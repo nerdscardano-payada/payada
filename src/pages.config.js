@@ -47,13 +47,36 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import Dashboard from './pages/Dashboard';
+import PaymentLinks from './pages/PaymentLinks';
+import Payments from './pages/Payments';
+import SubscriptionPlans from './pages/SubscriptionPlans';
+import Subscriptions from './pages/Subscriptions';
+import Customers from './pages/Customers';
+import Webhooks from './pages/Webhooks';
+import ApiKeys from './pages/ApiKeys';
+import MerchantSettings from './pages/MerchantSettings';
+import Billing from './pages/Billing';
+import Checkout from './pages/Checkout';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "Dashboard": Dashboard,
+    "PaymentLinks": PaymentLinks,
+    "Payments": Payments,
+    "SubscriptionPlans": SubscriptionPlans,
+    "Subscriptions": Subscriptions,
+    "Customers": Customers,
+    "Webhooks": Webhooks,
+    "ApiKeys": ApiKeys,
+    "MerchantSettings": MerchantSettings,
+    "Billing": Billing,
+    "Checkout": Checkout,
 }
 
 export const pagesConfig = {
+    mainPage: "Dashboard",
     Pages: PAGES,
     Layout: __Layout,
 };

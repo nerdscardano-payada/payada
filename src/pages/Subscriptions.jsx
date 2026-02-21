@@ -1,0 +1,84 @@
+import React from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import PageHeader from "@/components/shared/PageHeader";
+import StatusBadge from "@/components/shared/StatusBadge";
+import EmptyState from "@/components/shared/EmptyState";
+import { ListOrdered } from "lucide-react";
+import { format } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function Subscriptions() {
+  const { data: subscriptions = [], isLoading } = useQuery({
+    queryKey: ["subscriptions"],
+    queryFn: () => base44.entities.Subscription.list("-created_date", 200),
+  });
+
+  return (
+    <div>
+      <PageHeader title="Subscribers" subtitle="Manage active and past subscriptions" />
+
+      <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
+        {isLoading ? (
+          <div className="p-5 space-y-3">
+            {Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}
+          </div>
+        ) : subscriptions.length === 0 ? (
+          <EmptyState
+            icon={ListOrdered}
+            title="No subscribers yet"
+            description="Subscribers will appear here when customers sign up for your plans."
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-100">
+                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Subscriber</th>
+                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Plan</th>
+                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Status</th>
+                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3 hidden md:table-cell">Amount</th>
+                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3 hidden md:table-cell">Next Due</th>
+                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Started</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-50">
+                {subscriptions.map((sub) => (
+                  <tr key={sub.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-5 py-3.5">
+                      <div>
+                        <p className="text-sm font-medium text-slate-900">{sub.customer_email || "—"}</p>
+                        {sub.customer_name && <p className="text-xs text-slate-400">{sub.customer_name}</p>}
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span className="text-sm text-slate-700">{sub.plan_name || "—"}</span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <StatusBadge status={sub.status} />
+                    </td>
+                    <td className="px-5 py-3.5 hidden md:table-cell">
+                      <span className="text-sm font-semibold text-slate-900 tabular-nums">
+                        ₳ {sub.amount_ada?.toFixed(2) || "—"}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 hidden md:table-cell">
+                      <span className="text-xs text-slate-500">
+                        {sub.next_due_date ? format(new Date(sub.next_due_date), "MMM d, yyyy") : "—"}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <span className="text-xs text-slate-500">
+                        {sub.started_at ? format(new Date(sub.started_at), "MMM d, yyyy") : format(new Date(sub.created_date), "MMM d, yyyy")}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
