@@ -156,6 +156,22 @@ Deno.serve(async (req) => {
            }
          });
 
+         // Send confirmation notification
+         await base44.functions.invoke('sendMerchantNotification', {
+           merchantId: payment.merchant_id,
+           notificationType: 'payment_confirmed',
+           title: '✅ Payment Confirmed',
+           message: `Payment of ${payment.received_amount_ada.toFixed(2)} ADA has been confirmed with ${confirmations} confirmations.`,
+           resourceType: 'payment',
+           resourceId: payment.id,
+           actionUrl: `/payments/${payment.id}`,
+           severity: 'info',
+           metadata: {
+             confirmations: confirmations,
+             amount_ada: payment.received_amount_ada
+           }
+         });
+
          confirmedCount++;
       } else {
         // Just update confirmation count
