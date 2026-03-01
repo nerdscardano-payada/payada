@@ -16,6 +16,24 @@ async function getLatestBlockHeight() {
   return data.height;
 }
 
+async function generateHmacSignature(payload, secret) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(payload);
+  const keyData = encoder.encode(secret);
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+
+  const signature = await crypto.subtle.sign('HMAC', key, data);
+  const signatureArray = Array.from(new Uint8Array(signature));
+  return signatureArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 async function triggerWebhook(base44, payment, merchantId) {
   try {
     const webhooks = await base44.entities.WebhookEndpoint.filter({
@@ -25,29 +43,40 @@ async function triggerWebhook(base44, payment, merchantId) {
 
     for (const webhook of webhooks) {
       if (webhook.event_types && webhook.event_types.includes('payment.confirmed')) {
-        const payload = {
-          event: 'payment.confirmed',
+        const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('');
+        
+        const timestamp = Date.now();
+
+        const payload = JSON.stringify({
+          event_type: 'payment.confirmed',
+          event_id: payment.id,
+          timestamp: timestamp,
+          nonce: nonce,
           data: {
             payment_id: payment.id,
             tx_hash: payment.tx_hash,
-            amount_ada: payment.received_amount_ada,
+            received_amount_ada: payment.received_amount_ada,
             merchant_amount_ada: payment.merchant_amount_ada,
             fee_amount_ada: payment.fee_amount_ada,
             confirmations: payment.confirmations,
             confirmed_at: payment.confirmed_at
-          },
-          timestamp: Date.now()
-        };
+          }
+        });
 
-        // Send webhook asynchronously (fire and forget)
+        const signature = await generateHmacSignature(payload, webhook.secret);
+
+        // Send signed webhook asynchronously (fire and forget)
         fetch(webhook.url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-payada-event': 'payment.confirmed',
-            'x-payada-timestamp': String(payload.timestamp)
+            'X-PayADA-Signature': signature,
+            'X-PayADA-Timestamp': String(timestamp),
+            'X-PayADA-Nonce': nonce
           },
-          body: JSON.stringify(payload)
+          body: payload
         }).catch(err => console.error(`Webhook delivery failed: ${err.message}`));
 
         // Update webhook stats
