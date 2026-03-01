@@ -92,6 +92,13 @@ export default function APIReferencePage() {
           <p className="text-xl text-slate-600">Complete API documentation for PayADA integration.</p>
         </div>
 
+        {/* Pricing Notice */}
+        <div className="mb-20 border border-indigo-200 rounded-lg p-8 bg-indigo-50">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Transparent Fee Structure</h2>
+          <p className="text-slate-700 mb-3">All payments processed through the API incur a <span className="font-semibold text-indigo-600">flat 1.75% platform fee</span>.</p>
+          <p className="text-slate-600 text-sm"><span className="font-semibold">Example:</span> A ₳100 payment results in ₳98.25 received (fee: ₳1.75). Fee amounts are included in payment response objects.</p>
+        </div>
+
         {/* Authentication */}
         <div className="mb-20 border border-slate-200 rounded-lg p-8 bg-slate-50">
           <h2 className="text-2xl font-bold text-slate-900 mb-4">Authentication</h2>

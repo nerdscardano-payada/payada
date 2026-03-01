@@ -9,37 +9,42 @@ const sections = [
     icon: Zap,
     content: `Sign up for a PayADA account and get your API keys. No credit card required.
 
-1. Create your merchant profile
-2. Generate your first API key
-3. Configure webhook endpoints
-4. Start accepting payments
+  1. Create your merchant profile
+  2. Generate your first API key
+  3. Configure webhook endpoints
+  4. Start accepting payments
 
-It takes less than 5 minutes to get started.`
+  Pricing is simple: 1.75% fee per transaction. No hidden fees, no subscription costs.
+  It takes less than 5 minutes to get started.`
   },
   {
     title: "Payment Links",
     icon: BookOpen,
     content: `Payment links are the easiest way to accept Cardano payments without any code.
 
-Create a payment link from your dashboard and share it with customers. They'll see a checkout page with the payment amount and your receive address.
+  Create a payment link from your dashboard and share it with customers. They'll see a checkout page with the payment amount and your receive address.
 
-No technical setup required. Just generate, share, and receive payments.`
+  Fee breakdown is shown at checkout. 1.75% platform fee applies to all payments.
+  No technical setup required. Just generate, share, and receive payments.`
   },
   {
     title: "REST API",
     icon: Code,
     content: `Integrate PayADA with your application using our REST API.
 
-Base URL: https://api.payada.io/v1
+  Base URL: https://api.payada.io/v1
 
-All endpoints require authentication with your API key.
-Authentication: Bearer \${API_KEY} in Authorization header
+  All endpoints require authentication with your API key.
+  Authentication: Bearer \${API_KEY} in Authorization header
 
-Common endpoints:
-- POST /payments - Create a payment
-- GET /payments/:id - Get payment details
-- GET /subscriptions - List subscriptions
-- POST /subscriptions - Create subscription`
+  Common endpoints:
+  - POST /payments - Create a payment
+  - GET /payments/:id - Get payment details
+  - GET /subscriptions - List subscriptions
+  - POST /subscriptions - Create subscription
+
+  Fee Handling: Payment responses include fee_amount_ada and merchant_amount_ada.
+  All merchants pay the same 1.75% fee. No plan-based pricing.`
   },
   {
     title: "Webhooks",
