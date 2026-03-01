@@ -74,6 +74,19 @@ export default function ApiKeys() {
         actionIcon={Plus}
       />
 
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
+        <h3 className="text-sm font-semibold text-blue-900 mb-2">API Keys gebruiken</h3>
+        <p className="text-sm text-blue-800 mb-3">
+          API keys bieden veilige toegang tot de PayADA API. Je kunt meerdere keys aanmaken voor verschillende applicaties of omgevingen.
+        </p>
+        <ul className="text-sm text-blue-800 space-y-1.5 ml-4">
+          <li className="list-disc"><strong>Aanmaken:</strong> Klik op "Create Key" en geef de key een duidelijke naam (bijv. "Production API")</li>
+          <li className="list-disc"><strong>Kopiëren:</strong> Na aanmaak zie je de volledige key. Kopieer deze direct, want je kunt hem later niet meer zien</li>
+          <li className="list-disc"><strong>Gebruiken:</strong> Voeg de key toe aan de Authorization header van je API requests</li>
+          <li className="list-disc"><strong>Verwijderen:</strong> Verwijder keys die je niet meer nodig hebt via de prullenbak knop</li>
+        </ul>
+      </div>
+
       <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
         {isLoading ? (
           <div className="p-5 space-y-3">
