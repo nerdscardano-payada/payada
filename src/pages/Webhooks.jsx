@@ -10,10 +10,11 @@ export default function WebhooksPage() {
     queryKey: ["merchant-profile"],
     queryFn: async () => {
       const user = await base44.auth.me();
+      if (!user) return null;
       const profiles = await base44.entities.MerchantProfile.filter({
         user_id: user.id,
       });
-      return profiles[0] || null;
+      return profiles[0] || { user_id: user.id, email: user.email };
     },
   });
 
