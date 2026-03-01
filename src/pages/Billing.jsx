@@ -1,116 +1,75 @@
 import React from "react";
 import PageHeader from "@/components/shared/PageHeader";
-import { Check, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Check, Zap, Percent } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-
-const plans = [
-  {
-    name: "Free",
-    price: "€0",
-    period: "/month",
-    fee: "1.5% tx fee",
-    features: [
-      "5 payment links",
-      "Basic dashboard",
-      "Payment detection",
-      "1 webhook endpoint",
-      "Community support",
-    ],
-    current: true,
-  },
-  {
-    name: "Pro",
-    price: "€15",
-    period: "/month",
-    fee: "0.8% tx fee",
-    popular: true,
-    features: [
-      "Unlimited payment links",
-      "Subscription plans",
-      "Fiat pricing (EUR/USD)",
-      "10 webhook endpoints",
-      "API access",
-      "CSV export",
-      "Priority support",
-    ],
-  },
-  {
-    name: "Business",
-    price: "€49",
-    period: "/month",
-    fee: "0.4% tx fee",
-    features: [
-      "Everything in Pro",
-      "Unlimited webhooks",
-      "Subscriber portal",
-      "Advanced analytics",
-      "Custom branding",
-      "Dedicated support",
-    ],
-  },
-];
 
 export default function Billing() {
   return (
     <div>
       <PageHeader
         title="Billing"
-        subtitle="Manage your PayADA subscription plan"
+        subtitle="Simple, transparent pricing for all merchants"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl">
-        {plans.map((plan) => (
-          <div
-            key={plan.name}
-            className={cn(
-              "bg-white rounded-xl border p-6 flex flex-col relative",
-              plan.popular
-                ? "border-indigo-300 shadow-lg shadow-indigo-100/50 ring-1 ring-indigo-200"
-                : "border-slate-200/60"
-            )}
-          >
-            {plan.popular && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="bg-indigo-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                  Popular
-                </span>
-              </div>
-            )}
-
-            <div className="mb-5">
-              <h3 className="text-lg font-bold text-slate-900">{plan.name}</h3>
-              <div className="flex items-baseline gap-1 mt-2">
-                <span className="text-3xl font-bold text-slate-900">{plan.price}</span>
-                <span className="text-sm text-slate-500">{plan.period}</span>
-              </div>
-              <p className="text-xs text-slate-400 mt-1">{plan.fee}</p>
+      {/* Single pricing model */}
+      <div className="max-w-2xl">
+        <Card className="bg-white border-indigo-300 shadow-lg shadow-indigo-100/50 ring-1 ring-indigo-200 p-8">
+          <div className="flex items-start justify-between mb-6">
+            <div>
+              <h3 className="text-2xl font-bold text-slate-900">One Simple Fee</h3>
+              <p className="text-slate-600 mt-1">Fair pricing for every merchant, no tiers, no surprises</p>
             </div>
-
-            <ul className="space-y-2.5 flex-1 mb-6">
-              {plan.features.map((f) => (
-                <li key={f} className="flex items-start gap-2 text-sm text-slate-600">
-                  <Check className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-
-            <Button
-              className={cn(
-                "w-full",
-                plan.current
-                  ? "bg-slate-100 text-slate-500 hover:bg-slate-100 cursor-default"
-                  : plan.popular
-                  ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-                  : "bg-slate-900 hover:bg-slate-800 text-white"
-              )}
-              disabled={plan.current}
-            >
-              {plan.current ? "Current Plan" : "Upgrade"}
-            </Button>
+            <div className="bg-indigo-100 rounded-lg p-3">
+              <Percent className="w-6 h-6 text-indigo-600" />
+            </div>
           </div>
-        ))}
+
+          <div className="bg-gradient-to-r from-indigo-50 to-cyan-50 rounded-lg p-6 mb-6">
+            <p className="text-slate-600 text-sm mb-2">Flat transaction fee on all payments</p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-5xl font-bold text-indigo-600">1.75%</span>
+              <span className="text-slate-600">per transaction</span>
+            </div>
+          </div>
+
+          <ul className="space-y-3 mb-6">
+            <li className="flex items-start gap-3">
+              <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-slate-900">No subscription fees</p>
+                <p className="text-sm text-slate-600">Everything included, no monthly costs</p>
+              </div>
+            </li>
+            <li className="flex items-start gap-3">
+              <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-slate-900">Unlimited features</p>
+                <p className="text-sm text-slate-600">Payment links, webhooks, API access for all</p>
+              </div>
+            </li>
+            <li className="flex items-start gap-3">
+              <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-slate-900">Global rate limits</p>
+                <p className="text-sm text-slate-600">100 API requests/min, fair for all merchants</p>
+              </div>
+            </li>
+            <li className="flex items-start gap-3">
+              <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-medium text-slate-900">Transparent breakdown</p>
+                <p className="text-sm text-slate-600">See exact fees for every payment you receive</p>
+              </div>
+            </li>
+          </ul>
+
+          <div className="border-t border-slate-200 pt-6">
+            <p className="text-sm text-slate-600 mb-4">
+              <span className="font-semibold text-slate-900">Example:</span> For a ₳100 payment, you receive ₳98.25 (fee: ₳1.75)
+            </p>
+          </div>
+        </Card>
       </div>
     </div>
   );

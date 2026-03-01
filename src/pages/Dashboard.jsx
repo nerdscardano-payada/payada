@@ -44,6 +44,10 @@ export default function Dashboard() {
     .filter(p => p.status === "confirmed")
     .reduce((sum, p) => sum + (p.received_amount_ada || p.expected_amount_ada || 0), 0);
 
+  const totalFees = payments
+    .filter(p => p.status === "confirmed")
+    .reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
+
   const confirmedPayments = payments.filter(p => p.status === "confirmed").length;
   const activeLinks = paymentLinks.filter(l => l.status === "active").length;
   const activeSubs = subscriptions.filter(s => s.status === "active" || s.status === "trial").length;
@@ -69,8 +73,8 @@ export default function Dashboard() {
         ) : (
           <>
             <StatCard
-              title="Total Revenue"
-              value={`₳ ${totalAda.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+              title="Net Revenue"
+              value={`₳ ${(totalAda - totalFees).toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`}
               subtitle={`${confirmedPayments} confirmed payments`}
               icon={TrendingUp}
               accentColor="green"
