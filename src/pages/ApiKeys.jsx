@@ -123,7 +123,7 @@ export default function ApiKeys() {
             <ul className="text-sm text-blue-800 space-y-1.5 ml-4">
               <li className="list-disc">Klik "Create Key" om je eerste API Key aan te maken</li>
               <li className="list-disc">Kopieer de key direct - je ziet hem daarna niet meer</li>
-              <li className="list-disc">Bezoek onze <a href="#" className="text-blue-700 font-semibold hover:underline">API Documentation</a> voor codevoorbeelden</li>
+              <li className="list-disc">Bezoek onze <Link to={createPageUrl("APIReference")} className="text-blue-700 font-semibold hover:underline">API Documentation</Link> voor codevoorbeelden</li>
               <li className="list-disc">Test je integratie in een test-omgeving voordat je live gaat</li>
             </ul>
           </div>
