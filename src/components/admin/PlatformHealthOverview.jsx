@@ -85,10 +85,10 @@ export default function PlatformHealthOverview() {
 
       <MetricsCard
         title="Transaction Volume"
-        value={`${paymentStats.volumeAda.toFixed(2)} ADA`}
+        value={`${(paymentStats.volumeAda || 0).toFixed(2)} ADA`}
         isLoading={paymentLoading}
         icon={DollarSign}
-        description={`${paymentStats.confirmed} confirmed payments`}
+        description={`${paymentStats.confirmed || 0} confirmed payments`}
       />
 
       <MetricsCard
