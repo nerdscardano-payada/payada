@@ -21,6 +21,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
+  { name: "Merchant Profile", icon: Building2, page: "MerchantProfile" },
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
   { name: "Payment Links", icon: Link2, page: "PaymentLinks" },
   { name: "Payments", icon: CreditCard, page: "Payments" },
