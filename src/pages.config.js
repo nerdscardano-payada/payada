@@ -68,6 +68,7 @@ import Security from './pages/Security';
 import Documentation from './pages/Documentation';
 import APIReference from './pages/APIReference';
 import About from './pages/About';
+import Blog from './pages/Blog';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +94,7 @@ export const PAGES = {
     "Documentation": Documentation,
     "APIReference": APIReference,
     "About": About,
+    "Blog": Blog,
 }
 
 export const pagesConfig = {
