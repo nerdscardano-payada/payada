@@ -1,22 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-const PLAN_LIMITS = {
-  free: {
-    payments_per_month: 50,
-    api_calls_per_day: 1000
-  },
-  pro: {
-    payments_per_month: 5000,
-    api_calls_per_day: 50000
-  },
-  business: {
-    payments_per_month: 50000,
-    api_calls_per_day: 500000
-  },
-  enterprise: {
-    payments_per_month: -1,
-    api_calls_per_day: -1
-  }
+// Global rate limits for all merchants (plan-agnostic)
+const GLOBAL_RATE_LIMITS = {
+  api_requests_per_minute: 100,
+  checkout_creates_per_minute: 20
 };
 
 Deno.serve(async (req) => {
@@ -28,11 +15,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { merchantId, operationType } = await req.json();
+    const { merchantId, limitType } = await req.json();
 
-    if (!merchantId || !operationType) {
+    if (!merchantId || !limitType) {
       return Response.json({
-        error: 'Missing required fields: merchantId, operationType'
+        error: 'Missing required fields: merchantId, limitType'
       }, { status: 400 });
     }
 
@@ -48,52 +35,31 @@ Deno.serve(async (req) => {
     }
 
     const profile = profiles[0];
-    const plan = profile.plan || 'free';
-    const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.free;
 
-    // Check payments per month limit
-    if (operationType === 'create_payment') {
-      const now = new Date();
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      
-      const payments = await base44.entities.Payment.filter({
-        merchant_id: merchantId
-      });
-      
-      const thisMonthPayments = payments.filter(p => new Date(p.created_date) >= monthStart).length;
-      const limit = limits.payments_per_month;
-
-      if (limit !== -1 && thisMonthPayments >= limit) {
-        return Response.json({
-          success: false,
-          allowed: false,
-          plan: plan,
-          reason: 'monthly_payment_limit_reached',
-          limitType: 'payments_per_month',
-          limit: limit,
-          currentUsage: thisMonthPayments,
-          message: `You have reached the monthly payment limit of ${limit} for the ${plan} plan`,
-          code: 'LIMIT_EXCEEDED'
-        }, { status: 429 });
-      }
-
+    // Check merchant status - suspended/blocked merchants are rate-limited
+    if (profile.status === 'blocked') {
       return Response.json({
-        success: true,
-        allowed: true,
-        plan: plan,
-        remaining: limit === -1 ? -1 : limit - thisMonthPayments
-      });
+        success: false,
+        allowed: false,
+        reason: 'merchant_blocked',
+        message: 'Merchant account is blocked',
+        code: 'MERCHANT_BLOCKED'
+      }, { status: 403 });
     }
 
+    // Return global rate limits (same for all active merchants)
     return Response.json({
-      error: 'Unknown operation type',
-      code: 'INVALID_OPERATION'
-    }, { status: 400 });
+      success: true,
+      allowed: true,
+      status: profile.status,
+      limits: GLOBAL_RATE_LIMITS,
+      message: 'Global rate limits apply to all merchants'
+    });
 
   } catch (error) {
     return Response.json({
       error: error.message,
-      type: 'payment_limit_enforcement_error'
+      type: 'rate_limit_check_error'
     }, { status: 500 });
   }
 });

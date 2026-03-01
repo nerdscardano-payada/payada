@@ -25,11 +25,14 @@ Deno.serve(async (req) => {
     if (profiles.length === 0) return Response.json({ error: 'Merchant profile not found' }, { status: 404 });
 
     const profile = profiles[0];
-    if (profile.status !== 'active') {
-      return Response.json({ error: 'Merchant account is not active' }, { status: 403 });
+
+    // Blocked merchants cannot access any features
+    if (profile.status === 'blocked') {
+      return Response.json({ error: 'Merchant account is blocked', code: 'MERCHANT_BLOCKED' }, { status: 403 });
     }
 
-    // All merchants have unlimited feature access
+    // All active and suspended merchants have unlimited feature access
+    // (suspension affects payment acceptance, not feature availability)
     const limits = {
       requests_per_minute_per_key: GLOBAL_LIMITS.requests_per_minute_per_key,
       checkout_creations_per_minute_per_ip: GLOBAL_LIMITS.checkout_creations_per_minute_per_ip,
@@ -43,7 +46,7 @@ Deno.serve(async (req) => {
       merchantId: merchantId,
       status: profile.status,
       limits: limits,
-      message: 'All features are available. Rate limits apply globally.'
+      message: 'All features are available. Global rate limits apply equally to all merchants. Flat 1.75% fee per transaction.'
     });
 
   } catch (error) {
