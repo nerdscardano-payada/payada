@@ -133,13 +133,30 @@ Deno.serve(async (req) => {
         });
 
         // Trigger webhook
-        await triggerWebhook(base44, {
-          ...payment,
-          confirmations,
-          confirmed_at: confirmedAt
-        }, payment.merchant_id);
+         await triggerWebhook(base44, {
+           ...payment,
+           confirmations,
+           confirmed_at: confirmedAt
+         }, payment.merchant_id);
 
-        confirmedCount++;
+         // Log audit event
+         await base44.functions.invoke('logAuditEvent', {
+           merchantId: payment.merchant_id,
+           eventType: 'payment_confirmed',
+           resourceType: 'payment',
+           resourceId: payment.id,
+           result: 'success',
+           changes: {
+             status: 'confirmed',
+             confirmations: confirmations
+           },
+           metadata: {
+             block_height: latestBlock,
+             amount_ada: payment.received_amount_ada
+           }
+         });
+
+         confirmedCount++;
       } else {
         // Just update confirmation count
         await base44.entities.Payment.update(payment.id, {
