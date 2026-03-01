@@ -21,6 +21,7 @@ export default function ApiKeys() {
   const [showDialog, setShowDialog] = useState(false);
   const [keyName, setKeyName] = useState("");
   const [newKey, setNewKey] = useState(null);
+  const [generatedKeyValue, setGeneratedKeyValue] = useState("");
   const queryClient = useQueryClient();
 
   const { data: keys = [], isLoading } = useQuery({
