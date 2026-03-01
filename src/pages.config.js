@@ -64,6 +64,7 @@ import Onboarding from './pages/Onboarding';
 import Home from './pages/Home';
 import Features from './pages/Features';
 import Pricing from './pages/Pricing';
+import Security from './pages/Security';
 import __Layout from './Layout.jsx';
 
 
@@ -85,6 +86,7 @@ export const PAGES = {
     "Home": Home,
     "Features": Features,
     "Pricing": Pricing,
+    "Security": Security,
 }
 
 export const pagesConfig = {
