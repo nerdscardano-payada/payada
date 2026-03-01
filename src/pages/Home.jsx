@@ -50,11 +50,11 @@ export default function HomePage() {
   }
 
   const handleSignUp = () => {
-    base44.auth.redirectToLogin(createPageUrl("Dashboard"));
+    base44.auth.redirectToLogin();
   };
 
   const handleLogin = () => {
-    base44.auth.redirectToLogin(createPageUrl("Dashboard"));
+    base44.auth.redirectToLogin();
   };
 
   return (
