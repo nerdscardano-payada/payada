@@ -62,6 +62,7 @@ import SDKDocumentation from './pages/SDKDocumentation';
 import AdminDashboard from './pages/AdminDashboard';
 import Onboarding from './pages/Onboarding';
 import Home from './pages/Home';
+import Features from './pages/Features';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "Onboarding": Onboarding,
     "Home": Home,
+    "Features": Features,
 }
 
 export const pagesConfig = {
