@@ -29,7 +29,6 @@ export default function ContactPage() {
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("About")} className="text-sm text-slate-600 hover:text-slate-900">About</Link>
-            <Link to={createPageUrl("Blog")} className="text-sm text-slate-600 hover:text-slate-900">Blog</Link>
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
           </div>
         </nav>
@@ -154,12 +153,12 @@ export default function ContactPage() {
             <details className="border border-slate-200 rounded-lg p-6 cursor-pointer group">
               <summary className="font-semibold text-slate-900 flex justify-between items-center">
                 What are your fees?
-                <span className="group-open:rotate-180 transition">▼</span>
-              </summary>
-              <p className="text-slate-600 mt-4">
-                Our fee is a simple 1.5% on Starter plans, 1.0% on Professional, and 0.5% on Business plans. 
-                No hidden fees, no setup costs, no monthly minimums. You only pay when you process a payment.
-              </p>
+                  <span className="group-open:rotate-180 transition">▼</span>
+                </summary>
+                <p className="text-slate-600 mt-4">
+                  We charge a simple flat 1.75% fee per transaction, no matter your payment volume. 
+                  No hidden fees, no setup costs, no monthly minimums. You only pay when you process a payment.
+                </p>
             </details>
 
             <details className="border border-slate-200 rounded-lg p-6 cursor-pointer group">
