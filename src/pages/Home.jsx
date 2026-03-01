@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Zap, Lock, TrendingUp, Globe } from "lucide-react";
@@ -68,6 +69,11 @@ export default function HomePage() {
             <span className="text-lg font-bold text-slate-900">
               Pay<span className="text-indigo-600">ADA</span>
             </span>
+          </div>
+          <div className="hidden md:flex items-center gap-8">
+            <Link to={createPageUrl("Features")} className="text-sm text-slate-600 hover:text-slate-900">Features</Link>
+            <Link to={createPageUrl("Pricing")} className="text-sm text-slate-600 hover:text-slate-900">Pricing</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
           </div>
           <div className="flex gap-3">
             <Button variant="ghost" onClick={handleLogin}>
@@ -233,24 +239,24 @@ export default function HomePage() {
             <div>
               <h4 className="text-white font-semibold mb-4">Developers</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">Documentation</a></li>
-                <li><a href="#" className="hover:text-white transition">API Reference</a></li>
-                <li><a href="#" className="hover:text-white transition">Webhooks</a></li>
+                <li><Link to={createPageUrl("Documentation")} className="hover:text-white transition">Documentation</Link></li>
+                <li><Link to={createPageUrl("APIReference")} className="hover:text-white transition">API Reference</Link></li>
+                <li><Link to={createPageUrl("Webhooks")} className="hover:text-white transition">Webhooks</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">About</a></li>
-                  <li><a href="#" className="hover:text-white transition">Contact</a></li>
+                <li><Link to={createPageUrl("About")} className="hover:text-white transition">About</Link></li>
+                <li><Link to={createPageUrl("Contact")} className="hover:text-white transition">Contact</Link></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center text-sm">
             <p>&copy; 2026 PayADA.io. All rights reserved.</p>
             <div className="flex gap-6 mt-4 sm:mt-0">
-              <a href="#" className="hover:text-white transition">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition">Terms of Service</a>
+              <Link to={createPageUrl("PrivacyPolicy")} className="hover:text-white transition">Privacy Policy</Link>
+              <Link to={createPageUrl("TermsOfService")} className="hover:text-white transition">Terms of Service</Link>
             </div>
           </div>
         </div>

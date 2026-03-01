@@ -13,9 +13,8 @@ export default function AboutPage() {
             Pay<span className="text-indigo-600">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">Contact</Link>
-            <Link to={createPageUrl("Blog")} className="text-sm text-slate-600 hover:text-slate-900">Blog</Link>
             <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">Security</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">Contact</Link>
           </div>
         </nav>
       </header>

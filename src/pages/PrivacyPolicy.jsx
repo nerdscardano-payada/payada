@@ -12,6 +12,7 @@ export default function PrivacyPolicyPage() {
             Pay<span className="text-indigo-600">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
+            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
             <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">Contact</Link>
             <Link to={createPageUrl("TermsOfService")} className="text-sm text-slate-600 hover:text-slate-900">Terms</Link>
           </div>
@@ -20,7 +21,7 @@ export default function PrivacyPolicyPage() {
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <h1 className="text-5xl font-bold text-slate-900 mb-4">Privacy Policy</h1>
-        <p className="text-slate-600 mb-12">Last updated: March 1, 2024</p>
+        <p className="text-slate-600 mb-12">Last updated: March 1, 2026</p>
 
         <div className="prose prose-lg max-w-none text-slate-600">
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">1. Introduction</h2>
