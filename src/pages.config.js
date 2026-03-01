@@ -67,6 +67,7 @@ import Pricing from './pages/Pricing';
 import Security from './pages/Security';
 import Documentation from './pages/Documentation';
 import APIReference from './pages/APIReference';
+import About from './pages/About';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +92,7 @@ export const PAGES = {
     "Security": Security,
     "Documentation": Documentation,
     "APIReference": APIReference,
+    "About": About,
 }
 
 export const pagesConfig = {
