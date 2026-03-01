@@ -63,6 +63,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Onboarding from './pages/Onboarding';
 import Home from './pages/Home';
 import Features from './pages/Features';
+import Pricing from './pages/Pricing';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +84,7 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "Home": Home,
     "Features": Features,
+    "Pricing": Pricing,
 }
 
 export const pagesConfig = {
