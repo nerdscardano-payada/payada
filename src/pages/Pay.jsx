@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-export default function pay() {
+export default function Pay() {
   const [slug, setSlug] = useState("");
   const [paymentLink, setPaymentLink] = useState(null);
   const [payerEmail, setPayerEmail] = useState("");
@@ -17,7 +17,7 @@ export default function pay() {
   const [loading, setLoading] = useState(true);
   const [sessionData, setSessionData] = useState(null);
 
-  // Extract slug from URL
+  // Extract slug from URL path
   useEffect(() => {
     const pathSegments = window.location.pathname.split("/").filter(Boolean);
     const payIndex = pathSegments.indexOf("pay");
