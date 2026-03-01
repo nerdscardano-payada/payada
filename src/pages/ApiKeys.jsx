@@ -88,32 +88,32 @@ export default function ApiKeys() {
       />
 
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
-        <h3 className="text-base font-bold text-blue-900 mb-4">API Keys - Volledige Gids</h3>
+         <h3 className="text-base font-bold text-blue-900 mb-4">API Keys - Complete Guide</h3>
         
         <div className="space-y-5">
           <div>
-            <h4 className="text-sm font-semibold text-blue-900 mb-2">📌 Wat zijn API Keys?</h4>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">📌 What are API Keys?</h4>
             <p className="text-sm text-blue-800">
-              API Keys zijn veilige authenticatietokens waarmee je externe applicaties verbinding kunt laten maken met PayADA. Met je API Key kun je betalingen verwerken, abonnementen beheren en webhooks activeren - allemaal via code.
+              API Keys are secure authentication tokens that allow external applications to connect to PayADA. With your API Key, you can process payments, manage subscriptions, and trigger webhooks—all through code.
             </p>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-blue-900 mb-2">🎯 Wat kun je ermee doen?</h4>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">🎯 What can you do with it?</h4>
             <ul className="text-sm text-blue-800 space-y-2 ml-4">
-              <li className="list-disc"><strong>Betalingen accepteren:</strong> Maak betaalsessies aan en verwerk Cardano-betalingen programmatisch</li>
-              <li className="list-disc"><strong>Betalingen opvragen:</strong> Check de status van betalingen en ontvang real-time updates</li>
-              <li className="list-disc"><strong>Abonnementen beheren:</strong> Maak abonnementsplannen aan en beheer klanten automatisch</li>
-              <li className="list-disc"><strong>Webhooks configureren:</strong> Ontvang real-time notificaties wanneer betalingen binnenkomen</li>
-              <li className="list-disc"><strong>Rapportages opvragen:</strong> Haal gedetailleerde transactie- en klantgegevens op voor je administratie</li>
-              <li className="list-disc"><strong>Integreren:</strong> Verbind PayADA met je website, mobiele app, of besturingssysteem</li>
+              <li className="list-disc"><strong>Accept Payments:</strong> Create payment sessions and process Cardano payments programmatically</li>
+              <li className="list-disc"><strong>Query Payments:</strong> Check payment status and receive real-time updates</li>
+              <li className="list-disc"><strong>Manage Subscriptions:</strong> Create subscription plans and manage customers automatically</li>
+              <li className="list-disc"><strong>Configure Webhooks:</strong> Receive real-time notifications when payments arrive</li>
+              <li className="list-disc"><strong>Request Reports:</strong> Retrieve detailed transaction and customer data for your records</li>
+              <li className="list-disc"><strong>Integrate:</strong> Connect PayADA with your website, mobile app, or system</li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-blue-900 mb-2">⚡ Hoe werkt het?</h4>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">⚡ How does it work?</h4>
             <p className="text-sm text-blue-800 mb-2">
-              Je API Key voeg je toe aan de Authorization header van je API requests:
+              Add your API Key to the Authorization header of your API requests:
             </p>
             <code className="bg-blue-100 border border-blue-300 rounded px-3 py-2 text-xs text-blue-900 font-mono block overflow-auto">
               Authorization: Bearer pk_live_xxxxxxxxxxxxx
@@ -123,21 +123,21 @@ export default function ApiKeys() {
           <div>
             <h4 className="text-sm font-semibold text-blue-900 mb-2">🔒 Best Practices</h4>
             <ul className="text-sm text-blue-800 space-y-1.5 ml-4">
-              <li className="list-disc">Maak aparte keys voor elk project (test, staging, production)</li>
-              <li className="list-disc">Zet je API Key NOOIT in publieke code repositories of client-side code</li>
-              <li className="list-disc">Verwijder ongebruikte keys om veiligheid te maximaliseren</li>
-              <li className="list-disc">Monitor "Last Used" data om ongebruikte keys op te sporen</li>
-              <li className="list-disc">Gebruik environment variables om je keys veilig op te slaan</li>
+              <li className="list-disc">Create separate keys for each project (test, staging, production)</li>
+              <li className="list-disc">NEVER put your API Key in public repositories or client-side code</li>
+              <li className="list-disc">Delete unused keys to maximize security</li>
+              <li className="list-disc">Monitor "Last Used" data to identify unused keys</li>
+              <li className="list-disc">Use environment variables to store your keys safely</li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-blue-900 mb-2">📚 Volgende stappen</h4>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">📚 Next Steps</h4>
             <ul className="text-sm text-blue-800 space-y-1.5 ml-4">
-              <li className="list-disc">Klik "Create Key" om je eerste API Key aan te maken</li>
-              <li className="list-disc">Kopieer de key direct - je ziet hem daarna niet meer</li>
-              <li className="list-disc">Bezoek onze <Link to={createPageUrl("APIReference")} className="text-blue-700 font-semibold hover:underline">API Documentation</Link> voor codevoorbeelden</li>
-              <li className="list-disc">Test je integratie in een test-omgeving voordat je live gaat</li>
+              <li className="list-disc">Click "Create Key" to generate your first API Key</li>
+              <li className="list-disc">Copy the key immediately—you won't see it again after this</li>
+              <li className="list-disc">Visit our <Link to={createPageUrl("APIReference")} className="text-blue-700 font-semibold hover:underline">API Documentation</Link> for code examples</li>
+              <li className="list-disc">Test your integration in a test environment before going live</li>
             </ul>
           </div>
         </div>
