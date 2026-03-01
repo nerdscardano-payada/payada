@@ -3,7 +3,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const publicPages = ["Checkout", "SubscriberPortal"];
+const publicPages = ["Checkout", "SubscriberPortal", "Home"];
 
 export default function Layout({ children, currentPageName }) {
   const [collapsed, setCollapsed] = useState(false);
