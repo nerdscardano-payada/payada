@@ -32,7 +32,8 @@ export default function ApiKeys() {
     mutationFn: (data) => base44.entities.ApiKey.create(data),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["apiKeys"] });
-      setKeyName("");
+      const key = data.key_value_hashed || "";
+      setNewKey({ key_value: key, key_prefix: data.key_prefix, name: data.name });
       toast.success("API key created!");
     },
     onError: () => {
