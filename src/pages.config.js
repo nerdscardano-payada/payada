@@ -65,6 +65,7 @@ import Home from './pages/Home';
 import Features from './pages/Features';
 import Pricing from './pages/Pricing';
 import Security from './pages/Security';
+import Documentation from './pages/Documentation';
 import __Layout from './Layout.jsx';
 
 
@@ -87,6 +88,7 @@ export const PAGES = {
     "Features": Features,
     "Pricing": Pricing,
     "Security": Security,
+    "Documentation": Documentation,
 }
 
 export const pagesConfig = {
