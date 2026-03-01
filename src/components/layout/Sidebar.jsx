@@ -51,7 +51,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
         )}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between px-4 h-16 border-b border-white/5">
+        <Link to={createPageUrl("Home")} className="flex items-center justify-between px-4 h-16 border-b border-white/5 hover:bg-white/5 transition-colors">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center flex-shrink-0">
               <Hexagon className="w-4.5 h-4.5 text-white" />
