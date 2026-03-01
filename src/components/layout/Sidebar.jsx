@@ -30,7 +30,6 @@ const navItems = [
   { name: "Customers", icon: Users, page: "Customers" },
   { name: "Webhooks", icon: Webhook, page: "Webhooks" },
   { name: "API Keys", icon: Key, page: "ApiKeys" },
-  { name: "Settings", icon: Settings, page: "MerchantSettings" },
   { name: "Billing", icon: Receipt, page: "Billing" },
 ];
 
