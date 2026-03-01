@@ -152,6 +152,25 @@ Deno.serve(async (req) => {
 
     await base44.entities.Payment.update(payment.id, updateData);
 
+    // Log audit event
+    await base44.functions.invoke('logAuditEvent', {
+      merchantId: payment.merchant_id,
+      eventType: isValid ? 'payment_detected' : 'payment_failed',
+      resourceType: 'payment',
+      resourceId: payment.id,
+      result: isValid ? 'success' : 'failure',
+      changes: {
+        status: updateData.status,
+        tx_hash: txHash
+      },
+      errorMessage: isValid ? null : updateData.validation_error,
+      metadata: {
+        merchant_validated: merchantOutputFound,
+        fee_validated: feeOutputFound,
+        amount_ada: (merchantOutputAmount + feeOutputAmount) / 1000000
+      }
+    });
+
     return Response.json({
       success: true,
       paymentId: payment.id,
