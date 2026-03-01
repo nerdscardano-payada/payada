@@ -52,7 +52,6 @@ import About from './pages/About';
 import AdminDashboard from './pages/AdminDashboard';
 import ApiKeys from './pages/ApiKeys';
 import Billing from './pages/Billing';
-import Blog from './pages/Blog';
 import Checkout from './pages/Checkout';
 import Contact from './pages/Contact';
 import Customers from './pages/Customers';
@@ -81,7 +80,6 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "ApiKeys": ApiKeys,
     "Billing": Billing,
-    "Blog": Blog,
     "Checkout": Checkout,
     "Contact": Contact,
     "Customers": Customers,
