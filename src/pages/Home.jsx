@@ -104,13 +104,15 @@ export default function HomePage() {
               >
                 Start Free <ArrowRight className="w-5 h-5" />
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-2"
-              >
-                View Docs
-              </Button>
+              <Link to={createPageUrl("Documentation")}>
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="border-2"
+                >
+                  View Docs
+                </Button>
+              </Link>
             </div>
             <p className="text-sm text-slate-500 mt-6">
               No credit card required. Set up in under 5 minutes.
