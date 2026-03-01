@@ -70,6 +70,7 @@ import APIReference from './pages/APIReference';
 import About from './pages/About';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import __Layout from './Layout.jsx';
 
 
@@ -97,6 +98,7 @@ export const PAGES = {
     "About": About,
     "Blog": Blog,
     "Contact": Contact,
+    "PrivacyPolicy": PrivacyPolicy,
 }
 
 export const pagesConfig = {
