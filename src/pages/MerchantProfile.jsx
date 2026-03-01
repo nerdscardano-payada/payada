@@ -230,7 +230,7 @@ export default function MerchantProfilePage() {
                 className="mt-1 font-mono text-xs"
                 rows={3}
               />
-              <p className="text-xs text-slate-500 mt-2">This is your default address for receiving payments.</p>
+              <p className="text-xs text-slate-600 mt-3 font-medium">⚠️ Dit is uw standaard Cardano ontvangstadres. Dit veld is verplicht en moet een geldig Cardano wallet adres bevatten. Zonder dit adres kunt u geen betalingen ontvangen.</p>
             </div>
           </div>
 
