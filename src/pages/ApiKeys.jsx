@@ -65,11 +65,11 @@ export default function ApiKeys() {
   });
 
   const generateKey = () => {
-    if (!keyName.trim()) return;
+    if (!keyName.trim() || !merchantId) return;
     const key = "pk_live_" + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
     const prefix = key.slice(0, 12);
     setGeneratedKeyValue(key);
-    createMutation.mutate({ name: keyName, key_prefix: prefix, key_value_hashed: key });
+    createMutation.mutate({ merchant_id: merchantId, name: keyName, key_prefix: prefix, key_value_hashed: key });
   };
 
   const copyKey = (key) => {
