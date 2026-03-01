@@ -59,6 +59,7 @@ import SubscriptionPlans from './pages/SubscriptionPlans';
 import Subscriptions from './pages/Subscriptions';
 import Webhooks from './pages/Webhooks';
 import SDKDocumentation from './pages/SDKDocumentation';
+import AdminDashboard from './pages/AdminDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +76,7 @@ export const PAGES = {
     "Subscriptions": Subscriptions,
     "Webhooks": Webhooks,
     "SDKDocumentation": SDKDocumentation,
+    "AdminDashboard": AdminDashboard,
 }
 
 export const pagesConfig = {
