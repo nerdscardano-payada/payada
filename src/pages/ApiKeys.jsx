@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -24,7 +24,20 @@ export default function ApiKeys() {
   const [keyName, setKeyName] = useState("");
   const [newKey, setNewKey] = useState(null);
   const [generatedKeyValue, setGeneratedKeyValue] = useState("");
+  const [merchantId, setMerchantId] = useState(null);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await base44.auth.me();
+        setMerchantId(user.email);
+      } catch (error) {
+        console.error("Failed to get user:", error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const { data: keys = [], isLoading } = useQuery({
     queryKey: ["apiKeys"],
