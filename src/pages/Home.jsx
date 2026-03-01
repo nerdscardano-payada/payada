@@ -48,11 +48,6 @@ export default function HomePage() {
     return <div className="min-h-screen bg-white flex items-center justify-center">Loading...</div>;
   }
 
-  if (isAuthenticated) {
-    window.location.href = createPageUrl("Dashboard");
-    return null;
-  }
-
   const handleSignUp = () => {
     base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   };
