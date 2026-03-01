@@ -23,7 +23,13 @@ Deno.serve(async (req) => {
     if (profiles.length === 0) return Response.json({ error: 'Merchant profile not found' }, { status: 404 });
     const merchant = profiles[0];
 
-    // Check merchant status
+    // Enforce merchant status check
+    if (merchant.status === 'blocked') {
+      return Response.json({ error: 'Merchant account is blocked' }, { status: 403 });
+    }
+    if (merchant.status === 'suspended') {
+      return Response.json({ error: 'Merchant account is suspended' }, { status: 403 });
+    }
     if (merchant.status !== 'active') {
       return Response.json({ error: 'Merchant account is not active' }, { status: 403 });
     }

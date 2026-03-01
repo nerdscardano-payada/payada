@@ -77,6 +77,15 @@ Deno.serve(async (req) => {
       }, { status: 400 });
     }
 
+    // Validate merchant status
+    const profiles = await base44.entities.MerchantProfile.filter({ user_id: merchantId });
+    if (profiles.length === 0) {
+      return Response.json({ error: 'Merchant profile not found' }, { status: 404 });
+    }
+    if (profiles[0].status !== 'active') {
+      return Response.json({ error: 'Merchant account is not active' }, { status: 403 });
+    }
+
     // Generate random key
     const rawKey = generateRandomKey(32);
     const keyPrefix = rawKey.substring(0, 8);

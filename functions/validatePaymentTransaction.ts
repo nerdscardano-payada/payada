@@ -53,7 +53,13 @@ Deno.serve(async (req) => {
     const merchantProfile = await base44.entities.MerchantProfile.filter({ user_id: merchantId }).then(p => p[0]);
     const feePercent = (merchantProfile?.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100;
 
-    // Validate merchant status
+    // Enforce merchant status checks
+    if (merchantProfile?.status === 'blocked') {
+      return Response.json({ error: 'Merchant account is blocked', code: 'MERCHANT_BLOCKED' }, { status: 403 });
+    }
+    if (merchantProfile?.status === 'suspended') {
+      return Response.json({ error: 'Merchant account is suspended', code: 'MERCHANT_SUSPENDED' }, { status: 403 });
+    }
     if (merchantProfile?.status !== 'active') {
       return Response.json({ error: 'Merchant account is not active' }, { status: 403 });
     }
