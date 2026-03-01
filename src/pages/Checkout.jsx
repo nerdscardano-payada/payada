@@ -19,6 +19,7 @@ export default function Checkout() {
   const [paymentStatus, setPaymentStatus] = useState("pending");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sessionData, setSessionData] = useState(null);
 
   // Load payment link by slug
   const { data: links = [] } = useQuery({
@@ -36,10 +37,16 @@ export default function Checkout() {
     }
   }, [links, slug]);
 
-  const handleStartCheckout = () => {
-    setSessionStarted(true);
-    // In production, this would create a checkout session
-    // and generate a unique receive address
+  const handleStartCheckout = async () => {
+    try {
+      const response = await base44.functions.invoke('createCheckoutSession', {
+        paymentLinkId: paymentLink.id
+      });
+      setSessionData(response.data);
+      setSessionStarted(true);
+    } catch (err) {
+      toast.error("Failed to start checkout");
+    }
   };
 
   const copyAddress = () => {
@@ -167,26 +174,44 @@ export default function Checkout() {
               </div>
 
               {paymentStatus !== "confirmed" && (
-                <>
-                  {/* QR placeholder */}
-                  <div className="bg-white rounded-xl p-6 flex items-center justify-center">
-                    <div className="w-40 h-40 bg-slate-100 rounded-lg flex items-center justify-center text-xs text-slate-400">
-                      QR Code
-                    </div>
-                  </div>
+                   <>
+                      {/* Fee Breakdown */}
+                      {sessionData && (
+                        <div className="bg-slate-800/50 rounded-lg p-4 space-y-2 text-xs text-slate-300">
+                          <div className="flex justify-between">
+                            <span>Total Amount:</span>
+                            <span className="text-white font-semibold">₳ {sessionData.amount_total_ada.toFixed(3)}</span>
+                          </div>
+                          <div className="flex justify-between text-slate-400">
+                            <span>Platform Fee ({sessionData.platform_fee_percent}%):</span>
+                            <span>₳ {sessionData.platform_fee_ada.toFixed(3)}</span>
+                          </div>
+                          <div className="border-t border-slate-700 pt-2 flex justify-between">
+                            <span>Merchant Receives:</span>
+                            <span className="text-emerald-400 font-semibold">₳ {sessionData.merchant_amount_ada.toFixed(3)}</span>
+                          </div>
+                        </div>
+                      )}
 
-                  {/* Address */}
-                  <div>
-                    <Label className="text-xs text-slate-500">Send ADA to:</Label>
-                    <div className="flex items-center gap-2 mt-1.5">
-                      <code className="flex-1 bg-slate-800 px-3 py-2.5 rounded-lg text-xs text-slate-300 font-mono break-all border border-slate-700">
-                        {paymentLink.receive_address || "addr1q9..."}
-                      </code>
-                      <Button variant="outline" size="icon" onClick={copyAddress} className="border-slate-700 text-slate-400 hover:text-white flex-shrink-0">
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
+                      {/* QR placeholder */}
+                      <div className="bg-white rounded-xl p-6 flex items-center justify-center">
+                        <div className="w-40 h-40 bg-slate-100 rounded-lg flex items-center justify-center text-xs text-slate-400">
+                          QR Code
+                        </div>
+                      </div>
+
+                      {/* Address */}
+                      <div>
+                        <Label className="text-xs text-slate-500">Send ADA to:</Label>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <code className="flex-1 bg-slate-800 px-3 py-2.5 rounded-lg text-xs text-slate-300 font-mono break-all border border-slate-700">
+                            {sessionData?.receive_address || paymentLink.receive_address || "addr1q9..."}
+                          </code>
+                          <Button variant="outline" size="icon" onClick={copyAddress} className="border-slate-700 text-slate-400 hover:text-white flex-shrink-0">
+                            <Copy className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
 
                   <div className="text-center">
                     <Button variant="outline" className="border-slate-700 text-slate-400 hover:text-white gap-2">

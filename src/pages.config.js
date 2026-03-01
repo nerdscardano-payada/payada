@@ -47,60 +47,60 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import ApiKeys from './pages/ApiKeys';
-import Billing from './pages/Billing';
-import Checkout from './pages/Checkout';
-import Customers from './pages/Customers';
-import Dashboard from './pages/Dashboard';
-import MerchantSettings from './pages/MerchantSettings';
-import PaymentLinks from './pages/PaymentLinks';
-import Payments from './pages/Payments';
-import SubscriptionPlans from './pages/SubscriptionPlans';
-import Subscriptions from './pages/Subscriptions';
-import Webhooks from './pages/Webhooks';
-import SDKDocumentation from './pages/SDKDocumentation';
-import AdminDashboard from './pages/AdminDashboard';
-import Onboarding from './pages/Onboarding';
-import Home from './pages/Home';
-import Features from './pages/Features';
-import Pricing from './pages/Pricing';
-import Security from './pages/Security';
-import Documentation from './pages/Documentation';
 import APIReference from './pages/APIReference';
 import About from './pages/About';
+import AdminDashboard from './pages/AdminDashboard';
+import ApiKeys from './pages/ApiKeys';
+import Billing from './pages/Billing';
 import Blog from './pages/Blog';
+import Checkout from './pages/Checkout';
 import Contact from './pages/Contact';
+import Customers from './pages/Customers';
+import Dashboard from './pages/Dashboard';
+import Documentation from './pages/Documentation';
+import Features from './pages/Features';
+import Home from './pages/Home';
+import MerchantSettings from './pages/MerchantSettings';
+import Onboarding from './pages/Onboarding';
+import PaymentLinks from './pages/PaymentLinks';
+import Payments from './pages/Payments';
+import Pricing from './pages/Pricing';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import SDKDocumentation from './pages/SDKDocumentation';
+import Security from './pages/Security';
+import SubscriptionPlans from './pages/SubscriptionPlans';
+import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
+import Webhooks from './pages/Webhooks';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "ApiKeys": ApiKeys,
-    "Billing": Billing,
-    "Checkout": Checkout,
-    "Customers": Customers,
-    "Dashboard": Dashboard,
-    "MerchantSettings": MerchantSettings,
-    "PaymentLinks": PaymentLinks,
-    "Payments": Payments,
-    "SubscriptionPlans": SubscriptionPlans,
-    "Subscriptions": Subscriptions,
-    "Webhooks": Webhooks,
-    "SDKDocumentation": SDKDocumentation,
-    "AdminDashboard": AdminDashboard,
-    "Onboarding": Onboarding,
-    "Home": Home,
-    "Features": Features,
-    "Pricing": Pricing,
-    "Security": Security,
-    "Documentation": Documentation,
     "APIReference": APIReference,
     "About": About,
+    "AdminDashboard": AdminDashboard,
+    "ApiKeys": ApiKeys,
+    "Billing": Billing,
     "Blog": Blog,
+    "Checkout": Checkout,
     "Contact": Contact,
+    "Customers": Customers,
+    "Dashboard": Dashboard,
+    "Documentation": Documentation,
+    "Features": Features,
+    "Home": Home,
+    "MerchantSettings": MerchantSettings,
+    "Onboarding": Onboarding,
+    "PaymentLinks": PaymentLinks,
+    "Payments": Payments,
+    "Pricing": Pricing,
     "PrivacyPolicy": PrivacyPolicy,
+    "SDKDocumentation": SDKDocumentation,
+    "Security": Security,
+    "SubscriptionPlans": SubscriptionPlans,
+    "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
+    "Webhooks": Webhooks,
 }
 
 export const pagesConfig = {
