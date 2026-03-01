@@ -146,16 +146,26 @@ Deno.serve(async (req) => {
     });
 
     if (isValid) {
+      const totalAda = (merchantOutputAmount + feeOutputAmount) / 1000000;
+      const merchantAda = merchantOutputAmount / 1000000;
+      const feeAda = feeOutputAmount / 1000000;
+      
       await base44.functions.invoke('sendMerchantNotification', {
         merchantId: payment.merchant_id,
         notificationType: 'payment_detected',
         title: '💰 Payment Detected',
-        message: `Payment of ${((merchantOutputAmount + feeOutputAmount) / 1000000).toFixed(2)} ADA detected (${feePercent * 100}% fee).`,
+        message: `Payment of ₳ ${totalAda.toFixed(3)} detected and confirmed.`,
         resourceType: 'payment',
         resourceId: payment.id,
         actionUrl: `/payments/${payment.id}`,
         severity: 'info',
-        metadata: { amount_ada: (merchantOutputAmount + feeOutputAmount) / 1000000, tx_hash: txHash }
+        feeBreakdown: {
+          totalAda: totalAda,
+          feeAda: feeAda,
+          feePercent: feePercent * 100,
+          merchantAda: merchantAda
+        },
+        metadata: { amount_ada: totalAda, tx_hash: txHash }
       });
     } else {
       await base44.functions.invoke('sendMerchantNotification', {
