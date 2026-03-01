@@ -19,7 +19,8 @@ Deno.serve(async (req) => {
       actionUrl,
       severity = 'info',
       metadata,
-      sendEmail = true
+      sendEmail = true,
+      feeBreakdown // For payment notifications: { totalAda, feeAda, feePercent, merchantAda }
     } = await req.json();
 
     if (!merchantId || !notificationType || !title || !message) {
@@ -58,10 +59,19 @@ Deno.serve(async (req) => {
         const email = merchantUser[0].email;
 
         try {
+          // Build email body with optional fee breakdown
+          let emailBody = message;
+          if (feeBreakdown) {
+            emailBody += `\n\n--- Fee Breakdown ---\nTotal: ₳ ${feeBreakdown.totalAda.toFixed(3)}\nPlatform Fee (${feeBreakdown.feePercent}%): ₳ ${feeBreakdown.feeAda.toFixed(3)}\nYou Receive: ₳ ${feeBreakdown.merchantAda.toFixed(3)}`;
+          }
+          if (actionUrl) {
+            emailBody += `\n\nView details: ${actionUrl}`;
+          }
+
           await base44.integrations.Core.SendEmail({
             to: email,
             subject: title,
-            body: `${message}\n\n${actionUrl ? `View details: ${actionUrl}` : ''}`
+            body: emailBody
           });
 
           // Mark email as sent
