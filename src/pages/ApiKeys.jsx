@@ -161,13 +161,14 @@ export default function ApiKeys() {
             {keys.map((k) => (
               <div key={k.id} className="flex items-center justify-between px-5 py-4 hover:bg-slate-50/50 transition-colors">
                 <div>
-                  <p className="text-sm font-medium text-slate-900">{k.name}</p>
-                  <p className="text-xs text-slate-400 font-mono mt-0.5">{k.key_prefix}•••••••••</p>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Created {format(new Date(k.created_date), "MMM d, yyyy")}
-                    {k.last_used_at && ` · Last used ${format(new Date(k.last_used_at), "MMM d")}`}
-                  </p>
-                </div>
+                    <p className="text-sm font-medium text-slate-900">{k.name}</p>
+                    <p className="text-xs text-slate-400 font-mono mt-0.5">{k.key_prefix}•••••••••</p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      {k.merchant_id && <span>Account: {k.merchant_id.split('@')[0]}@... · </span>}
+                      Created {format(new Date(k.created_date), "MMM d, yyyy")}
+                      {k.last_used_at && ` · Last used ${format(new Date(k.last_used_at), "MMM d")}`}
+                    </p>
+                  </div>
                 <Button
                   variant="ghost"
                   size="icon"
