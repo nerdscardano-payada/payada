@@ -35,20 +35,6 @@ const steps = [
 ];
 
 export default function HomePage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    base44.auth.isAuthenticated().then(auth => {
-      setIsAuthenticated(auth);
-      setIsLoading(false);
-    });
-  }, []);
-
-  if (isLoading) {
-    return <div className="min-h-screen bg-white flex items-center justify-center">Loading...</div>;
-  }
-
   const handleSignUp = () => {
     base44.auth.redirectToLogin();
   };
