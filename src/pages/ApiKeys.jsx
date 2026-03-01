@@ -72,17 +72,60 @@ export default function ApiKeys() {
         actionIcon={Plus}
       />
 
-      <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
-        <h3 className="text-sm font-semibold text-blue-900 mb-2">API Keys gebruiken</h3>
-        <p className="text-sm text-blue-800 mb-3">
-          API keys bieden veilige toegang tot de PayADA API. Je kunt meerdere keys aanmaken voor verschillende applicaties of omgevingen.
-        </p>
-        <ul className="text-sm text-blue-800 space-y-1.5 ml-4">
-          <li className="list-disc"><strong>Aanmaken:</strong> Klik op "Create Key" en geef de key een duidelijke naam (bijv. "Production API")</li>
-          <li className="list-disc"><strong>Kopiëren:</strong> Na aanmaak zie je de volledige key. Kopieer deze direct, want je kunt hem later niet meer zien</li>
-          <li className="list-disc"><strong>Gebruiken:</strong> Voeg de key toe aan de Authorization header van je API requests</li>
-          <li className="list-disc"><strong>Verwijderen:</strong> Verwijder keys die je niet meer nodig hebt via de prullenbak knop</li>
-        </ul>
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+        <h3 className="text-base font-bold text-blue-900 mb-4">API Keys - Volledige Gids</h3>
+        
+        <div className="space-y-5">
+          <div>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">📌 Wat zijn API Keys?</h4>
+            <p className="text-sm text-blue-800">
+              API Keys zijn veilige authenticatietokens waarmee je externe applicaties verbinding kunt laten maken met PayADA. Met je API Key kun je betalingen verwerken, abonnementen beheren en webhooks activeren - allemaal via code.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">🎯 Wat kun je ermee doen?</h4>
+            <ul className="text-sm text-blue-800 space-y-2 ml-4">
+              <li className="list-disc"><strong>Betalingen accepteren:</strong> Maak betaalsessies aan en verwerk Cardano-betalingen programmatisch</li>
+              <li className="list-disc"><strong>Betalingen opvragen:</strong> Check de status van betalingen en ontvang real-time updates</li>
+              <li className="list-disc"><strong>Abonnementen beheren:</strong> Maak abonnementsplannen aan en beheer klanten automatisch</li>
+              <li className="list-disc"><strong>Webhooks configureren:</strong> Ontvang real-time notificaties wanneer betalingen binnenkomen</li>
+              <li className="list-disc"><strong>Rapportages opvragen:</strong> Haal gedetailleerde transactie- en klantgegevens op voor je administratie</li>
+              <li className="list-disc"><strong>Integreren:</strong> Verbind PayADA met je website, mobiele app, of besturingssysteem</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">⚡ Hoe werkt het?</h4>
+            <p className="text-sm text-blue-800 mb-2">
+              Je API Key voeg je toe aan de Authorization header van je API requests:
+            </p>
+            <code className="bg-blue-100 border border-blue-300 rounded px-3 py-2 text-xs text-blue-900 font-mono block overflow-auto">
+              Authorization: Bearer pk_live_xxxxxxxxxxxxx
+            </code>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">🔒 Best Practices</h4>
+            <ul className="text-sm text-blue-800 space-y-1.5 ml-4">
+              <li className="list-disc">Maak aparte keys voor elk project (test, staging, production)</li>
+              <li className="list-disc">Zet je API Key NOOIT in publieke code repositories of client-side code</li>
+              <li className="list-disc">Verwijder ongebruikte keys om veiligheid te maximaliseren</li>
+              <li className="list-disc">Monitor "Last Used" data om ongebruikte keys op te sporen</li>
+              <li className="list-disc">Gebruik environment variables om je keys veilig op te slaan</li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-blue-900 mb-2">📚 Volgende stappen</h4>
+            <ul className="text-sm text-blue-800 space-y-1.5 ml-4">
+              <li className="list-disc">Klik "Create Key" om je eerste API Key aan te maken</li>
+              <li className="list-disc">Kopieer de key direct - je ziet hem daarna niet meer</li>
+              <li className="list-disc">Bezoek onze <a href="#" className="text-blue-700 font-semibold hover:underline">API Documentation</a> voor codevoorbeelden</li>
+              <li className="list-disc">Test je integratie in een test-omgeving voordat je live gaat</li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
