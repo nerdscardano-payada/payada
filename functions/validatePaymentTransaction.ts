@@ -171,6 +171,34 @@ Deno.serve(async (req) => {
       }
     });
 
+    // Send notification
+    if (isValid) {
+      await base44.functions.invoke('sendMerchantNotification', {
+        merchantId: payment.merchant_id,
+        notificationType: 'payment_detected',
+        title: '💰 Payment Detected',
+        message: `Payment of ${((merchantOutputAmount + feeOutputAmount) / 1000000).toFixed(2)} ADA detected. Awaiting confirmation.`,
+        resourceType: 'payment',
+        resourceId: payment.id,
+        actionUrl: `/payments/${payment.id}`,
+        severity: 'info',
+        metadata: {
+          amount_ada: (merchantOutputAmount + feeOutputAmount) / 1000000,
+          tx_hash: txHash
+        }
+      });
+    } else {
+      await base44.functions.invoke('sendMerchantNotification', {
+        merchantId: payment.merchant_id,
+        notificationType: 'payment_failed',
+        title: '❌ Payment Validation Failed',
+        message: updateData.validation_error || 'Payment failed validation checks.',
+        resourceType: 'payment',
+        resourceId: payment.id,
+        severity: 'warning'
+      });
+    }
+
     return Response.json({
       success: true,
       paymentId: payment.id,
