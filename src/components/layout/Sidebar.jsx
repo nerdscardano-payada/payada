@@ -68,7 +68,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
           >
             <X className="w-4 h-4" />
           </button>
-        </div>
+        </Link>
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
