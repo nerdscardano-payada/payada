@@ -71,6 +71,7 @@ import SubscriptionPlans from './pages/SubscriptionPlans';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
+import MerchantProfile from './pages/MerchantProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -99,6 +100,7 @@ export const PAGES = {
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
+    "MerchantProfile": MerchantProfile,
 }
 
 export const pagesConfig = {
