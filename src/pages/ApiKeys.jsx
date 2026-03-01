@@ -48,14 +48,15 @@ export default function ApiKeys() {
     },
   });
 
-  const generateKey = () => {
+  const generateKey = async () => {
     const key = "pk_live_" + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
     const prefix = key.slice(0, 12);
-    createMutation.mutate({ name: keyName, key_prefix: prefix, key_value_hashed: key }, {
-      onSuccess: (data) => {
-        setNewKey({ ...data, key_value: key });
-      }
-    });
+    try {
+      await createMutation.mutateAsync({ name: keyName, key_prefix: prefix, key_value_hashed: key });
+      setNewKey({ key_value: key, key_prefix: prefix, name: keyName });
+    } catch (err) {
+      console.error("Error creating API key:", err);
+    }
   };
 
   const copyKey = (key) => {
