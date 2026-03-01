@@ -47,32 +47,34 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
+import ApiKeys from './pages/ApiKeys';
+import Billing from './pages/Billing';
+import Checkout from './pages/Checkout';
+import Customers from './pages/Customers';
 import Dashboard from './pages/Dashboard';
+import MerchantSettings from './pages/MerchantSettings';
 import PaymentLinks from './pages/PaymentLinks';
 import Payments from './pages/Payments';
 import SubscriptionPlans from './pages/SubscriptionPlans';
 import Subscriptions from './pages/Subscriptions';
-import Customers from './pages/Customers';
 import Webhooks from './pages/Webhooks';
-import ApiKeys from './pages/ApiKeys';
-import MerchantSettings from './pages/MerchantSettings';
-import Billing from './pages/Billing';
-import Checkout from './pages/Checkout';
+import SDKDocumentation from './pages/SDKDocumentation';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "ApiKeys": ApiKeys,
+    "Billing": Billing,
+    "Checkout": Checkout,
+    "Customers": Customers,
     "Dashboard": Dashboard,
+    "MerchantSettings": MerchantSettings,
     "PaymentLinks": PaymentLinks,
     "Payments": Payments,
     "SubscriptionPlans": SubscriptionPlans,
     "Subscriptions": Subscriptions,
-    "Customers": Customers,
     "Webhooks": Webhooks,
-    "ApiKeys": ApiKeys,
-    "MerchantSettings": MerchantSettings,
-    "Billing": Billing,
-    "Checkout": Checkout,
+    "SDKDocumentation": SDKDocumentation,
 }
 
 export const pagesConfig = {
