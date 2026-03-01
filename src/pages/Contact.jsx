@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Mail, Phone, MapPin, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function ContactPage() {
@@ -41,40 +41,10 @@ export default function ContactPage() {
           <p className="text-xl text-slate-600">We're here to help. Reach out with any questions or feedback.</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {/* Email */}
-          <div className="border border-slate-200 rounded-lg p-8 text-center">
-            <Mail className="w-12 h-12 text-indigo-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Email</h3>
-            <p className="text-slate-600 mb-4">We typically respond within 24 hours</p>
-            <a href="mailto:support@payada.io" className="text-indigo-600 font-semibold hover:text-indigo-700">
-              support@payada.io
-            </a>
-          </div>
 
-          {/* Phone */}
-          <div className="border border-slate-200 rounded-lg p-8 text-center">
-            <Phone className="w-12 h-12 text-indigo-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Phone</h3>
-            <p className="text-slate-600 mb-4">Monday-Friday, 9am-6pm CET</p>
-            <a href="tel:+4930123456789" className="text-indigo-600 font-semibold hover:text-indigo-700">
-              +49 30 123 456 789
-            </a>
-          </div>
-
-          {/* Address */}
-          <div className="border border-slate-200 rounded-lg p-8 text-center">
-            <MapPin className="w-12 h-12 text-indigo-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Office</h3>
-            <p className="text-slate-600">
-              PayADA GmbH<br/>
-              Berlin, Germany
-            </p>
-          </div>
-        </div>
 
         {/* Contact Form */}
-        <div className="max-w-2xl mx-auto mb-20">
+         <div className="max-w-2xl mx-auto">
           <div className="border border-slate-200 rounded-lg p-8">
             <h2 className="text-2xl font-bold text-slate-900 mb-6">Send us a Message</h2>
             
