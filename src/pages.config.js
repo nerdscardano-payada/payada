@@ -59,7 +59,6 @@ import Dashboard from './pages/Dashboard';
 import Documentation from './pages/Documentation';
 import Features from './pages/Features';
 import Home from './pages/Home';
-import MerchantSettings from './pages/MerchantSettings';
 import Onboarding from './pages/Onboarding';
 import PaymentLinks from './pages/PaymentLinks';
 import Payments from './pages/Payments';
@@ -88,7 +87,6 @@ export const PAGES = {
     "Documentation": Documentation,
     "Features": Features,
     "Home": Home,
-    "MerchantSettings": MerchantSettings,
     "Onboarding": Onboarding,
     "PaymentLinks": PaymentLinks,
     "Payments": Payments,
