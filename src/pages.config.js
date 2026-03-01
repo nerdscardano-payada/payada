@@ -71,6 +71,7 @@ import About from './pages/About';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import __Layout from './Layout.jsx';
 
 
@@ -99,6 +100,7 @@ export const PAGES = {
     "Blog": Blog,
     "Contact": Contact,
     "PrivacyPolicy": PrivacyPolicy,
+    "TermsOfService": TermsOfService,
 }
 
 export const pagesConfig = {
