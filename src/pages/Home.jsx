@@ -231,9 +231,9 @@ export default function HomePage() {
             <div>
               <h4 className="text-white font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">Features</a></li>
-                <li><a href="#" className="hover:text-white transition">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition">Security</a></li>
+                <li><Link to={createPageUrl("Features")} className="hover:text-white transition">Features</Link></li>
+                  <li><Link to={createPageUrl("Pricing")} className="hover:text-white transition">Pricing</Link></li>
+                  <li><Link to={createPageUrl("Security")} className="hover:text-white transition">Security</Link></li>
               </ul>
             </div>
             <div>
