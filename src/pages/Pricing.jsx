@@ -6,53 +6,21 @@ import { Button } from "@/components/ui/button";
 
 const plans = [
   {
-    name: "Starter",
-    price: "Free",
-    description: "Perfect for getting started",
-    features: [
-      "Up to 10 payment links",
-      "1 API key",
-      "Basic webhooks",
-      "Email support",
-      "1.5% platform fee",
-      "Up to €5,000/month volume"
-    ],
-    cta: "Get Started"
-  },
-  {
-    name: "Professional",
-    price: "€29",
-    period: "/month",
-    description: "For growing businesses",
+    name: "PayADA",
+    price: "1.75%",
+    description: "One simple fee for everyone",
     features: [
       "Unlimited payment links",
-      "5 API keys",
-      "Advanced webhooks",
-      "Priority email support",
-      "1.0% platform fee",
-      "Up to €50,000/month volume",
-      "Subscription management",
-      "Advanced analytics"
-    ],
-    cta: "Start Free Trial",
-    popular: true
-  },
-  {
-    name: "Business",
-    price: "€99",
-    period: "/month",
-    description: "For established businesses",
-    features: [
-      "Everything in Professional",
       "Unlimited API keys",
-      "Custom webhooks",
-      "24/7 phone support",
-      "0.5% platform fee",
-      "Unlimited volume",
-      "Custom branding",
-      "Dedicated account manager"
+      "Webhooks & integrations",
+      "Email support",
+      "Subscription management",
+      "Advanced analytics",
+      "No setup fees",
+      "No monthly minimums"
     ],
-    cta: "Contact Sales"
+    cta: "Get Started",
+    popular: true
   }
 ];
 
@@ -95,21 +63,21 @@ export default function PricingPage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-slate-900 mb-4">Simple, Transparent Pricing</h1>
-          <p className="text-xl text-slate-600">Only pay for what you use. No hidden fees.</p>
+          <p className="text-xl text-slate-600">One flat 1.75% fee per transaction. No hidden fees, no plans, no minimums.</p>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mb-20">
+        <div className="grid md:grid-cols-1 gap-8 mb-20 max-w-2xl mx-auto">
           {plans.map((plan, idx) => (
-            <div key={idx} className={`border rounded-lg p-8 ${plan.popular ? 'border-indigo-300 shadow-lg ring-2 ring-indigo-100' : 'border-slate-200'}`}>
-              {plan.popular && <div className="bg-indigo-600 text-white text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">Most Popular</div>}
+            <div key={idx} className="border border-indigo-300 shadow-lg ring-2 ring-indigo-100 rounded-lg p-8">
+              <div className="bg-indigo-600 text-white text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">Flat Rate</div>
               <h3 className="text-2xl font-bold text-slate-900 mb-2">{plan.name}</h3>
               <p className="text-slate-600 mb-6">{plan.description}</p>
               <div className="mb-6">
                 <span className="text-4xl font-bold text-slate-900">{plan.price}</span>
                 {plan.period && <span className="text-slate-600">{plan.period}</span>}
               </div>
-              <Button className={`w-full mb-8 ${plan.popular ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-slate-900 hover:bg-slate-800'}`}>
+              <Button className="w-full mb-8 bg-indigo-600 hover:bg-indigo-700">
                 {plan.cta}
               </Button>
               <div className="space-y-4">
