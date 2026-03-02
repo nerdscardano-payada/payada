@@ -14,11 +14,17 @@ import TerminalForm from "@/components/terminals/TerminalForm";
 export default function PayTerminals() {
   const [showForm, setShowForm] = useState(false);
   const [editingTerminal, setEditingTerminal] = useState(null);
+  const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
 
+  React.useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
+
   const { data: terminals = [], isLoading } = useQuery({
-    queryKey: ["pay-terminals"],
-    queryFn: () => base44.entities.PayTerminal.list("-created_date", 100),
+    queryKey: ["pay-terminals", user?.email],
+    queryFn: () => base44.entities.PayTerminal.filter({ merchant_id: user.email }, "-created_date", 100),
+    enabled: !!user,
   });
 
   const deleteMutation = useMutation({
