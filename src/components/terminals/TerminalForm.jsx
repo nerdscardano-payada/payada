@@ -50,7 +50,7 @@ export default function TerminalForm({ terminal, onBack }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pay-terminals"] });
-      toast.success(isEditing ? "Terminal bijgewerkt" : "Terminal aangemaakt");
+      toast.success(isEditing ? "Terminal updated" : "Terminal created");
       onBack();
     },
   });

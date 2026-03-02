@@ -31,7 +31,7 @@ export default function PayTerminals() {
     mutationFn: (id) => base44.entities.PayTerminal.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pay-terminals"] });
-      toast.success("Terminal verwijderd");
+      toast.success("Terminal deleted");
     },
   });
 
