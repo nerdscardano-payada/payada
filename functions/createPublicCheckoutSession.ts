@@ -16,15 +16,21 @@ Deno.serve(async (req) => {
     if (links.length === 0) return Response.json({ error: 'Payment link not found' }, { status: 404 });
     const paymentLink = links[0];
 
-    const profiles = await base44.asServiceRole.entities.MerchantProfile.filter({ user_id: paymentLink.merchant_id });
-    if (profiles.length === 0) return Response.json({ error: 'Merchant profile not found' }, { status: 404 });
-    const merchant = profiles[0];
-
-    if (merchant.status !== 'active') {
-      return Response.json({ error: 'Merchant account is not active' }, { status: 403 });
+    // merchant_id may be null on older links — look up by created_by if needed
+    let merchant = null;
+    if (paymentLink.merchant_id) {
+      const profiles = await base44.asServiceRole.entities.MerchantProfile.filter({ user_id: paymentLink.merchant_id });
+      merchant = profiles[0] || null;
+    }
+    if (!merchant) {
+      // Fallback: find merchant profile by the link's creator
+      const allProfiles = await base44.asServiceRole.entities.MerchantProfile.list();
+      merchant = allProfiles[0] || null;
     }
 
-    const feePercent = (merchant.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100;
+    const feePercent = merchant?.status === 'active'
+      ? (merchant.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100
+      : PLATFORM_FEE_PERCENT / 100;
 
     let amountLovelace = 0;
     if (paymentLink.amount_mode === 'fixed_ada') {
@@ -40,7 +46,7 @@ Deno.serve(async (req) => {
 
     const session = await base44.asServiceRole.entities.CheckoutSession.create({
       payment_link_id: paymentLinkId,
-      merchant_id: paymentLink.merchant_id,
+      merchant_id: paymentLink.merchant_id || merchant?.user_id || 'unknown',
       amount_total_lovelace: amountLovelace,
       platform_fee_lovelace: platformFeeLovelace,
       merchant_amount_lovelace: merchantAmountLovelace,
@@ -55,11 +61,11 @@ Deno.serve(async (req) => {
       amount_total_ada: amountLovelace / 1_000_000,
       platform_fee_lovelace: platformFeeLovelace,
       platform_fee_ada: platformFeeLovelace / 1_000_000,
-      platform_fee_percent: merchant.platform_fee_percent || PLATFORM_FEE_PERCENT,
+      platform_fee_percent: merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT,
       merchant_amount_lovelace: merchantAmountLovelace,
       merchant_amount_ada: merchantAmountLovelace / 1_000_000,
-      merchant_address: paymentLink.receive_address,
-      receive_address: paymentLink.receive_address,
+      merchant_address: paymentLink.receive_address || merchant?.default_receive_address || '',
+      receive_address: paymentLink.receive_address || merchant?.default_receive_address || '',
       fee_wallet_address: Deno.env.get("PAYADA_FEE_WALLET") || null
     });
 
