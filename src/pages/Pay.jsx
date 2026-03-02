@@ -46,7 +46,7 @@ export default function Pay() {
 
   const handleStartCheckout = async () => {
     try {
-      const response = await base44.functions.invoke('createCheckoutSession', {
+      const response = await base44.functions.invoke('createPublicCheckoutSession', {
         paymentLinkId: paymentLink.id
       });
       setSessionData(response.data);
