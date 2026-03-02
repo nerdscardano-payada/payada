@@ -74,7 +74,8 @@ Deno.serve(async (req) => {
       merchant_amount_lovelace: merchantAmountLovelace,
       merchant_amount_ada: merchantAmountLovelace / 1000000,
       merchant_address: paymentLink.receive_address,
-      receive_address: paymentLink.receive_address
+      receive_address: paymentLink.receive_address,
+      fee_wallet_address: Deno.env.get("PAYADA_FEE_WALLET") || null
     });
 
   } catch (error) {
