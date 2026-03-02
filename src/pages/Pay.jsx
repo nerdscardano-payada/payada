@@ -194,13 +194,6 @@ export default function Pay() {
                     </div>
                   )}
 
-                  {/* QR placeholder */}
-                  <div className="bg-white rounded-xl p-6 flex items-center justify-center">
-                    <div className="w-40 h-40 bg-slate-100 rounded-lg flex items-center justify-center text-xs text-slate-400">
-                      QR Code
-                    </div>
-                  </div>
-
                   {/* Address */}
                   <div>
                     <Label className="text-xs text-slate-500">Send ADA to:</Label>
