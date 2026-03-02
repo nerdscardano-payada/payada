@@ -1,17 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { base44 } from "@/api/base44Client";
 
 const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal"];
 
 export default function Layout({ children, currentPageName }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    if (publicPages.includes(currentPageName)) {
+      setAuthChecked(true);
+      return;
+    }
+    base44.auth.isAuthenticated().then((loggedIn) => {
+      if (!loggedIn) {
+        base44.auth.redirectToLogin(window.location.href);
+      } else {
+        setAuthChecked(true);
+      }
+    });
+  }, [currentPageName]);
 
   if (publicPages.includes(currentPageName)) {
     return <>{children}</>;
   }
+
+  if (!authChecked) return null;
 
   return (
     <div className="min-h-screen bg-slate-50">
