@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-// Build a Cardano transaction CBOR using Blockfrost for UTxO fetching
-// and a lightweight tx builder — returns unsigned CBOR for wallet signing
+// Build a real unsigned Cardano transaction CBOR using @emurgo/cardano-serialization-lib-nodejs
+// Returns txCbor ready for wallet signing via CIP-30
 
 const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
@@ -23,82 +23,115 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Fetch UTxOs for the wallet address from Blockfrost
+    // Import CSL (Cardano Serialization Library) for Deno
+    const CSL = await import("npm:@emurgo/cardano-serialization-lib-nodejs@14.1.0");
+
+    // Fetch UTxOs for the wallet
     const utxos = await blockfrost(`/addresses/${walletAddress}/utxos`);
     if (!utxos || utxos.length === 0) {
-      return Response.json({ error: 'No UTxOs found for wallet address. Please fund your wallet.' }, { status: 400 });
+      return Response.json({ error: 'No UTxOs found for wallet address.' }, { status: 400 });
     }
 
-    // Get protocol params for fee calculation
-    const latestEpoch = await blockfrost('/epochs/latest');
+    // Get protocol params and latest block
+    const [latestEpoch, latestBlock] = await Promise.all([
+      blockfrost('/epochs/latest'),
+      blockfrost('/blocks/latest'),
+    ]);
     const protocolParams = await blockfrost(`/epochs/${latestEpoch.epoch}/parameters`);
-
-    // Get latest block for TTL
-    const latestBlock = await blockfrost('/blocks/latest');
-    const ttl = latestBlock.slot + 7200; // ~2 hours
+    const ttl = latestBlock.slot + 7200;
 
     // Build outputs
-    const outputs = [
-      { address: merchantAddress, lovelace: BigInt(merchantLovelace) }
-    ];
-    if (PAYADA_FEE_WALLET && platformFeeLovelace && BigInt(platformFeeLovelace) > 0n) {
-      outputs.push({ address: PAYADA_FEE_WALLET, lovelace: BigInt(platformFeeLovelace) });
-    }
+    const merchantLov = BigInt(merchantLovelace);
+    const feeLov = platformFeeLovelace && PAYADA_FEE_WALLET ? BigInt(platformFeeLovelace) : 0n;
+    const totalOutput = merchantLov + feeLov;
 
-    const totalOutputLovelace = outputs.reduce((sum, o) => sum + o.lovelace, 0n);
-
-    // Simple coin selection: pick UTxOs until we have enough
-    const minFeeEstimate = 200000n; // 0.2 ADA generous estimate
-    const needed = totalOutputLovelace + minFeeEstimate;
-
+    // Coin selection
+    const minFee = 200000n;
     let selectedUtxos = [];
     let selectedTotal = 0n;
+
     for (const utxo of utxos) {
       const adaAmount = utxo.amount.find(a => a.unit === 'lovelace');
       if (!adaAmount) continue;
-      // Only select pure ADA UTxOs to keep it simple
-      if (utxo.amount.length > 1) continue;
       selectedUtxos.push(utxo);
       selectedTotal += BigInt(adaAmount.quantity);
-      if (selectedTotal >= needed) break;
+      if (selectedTotal >= totalOutput + minFee) break;
     }
 
-    if (selectedTotal < needed) {
-      // Try including multi-asset UTxOs as well
-      selectedUtxos = [];
-      selectedTotal = 0n;
-      for (const utxo of utxos) {
-        const adaAmount = utxo.amount.find(a => a.unit === 'lovelace');
-        if (!adaAmount) continue;
-        selectedUtxos.push(utxo);
-        selectedTotal += BigInt(adaAmount.quantity);
-        if (selectedTotal >= needed) break;
-      }
-    }
-
-    if (selectedTotal < needed) {
-      return Response.json({ 
-        error: `Insufficient balance. Need ₳ ${Number(needed) / 1_000_000}, have ₳ ${Number(selectedTotal) / 1_000_000}` 
+    if (selectedTotal < totalOutput + minFee) {
+      return Response.json({
+        error: `Insufficient balance. Need ₳ ${Number(totalOutput + minFee) / 1_000_000}, have ₳ ${Number(selectedTotal) / 1_000_000}`
       }, { status: 400 });
     }
 
-    // Return the data needed for the wallet to build the tx
-    // We return structured data; the wallet will use its own builder
-    const changeLovelace = selectedTotal - totalOutputLovelace - minFeeEstimate;
+    const changeLovelace = selectedTotal - totalOutput - minFee;
 
-    return Response.json({
-      success: true,
-      inputs: selectedUtxos.map(u => ({ txHash: u.tx_hash, index: u.tx_index })),
-      outputs: outputs.map(o => ({ address: o.address, lovelace: String(o.lovelace) })),
-      changeAddress: walletAddress,
-      changeLovelace: String(changeLovelace > 0n ? changeLovelace : 0n),
-      ttl,
-      feeWallet: PAYADA_FEE_WALLET,
-      protocolParams: {
-        minFeeA: protocolParams.min_fee_a,
-        minFeeB: protocolParams.min_fee_b,
-      }
-    });
+    // Build transaction with CSL
+    const txBuilder = CSL.TransactionBuilder.new(
+      CSL.TransactionBuilderConfigBuilder.new()
+        .fee_algo(CSL.LinearFee.new(
+          CSL.BigNum.from_str(String(protocolParams.min_fee_a)),
+          CSL.BigNum.from_str(String(protocolParams.min_fee_b))
+        ))
+        .pool_deposit(CSL.BigNum.from_str(String(protocolParams.pool_deposit)))
+        .key_deposit(CSL.BigNum.from_str(String(protocolParams.key_deposit)))
+        .max_value_size(protocolParams.max_val_size || 5000)
+        .max_tx_size(protocolParams.max_tx_size || 16384)
+        .coins_per_utxo_byte(CSL.BigNum.from_str(String(protocolParams.coins_per_utxo_size || protocolParams.coins_per_utxo_word || 4310)))
+        .build()
+    );
+
+    // Add inputs
+    for (const utxo of selectedUtxos) {
+      const txInput = CSL.TransactionInput.new(
+        CSL.TransactionHash.from_bytes(Buffer.from(utxo.tx_hash, 'hex')),
+        utxo.tx_index
+      );
+      const adaAmt = utxo.amount.find(a => a.unit === 'lovelace');
+      const value = CSL.Value.new(CSL.BigNum.from_str(adaAmt.quantity));
+      txBuilder.add_input(
+        CSL.Address.from_bech32(walletAddress),
+        txInput,
+        value
+      );
+    }
+
+    // Add merchant output
+    txBuilder.add_output(
+      CSL.TransactionOutput.new(
+        CSL.Address.from_bech32(merchantAddress),
+        CSL.Value.new(CSL.BigNum.from_str(String(merchantLov)))
+      )
+    );
+
+    // Add fee output
+    if (feeLov > 0n && PAYADA_FEE_WALLET) {
+      txBuilder.add_output(
+        CSL.TransactionOutput.new(
+          CSL.Address.from_bech32(PAYADA_FEE_WALLET),
+          CSL.Value.new(CSL.BigNum.from_str(String(feeLov)))
+        )
+      );
+    }
+
+    // Add change output
+    if (changeLovelace > 0n) {
+      txBuilder.add_output(
+        CSL.TransactionOutput.new(
+          CSL.Address.from_bech32(walletAddress),
+          CSL.Value.new(CSL.BigNum.from_str(String(changeLovelace)))
+        )
+      );
+    }
+
+    txBuilder.set_ttl_bignum(CSL.BigNum.from_str(String(ttl)));
+
+    const txBody = txBuilder.build();
+    const witnessSet = CSL.TransactionWitnessSet.new();
+    const tx = CSL.Transaction.new(txBody, witnessSet);
+    const txCbor = Buffer.from(tx.to_bytes()).toString('hex');
+
+    return Response.json({ success: true, txCbor });
 
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
