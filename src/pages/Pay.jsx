@@ -172,105 +172,150 @@ export default function Pay() {
               {paymentLink.collect_email && (
                 <div className="space-y-2">
                   <Label className="text-slate-300 text-xs">Email</Label>
-                  <Input
-                    value={payerEmail}
-                    onChange={(e) => setPayerEmail(e.target.value)}
+                  <Input value={payerEmail} onChange={(e) => setPayerEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
-                  />
+                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                 </div>
               )}
               {paymentLink.collect_name && (
                 <div className="space-y-2">
                   <Label className="text-slate-300 text-xs">Name</Label>
-                  <Input
-                    value={payerName}
-                    onChange={(e) => setPayerName(e.target.value)}
+                  <Input value={payerName} onChange={(e) => setPayerName(e.target.value)}
                     placeholder="Your name"
-                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
-                  />
+                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                 </div>
               )}
-              <Button
-                onClick={handleStartCheckout}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 text-base font-semibold"
-              >
-                Pay ₳ {paymentLink.amount_ada?.toFixed(2)}
+              <Button onClick={handleStartCheckout}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 text-base font-semibold">
+                Continue to Payment
               </Button>
             </div>
+
+          ) : paymentStatus === "confirmed" ? (
+            <div className="p-6">
+              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6 text-center">
+                <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
+                <p className="text-base font-semibold text-white">Payment Complete</p>
+                <p className="text-sm text-slate-400 mt-1">Your transaction has been confirmed on the Cardano blockchain.</p>
+                {txHash && (
+                  <a href={`https://cardanoscan.io/transaction/${txHash}`} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-indigo-400 text-xs mt-3 hover:underline font-mono">
+                    {txHash.slice(0, 16)}…{txHash.slice(-8)} <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+                {paymentLink.success_redirect_url && (
+                  <div className="mt-4">
+                    <a href={paymentLink.success_redirect_url}
+                      className="inline-flex items-center gap-1 text-indigo-400 text-sm hover:underline">
+                      Continue <ArrowRight className="w-3 h-3" />
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+
           ) : (
             <div className="p-6 space-y-5">
-              {/* Status */}
-              <div className="flex items-center gap-3">
-                {paymentStatus === "pending" && <Clock className="w-5 h-5 text-amber-400" />}
-                {paymentStatus === "detected" && <Loader2 className="w-5 h-5 text-blue-400 animate-spin" />}
-                {paymentStatus === "confirmed" && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
+              {/* Status bar */}
+              <div className="flex items-center gap-3 p-3 bg-slate-800/60 rounded-lg">
+                {paymentStatus === "pending" && <Clock className="w-4 h-4 text-amber-400 flex-shrink-0" />}
+                {paymentStatus === "detected" && <Loader2 className="w-4 h-4 text-blue-400 animate-spin flex-shrink-0" />}
                 <div>
-                  <p className="text-sm font-medium text-white">
-                    {paymentStatus === "pending" && "Waiting for payment..."}
-                    {paymentStatus === "detected" && "Payment detected, confirming..."}
-                    {paymentStatus === "confirmed" && "Payment confirmed!"}
+                  <p className="text-xs font-semibold text-white">
+                    {paymentStatus === "pending" ? "Awaiting payment" : `Confirming on-chain…`}
                   </p>
-                  <p className="text-xs text-slate-500">
-                    {paymentStatus === "pending" && "Send ADA to the address below"}
-                    {paymentStatus === "detected" && "Waiting for block confirmations"}
-                    {paymentStatus === "confirmed" && "Thank you for your payment"}
+                  <p className="text-[11px] text-slate-500">
+                    {paymentStatus === "pending" ? "Choose how you'd like to pay below" : "Your transaction was submitted."}
                   </p>
                 </div>
               </div>
 
-              {paymentStatus !== "confirmed" && (
+              {paymentStatus === "pending" && (
                 <>
-                  {/* Fee Breakdown */}
+                  {/* Fee breakdown */}
                   {sessionData && (
-                    <div className="bg-slate-800/50 rounded-lg p-4 space-y-2 text-xs text-slate-300">
+                    <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
                       <div className="flex justify-between">
-                        <span>Total Amount:</span>
-                        <span className="text-white font-semibold">₳ {sessionData.amount_total_ada.toFixed(3)}</span>
+                        <span>Total</span>
+                        <span className="text-white font-semibold">₳ {sessionData.amount_total_ada?.toFixed(3)}</span>
                       </div>
                       <div className="flex justify-between text-slate-400">
-                        <span>Platform Fee ({sessionData.platform_fee_percent}%):</span>
-                        <span>₳ {sessionData.platform_fee_ada.toFixed(3)}</span>
+                        <span>Platform fee ({sessionData.platform_fee_percent}%)</span>
+                        <span>₳ {sessionData.platform_fee_ada?.toFixed(3)}</span>
                       </div>
-                      <div className="border-t border-slate-700 pt-2 flex justify-between">
-                        <span>Merchant Receives:</span>
-                        <span className="text-emerald-400 font-semibold">₳ {sessionData.merchant_amount_ada.toFixed(3)}</span>
+                      <div className="border-t border-slate-700 pt-1.5 flex justify-between">
+                        <span>Merchant receives</span>
+                        <span className="text-emerald-400 font-semibold">₳ {sessionData.merchant_amount_ada?.toFixed(3)}</span>
                       </div>
                     </div>
                   )}
 
-                  {/* Address */}
-                  <div>
-                    <Label className="text-xs text-slate-500">Send ADA to:</Label>
-                    <div className="flex items-center gap-2 mt-1.5">
-                      <code className="flex-1 bg-slate-800 px-3 py-2.5 rounded-lg text-xs text-slate-300 font-mono break-all border border-slate-700">
-                        {sessionData?.receive_address || paymentLink.receive_address || "addr1q9..."}
-                      </code>
-                      <Button variant="outline" size="icon" onClick={copyAddress} className="border-slate-700 text-slate-400 hover:text-white flex-shrink-0">
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
+                  {/* Payment method toggle */}
+                  <div className="flex rounded-lg overflow-hidden border border-slate-700">
+                    <button
+                      className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${paymentMethod === "wallet" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
+                      onClick={() => setPaymentMethod("wallet")}
+                    >
+                      <Wallet className="w-3.5 h-3.5" /> Wallet
+                    </button>
+                    <button
+                      className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${paymentMethod === "manual" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
+                      onClick={() => setPaymentMethod("manual")}
+                    >
+                      Manual Transfer
+                    </button>
                   </div>
 
-                  <div className="text-center">
-                    <Button variant="outline" className="border-slate-700 text-slate-400 hover:text-white gap-2">
-                      Connect Wallet
-                    </Button>
-                  </div>
+                  {/* Wallet flow */}
+                  {paymentMethod === "wallet" && (
+                    <div className="space-y-3">
+                      <WalletConnect
+                        onConnected={(w) => setConnectedWallet(w)}
+                        onDisconnected={() => setConnectedWallet(null)}
+                      />
+                      {connectedWallet && (
+                        <>
+                          <Button
+                            onClick={handleWalletPay}
+                            disabled={txLoading}
+                            className="w-full bg-indigo-600 hover:bg-indigo-700 h-12 text-base font-semibold gap-2"
+                          >
+                            {txLoading ? (
+                              <><Loader2 className="w-4 h-4 animate-spin" /> Building transaction…</>
+                            ) : (
+                              <>Pay ₳ {sessionData?.amount_total_ada?.toFixed(2)} with Wallet</>
+                            )}
+                          </Button>
+                          <p className="text-[11px] text-slate-500 text-center">
+                            Your wallet will ask you to confirm and enter your password.
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Manual flow */}
+                  {paymentMethod === "manual" && (
+                    <div className="space-y-3">
+                      <div>
+                        <Label className="text-xs text-slate-500">Send exactly ₳ {sessionData?.amount_total_ada?.toFixed(3)} to:</Label>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <code className="flex-1 bg-slate-800 px-3 py-2.5 rounded-lg text-xs text-slate-300 font-mono break-all border border-slate-700">
+                            {sessionData?.receive_address || paymentLink.receive_address}
+                          </code>
+                          <Button variant="outline" size="icon"
+                            onClick={() => copyAddress(sessionData?.receive_address || paymentLink.receive_address)}
+                            className="border-slate-700 text-slate-400 hover:text-white flex-shrink-0">
+                            <Copy className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-slate-500">
+                        Send from any Cardano wallet. Payment is auto-detected after 2+ block confirmations.
+                      </p>
+                    </div>
+                  )}
                 </>
-              )}
-
-              {paymentStatus === "confirmed" && (
-                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-5 text-center">
-                  <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto mb-3" />
-                  <p className="text-base font-semibold text-white">Payment Complete</p>
-                  <p className="text-sm text-slate-400 mt-1">Your transaction has been confirmed on the Cardano blockchain.</p>
-                  {paymentLink.success_redirect_url && (
-                    <a href={paymentLink.success_redirect_url} className="inline-flex items-center gap-1 text-indigo-400 text-sm mt-3 hover:underline">
-                      Continue <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-                </div>
               )}
             </div>
           )}
