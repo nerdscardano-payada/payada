@@ -72,9 +72,9 @@ export default function PayTerminals() {
     <div>
       <PageHeader
         title="Pay Terminals"
-        subtitle="Configureerbare betaalterminals voor je website (iframe/modal)"
+        subtitle="Configurable payment terminals for your website (iframe/modal)"
         action={() => setShowForm(true)}
-        actionLabel="Nieuwe terminal"
+        actionLabel="New Terminal"
         actionIcon={Plus}
       />
 
@@ -85,9 +85,9 @@ export default function PayTerminals() {
       ) : terminals.length === 0 ? (
         <EmptyState
           icon={Monitor}
-          title="Geen terminals"
-          description="Maak je eerste betaalterminal aan en embed deze op je website."
-          actionLabel="Nieuwe terminal"
+          title="No terminals yet"
+          description="Create your first payment terminal and embed it on your website."
+          actionLabel="New Terminal"
           onAction={() => setShowForm(true)}
         />
       ) : (
@@ -105,10 +105,10 @@ export default function PayTerminals() {
                 <div className="flex items-center gap-2">
                   <p className="font-semibold text-slate-900 truncate">{terminal.name}</p>
                   <Badge variant={terminal.status === "active" ? "default" : "secondary"} className="text-[11px]">
-                    {terminal.status === "active" ? "Actief" : "Inactief"}
+                    {terminal.status === "active" ? "Active" : "Inactive"}
                   </Badge>
                   <Badge variant="outline" className="text-[11px]">
-                    {terminal.mode === "one_time" ? "Eenmalig" : "Abonnement"}
+                    {terminal.mode === "one_time" ? "One-time" : "Subscription"}
                   </Badge>
                 </div>
                 {terminal.description && (
