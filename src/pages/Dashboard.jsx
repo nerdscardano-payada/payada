@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import PageHeader from "@/components/shared/PageHeader";
 import StatCard from "@/components/shared/StatCard";
 import StatusBadge from "@/components/shared/StatusBadge";
+import PaymentVolumeChart from "@/components/dashboard/PaymentVolumeChart";
+import TopCustomers from "@/components/dashboard/TopCustomers";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
@@ -12,9 +14,7 @@ import {
   RefreshCw,
   Users,
   TrendingUp,
-  ArrowRight,
-  ExternalLink,
-  Hexagon
+  ArrowRight
 } from "lucide-react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
