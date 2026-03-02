@@ -18,9 +18,11 @@ import {
   Building2,
   Code2,
   ShoppingCart,
-  Monitor
+  Monitor,
+  LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { base44 } from "@/api/base44Client";
 
 const navItems = [
   { name: "Merchant Profile", icon: Building2, page: "MerchantProfile" },
