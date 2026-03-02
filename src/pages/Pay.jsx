@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { Hexagon, Copy, CheckCircle2, Clock, Loader2, ExternalLink, AlertCircle } from "lucide-react";
+import {
+  Hexagon, Copy, CheckCircle2, Clock, Loader2,
+  ExternalLink, AlertCircle, Wallet, ArrowRight
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import WalletConnect from "@/components/checkout/WalletConnect";
 
 export default function Pay() {
   const [slug, setSlug] = useState("");
