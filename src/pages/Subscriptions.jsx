@@ -11,11 +11,17 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export default function Subscriptions() {
+  const [user, setUser] = React.useState(null);
   const queryClient = useQueryClient();
 
+  React.useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
+
   const { data: subscriptions = [], isLoading } = useQuery({
-    queryKey: ["subscriptions"],
-    queryFn: () => base44.entities.Subscription.list("-created_date", 200),
+    queryKey: ["subscriptions", user?.email],
+    queryFn: () => base44.entities.Subscription.filter({ merchant_id: user.email }, "-created_date", 200),
+    enabled: !!user,
   });
 
   const cancelMutation = useMutation({
