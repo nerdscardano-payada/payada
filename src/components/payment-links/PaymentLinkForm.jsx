@@ -44,7 +44,7 @@ export default function PaymentLinkForm({ link, onBack }) {
   const mutation = useMutation({
     mutationFn: (data) => {
       if (isEditing) return base44.entities.PaymentLink.update(link.id, data);
-      return base44.entities.PaymentLink.create(data);
+      return base44.entities.PaymentLink.create({ ...data, merchant_id: user?.email });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["paymentLinks"] });
