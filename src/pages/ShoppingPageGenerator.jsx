@@ -17,12 +17,12 @@ import { toast } from "sonner";
 import PageHeader from "@/components/shared/PageHeader";
 
 const THEMES = [
-  { label: "Midnight", bg: "#0f172a", accent: "#6366f1", text: "#f8fafc", card: "#1e293b" },
-  { label: "Soft White", bg: "#f8fafc", accent: "#6366f1", text: "#0f172a", card: "#ffffff" },
-  { label: "Forest", bg: "#052e16", accent: "#22c55e", text: "#f0fdf4", card: "#14532d" },
-  { label: "Ocean", bg: "#0c4a6e", accent: "#38bdf8", text: "#f0f9ff", card: "#075985" },
-  { label: "Sunset", bg: "#431407", accent: "#f97316", text: "#fff7ed", card: "#7c2d12" },
-  { label: "Rose", bg: "#fff1f2", accent: "#f43f5e", text: "#0f172a", card: "#ffffff" },
+  { label: "Midnight", bg: "#080c14", accent: "#818cf8", text: "#f1f5f9", card: "#0f172a", cardBorder: "rgba(129,140,248,0.12)" },
+  { label: "Soft White", bg: "#f0f4ff", accent: "#6366f1", text: "#0f172a", card: "#ffffff", cardBorder: "rgba(99,102,241,0.12)" },
+  { label: "Forest", bg: "#030d07", accent: "#4ade80", text: "#f0fdf4", card: "#071a0f", cardBorder: "rgba(74,222,128,0.12)" },
+  { label: "Ocean", bg: "#030c14", accent: "#38bdf8", text: "#f0f9ff", card: "#0a1929", cardBorder: "rgba(56,189,248,0.12)" },
+  { label: "Sunset", bg: "#0f0500", accent: "#fb923c", text: "#fff7ed", card: "#1a0a00", cardBorder: "rgba(251,146,60,0.12)" },
+  { label: "Rose", bg: "#0f000a", accent: "#f472b6", text: "#fdf2f8", card: "#1a0010", cardBorder: "rgba(244,114,182,0.12)" },
 ];
 
 const FONTS = [
