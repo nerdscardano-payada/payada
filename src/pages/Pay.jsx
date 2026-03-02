@@ -21,6 +21,13 @@ export default function Pay() {
   const [loading, setLoading] = useState(true);
   const [sessionData, setSessionData] = useState(null);
 
+  // Wallet state
+  const [connectedWallet, setConnectedWallet] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState("wallet");
+  const [txHash, setTxHash] = useState(null);
+  const [txLoading, setTxLoading] = useState(false);
+  const [pollCount, setPollCount] = useState(0);
+
   // Extract slug from URL query params
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
