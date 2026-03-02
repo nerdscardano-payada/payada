@@ -10,13 +10,13 @@ import {
   Users,
   Webhook,
   Key,
-  Settings,
   Receipt,
   ChevronLeft,
   ChevronRight,
   Hexagon,
   X,
-  Building2
+  Building2,
+  Code2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

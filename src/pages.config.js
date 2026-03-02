@@ -61,6 +61,7 @@ import Features from './pages/Features';
 import Home from './pages/Home';
 import MerchantProfile from './pages/MerchantProfile';
 import Onboarding from './pages/Onboarding';
+import Pay from './pages/Pay';
 import PaymentLinks from './pages/PaymentLinks';
 import Payments from './pages/Payments';
 import Pricing from './pages/Pricing';
@@ -71,7 +72,7 @@ import SubscriptionPlans from './pages/SubscriptionPlans';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
-import Pay from './pages/Pay';
+import ButtonGenerator from './pages/ButtonGenerator';
 import __Layout from './Layout.jsx';
 
 
@@ -90,6 +91,7 @@ export const PAGES = {
     "Home": Home,
     "MerchantProfile": MerchantProfile,
     "Onboarding": Onboarding,
+    "Pay": Pay,
     "PaymentLinks": PaymentLinks,
     "Payments": Payments,
     "Pricing": Pricing,
@@ -100,7 +102,7 @@ export const PAGES = {
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
-    "Pay": Pay,
+    "ButtonGenerator": ButtonGenerator,
 }
 
 export const pagesConfig = {
