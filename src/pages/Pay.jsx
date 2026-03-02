@@ -76,33 +76,53 @@ export default function Pay() {
     if (!connectedWallet || !sessionData) return;
     setTxLoading(true);
     try {
-      const { api, address: walletAddress } = connectedWallet;
+      const { api } = connectedWallet;
       const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
+      const feeAddress = sessionData.fee_wallet_address;
       const merchantLovelace = String(Math.floor(sessionData.merchant_amount_ada * 1_000_000));
       const platformFeeLovelace = String(Math.floor(sessionData.platform_fee_ada * 1_000_000));
 
-      const buildRes = await base44.functions.invoke('buildPaymentTx', {
-        walletAddress,
-        merchantAddress,
-        merchantLovelace,
-        platformFeeLovelace
-      });
+      // Use CIP-30 experimental.sendLovelace (supported by Eternl, Lace, Nami)
+      // This opens the wallet popup for user to confirm + enter password
+      let hash;
 
-      if (!buildRes?.data?.success) {
-        throw new Error(buildRes?.data?.error || "Failed to build transaction");
+      if (api.experimental?.sendLovelace) {
+        // Single output: total to merchant (simpler, no fee split via wallet API)
+        // Some wallets support multi-output via sendLovelace array
+        const recipients = [{ address: merchantAddress, amount: merchantLovelace }];
+        if (feeAddress && platformFeeLovelace && BigInt(platformFeeLovelace) > 0n) {
+          recipients.push({ address: feeAddress, amount: platformFeeLovelace });
+        }
+        hash = await api.experimental.sendLovelace(recipients);
+      } else if (api.submitTx) {
+        // Fallback: use backend to build tx CBOR, then sign + submit via wallet
+        const buildRes = await base44.functions.invoke('buildPaymentTx', {
+          walletAddress: connectedWallet.address,
+          merchantAddress,
+          merchantLovelace,
+          platformFeeLovelace
+        });
+        if (!buildRes?.data?.success) throw new Error(buildRes?.data?.error || "Failed to build transaction");
+        const signedTx = await api.signTx(buildRes.data.txCbor, true);
+        hash = await api.submitTx(signedTx);
+      } else {
+        // No wallet TX API available — show manual fallback
+        toast.info("Your wallet doesn't support direct sending. Use the Manual tab to send manually.");
+        setPaymentMethod("manual");
+        return;
       }
 
-      // Ask the wallet to send via CIP-30 sendLovelace if available, otherwise guide manual
-      // Most wallets (Eternl, Nami, Lace) support api.sendLovelace or api.signTx
-      // We use the standard approach: instruct user the wallet will prompt them
-      toast.info("Please confirm the transaction in your wallet.");
-      
-      // Try signTx if wallet supports it (some wallets auto-open for signing)
-      // For now fall back to manual with address shown
-      setPaymentMethod("manual");
-      toast.success("Check your wallet for a signing request, or send manually to the address below.");
+      if (hash) {
+        setTxHash(hash);
+        setPaymentStatus("detected");
+        toast.success("Transaction submitted! Waiting for confirmation…");
+      }
     } catch (err) {
-      toast.error(err?.message || "Transaction failed");
+      if (err?.code === 2) {
+        toast.error("Transaction cancelled by user.");
+      } else {
+        toast.error(err?.message || "Transaction failed");
+      }
     } finally {
       setTxLoading(false);
     }
