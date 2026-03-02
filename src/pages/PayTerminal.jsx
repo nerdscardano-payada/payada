@@ -143,10 +143,10 @@ export default function PayTerminal() {
   };
 
   // ── Guards ──
-  if (!terminalId) return <ErrorScreen message="Geen terminal ID opgegeven." />;
+  if (!terminalId) return <ErrorScreen message="No terminal ID provided." />;
   if (isLoading) return <LoadingScreen />;
-  if (!terminal) return <ErrorScreen title="Terminal niet gevonden" message="Deze terminal is onbekend of inactief." />;
-  if (terminal.mode === "one_time" && !paymentLink) return <ErrorScreen title="Betaallink niet gevonden" message="De gekoppelde betaallink is niet actief." />;
+  if (!terminal) return <ErrorScreen title="Terminal not found" message="This terminal is unknown or inactive." />;
+  if (terminal.mode === "one_time" && !paymentLink) return <ErrorScreen title="Payment link not found" message="The linked payment link is not active." />;
 
   const receiveAddress = sessionData?.receive_address || sessionData?.merchant_address || paymentLink?.receive_address;
 
@@ -174,7 +174,7 @@ export default function PayTerminal() {
               <div className="p-6 border-b border-slate-800">
                 <div className="flex items-center gap-2 mb-1">
                   <RefreshCw className="w-4 h-4" style={{ color: accentColor }} />
-                  <span className="text-xs font-medium uppercase tracking-wider" style={{ color: accentColor }}>Kies je abonnement</span>
+                  <span className="text-xs font-medium uppercase tracking-wider" style={{ color: accentColor }}>Choose your plan</span>
                 </div>
                 <h1 className="text-xl font-bold text-white">{terminal.name}</h1>
                 {terminal.description && <p className="text-sm text-slate-400 mt-1">{terminal.description}</p>}
@@ -188,7 +188,7 @@ export default function PayTerminal() {
                         <p className="font-semibold text-white group-hover:text-indigo-300 transition-colors">{plan.name}</p>
                         {plan.description && <p className="text-xs text-slate-400 mt-0.5">{plan.description}</p>}
                         {plan.trial_days > 0 && (
-                          <p className="text-xs text-emerald-400 mt-1">✓ {plan.trial_days} dagen gratis</p>
+                          <p className="text-xs text-emerald-400 mt-1">✓ {plan.trial_days} days free</p>
                         )}
                       </div>
                       <div className="text-right flex-shrink-0 ml-4">
@@ -220,7 +220,7 @@ export default function PayTerminal() {
               <div className="p-6">
                 <Button onClick={handleOneTimeNext} className="w-full h-12 text-base font-semibold text-white"
                   style={{ backgroundColor: accentColor }}>
-                  {terminal.button_label || "Doorgaan"}
+                  {terminal.button_label || "Continue"}
                 </Button>
               </div>
             </>
@@ -232,7 +232,7 @@ export default function PayTerminal() {
               <div className="p-6 border-b border-slate-800">
                 {terminal.mode === "subscription" && selectedPlan && (
                   <div>
-                    <button onClick={() => setStep("select")} className="text-xs text-slate-500 hover:text-slate-300 mb-2">← Terug</button>
+                    <button onClick={() => setStep("select")} className="text-xs text-slate-500 hover:text-slate-300 mb-2">← Back</button>
                     <p className="text-slate-400 text-sm">{selectedPlan.name}</p>
                     <p className="text-2xl font-bold text-white mt-1">
                       {selectedPlan.amount_mode === "fixed_ada"
@@ -244,7 +244,7 @@ export default function PayTerminal() {
                 )}
                 {terminal.mode === "one_time" && (
                   <div>
-                    <button onClick={() => setStep("select")} className="text-xs text-slate-500 hover:text-slate-300 mb-2">← Terug</button>
+                    <button onClick={() => setStep("select")} className="text-xs text-slate-500 hover:text-slate-300 mb-2">← Back</button>
                     <p className="text-2xl font-bold text-white">₳ {paymentLink?.amount_ada?.toFixed(2)}</p>
                     <p className="text-sm text-slate-400">{paymentLink?.title}</p>
                   </div>
@@ -253,21 +253,21 @@ export default function PayTerminal() {
               <div className="p-6 space-y-4">
                 {terminal.collect_email && (
                   <div className="space-y-2">
-                    <Label className="text-slate-300 text-xs">E-mail {terminal.mode === "subscription" ? "*" : ""}</Label>
-                    <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="jouw@email.com"
+                    <Label className="text-slate-300 text-xs">Email {terminal.mode === "subscription" ? "*" : ""}</Label>
+                    <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com"
                       className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                   </div>
                 )}
                 {terminal.collect_name && (
                   <div className="space-y-2">
-                    <Label className="text-slate-300 text-xs">Naam</Label>
-                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Jouw naam"
+                    <Label className="text-slate-300 text-xs">Name</Label>
+                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
                       className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                   </div>
                 )}
                 <Button onClick={handleStartPayment} className="w-full h-12 text-base font-semibold text-white"
                   style={{ backgroundColor: accentColor }}>
-                  {terminal.mode === "subscription" ? "Abonnement starten" : (terminal.button_label || "Doorgaan naar betaling")}
+                  {terminal.mode === "subscription" ? "Start Subscription" : (terminal.button_label || "Continue to Payment")}
                 </Button>
               </div>
             </>
