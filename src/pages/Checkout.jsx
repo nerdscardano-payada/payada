@@ -287,17 +287,16 @@ export default function Checkout() {
                             onConnected={(w) => setConnectedWallet(w)}
                             onDisconnected={() => setConnectedWallet(null)}
                           />
-                          <Button
-                            onClick={handleWalletPay}
-                            disabled={txLoading}
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 h-12 text-base font-semibold gap-2"
-                          >
-                            {txLoading ? (
-                              <><Loader2 className="w-4 h-4 animate-spin" /> Building transaction…</>
-                            ) : (
-                              <>Pay ₳ {sessionData?.amount_total_ada?.toFixed(2)} with Wallet</>
-                            )}
-                          </Button>
+                          <WalletPayButton
+                            connectedWallet={connectedWallet}
+                            sessionData={sessionData}
+                            paymentLink={paymentLink}
+                            onSuccess={(hash) => {
+                              setTxHash(hash);
+                              setPaymentStatus("detected");
+                              startPolling(hash);
+                            }}
+                          />
                           <p className="text-[11px] text-slate-500 text-center">
                             This sends a multi-output transaction: merchant + PayADA fee in one click.
                           </p>
