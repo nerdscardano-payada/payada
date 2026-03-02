@@ -19,11 +19,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function SubscriptionPlans() {
   const [showForm, setShowForm] = useState(false);
   const [editingPlan, setEditingPlan] = useState(null);
+  const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
 
+  React.useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
+
   const { data: plans = [], isLoading } = useQuery({
-    queryKey: ["subscriptionPlans"],
-    queryFn: () => base44.entities.SubscriptionPlan.list("-created_date", 100),
+    queryKey: ["subscriptionPlans", user?.email],
+    queryFn: () => base44.entities.SubscriptionPlan.filter({ merchant_id: user.email }, "-created_date", 100),
+    enabled: !!user,
   });
 
   const deleteMutation = useMutation({
