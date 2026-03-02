@@ -1,19 +1,27 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import PageHeader from "@/components/shared/PageHeader";
 import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
-import { ListOrdered, XCircle } from "lucide-react";
+import { ListOrdered } from "lucide-react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 export default function Subscriptions() {
+  const queryClient = useQueryClient();
+
   const { data: subscriptions = [], isLoading } = useQuery({
     queryKey: ["subscriptions"],
     queryFn: () => base44.entities.Subscription.list("-created_date", 200),
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: (id) => base44.entities.Subscription.update(id, { status: "cancelled", cancelled_at: new Date().toISOString() }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["subscriptions"] });
+      toast.success("Abonnement geannuleerd");
+    },
   });
 
   return (
