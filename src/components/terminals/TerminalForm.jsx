@@ -65,40 +65,40 @@ export default function TerminalForm({ terminal, onBack }) {
   };
 
   const handleSave = () => {
-    if (!form.name) { toast.error("Naam is verplicht"); return; }
-    if (form.mode === "one_time" && !form.payment_link_slug) { toast.error("Selecteer een betaallink"); return; }
-    if (form.mode === "subscription" && form.plan_ids.length === 0) { toast.error("Selecteer minimaal één abonnement"); return; }
+    if (!form.name) { toast.error("Name is required"); return; }
+    if (form.mode === "one_time" && !form.payment_link_slug) { toast.error("Please select a payment link"); return; }
+    if (form.mode === "subscription" && form.plan_ids.length === 0) { toast.error("Please select at least one subscription plan"); return; }
     saveMutation.mutate(form);
   };
 
   return (
     <div className="max-w-xl">
       <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6">
-        <ArrowLeft className="w-4 h-4" /> Terug
+        <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
-      <h2 className="text-lg font-bold text-slate-900 mb-6">{isEditing ? "Terminal bewerken" : "Nieuwe terminal"}</h2>
+      <h2 className="text-lg font-bold text-slate-900 mb-6">{isEditing ? "Edit Terminal" : "New Terminal"}</h2>
 
       <div className="space-y-5">
         {/* Basic */}
         <div className="space-y-2">
-          <Label>Naam *</Label>
-          <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Bijv. Webshop Checkout" />
+          <Label>Name *</Label>
+          <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Webshop Checkout" />
         </div>
 
         <div className="space-y-2">
-          <Label>Beschrijving</Label>
-          <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Optionele beschrijving" />
+          <Label>Description</Label>
+          <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Optional description" />
         </div>
 
         {/* Mode */}
         <div className="space-y-2">
-          <Label>Type terminal *</Label>
+          <Label>Terminal Type *</Label>
           <Select value={form.mode} onValueChange={(v) => setForm({ ...form, mode: v })}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="one_time">Eenmalige betaling</SelectItem>
-              <SelectItem value="subscription">Abonnement (meerkeuze)</SelectItem>
+              <SelectItem value="one_time">One-time payment</SelectItem>
+              <SelectItem value="subscription">Subscription (multi-plan)</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -106,9 +106,9 @@ export default function TerminalForm({ terminal, onBack }) {
         {/* One-time: pick payment link */}
         {form.mode === "one_time" && (
           <div className="space-y-2">
-            <Label>Betaallink *</Label>
+            <Label>Payment Link *</Label>
             <Select value={form.payment_link_slug} onValueChange={(v) => setForm({ ...form, payment_link_slug: v })}>
-              <SelectTrigger><SelectValue placeholder="Selecteer een betaallink" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder="Select a payment link" /></SelectTrigger>
               <SelectContent>
                 {paymentLinks.map((pl) => (
                   <SelectItem key={pl.id} value={pl.slug}>{pl.title} (₳ {pl.amount_ada})</SelectItem>
@@ -121,10 +121,10 @@ export default function TerminalForm({ terminal, onBack }) {
         {/* Subscription: pick plans */}
         {form.mode === "subscription" && (
           <div className="space-y-2">
-            <Label>Selecteer abonnementen *</Label>
+            <Label>Select Subscription Plans *</Label>
             <div className="border border-slate-200 rounded-lg divide-y divide-slate-100">
               {plans.length === 0 && (
-                <p className="text-sm text-slate-400 p-3">Geen actieve plannen gevonden</p>
+                <p className="text-sm text-slate-400 p-3">No active plans found</p>
               )}
               {plans.map((plan) => (
                 <label key={plan.id} className="flex items-center gap-3 p-3 cursor-pointer hover:bg-slate-50">
@@ -146,23 +146,23 @@ export default function TerminalForm({ terminal, onBack }) {
 
         {/* Collect fields */}
         <div className="space-y-3">
-          <Label>Klantgegevens verzamelen</Label>
+          <Label>Collect Customer Info</Label>
           <div className="flex items-center gap-3">
             <Switch checked={form.collect_email} onCheckedChange={(v) => setForm({ ...form, collect_email: v })} />
-            <span className="text-sm text-slate-700">E-mail</span>
+            <span className="text-sm text-slate-700">Email</span>
           </div>
           <div className="flex items-center gap-3">
             <Switch checked={form.collect_name} onCheckedChange={(v) => setForm({ ...form, collect_name: v })} />
-            <span className="text-sm text-slate-700">Naam</span>
+            <span className="text-sm text-slate-700">Name</span>
           </div>
         </div>
 
         {/* Branding */}
         <div className="space-y-4 pt-2 border-t border-slate-100">
-          <p className="text-sm font-medium text-slate-700">Uitstraling</p>
+          <p className="text-sm font-medium text-slate-700">Branding</p>
           <div className="flex gap-4">
             <div className="space-y-2 flex-1">
-              <Label>Accentkleur</Label>
+              <Label>Accent Color</Label>
               <div className="flex items-center gap-2">
                 <input type="color" value={form.accent_color}
                   onChange={(e) => setForm({ ...form, accent_color: e.target.value })}
@@ -172,7 +172,7 @@ export default function TerminalForm({ terminal, onBack }) {
               </div>
             </div>
             <div className="space-y-2 flex-1">
-              <Label>Knoptekst</Label>
+              <Label>Button Label</Label>
               <Input value={form.button_label} onChange={(e) => setForm({ ...form, button_label: e.target.value })} />
             </div>
           </div>
@@ -185,14 +185,14 @@ export default function TerminalForm({ terminal, onBack }) {
         {/* Status */}
         <div className="flex items-center gap-3 pt-2">
           <Switch checked={form.status === "active"} onCheckedChange={(v) => setForm({ ...form, status: v ? "active" : "disabled" })} />
-          <span className="text-sm text-slate-700">Terminal actief</span>
+          <span className="text-sm text-slate-700">Terminal active</span>
         </div>
 
         <div className="flex gap-3 pt-2">
           <Button onClick={handleSave} disabled={saveMutation.isPending} className="bg-indigo-600 hover:bg-indigo-700 text-white">
-            {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Opslaan"}
+            {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
           </Button>
-          <Button variant="outline" onClick={onBack}>Annuleren</Button>
+          <Button variant="outline" onClick={onBack}>Cancel</Button>
         </div>
       </div>
     </div>
