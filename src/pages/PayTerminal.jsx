@@ -279,7 +279,7 @@ export default function PayTerminal() {
               {/* Summary */}
               <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
                 <div className="flex justify-between">
-                  <span>{terminal.mode === "subscription" ? "Eerste betaling" : "Totaal"}</span>
+                  <span>{terminal.mode === "subscription" ? "First payment" : "Total"}</span>
                   <span className="text-white font-semibold">₳ {sessionData?.amount_total_ada?.toFixed(3)}</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
@@ -287,7 +287,7 @@ export default function PayTerminal() {
                   <span>₳ {sessionData?.platform_fee_ada?.toFixed(3)}</span>
                 </div>
                 <div className="border-t border-slate-700 pt-1.5 flex justify-between">
-                  <span>Merchant ontvangt</span>
+                  <span>Merchant receives</span>
                   <span className="text-emerald-400 font-semibold">₳ {sessionData?.merchant_amount_ada?.toFixed(3)}</span>
                 </div>
               </div>
@@ -306,7 +306,7 @@ export default function PayTerminal() {
                   style={paymentMethod === "manual" ? { backgroundColor: accentColor } : {}}
                   onClick={() => setPaymentMethod("manual")}
                 >
-                  Handmatig
+                  Manual
                 </button>
               </div>
 
@@ -322,12 +322,12 @@ export default function PayTerminal() {
                       className="w-full h-12 text-base font-semibold text-white gap-2"
                       style={{ backgroundColor: accentColor }}>
                       {txLoading
-                        ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig…</>
-                        : <>Betaal ₳ {sessionData?.amount_total_ada?.toFixed(2)}</>}
+                        ? <><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>
+                        : <>Pay ₳ {sessionData?.amount_total_ada?.toFixed(2)}</>}
                     </Button>
                   )}
                   <p className="text-[11px] text-slate-500 text-center">
-                    Sluit je Cardano wallet aan (Nami, Eternl, Flint, Lace, …)
+                    Connect your Cardano wallet (Nami, Eternl, Flint, Lace, …)
                   </p>
                 </div>
               )}
@@ -339,7 +339,7 @@ export default function PayTerminal() {
                     <div className="w-36 h-36 bg-slate-100 rounded-lg flex items-center justify-center text-xs text-slate-400">QR Code</div>
                   </div>
                   <div>
-                    <Label className="text-xs text-slate-500">Stuur exact ₳ {sessionData?.amount_total_ada?.toFixed(3)} naar:</Label>
+                    <Label className="text-xs text-slate-500">Send exactly ₳ {sessionData?.amount_total_ada?.toFixed(3)} to:</Label>
                     <div className="flex items-center gap-2 mt-1.5">
                       <code className="flex-1 bg-slate-800 px-3 py-2.5 rounded-lg text-xs text-slate-300 font-mono break-all border border-slate-700">
                         {receiveAddress}
@@ -351,11 +351,11 @@ export default function PayTerminal() {
                     </div>
                   </div>
                   <p className="text-[11px] text-slate-500">
-                    Betaling wordt automatisch gedetecteerd na 2+ bevestigingen.
+                    Payment is automatically detected after 2+ confirmations.
                   </p>
                   <Button onClick={() => setStep("awaiting")} className="w-full text-white"
                     style={{ backgroundColor: accentColor }}>
-                    Ik heb betaald
+                    I have paid
                   </Button>
                 </div>
               )}
@@ -368,10 +368,10 @@ export default function PayTerminal() {
               <div className="flex items-center gap-3 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
                 <Clock className="w-5 h-5 text-amber-400 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-white">Wachten op bevestiging</p>
+                  <p className="text-sm font-semibold text-white">Waiting for confirmation</p>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Je transactie wordt verwerkt op de Cardano blockchain.
-                    {email && ` Je ontvangt een bevestiging op ${email}.`}
+                    Your transaction is being processed on the Cardano blockchain.
+                    {email && ` A confirmation will be sent to ${email}.`}
                   </p>
                 </div>
               </div>
@@ -383,11 +383,11 @@ export default function PayTerminal() {
             <div className="p-6">
               <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6 text-center">
                 <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-                <p className="text-base font-semibold text-white">Betaling bevestigd!</p>
+                <p className="text-base font-semibold text-white">Payment confirmed!</p>
                 <p className="text-sm text-slate-400 mt-1">
                   {terminal.mode === "subscription"
-                    ? `Je abonnement op ${selectedPlan?.name} is geactiveerd.`
-                    : "Je transactie is bevestigd op de Cardano blockchain."}
+                    ? `Your subscription to ${selectedPlan?.name} has been activated.`
+                    : "Your transaction has been confirmed on the Cardano blockchain."}
                 </p>
               </div>
             </div>
@@ -395,14 +395,14 @@ export default function PayTerminal() {
         </div>
 
         <p className="text-center text-[11px] text-slate-600 mt-6">
-          Veilige Cardano ADA betaling · PayADA.io
+          Secure Cardano ADA payment · PayADA.io
         </p>
       </div>
     </div>
   );
 }
 
-function ErrorScreen({ message, title = "Terminal niet gevonden" }) {
+function ErrorScreen({ message, title = "Terminal not found" }) {
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
       <div className="text-center">
