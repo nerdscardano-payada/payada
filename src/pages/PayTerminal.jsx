@@ -73,11 +73,11 @@ export default function PayTerminal() {
     if (!paymentLink) return;
     try {
       const res = await base44.functions.invoke("createPublicCheckoutSession", { paymentLinkId: paymentLink.id });
-      if (!res?.data?.success) { toast.error(res?.data?.error || "Er ging iets mis"); return; }
+      if (!res?.data?.success) { toast.error(res?.data?.error || "Something went wrong"); return; }
       setSessionData(res.data);
       setStep("pay");
     } catch (err) {
-      toast.error(err?.message || "Er ging iets mis bij het starten van de betaling");
+      toast.error(err?.message || "Something went wrong while starting the payment");
     }
   };
 
@@ -86,25 +86,25 @@ export default function PayTerminal() {
       if (!paymentLink) return;
       try {
         const res = await base44.functions.invoke("createPublicCheckoutSession", { paymentLinkId: paymentLink.id });
-        if (!res?.data?.success) { toast.error(res?.data?.error || "Er ging iets mis"); return; }
+        if (!res?.data?.success) { toast.error(res?.data?.error || "Something went wrong"); return; }
         setSessionData(res.data);
         setStep("pay");
       } catch (err) {
-        toast.error(err?.message || "Er ging iets mis bij het starten van de betaling");
+        toast.error(err?.message || "Something went wrong while starting the payment");
       }
     } else {
-      if (!email) { toast.error("E-mail is verplicht"); return; }
+      if (!email) { toast.error("Email is required"); return; }
       try {
         const res = await base44.functions.invoke("createSubscriptionSignup", {
           planId: selectedPlan.id,
           customerEmail: email,
           customerName: name,
         });
-        if (!res?.data?.success) { toast.error(res?.data?.error || "Er ging iets mis"); return; }
+        if (!res?.data?.success) { toast.error(res?.data?.error || "Something went wrong"); return; }
         setSessionData(res.data);
         setStep("pay");
       } catch (err) {
-        toast.error(err?.message || "Er ging iets mis bij het starten van het abonnement");
+        toast.error(err?.message || "Something went wrong while starting the subscription");
       }
     }
   };
@@ -120,10 +120,10 @@ export default function PayTerminal() {
         platformFeeLovelace: String(Math.floor((sessionData.platform_fee_ada || sessionData.platform_fee_lovelace / 1e6) * 1e6)),
       });
       if (!buildRes?.data?.success) throw new Error(buildRes?.data?.error || "Build failed");
-      toast.info(`Stuur ₳ ${sessionData.amount_total_ada?.toFixed(2)} vanuit je wallet naar het adres hieronder.`);
+      toast.info(`Send ₳ ${sessionData.amount_total_ada?.toFixed(2)} from your wallet to the address below.`);
       setPaymentMethod("manual");
     } catch (err) {
-      toast.error(err?.message || "Transactie mislukt");
+      toast.error(err?.message || "Transaction failed");
     } finally {
       setTxLoading(false);
     }
@@ -131,15 +131,15 @@ export default function PayTerminal() {
 
   const copyAddress = (addr) => {
     navigator.clipboard.writeText(addr);
-    toast.success("Adres gekopieerd!");
+    toast.success("Address copied!");
   };
 
   const intervalLabel = (plan) => {
     if (!plan) return "";
     if (plan.interval_type === "weekly") return "/ week";
-    if (plan.interval_type === "monthly") return "/ maand";
-    if (plan.interval_type === "yearly") return "/ jaar";
-    return `/ ${plan.interval_days} dagen`;
+    if (plan.interval_type === "monthly") return "/ month";
+    if (plan.interval_type === "yearly") return "/ year";
+    return `/ ${plan.interval_days} days`;
   };
 
   // ── Guards ──
