@@ -52,6 +52,7 @@ import About from './pages/About';
 import AdminDashboard from './pages/AdminDashboard';
 import ApiKeys from './pages/ApiKeys';
 import Billing from './pages/Billing';
+import ButtonGenerator from './pages/ButtonGenerator';
 import Checkout from './pages/Checkout';
 import Contact from './pages/Contact';
 import Customers from './pages/Customers';
@@ -68,12 +69,11 @@ import Pricing from './pages/Pricing';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import SDKDocumentation from './pages/SDKDocumentation';
 import Security from './pages/Security';
+import ShoppingPageGenerator from './pages/ShoppingPageGenerator';
 import SubscriptionPlans from './pages/SubscriptionPlans';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
-import ButtonGenerator from './pages/ButtonGenerator';
-import ShoppingPageGenerator from './pages/ShoppingPageGenerator';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +83,7 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "ApiKeys": ApiKeys,
     "Billing": Billing,
+    "ButtonGenerator": ButtonGenerator,
     "Checkout": Checkout,
     "Contact": Contact,
     "Customers": Customers,
@@ -99,12 +100,11 @@ export const PAGES = {
     "PrivacyPolicy": PrivacyPolicy,
     "SDKDocumentation": SDKDocumentation,
     "Security": Security,
+    "ShoppingPageGenerator": ShoppingPageGenerator,
     "SubscriptionPlans": SubscriptionPlans,
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
-    "ButtonGenerator": ButtonGenerator,
-    "ShoppingPageGenerator": ShoppingPageGenerator,
 }
 
 export const pagesConfig = {
