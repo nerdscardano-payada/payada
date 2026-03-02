@@ -36,7 +36,7 @@ export default function PaymentLinks() {
   });
 
   const copyCheckoutUrl = (slug) => {
-    navigator.clipboard.writeText(`${window.location.origin}/pay/${slug}`);
+    navigator.clipboard.writeText(`${window.location.origin}/Pay?slug=${slug}`);
     toast.success("Checkout URL copied!");
   };
 
