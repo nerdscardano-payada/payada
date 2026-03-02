@@ -174,42 +174,62 @@ export default function ShoppingPageGenerator() {
       background: ${theme.bg};
       color: ${theme.text};
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; }
-    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+    .container { max-width: 920px; margin: 0 auto; padding: 0 28px; }
     @media (max-width: 640px) {
-      .product-card > div { min-width: 100% !important; }
+      .product-card > div { min-width: 100% !important; flex-direction: column !important; }
     }
+    /* Noise overlay for depth */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+    body > * { position: relative; z-index: 1; }
   </style>
 </head>
 <body>
+  <!-- Ambient glow -->
+  <div style="position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,${accent}18 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
+
   <!-- Header -->
-  <header style="background:${theme.card};border-bottom:1px solid rgba(255,255,255,0.06);padding:18px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);">
+  <header style="background:${theme.card}cc;border-bottom:1px solid ${cardBorder};padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);">
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:20px;font-weight:800;letter-spacing:-0.02em;">${logoText}</span>
-      <span style="font-size:13px;opacity:0.5;">Accepts <span style="color:${accent};font-weight:700;">Cardano ADA</span></span>
+      <span style="font-size:18px;font-weight:800;letter-spacing:-0.03em;">${logoText}</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;background:${accent}15;color:${accent};border:1px solid ${accent}30;padding:5px 12px;border-radius:999px;font-weight:600;">
+        ✦ Cardano ADA
+      </span>
     </div>
   </header>
 
   <!-- Hero -->
-  <section style="padding:80px 0 48px;text-align:center;background:linear-gradient(160deg,${theme.bg} 0%,${theme.card} 100%);">
-    <div class="container">
-      <h1 style="font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-0.03em;margin-bottom:16px;line-height:1.1;">${shopTitle}</h1>
-      <p style="font-size:18px;opacity:0.6;max-width:520px;margin:0 auto;line-height:1.6;">${shopSubtitle}</p>
+  <section style="padding:100px 0 64px;text-align:center;position:relative;overflow:hidden;">
+    <div class="container" style="position:relative;z-index:1;">
+      <div style="display:inline-flex;align-items:center;gap:6px;background:${accent}12;color:${accent};border:1px solid ${accent}25;padding:6px 16px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:24px;letter-spacing:0.04em;">
+        ✦ POWERED BY CARDANO
+      </div>
+      <h1 style="font-size:clamp(36px,6vw,64px);font-weight:900;letter-spacing:-0.04em;margin-bottom:20px;line-height:1.05;background:linear-gradient(135deg,${theme.text} 40%,${accent} 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${shopTitle}</h1>
+      <p style="font-size:17px;opacity:0.5;max-width:480px;margin:0 auto;line-height:1.7;">${shopSubtitle}</p>
     </div>
   </section>
 
   <!-- Products -->
-  <main style="padding:48px 0 80px;">
+  <main style="padding:16px 0 100px;position:relative;z-index:1;">
     <div class="container">
       ${productCards}
     </div>
   </main>
 
   <!-- Footer -->
-  <footer style="border-top:1px solid rgba(255,255,255,0.06);padding:32px 0;text-align:center;opacity:0.4;font-size:13px;">
-    ${footerText}
-    ${showPoweredBy ? `<br/><a href="https://payada.io" style="color:${accent};text-decoration:none;margin-top:4px;display:inline-block;">Powered by PayADA</a>` : ""}
+  <footer style="border-top:1px solid ${cardBorder};padding:40px 0;text-align:center;position:relative;z-index:1;">
+    <div style="font-size:13px;opacity:0.3;">${footerText}</div>
+    ${showPoweredBy ? `<a href="https://payada.io" style="display:inline-flex;align-items:center;gap:6px;color:${accent};text-decoration:none;font-size:12px;font-weight:600;margin-top:10px;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">✦ Powered by PayADA</a>` : ""}
   </footer>
 </body>
 </html>`;
