@@ -31,6 +31,7 @@ const navItems = [
   { name: "Webhooks", icon: Webhook, page: "Webhooks" },
   { name: "API Keys", icon: Key, page: "ApiKeys" },
   { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
+  { name: "Shop Generator", icon: ShoppingCart, page: "ShoppingPageGenerator" },
   { name: "Billing", icon: Receipt, page: "Billing" },
 ];
 

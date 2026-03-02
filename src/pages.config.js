@@ -73,6 +73,7 @@ import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
 import ButtonGenerator from './pages/ButtonGenerator';
+import ShoppingPageGenerator from './pages/ShoppingPageGenerator';
 import __Layout from './Layout.jsx';
 
 
@@ -103,6 +104,7 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
     "ButtonGenerator": ButtonGenerator,
+    "ShoppingPageGenerator": ShoppingPageGenerator,
 }
 
 export const pagesConfig = {
