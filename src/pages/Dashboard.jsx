@@ -22,7 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function Dashboard() {
   const { data: payments = [], isLoading: loadingPayments } = useQuery({
     queryKey: ["payments"],
-    queryFn: () => base44.entities.Payment.list("-created_date", 10),
+    queryFn: () => base44.entities.Payment.list("-created_date", 200),
   });
 
   const { data: paymentLinks = [], isLoading: loadingLinks } = useQuery({
