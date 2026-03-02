@@ -219,13 +219,16 @@ export default function ButtonGenerator() {
                   color: "#fff",
                   border: "none",
                   cursor: "pointer",
-                  fontFamily: "sans-serif",
-                  fontWeight: 600,
+                  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontWeight: 700,
                   padding: sizeStyles[size].padding,
                   fontSize: sizeStyles[size].fontSize,
                   borderRadius: borderRadii[rounded],
                   textAlign: "center",
                   lineHeight: 1.3,
+                  letterSpacing: "-0.01em",
+                  WebkitFontSmoothing: "antialiased",
+                  textRendering: "optimizeLegibility",
                 }}
               >
                 {previewLabel}
