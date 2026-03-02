@@ -70,11 +70,12 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import SDKDocumentation from './pages/SDKDocumentation';
 import Security from './pages/Security';
 import ShoppingPageGenerator from './pages/ShoppingPageGenerator';
+import SubscriberPortal from './pages/SubscriberPortal';
 import SubscriptionPlans from './pages/SubscriptionPlans';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
-import SubscriberPortal from './pages/SubscriberPortal';
+import PayTerminals from './pages/PayTerminals';
 import __Layout from './Layout.jsx';
 
 
@@ -102,11 +103,12 @@ export const PAGES = {
     "SDKDocumentation": SDKDocumentation,
     "Security": Security,
     "ShoppingPageGenerator": ShoppingPageGenerator,
+    "SubscriberPortal": SubscriberPortal,
     "SubscriptionPlans": SubscriptionPlans,
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
-    "SubscriberPortal": SubscriberPortal,
+    "PayTerminals": PayTerminals,
 }
 
 export const pagesConfig = {
