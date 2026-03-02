@@ -14,6 +14,11 @@ import { toast } from "sonner";
 export default function PaymentLinkForm({ link, onBack }) {
   const isEditing = !!link;
   const queryClient = useQueryClient();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
 
   const [form, setForm] = useState({
     title: link?.title || "",
