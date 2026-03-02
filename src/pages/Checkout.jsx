@@ -307,8 +307,9 @@ export default function Checkout() {
 
                   {/* Manual flow */}
                   {paymentMethod === "manual" && (
-                    <div className="space-y-3">
-                      <div>
+                  <div className="space-y-3">
+                    <div>
+
                         <Label className="text-xs text-slate-500">Send exactly ₳ {sessionData?.amount_total_ada?.toFixed(3)} to:</Label>
                         <div className="flex items-center gap-2 mt-1.5">
                           <code className="flex-1 bg-slate-800 px-3 py-2.5 rounded-lg text-xs text-slate-300 font-mono break-all border border-slate-700">
