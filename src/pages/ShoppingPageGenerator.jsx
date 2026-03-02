@@ -381,8 +381,30 @@ export default function ShoppingPageGenerator() {
                         <Textarea value={p.description} onChange={(e) => updateProduct(p.id, "description", e.target.value)} placeholder="Describe your product…" rows={2} />
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-xs text-slate-500">Image URL</Label>
-                        <Input value={p.imageUrl} onChange={(e) => updateProduct(p.id, "imageUrl", e.target.value)} placeholder="https://…/image.jpg" />
+                       <Label className="text-xs text-slate-500">Product Image</Label>
+                       <div className="flex items-center gap-2">
+                         <label className="flex-1 cursor-pointer">
+                           <input
+                             type="file"
+                             accept="image/*"
+                             className="hidden"
+                             onChange={(e) => {
+                               const file = e.target.files[0];
+                               if (!file) return;
+                               const reader = new FileReader();
+                               reader.onload = (ev) => updateProduct(p.id, "imageUrl", ev.target.result);
+                               reader.readAsDataURL(file);
+                             }}
+                           />
+                           <div className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-xs text-slate-500 hover:bg-slate-50 transition-colors">
+                             <Image className="w-3.5 h-3.5" />
+                             {p.imageUrl ? "Change image" : "Upload image"}
+                           </div>
+                         </label>
+                         {p.imageUrl && (
+                           <img src={p.imageUrl} alt="" className="w-10 h-10 rounded-lg object-cover border border-slate-200" />
+                         )}
+                       </div>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1.5">
