@@ -67,19 +67,28 @@ export default function PayTerminal() {
   const handleStartPayment = async () => {
     if (terminal.mode === "one_time") {
       if (!paymentLink) return;
-      const res = await base44.functions.invoke("createCheckoutSession", { paymentLinkId: paymentLink.id });
-      setSessionData(res.data);
-      setStep("pay");
+      try {
+        const res = await base44.functions.invoke("createPublicCheckoutSession", { paymentLinkId: paymentLink.id });
+        if (!res?.data?.success) { toast.error(res?.data?.error || "Er ging iets mis"); return; }
+        setSessionData(res.data);
+        setStep("pay");
+      } catch (err) {
+        toast.error(err?.message || "Er ging iets mis bij het starten van de betaling");
+      }
     } else {
       if (!email) { toast.error("E-mail is verplicht"); return; }
-      const res = await base44.functions.invoke("createSubscriptionSignup", {
-        planId: selectedPlan.id,
-        customerEmail: email,
-        customerName: name,
-      });
-      if (!res?.data?.success) { toast.error(res?.data?.error || "Er ging iets mis"); return; }
-      setSessionData(res.data);
-      setStep("pay");
+      try {
+        const res = await base44.functions.invoke("createSubscriptionSignup", {
+          planId: selectedPlan.id,
+          customerEmail: email,
+          customerName: name,
+        });
+        if (!res?.data?.success) { toast.error(res?.data?.error || "Er ging iets mis"); return; }
+        setSessionData(res.data);
+        setStep("pay");
+      } catch (err) {
+        toast.error(err?.message || "Er ging iets mis bij het starten van het abonnement");
+      }
     }
   };
 

@@ -48,11 +48,19 @@ export default function Checkout() {
   }, [links, slug]);
 
   const handleStartCheckout = async () => {
-    const response = await base44.functions.invoke('createCheckoutSession', {
-      paymentLinkId: paymentLink.id
-    });
-    setSessionData(response.data);
-    setSessionStarted(true);
+    try {
+      const response = await base44.functions.invoke('createPublicCheckoutSession', {
+        paymentLinkId: paymentLink.id
+      });
+      if (!response?.data?.success) {
+        toast.error(response?.data?.error || "Could not start checkout");
+        return;
+      }
+      setSessionData(response.data);
+      setSessionStarted(true);
+    } catch (err) {
+      toast.error(err?.message || "Could not start checkout");
+    }
   };
 
   const copyAddress = (addr) => {
