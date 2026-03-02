@@ -9,9 +9,16 @@ import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Payments() {
+  const [user, setUser] = React.useState(null);
+
+  React.useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
+
   const { data: payments = [], isLoading } = useQuery({
-    queryKey: ["payments"],
-    queryFn: () => base44.entities.Payment.list("-created_date", 200),
+    queryKey: ["payments", user?.email],
+    queryFn: () => base44.entities.Payment.filter({ merchant_id: user.email }, "-created_date", 200),
+    enabled: !!user,
   });
 
   return (
