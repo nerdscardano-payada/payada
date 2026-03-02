@@ -76,6 +76,7 @@ import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
 import PayTerminals from './pages/PayTerminals';
+import PayTerminal from './pages/PayTerminal';
 import __Layout from './Layout.jsx';
 
 
@@ -109,6 +110,7 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
     "PayTerminals": PayTerminals,
+    "PayTerminal": PayTerminal,
 }
 
 export const pagesConfig = {

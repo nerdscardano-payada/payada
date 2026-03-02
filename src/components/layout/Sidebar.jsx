@@ -17,7 +17,8 @@ import {
   X,
   Building2,
   Code2,
-  ShoppingCart
+  ShoppingCart,
+  Monitor
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
