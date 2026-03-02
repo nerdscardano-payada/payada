@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
       amount_total_lovelace: amountLovelace,
       platform_fee_lovelace: platformFeeLovelace,
       merchant_amount_lovelace: merchantAmountLovelace,
-      fee_percent: merchant.platform_fee_percent || PLATFORM_FEE_PERCENT,
+      fee_percent: merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT,
       status: 'pending'
     });
 
