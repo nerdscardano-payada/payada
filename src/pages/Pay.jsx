@@ -17,11 +17,10 @@ export default function Pay() {
   const [loading, setLoading] = useState(true);
   const [sessionData, setSessionData] = useState(null);
 
-  // Extract slug from URL path
+  // Extract slug from URL query params
   useEffect(() => {
-    const pathSegments = window.location.pathname.split("/").filter(Boolean);
-    const payIndex = pathSegments.indexOf("pay");
-    const paySlug = pathSegments[payIndex + 1];
+    const params = new URLSearchParams(window.location.search);
+    const paySlug = params.get("slug");
     if (paySlug) {
       setSlug(paySlug);
     } else {
