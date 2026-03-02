@@ -1,14 +1,12 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import PageHeader from "@/components/shared/PageHeader";
 import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
-import { ListOrdered, XCircle } from "lucide-react";
+import { ListOrdered } from "lucide-react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 export default function Subscriptions() {
   const queryClient = useQueryClient();
@@ -53,7 +51,7 @@ export default function Subscriptions() {
                   <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3 hidden md:table-cell">Next Due</th>
                   <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Started</th>
                   <th className="text-right text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Acties</th>
-                  </tr>
+                </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {subscriptions.map((sub) => (
@@ -84,6 +82,19 @@ export default function Subscriptions() {
                       <span className="text-xs text-slate-500">
                         {sub.started_at ? format(new Date(sub.started_at), "MMM d, yyyy") : format(new Date(sub.created_date), "MMM d, yyyy")}
                       </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-right">
+                      {sub.status !== "cancelled" && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-slate-400 hover:text-red-500"
+                          onClick={() => cancelMutation.mutate(sub.id)}
+                          title="Annuleer abonnement"
+                        >
+                          <XCircle className="w-4 h-4" />
+                        </Button>
+                      )}
                     </td>
                   </tr>
                 ))}
