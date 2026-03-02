@@ -35,12 +35,20 @@ const steps = [
 ];
 
 export default function HomePage() {
+  useEffect(() => {
+    base44.auth.isAuthenticated().then((loggedIn) => {
+      if (loggedIn) {
+        window.location.href = createPageUrl("Dashboard");
+      }
+    });
+  }, []);
+
   const handleSignUp = () => {
-    base44.auth.redirectToLogin();
+    base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   };
 
   const handleLogin = () => {
-    base44.auth.redirectToLogin();
+    base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   };
 
   return (
