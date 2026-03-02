@@ -31,9 +31,16 @@ export default function ButtonGenerator() {
   const [showPoweredBy, setShowPoweredBy] = useState(true);
   const [copied, setCopied] = useState(null);
 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
+
   const { data: links = [] } = useQuery({
-    queryKey: ["paymentLinks"],
-    queryFn: () => base44.entities.PaymentLink.filter({ status: "active" }, "-created_date", 100),
+    queryKey: ["paymentLinks", user?.email],
+    queryFn: () => base44.entities.PaymentLink.filter({ merchant_id: user.email, status: "active" }, "-created_date", 100),
+    enabled: !!user,
   });
 
   const selectedLink = links.find((l) => l.id === selectedLinkId);
