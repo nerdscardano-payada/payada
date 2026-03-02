@@ -20,11 +20,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function PaymentLinks() {
   const [showForm, setShowForm] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
+  const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
 
+  React.useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
+
   const { data: links = [], isLoading } = useQuery({
-    queryKey: ["paymentLinks"],
-    queryFn: () => base44.entities.PaymentLink.list("-created_date", 100),
+    queryKey: ["paymentLinks", user?.email],
+    queryFn: () => base44.entities.PaymentLink.filter({ merchant_id: user.email }, "-created_date", 100),
+    enabled: !!user,
   });
 
   const deleteMutation = useMutation({
