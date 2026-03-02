@@ -18,7 +18,7 @@ export default function Layout({ children, currentPageName }) {
     }
     base44.auth.isAuthenticated().then((loggedIn) => {
       if (!loggedIn) {
-        base44.auth.redirectToLogin(window.location.href);
+        window.location.href = createPageUrl("Home");
       } else {
         setAuthChecked(true);
       }
