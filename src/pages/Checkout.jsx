@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import WalletConnect from "@/components/checkout/WalletConnect";
+import WalletPayButton from "@/components/checkout/WalletPayButton";
 
 const BLOCKFROST_API_KEY = null; // Not needed frontend-side; tx is built client-side
 
