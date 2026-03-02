@@ -63,6 +63,8 @@ import Home from './pages/Home';
 import MerchantProfile from './pages/MerchantProfile';
 import Onboarding from './pages/Onboarding';
 import Pay from './pages/Pay';
+import PayTerminal from './pages/PayTerminal';
+import PayTerminals from './pages/PayTerminals';
 import PaymentLinks from './pages/PaymentLinks';
 import Payments from './pages/Payments';
 import Pricing from './pages/Pricing';
@@ -75,8 +77,6 @@ import SubscriptionPlans from './pages/SubscriptionPlans';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
-import PayTerminals from './pages/PayTerminals';
-import PayTerminal from './pages/PayTerminal';
 import __Layout from './Layout.jsx';
 
 
@@ -97,6 +97,8 @@ export const PAGES = {
     "MerchantProfile": MerchantProfile,
     "Onboarding": Onboarding,
     "Pay": Pay,
+    "PayTerminal": PayTerminal,
+    "PayTerminals": PayTerminals,
     "PaymentLinks": PaymentLinks,
     "Payments": Payments,
     "Pricing": Pricing,
@@ -109,8 +111,6 @@ export const PAGES = {
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
-    "PayTerminals": PayTerminals,
-    "PayTerminal": PayTerminal,
 }
 
 export const pagesConfig = {

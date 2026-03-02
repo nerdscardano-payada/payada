@@ -308,9 +308,6 @@ export default function Checkout() {
                   {/* Manual flow */}
                   {paymentMethod === "manual" && (
                     <div className="space-y-3">
-                      <div className="bg-white rounded-xl p-5 flex items-center justify-center">
-                        <div className="w-36 h-36 bg-slate-100 rounded-lg flex items-center justify-center text-xs text-slate-400">QR Code</div>
-                      </div>
                       <div>
                         <Label className="text-xs text-slate-500">Send exactly ₳ {sessionData?.amount_total_ada?.toFixed(3)} to:</Label>
                         <div className="flex items-center gap-2 mt-1.5">
