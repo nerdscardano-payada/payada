@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import PageHeader from "@/components/shared/PageHeader";
@@ -20,24 +20,34 @@ import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
+
   const { data: payments = [], isLoading: loadingPayments } = useQuery({
-    queryKey: ["payments"],
-    queryFn: () => base44.entities.Payment.list("-created_date", 200),
+    queryKey: ["payments", user?.email],
+    queryFn: () => base44.entities.Payment.filter({ merchant_id: user.email }, "-created_date", 200),
+    enabled: !!user,
   });
 
   const { data: paymentLinks = [], isLoading: loadingLinks } = useQuery({
-    queryKey: ["paymentLinks"],
-    queryFn: () => base44.entities.PaymentLink.list("-created_date", 50),
+    queryKey: ["paymentLinks", user?.email],
+    queryFn: () => base44.entities.PaymentLink.filter({ merchant_id: user.email }, "-created_date", 50),
+    enabled: !!user,
   });
 
   const { data: subscriptions = [], isLoading: loadingSubs } = useQuery({
-    queryKey: ["subscriptions"],
-    queryFn: () => base44.entities.Subscription.list("-created_date", 50),
+    queryKey: ["subscriptions", user?.email],
+    queryFn: () => base44.entities.Subscription.filter({ merchant_id: user.email }, "-created_date", 50),
+    enabled: !!user,
   });
 
   const { data: customers = [], isLoading: loadingCustomers } = useQuery({
-    queryKey: ["customers"],
-    queryFn: () => base44.entities.Customer.list("-created_date", 50),
+    queryKey: ["customers", user?.email],
+    queryFn: () => base44.entities.Customer.filter({ merchant_id: user.email }, "-created_date", 50),
+    enabled: !!user,
   });
 
   const totalAda = payments
