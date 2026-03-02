@@ -28,19 +28,21 @@ export default function TerminalForm({ terminal, onBack }) {
     status: terminal?.status || "active",
   });
 
-  const { data: paymentLinks = [] } = useQuery({
-    queryKey: ["payment-links-active"],
-    queryFn: () => base44.entities.PaymentLink.filter({ status: "active" }, "-created_date", 50),
-  });
-
-  const { data: plans = [] } = useQuery({
-    queryKey: ["subscription-plans-active"],
-    queryFn: () => base44.entities.SubscriptionPlan.filter({ status: "active" }, "-created_date", 50),
-  });
-
   const { data: me } = useQuery({
     queryKey: ["me"],
     queryFn: () => base44.auth.me(),
+  });
+
+  const { data: paymentLinks = [] } = useQuery({
+    queryKey: ["payment-links-active", me?.email],
+    queryFn: () => base44.entities.PaymentLink.filter({ status: "active", merchant_id: me.email }, "-created_date", 50),
+    enabled: !!me?.email,
+  });
+
+  const { data: plans = [] } = useQuery({
+    queryKey: ["subscription-plans-active", me?.email],
+    queryFn: () => base44.entities.SubscriptionPlan.filter({ status: "active", merchant_id: me.email }, "-created_date", 50),
+    enabled: !!me?.email,
   });
 
   const saveMutation = useMutation({
