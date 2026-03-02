@@ -16,7 +16,8 @@ import {
   Hexagon,
   X,
   Building2,
-  Code2
+  Code2,
+  ShoppingCart
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
