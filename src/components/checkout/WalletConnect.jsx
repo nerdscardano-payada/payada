@@ -25,7 +25,9 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [walletInstance, setWalletInstance] = useState(null);
 
   useEffect(() => {
-    detectWallets();
+    // Delay to allow browser extensions to inject window.cardano
+    const timer = setTimeout(() => detectWallets(), 500);
+    return () => clearTimeout(timer);
   }, []);
 
   const detectWallets = () => {
