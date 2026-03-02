@@ -59,9 +59,26 @@ export default function PayTerminal() {
     setStep("details");
   };
 
-  const handleOneTimeNext = () => {
-    // For one_time: go straight to details if needed, else pay
-    setStep("details");
+  const handleOneTimeNext = async () => {
+    const needsDetails = terminal.collect_email || terminal.collect_name;
+    if (needsDetails) {
+      setStep("details");
+    } else {
+      // Skip details step, go straight to payment
+      await handleStartPaymentDirect();
+    }
+  };
+
+  const handleStartPaymentDirect = async () => {
+    if (!paymentLink) return;
+    try {
+      const res = await base44.functions.invoke("createPublicCheckoutSession", { paymentLinkId: paymentLink.id });
+      if (!res?.data?.success) { toast.error(res?.data?.error || "Er ging iets mis"); return; }
+      setSessionData(res.data);
+      setStep("pay");
+    } catch (err) {
+      toast.error(err?.message || "Er ging iets mis bij het starten van de betaling");
+    }
   };
 
   const handleStartPayment = async () => {
