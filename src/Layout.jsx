@@ -3,6 +3,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
+import { createPageUrl } from "@/utils";
 
 const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal"];
 
