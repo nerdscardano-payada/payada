@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Transaction, AppWallet, BlockfrostProvider } from "@meshsdk/core";
+import { base44 } from "@/api/base44Client";
 
 /**
- * Builds and submits a multi-output Cardano transaction using MeshSDK + CIP-30 wallet.
- * Splits payment between merchant and PayADA fee wallet in one tx.
+ * Builds a Cardano tx via backend (buildPaymentTx) and submits via CIP-30 wallet.
+ * The backend returns unsigned CBOR → wallet signs → wallet submits.
  */
 export default function WalletPayButton({ connectedWallet, sessionData, paymentLink, onSuccess }) {
   const [txLoading, setTxLoading] = useState(false);
@@ -15,41 +15,37 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     if (!connectedWallet || !sessionData) return;
     setTxLoading(true);
     try {
-      const { api, walletId } = connectedWallet;
+      const { api, address: walletAddress } = connectedWallet;
 
       const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
-      const feeAddress = sessionData.fee_wallet_address;
-      const merchantLovelace = Math.floor(sessionData.merchant_amount_ada * 1_000_000);
-      const platformFeeLovelace = Math.floor(sessionData.platform_fee_ada * 1_000_000);
+      const merchantLovelace = String(Math.floor(sessionData.merchant_amount_ada * 1_000_000));
+      const platformFeeLovelace = String(Math.floor(sessionData.platform_fee_ada * 1_000_000));
 
-      // Use CIP-30 directly: build tx with Mesh Transaction builder using raw wallet API
-      const { BrowserWallet, Transaction: MeshTx } = await import("@meshsdk/core");
+      // Build the tx CBOR via backend
+      const buildRes = await base44.functions.invoke('buildPaymentTx', {
+        walletAddress,
+        merchantAddress,
+        merchantLovelace,
+        platformFeeLovelace,
+      });
 
-      // Connect Mesh to the already-enabled wallet
-      const wallet = await BrowserWallet.enable(walletId);
-
-      const tx = new MeshTx({ initiator: wallet });
-
-      // Add merchant output
-      tx.sendLovelace(merchantAddress, String(merchantLovelace));
-
-      // Add fee output if applicable
-      if (feeAddress && platformFeeLovelace > 0) {
-        tx.sendLovelace(feeAddress, String(platformFeeLovelace));
+      if (!buildRes?.data?.txCbor) {
+        throw new Error(buildRes?.data?.error || "Failed to build transaction CBOR");
       }
 
-      const unsignedTx = await tx.build();
-      const signedTx = await wallet.signTx(unsignedTx);
-      const txHash = await wallet.submitTx(signedTx);
+      // Sign with wallet (CIP-30) — opens wallet popup
+      const signedTx = await api.signTx(buildRes.data.txCbor, true);
+
+      // Submit via wallet
+      const txHash = await api.submitTx(signedTx);
 
       toast.success("Transaction submitted! Waiting for confirmation…");
       onSuccess?.(txHash);
     } catch (err) {
-      if (err?.code === 2 || err?.message?.includes("cancelled") || err?.message?.includes("declined")) {
+      if (err?.code === 2) {
         toast.error("Transaction cancelled.");
       } else {
         toast.error(err?.message || "Transaction failed. Please try again.");
-        console.error("Wallet pay error:", err);
       }
     } finally {
       setTxLoading(false);
