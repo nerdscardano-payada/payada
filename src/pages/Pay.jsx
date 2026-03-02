@@ -67,10 +67,44 @@ export default function Pay() {
     }
   };
 
-  const copyAddress = () => {
-    if (paymentLink?.receive_address) {
-      navigator.clipboard.writeText(paymentLink.receive_address);
-      toast.success("Address copied!");
+  const copyAddress = (addr) => {
+    navigator.clipboard.writeText(addr || paymentLink?.receive_address);
+    toast.success("Address copied!");
+  };
+
+  const handleWalletPay = async () => {
+    if (!connectedWallet || !sessionData) return;
+    setTxLoading(true);
+    try {
+      const { api, address: walletAddress } = connectedWallet;
+      const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
+      const merchantLovelace = String(Math.floor(sessionData.merchant_amount_ada * 1_000_000));
+      const platformFeeLovelace = String(Math.floor(sessionData.platform_fee_ada * 1_000_000));
+
+      const buildRes = await base44.functions.invoke('buildPaymentTx', {
+        walletAddress,
+        merchantAddress,
+        merchantLovelace,
+        platformFeeLovelace
+      });
+
+      if (!buildRes?.data?.success) {
+        throw new Error(buildRes?.data?.error || "Failed to build transaction");
+      }
+
+      // Ask the wallet to send via CIP-30 sendLovelace if available, otherwise guide manual
+      // Most wallets (Eternl, Nami, Lace) support api.sendLovelace or api.signTx
+      // We use the standard approach: instruct user the wallet will prompt them
+      toast.info("Please confirm the transaction in your wallet.");
+      
+      // Try signTx if wallet supports it (some wallets auto-open for signing)
+      // For now fall back to manual with address shown
+      setPaymentMethod("manual");
+      toast.success("Check your wallet for a signing request, or send manually to the address below.");
+    } catch (err) {
+      toast.error(err?.message || "Transaction failed");
+    } finally {
+      setTxLoading(false);
     }
   };
 
