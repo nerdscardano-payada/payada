@@ -28,13 +28,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields: txHash, paymentLinkId, merchantId' }, { status: 400 });
     }
 
-    // Use service role since this is called from a public page (no user auth)
-    const paymentLinks = await base44.asServiceRole.entities.PaymentLink.filter({ id: paymentLinkId, merchant_id: merchantId });
+    // Use service role for all operations - this is called from a public page
+    const sr = base44.asServiceRole;
+
+    const paymentLinks = await sr.entities.PaymentLink.filter({ id: paymentLinkId, merchant_id: merchantId });
     const paymentLink = paymentLinks[0];
     if (!paymentLink) return Response.json({ error: 'Payment link not found' }, { status: 404 });
 
     // Avoid duplicate payment records for same tx
-    const existingPayments = await base44.asServiceRole.entities.Payment.filter({ tx_hash: txHash });
+    const existingPayments = await sr.entities.Payment.filter({ tx_hash: txHash });
     if (existingPayments.length > 0) {
       return Response.json({ success: true, paymentId: existingPayments[0].id, duplicate: true });
     }
@@ -57,7 +59,7 @@ Deno.serve(async (req) => {
     const expectedAmountAda = paymentLink.amount_ada || 0;
 
     // Create Payment record
-    const payment = await base44.asServiceRole.entities.Payment.create({
+    const payment = await sr.entities.Payment.create({
       merchant_id: merchantId,
       payment_link_id: paymentLinkId,
       status: 'detected',
@@ -75,7 +77,7 @@ Deno.serve(async (req) => {
     });
 
     // Update PaymentLink stats
-    await base44.asServiceRole.entities.PaymentLink.update(paymentLinkId, {
+    await sr.entities.PaymentLink.update(paymentLinkId, {
       total_received_ada: (paymentLink.total_received_ada || 0) + receivedAmountAda,
       payment_count: (paymentLink.payment_count || 0) + 1
     });
