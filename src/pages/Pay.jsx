@@ -210,16 +210,16 @@ export default function Pay() {
             <div className="p-6 space-y-4">
               {paymentLink.collect_email && (
                 <div className="space-y-2">
-                  <Label className="text-slate-300 text-xs">Email</Label>
-                  <Input value={payerEmail} onChange={(e) => setPayerEmail(e.target.value)}
+                  <Label htmlFor="payer-email" className="text-slate-300 text-xs">Email</Label>
+                  <Input id="payer-email" name="payer-email" value={payerEmail} onChange={(e) => setPayerEmail(e.target.value)}
                     placeholder="your@email.com"
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                 </div>
               )}
               {paymentLink.collect_name && (
                 <div className="space-y-2">
-                  <Label className="text-slate-300 text-xs">Name</Label>
-                  <Input value={payerName} onChange={(e) => setPayerName(e.target.value)}
+                  <Label htmlFor="payer-name" className="text-slate-300 text-xs">Name</Label>
+                  <Input id="payer-name" name="payer-name" value={payerName} onChange={(e) => setPayerName(e.target.value)}
                     placeholder="Your name"
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                 </div>
@@ -335,7 +335,7 @@ export default function Pay() {
                   {paymentMethod === "manual" && (
                     <div className="space-y-3">
                       <div>
-                        <Label className="text-xs text-slate-500">Send exactly ₳ {sessionData?.amount_total_ada?.toFixed(3)} to:</Label>
+                        <Label htmlFor="receive-address" className="text-xs text-slate-500">Send exactly ₳ {sessionData?.amount_total_ada?.toFixed(3)} to:</Label>
                         <div className="flex items-center gap-2 mt-1.5">
                           <code className="flex-1 bg-slate-800 px-3 py-2.5 rounded-lg text-xs text-slate-300 font-mono break-all border border-slate-700">
                             {sessionData?.receive_address || paymentLink.receive_address}
