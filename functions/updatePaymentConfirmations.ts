@@ -63,10 +63,14 @@ async function triggerWebhook(sr, payment, merchantId) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
 
-    if (!user || user.role !== 'admin') { 
-      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    // Allow both: scheduled automations (no user) and direct admin calls
+    const isAuthenticated = await base44.auth.isAuthenticated();
+    if (isAuthenticated) {
+      const user = await base44.auth.me();
+      if (!user || user.role !== 'admin') {
+        return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+      }
     }
 
     const sr = base44.asServiceRole;
