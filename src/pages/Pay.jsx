@@ -105,7 +105,9 @@ export default function Pay() {
         });
         if (!buildRes?.data?.success) throw new Error(buildRes?.data?.error || "Failed to build transaction");
         const signedTx = await api.signTx(buildRes.data.txCbor, true);
-        hash = await api.submitTx(signedTx);
+        const submitRes = await base44.functions.invoke('submitSignedTx', { signedTxCbor: signedTx });
+        if (!submitRes?.data?.success) throw new Error(submitRes?.data?.error || "Failed to submit transaction");
+        hash = submitRes.data.txHash;
       } else {
         // No wallet TX API available — show manual fallback
         toast.info("Your wallet doesn't support direct sending. Use the Manual tab to send manually.");
