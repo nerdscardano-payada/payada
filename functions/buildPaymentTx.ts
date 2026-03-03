@@ -26,8 +26,22 @@ Deno.serve(async (req) => {
     // Import CSL (Cardano Serialization Library) for Deno
     const CSL = await import("npm:@emurgo/cardano-serialization-lib-nodejs@14.1.0");
 
-    // Fetch UTxOs for the wallet
-    const utxos = await blockfrost(`/addresses/${walletAddress}/utxos`);
+    // Convert hex CBOR address to bech32 if needed (CIP-30 wallets return hex)
+    const toBech32 = (addr) => {
+      if (!addr) return addr;
+      if (addr.startsWith("addr") || addr.startsWith("stake")) return addr; // already bech32
+      try {
+        return CSL.Address.from_bytes(Buffer.from(addr, 'hex')).to_bech32();
+      } catch {
+        return addr; // return as-is if conversion fails
+      }
+    };
+
+    const walletBech32 = toBech32(walletAddress);
+    const merchantBech32 = toBech32(merchantAddress);
+
+    // Fetch UTxOs for the wallet (use bech32 for Blockfrost)
+    const utxos = await blockfrost(`/addresses/${walletBech32}/utxos`);
     if (!utxos || utxos.length === 0) {
       return Response.json({ error: 'No UTxOs found for wallet address.' }, { status: 400 });
     }
