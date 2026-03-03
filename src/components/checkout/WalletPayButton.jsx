@@ -60,8 +60,8 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       return;
     }
 
-    // Step 3: Sign — NO state updates, NO redirects, NO navigation until this resolves
-    setTxStatus('signing');
+    // Step 3: Sign — zero React state updates between enable() and signTx() resolving
+    // Any setState here causes re-render which can destroy the extension port
     toast.info("Please confirm the transaction in your wallet…", { duration: 60000, id: "wallet-sign" });
 
     let witnessCbor;
@@ -79,6 +79,7 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       return;
     }
     toast.dismiss("wallet-sign");
+    setTxStatus('submitting');
 
     // Step 4: Submit via backend
     setTxStatus('submitting');
