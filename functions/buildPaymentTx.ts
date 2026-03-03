@@ -1,8 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
-// Build unsigned Cardano transaction using pure CBOR encoding (no WASM/eval needed)
-// Returns txCbor ready for wallet signing via CIP-30
-
 const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
 const PAYADA_FEE_WALLET = Deno.env.get("PAYADA_FEE_WALLET");
@@ -15,7 +12,6 @@ async function blockfrost(path) {
   return res.json();
 }
 
-// Convert hex address string to Uint8Array
 function hexToBytes(hex) {
   const result = new Uint8Array(hex.length / 2);
   for (let i = 0; i < hex.length; i += 2) {
@@ -24,53 +20,85 @@ function hexToBytes(hex) {
   return result;
 }
 
-// Convert Uint8Array to hex string
 function bytesToHex(bytes) {
   return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Encode a positive integer as CBOR
 function encodeCborUint(n) {
   const bn = BigInt(n);
   if (bn <= 23n) return [Number(bn)];
   if (bn <= 0xffn) return [0x18, Number(bn)];
   if (bn <= 0xffffn) return [0x19, Number(bn >> 8n), Number(bn & 0xffn)];
   if (bn <= 0xffffffffn) return [0x1a, Number(bn >> 24n), Number((bn >> 16n) & 0xffn), Number((bn >> 8n) & 0xffn), Number(bn & 0xffn)];
-  // 8-byte uint
   return [0x1b,
     Number(bn >> 56n), Number((bn >> 48n) & 0xffn), Number((bn >> 40n) & 0xffn), Number((bn >> 32n) & 0xffn),
     Number((bn >> 24n) & 0xffn), Number((bn >> 16n) & 0xffn), Number((bn >> 8n) & 0xffn), Number(bn & 0xffn)
   ];
 }
 
-// Encode bytes as CBOR byte string
 function encodeCborBytes(bytes) {
-  const len = bytes.length;
+  const arr = Array.isArray(bytes) ? bytes : Array.from(bytes);
+  const len = arr.length;
   let header;
   if (len <= 23) header = [0x40 + len];
   else if (len <= 0xff) header = [0x58, len];
   else header = [0x59, len >> 8, len & 0xff];
-  return [...header, ...bytes];
+  return [...header, ...arr];
 }
 
-// Encode CBOR array header
 function encodeCborArrayHeader(len) {
   if (len <= 23) return [0x80 + len];
   return [0x98, len];
 }
 
-// Encode CBOR map header
 function encodeCborMapHeader(len) {
   if (len <= 23) return [0xa0 + len];
   return [0xb8, len];
 }
 
-// Build a bech32 address -> raw bytes (strip network byte and decode)
-// For Blockfrost we use the bech32 address directly
-// But for CBOR we need raw address bytes
+// Encode a TxOut value - supports both pure ADA and multi-asset
+// assets = Map<policyIdHex, Map<assetNameHex, BigInt>>
+function encodeTxOutValue(lovelace, assets) {
+  if (!assets || assets.size === 0) {
+    // Pure ADA: just encode as uint
+    return encodeCborUint(lovelace);
+  }
 
-// Decode bech32 address to raw bytes using the CIP-19 format
-// We'll use a simple bech32 decoder
+  // Multi-asset: [lovelace, {policyId: {assetName: quantity}}]
+  const result = [];
+  result.push(0x82); // array of 2
+
+  // lovelace
+  result.push(...encodeCborUint(lovelace));
+
+  // multi-asset map
+  const sortedPolicies = Array.from(assets.keys()).sort();
+  result.push(...encodeCborMapHeader(sortedPolicies.length));
+
+  for (const policyId of sortedPolicies) {
+    const assetMap = assets.get(policyId);
+    result.push(...encodeCborBytes(hexToBytes(policyId)));
+
+    const sortedAssetNames = Array.from(assetMap.keys()).sort();
+    result.push(...encodeCborMapHeader(sortedAssetNames.length));
+    for (const assetName of sortedAssetNames) {
+      result.push(...encodeCborBytes(assetName ? hexToBytes(assetName) : []));
+      result.push(...encodeCborUint(assetMap.get(assetName)));
+    }
+  }
+
+  return result;
+}
+
+// Encode a full TxOut: [address_bytes, value]
+function encodeTxOut(addrBytes, lovelace, assets) {
+  const result = [];
+  result.push(0x82); // array of 2
+  result.push(...encodeCborBytes(Array.from(addrBytes)));
+  result.push(...encodeTxOutValue(lovelace, assets));
+  return result;
+}
+
 const CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
 
 function bech32Decode(bechStr) {
@@ -84,7 +112,6 @@ function bech32Decode(bechStr) {
     if (d < 0) return null;
     data.push(d);
   }
-  // Convert 5-bit groups to 8-bit (drop checksum last 6)
   const decoded = [];
   let value = 0, bits = 0;
   for (let i = 0; i < data.length - 6; i++) {
@@ -98,21 +125,6 @@ function bech32Decode(bechStr) {
   return { hrp, bytes: new Uint8Array(decoded) };
 }
 
-// Convert a CIP-30 hex CBOR address to bech32 address string
-// The raw address bytes from CIP-30 can be used directly with Blockfrost by converting to bech32
-function hexAddrToBech32(hexAddr) {
-  if (!hexAddr || hexAddr.startsWith('addr') || hexAddr.startsWith('stake')) return hexAddr;
-  const bytes = hexToBytes(hexAddr);
-  // First byte is header: network nibble (0xe=mainnet, 0x0=testnet)
-  const header = bytes[0];
-  const isMainnet = (header & 0x0f) === 1 || (header & 0x0f) === 0; // enterprise=0x60 mainnet
-  // Actually check high nibble for type
-  const hrp = (header & 0x0f) === 1 ? 'addr' : (header & 0x0f) === 0 ? 'addr' : 'addr';
-  // Use bech32 encoding
-  return encodeBech32(hrp, bytes);
-}
-
-// Simple bech32 encoder
 function encodeBech32(hrp, data) {
   function polymod(values) {
     const GEN = [0x3b6a57b2n, 0x26508e6dn, 0x1ea119fan, 0x3d4233ddn, 0x2a1462b3n];
@@ -156,6 +168,19 @@ function encodeBech32(hrp, data) {
   return hrp + '1' + [...words, ...checksum].map(v => CHARSET[v]).join('');
 }
 
+function hexAddrToBech32(hexAddr) {
+  if (!hexAddr || hexAddr.startsWith('addr') || hexAddr.startsWith('stake')) return hexAddr;
+  const bytes = hexToBytes(hexAddr);
+  return encodeBech32('addr', bytes);
+}
+
+function getAddrBytes(addr) {
+  if (addr.startsWith('addr') || addr.startsWith('stake')) {
+    return bech32Decode(addr)?.bytes;
+  }
+  return hexToBytes(addr);
+}
+
 Deno.serve(async (req) => {
   try {
     const { walletAddress, merchantAddress, merchantLovelace, platformFeeLovelace } = await req.json();
@@ -164,99 +189,101 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Convert addresses: if hex, convert to bech32 for Blockfrost
     const walletBech32 = hexAddrToBech32(walletAddress);
-    const merchantBech32 = hexAddrToBech32(merchantAddress);
+    const walletAddrBytes = getAddrBytes(walletAddress);
+    const merchantAddrBytes = getAddrBytes(merchantAddress);
 
-    // Get raw bytes for addresses (for CBOR encoding)
-    const walletAddrBytes = walletAddress.startsWith('addr') || walletAddress.startsWith('stake')
-      ? bech32Decode(walletAddress)?.bytes
-      : hexToBytes(walletAddress);
+    // Fetch UTxOs and latest block in parallel
+    const [utxos, latestBlock] = await Promise.all([
+      blockfrost(`/addresses/${walletBech32}/utxos`),
+      blockfrost('/blocks/latest')
+    ]);
 
-    const merchantAddrBytes = merchantAddress.startsWith('addr') || merchantAddress.startsWith('stake')
-      ? bech32Decode(merchantAddress)?.bytes
-      : hexToBytes(merchantAddress);
-
-    // Fetch UTxOs
-    const utxos = await blockfrost(`/addresses/${walletBech32}/utxos`);
     if (!utxos || utxos.length === 0) {
       return Response.json({ error: 'No UTxOs found for wallet address.' }, { status: 400 });
     }
 
-    // Get latest block for TTL
-    const latestBlock = await blockfrost('/blocks/latest');
     const ttl = latestBlock.slot + 7200;
-
     const merchantLov = BigInt(merchantLovelace);
     const feeLov = platformFeeLovelace && PAYADA_FEE_WALLET ? BigInt(platformFeeLovelace) : 0n;
     const totalOutput = merchantLov + feeLov;
     const minFee = 200000n;
+    const needed = totalOutput + minFee;
 
-    // Coin selection - prefer pure ADA UTxOs (no native tokens) to avoid token bleed
+    // Prefer pure ADA UTxOs to avoid picking up native tokens unnecessarily
     const pureAdaUtxos = utxos.filter(u => u.amount.length === 1 && u.amount[0].unit === 'lovelace');
-    const utxosToUse = pureAdaUtxos.length > 0 ? pureAdaUtxos : utxos.filter(u => u.amount.find(a => a.unit === 'lovelace'));
+    const mixedUtxos = utxos.filter(u => u.amount.length > 1);
+    const orderedUtxos = [...pureAdaUtxos, ...mixedUtxos];
 
-    let selectedUtxos = [];
-    let selectedTotal = 0n;
-    for (const utxo of utxosToUse) {
-      const adaAmount = utxo.amount.find(a => a.unit === 'lovelace');
-      if (!adaAmount) continue;
+    // Select UTxOs - collect lovelace AND all native tokens from selected UTxOs
+    const selectedUtxos = [];
+    let selectedLovelace = 0n;
+    const collectedAssets = new Map(); // policyId -> Map<assetName, BigInt>
+
+    for (const utxo of orderedUtxos) {
       selectedUtxos.push(utxo);
-      selectedTotal += BigInt(adaAmount.quantity);
-      if (selectedTotal >= totalOutput + minFee) break;
+      for (const asset of utxo.amount) {
+        if (asset.unit === 'lovelace') {
+          selectedLovelace += BigInt(asset.quantity);
+        } else {
+          const policyId = asset.unit.slice(0, 56);
+          const assetName = asset.unit.slice(56);
+          if (!collectedAssets.has(policyId)) collectedAssets.set(policyId, new Map());
+          const prev = collectedAssets.get(policyId).get(assetName) || 0n;
+          collectedAssets.get(policyId).set(assetName, prev + BigInt(asset.quantity));
+        }
+      }
+      if (selectedLovelace >= needed) break;
     }
 
-    if (selectedTotal < totalOutput + minFee) {
+    if (selectedLovelace < needed) {
       return Response.json({
-        error: `Insufficient balance. Need ₳ ${Number(totalOutput + minFee) / 1_000_000}, have ₳ ${Number(selectedTotal) / 1_000_000}`
+        error: `Insufficient ADA. Need ₳${Number(needed) / 1_000_000}, have ₳${Number(selectedLovelace) / 1_000_000}`
       }, { status: 400 });
     }
 
-    const changeLovelace = selectedTotal - totalOutput - minFee;
+    const changeLovelace = selectedLovelace - needed;
+    // All collected native tokens go back as change to the sender
+    const changeAssets = collectedAssets;
 
-    // Build transaction body as CBOR map
-    // inputs = set of [txhash, index]
+    // Build inputs
     const inputs = selectedUtxos.map(u => [hexToBytes(u.tx_hash), u.tx_index]);
 
-    // outputs = [address_bytes, lovelace]
-    const outputs = [
-      { addr: merchantAddrBytes, lovelace: merchantLov }
-    ];
+    // Build outputs
+    const outputsData = [];
 
+    // Merchant output (pure ADA)
+    outputsData.push({ addrBytes: merchantAddrBytes, lovelace: merchantLov, assets: new Map() });
+
+    // Fee output (pure ADA)
     if (feeLov > 0n && PAYADA_FEE_WALLET) {
-      const feeAddrBytes = PAYADA_FEE_WALLET.startsWith('addr')
-        ? bech32Decode(PAYADA_FEE_WALLET)?.bytes
-        : hexToBytes(PAYADA_FEE_WALLET);
-      outputs.push({ addr: feeAddrBytes, lovelace: feeLov });
+      const feeAddrBytes = getAddrBytes(PAYADA_FEE_WALLET);
+      outputsData.push({ addrBytes: feeAddrBytes, lovelace: feeLov, assets: new Map() });
     }
 
-    if (changeLovelace > 0n) {
-      outputs.push({ addr: walletAddrBytes, lovelace: changeLovelace });
+    // Change output (ADA + all native tokens back to sender)
+    if (changeLovelace > 0n || changeAssets.size > 0) {
+      outputsData.push({ addrBytes: walletAddrBytes, lovelace: changeLovelace, assets: changeAssets });
     }
 
     // Encode transaction body
-    // tx_body = { 0: inputs, 1: outputs, 2: fee, 3: ttl }
     const cborBytes = [];
-
-    // Map with 4 entries
     cborBytes.push(...encodeCborMapHeader(4));
 
-    // Key 0: inputs (array of [txhash_bytes, index])
+    // Key 0: inputs
     cborBytes.push(...encodeCborUint(0));
     cborBytes.push(...encodeCborArrayHeader(inputs.length));
     for (const [txHash, txIndex] of inputs) {
-      cborBytes.push(...encodeCborArrayHeader(2));
+      cborBytes.push(0x82);
       cborBytes.push(...encodeCborBytes(Array.from(txHash)));
       cborBytes.push(...encodeCborUint(txIndex));
     }
 
     // Key 1: outputs
     cborBytes.push(...encodeCborUint(1));
-    cborBytes.push(...encodeCborArrayHeader(outputs.length));
-    for (const { addr, lovelace } of outputs) {
-      cborBytes.push(...encodeCborArrayHeader(2));
-      cborBytes.push(...encodeCborBytes(Array.from(addr)));
-      cborBytes.push(...encodeCborUint(lovelace));
+    cborBytes.push(...encodeCborArrayHeader(outputsData.length));
+    for (const { addrBytes, lovelace, assets } of outputsData) {
+      cborBytes.push(...encodeTxOut(addrBytes, lovelace, assets));
     }
 
     // Key 2: fee
@@ -267,22 +294,8 @@ Deno.serve(async (req) => {
     cborBytes.push(...encodeCborUint(3));
     cborBytes.push(...encodeCborUint(ttl));
 
-    // Full transaction: [tx_body_cbor, {}, null, null]
-    // Wrap tx_body in a byte string first, then build full tx
-    const txBodyBytes = new Uint8Array(cborBytes);
-
-    // Full unsigned tx CBOR: array of [txBody, witnessSet, true, null]
-    const fullTx = [];
-    fullTx.push(0x84); // array of 4
-    // tx body
-    fullTx.push(...cborBytes);
-    // empty witness set {}
-    fullTx.push(0xa0);
-    // valid = true
-    fullTx.push(0xf5);
-    // auxiliary data = null
-    fullTx.push(0xf6);
-
+    // Full tx: [txBody, witnessSet={}, valid=true, auxiliaryData=null]
+    const fullTx = [0x84, ...cborBytes, 0xa0, 0xf5, 0xf6];
     const txCbor = bytesToHex(new Uint8Array(fullTx));
 
     return Response.json({ success: true, txCbor });
