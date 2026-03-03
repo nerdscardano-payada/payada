@@ -61,11 +61,18 @@ Deno.serve(async (req) => {
       const attemptNumber = (log.attempt_number || 1);
       const maxRetries = (log.max_retries || 5);
 
-      // Need the webhook secret — fetch the endpoint
+      // Need the webhook secret — fetch the endpoint (with timeout guard)
       let webhookSecret = '';
       if (log.webhook_endpoint_id) {
         const endpoints = await sr.entities.WebhookEndpoint.filter({ id: log.webhook_endpoint_id });
         if (endpoints.length > 0) webhookSecret = endpoints[0].secret || '';
+      }
+
+      // Skip logs missing a delivery URL
+      if (!log.endpoint_url) {
+        await sr.entities.WebhookLog.update(log.id, { status: 'failed', error_message: 'Missing endpoint_url' });
+        failed++;
+        continue;
       }
 
       const result = await deliverWebhook({ ...log, webhook_secret: webhookSecret });
