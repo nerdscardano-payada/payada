@@ -81,8 +81,7 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     toast.dismiss("wallet-sign");
     setTxStatus('submitting');
 
-    // Step 4: Submit via backend
-    setTxStatus('submitting');
+    // Step 4: Submit via backend — port is safe now, signTx resolved
     try {
       const submitRes = await base44.functions.invoke('submitSignedTx', {
         unsignedTxCbor: txCbor,
