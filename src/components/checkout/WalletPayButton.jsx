@@ -64,9 +64,10 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     // Any setState here causes re-render which can destroy the extension port
     toast.info("Please confirm the transaction in your wallet…", { duration: 60000, id: "wallet-sign" });
 
-    let witnessCbor;
+    let signedTxCbor;
     try {
-      witnessCbor = await api.signTx(txCbor, true);
+      // signTx returns the fully signed tx CBOR (CIP-30 standard)
+      signedTxCbor = await api.signTx(txCbor, true);
     } catch (signErr) {
       toast.dismiss("wallet-sign");
       if (signErr?.code === 2 || signErr?.info?.includes("cancelled") || signErr?.info?.includes("declined")) {
@@ -81,17 +82,26 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     toast.dismiss("wallet-sign");
     setTxStatus('submitting');
 
-    // Step 4: Submit via backend — port is safe now, signTx resolved
+    // Step 4: Submit — try wallet's own submitTx first (most reliable, stays on correct network)
+    // Fall back to backend Blockfrost submission if wallet doesn't support it
     try {
-      const submitRes = await base44.functions.invoke('submitSignedTx', {
-        unsignedTxCbor: txCbor,
-        witnessCbor,
-      });
-      if (!submitRes?.data?.success) {
-        throw new Error(submitRes?.data?.error || "Failed to submit transaction");
+      let txHash;
+      try {
+        // CIP-30: wallet.submitTx() sends the signed tx directly to its own node
+        txHash = await api.submitTx(signedTxCbor);
+      } catch (walletSubmitErr) {
+        // Wallet doesn't support submitTx or failed — use backend
+        const submitRes = await base44.functions.invoke('submitSignedTx', {
+          unsignedTxCbor: txCbor,
+          witnessCbor: signedTxCbor,
+        });
+        if (!submitRes?.data?.success) {
+          throw new Error(submitRes?.data?.error || "Failed to submit transaction");
+        }
+        txHash = submitRes.data.txHash;
       }
       toast.success("Transaction submitted! Waiting for confirmation…");
-      onSuccess?.(submitRes.data.txHash);
+      onSuccess?.(txHash);
     } catch (err) {
       toast.error(err?.message || "Failed to submit transaction.");
     } finally {
