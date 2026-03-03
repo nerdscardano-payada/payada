@@ -90,7 +90,8 @@ export default function Pay() {
             paymentLinkId: paymentLink.id,
             merchantId: paymentLink.merchant_id,
             payerEmail: payerEmail || null,
-            payerName: payerName || null
+            payerName: payerName || null,
+            payerAddress: connectedWallet?.address || null
           });
           console.log(`Payment recorded on attempt ${attempt}`);
           break; // success
