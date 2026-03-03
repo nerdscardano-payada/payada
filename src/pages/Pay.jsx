@@ -74,10 +74,26 @@ export default function Pay() {
     toast.success("Address copied!");
   };
 
-  const handleTxSuccess = useCallback((hash) => {
+  const handleTxSuccess = useCallback(async (hash) => {
     setTxHash(hash);
     setTxSubmitted(true);
     setPaymentStatus("detected");
+
+    // Record the payment in the database
+    if (paymentLink) {
+      try {
+        await base44.functions.invoke('recordWalletPayment', {
+          txHash: hash,
+          paymentLinkId: paymentLink.id,
+          merchantId: paymentLink.merchant_id,
+          payerEmail: payerEmail || null,
+          payerName: payerName || null
+        });
+      } catch (err) {
+        console.error("Failed to record payment:", err);
+      }
+    }
+
     // Poll for confirmation
     let attempts = 0;
     const interval = setInterval(async () => {
@@ -91,7 +107,7 @@ export default function Pay() {
       } catch {}
       if (attempts >= 30) clearInterval(interval);
     }, 10000);
-  }, []);
+  }, [paymentLink, payerEmail, payerName]);
 
   if (!slug) {
     return (
