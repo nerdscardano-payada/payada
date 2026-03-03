@@ -4,19 +4,12 @@ const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
 
 async function getLatestBlockHeight() {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
-  try {
-    const response = await fetch(`${BLOCKFROST_URL}/blocks/latest`, {
-      headers: { "project_id": BLOCKFROST_API_KEY },
-      signal: controller.signal
-    });
-    if (!response.ok) throw new Error(`Failed to get latest block: ${response.statusText}`);
-    const data = await response.json();
-    return data.height;
-  } finally {
-    clearTimeout(timeout);
-  }
+  const response = await fetch(`${BLOCKFROST_URL}/blocks/latest`, {
+    headers: { "project_id": BLOCKFROST_API_KEY }
+  });
+  if (!response.ok) throw new Error(`Failed to get latest block: ${response.statusText}`);
+  const data = await response.json();
+  return data.height;
 }
 
 async function generateHmacSignature(payload, secret) {
@@ -52,13 +45,11 @@ async function triggerWebhook(sr, payment, merchantId) {
           }
         });
         const signature = await generateHmacSignature(payload, webhook.secret);
-        // Fire-and-forget webhook delivery
         fetch(webhook.url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-PayADA-Signature': signature, 'X-PayADA-Timestamp': String(timestamp), 'X-PayADA-Nonce': nonce },
           body: payload
         }).catch(err => console.error(`Webhook delivery failed: ${err.message}`));
-
         return sr.entities.WebhookEndpoint.update(webhook.id, {
           last_triggered_at: new Date().toISOString(),
           delivery_count: (webhook.delivery_count || 0) + 1
@@ -68,6 +59,81 @@ async function triggerWebhook(sr, payment, merchantId) {
   } catch (error) {
     console.error(`Error triggering webhooks: ${error.message}`);
   }
+}
+
+async function processConfirmations(base44) {
+  const sr = base44.asServiceRole;
+
+  const [latestBlock, detectedPayments] = await Promise.all([
+    getLatestBlockHeight(),
+    sr.entities.Payment.filter({ status: 'detected' })
+  ]);
+
+  console.log(`Latest block: ${latestBlock}, detected payments: ${detectedPayments.length}`);
+
+  const toConfirm = [];
+  const toUpdateOnly = [];
+
+  for (const payment of detectedPayments) {
+    if (!payment.block_height_detected) continue;
+    const confirmations = latestBlock - payment.block_height_detected;
+    const confirmationsRequired = payment.confirmations_required || 2;
+    if (confirmations >= confirmationsRequired) {
+      toConfirm.push({ payment, confirmations });
+    } else {
+      toUpdateOnly.push({ payment, confirmations });
+    }
+  }
+
+  // Update confirmation counts in parallel
+  await Promise.all(
+    toUpdateOnly.map(({ payment, confirmations }) =>
+      sr.entities.Payment.update(payment.id, { confirmations })
+    )
+  );
+
+  // Process confirmations in parallel
+  await Promise.all(
+    toConfirm.map(async ({ payment, confirmations }) => {
+      const confirmedAt = new Date().toISOString();
+      const updatedPayment = { ...payment, confirmations, confirmed_at: confirmedAt };
+
+      await Promise.all([
+        sr.entities.Payment.update(payment.id, { status: 'confirmed', confirmations, confirmed_at: confirmedAt }),
+        triggerWebhook(sr, updatedPayment, payment.merchant_id)
+      ]);
+
+      // Fire-and-forget side effects
+      base44.functions.invoke('logAuditEvent', {
+        merchantId: payment.merchant_id,
+        eventType: 'payment_confirmed',
+        resourceType: 'payment',
+        resourceId: payment.id,
+        result: 'success',
+        changes: { status: 'confirmed', confirmations },
+        metadata: { block_height: latestBlock, amount_ada: payment.received_amount_ada }
+      }).catch(err => console.error(`Audit log failed: ${err.message}`));
+
+      base44.functions.invoke('sendMerchantNotification', {
+        merchantId: payment.merchant_id,
+        notificationType: 'payment_confirmed',
+        title: '✅ Payment Confirmed',
+        message: `Payment of ${(payment.received_amount_ada || 0).toFixed(2)} ADA has been confirmed with ${confirmations} confirmations.`,
+        resourceType: 'payment',
+        resourceId: payment.id,
+        actionUrl: `/payments/${payment.id}`,
+        severity: 'info',
+        metadata: { confirmations, amount_ada: payment.received_amount_ada }
+      }).catch(err => console.error(`Notification failed: ${err.message}`));
+    })
+  );
+
+  return {
+    latestBlockHeight: latestBlock,
+    confirmedCount: toConfirm.length,
+    updatedCount: toUpdateOnly.length,
+    totalProcessed: detectedPayments.length
+  };
 }
 
 Deno.serve(async (req) => {
@@ -83,92 +149,10 @@ Deno.serve(async (req) => {
       }
     }
 
-    const sr = base44.asServiceRole;
-
-    // Fetch block height and detected payments in parallel
-    const [latestBlock, detectedPayments] = await Promise.all([
-      getLatestBlockHeight(),
-      sr.entities.Payment.filter({ status: 'detected' })
-    ]);
-
-    let confirmedCount = 0;
-    let updatedCount = 0;
-
-    // Separate payments into "to confirm" and "to update count"
-    const toConfirm = [];
-    const toUpdateOnly = [];
-
-    for (const payment of detectedPayments) {
-      if (!payment.block_height_detected) continue;
-      const confirmations = latestBlock - payment.block_height_detected;
-      const confirmationsRequired = payment.confirmations_required || 2;
-
-      if (confirmations >= confirmationsRequired) {
-        toConfirm.push({ payment, confirmations });
-      } else {
-        toUpdateOnly.push({ payment, confirmations });
-      }
-    }
-
-    // Update confirmation counts in parallel (no side effects needed)
-    await Promise.all(
-      toUpdateOnly.map(({ payment, confirmations }) =>
-        sr.entities.Payment.update(payment.id, { confirmations })
-      )
-    );
-    updatedCount = toUpdateOnly.length;
-
-    // Process confirmations in parallel
-    await Promise.all(
-      toConfirm.map(async ({ payment, confirmations }) => {
-        const confirmedAt = new Date().toISOString();
-        const updatedPayment = { ...payment, confirmations, confirmed_at: confirmedAt };
-
-        // Update payment status + trigger webhooks (critical operations)
-        await Promise.all([
-          sr.entities.Payment.update(payment.id, {
-            status: 'confirmed',
-            confirmations,
-            confirmed_at: confirmedAt
-          }),
-          triggerWebhook(sr, updatedPayment, payment.merchant_id)
-        ]);
-
-        // Fire-and-forget: audit log + notification (non-blocking)
-        base44.functions.invoke('logAuditEvent', {
-          merchantId: payment.merchant_id,
-          eventType: 'payment_confirmed',
-          resourceType: 'payment',
-          resourceId: payment.id,
-          result: 'success',
-          changes: { status: 'confirmed', confirmations },
-          metadata: { block_height: latestBlock, amount_ada: payment.received_amount_ada }
-        }).catch(err => console.error(`Audit log failed: ${err.message}`));
-
-        base44.functions.invoke('sendMerchantNotification', {
-          merchantId: payment.merchant_id,
-          notificationType: 'payment_confirmed',
-          title: '✅ Payment Confirmed',
-          message: `Payment of ${(payment.received_amount_ada || 0).toFixed(2)} ADA has been confirmed with ${confirmations} confirmations.`,
-          resourceType: 'payment',
-          resourceId: payment.id,
-          actionUrl: `/payments/${payment.id}`,
-          severity: 'info',
-          metadata: { confirmations, amount_ada: payment.received_amount_ada }
-        }).catch(err => console.error(`Notification failed: ${err.message}`));
-
-        confirmedCount++;
-      })
-    );
-
-    return Response.json({
-      success: true,
-      latestBlockHeight: latestBlock,
-      confirmedCount,
-      updatedCount,
-      totalProcessed: detectedPayments.length
-    });
+    const result = await processConfirmations(base44);
+    return Response.json({ success: true, ...result });
   } catch (error) {
+    console.error('Confirmation update error:', error.message);
     return Response.json({ error: error.message, type: 'confirmation_update_error' }, { status: 500 });
   }
 });
