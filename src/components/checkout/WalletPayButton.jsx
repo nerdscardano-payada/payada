@@ -84,17 +84,35 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     toast.dismiss("wallet-sign");
     setTxStatus('submitting');
 
+    // Normalize signedTxCbor to hex string (submitTx requires hex-encoded CBOR)
+    let normalizedSignedTx;
+    console.log("signedTxCbor type:", typeof signedTxCbor);
+    if (typeof signedTxCbor === "string") {
+      console.log("signedTxCbor preview:", signedTxCbor.slice(0, 20));
+      if (/^[0-9a-fA-F]+$/.test(signedTxCbor)) {
+        normalizedSignedTx = signedTxCbor; // already hex
+      } else {
+        // base64 → hex
+        const bytes = Uint8Array.from(atob(signedTxCbor), c => c.charCodeAt(0));
+        normalizedSignedTx = Array.from(bytes).map(b => b.toString(16).padStart(2, "0")).join("");
+      }
+    } else {
+      // Uint8Array or similar → hex
+      console.log("signedTxCbor is object/bytes:", signedTxCbor);
+      normalizedSignedTx = Array.from(signedTxCbor).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+    console.log("normalizedSignedTx preview:", normalizedSignedTx.slice(0, 20));
+
     // Step 4: Submit via wallet (CIP-30), fallback to backend
     try {
       let txHash;
       try {
-        txHash = await api.submitTx(signedTxCbor);
+        txHash = await api.submitTx(normalizedSignedTx);
         console.log("TX HASH (wallet submit):", txHash);
       } catch (walletSubmitErr) {
         console.warn("Wallet submitTx failed, trying backend:", walletSubmitErr?.info || walletSubmitErr?.message);
-        // signTx(tx, true) returns full signed tx — send directly to Blockfrost via backend
         const submitRes = await base44.functions.invoke('submitSignedTx', {
-          signedTxCbor,
+          signedTxCbor: normalizedSignedTx,
         });
         if (!submitRes?.data?.success) {
           throw new Error(submitRes?.data?.error || "Failed to submit transaction");
