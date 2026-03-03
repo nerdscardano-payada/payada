@@ -209,18 +209,29 @@ Deno.serve(async (req) => {
     }
 
     const ttl = latestBlock.slot + 7200; // ~2 hour TTL
-    const merchantLov = BigInt(merchantLovelace);
-    const feeLov = platformFeeLovelace && PAYADA_FEE_WALLET ? BigInt(platformFeeLovelace) : 0n;
+
+    // ⭐ Smart Payment Rules Engine: enforce minimum outputs
+    const MIN_OUTPUT = 1_500_000n; // 1.5 ADA minimum per output (Cardano safety)
+    const FEE_BUFFER = 300_000n;   // 0.3 ADA fee buffer on top of estimate
+
+    // Enforce minimum merchant output
+    const merchantLov = BigInt(merchantLovelace) < MIN_OUTPUT ? MIN_OUTPUT : BigInt(merchantLovelace);
+
+    // Enforce minimum fee output
+    let feeLov = 0n;
+    if (platformFeeLovelace && PAYADA_FEE_WALLET) {
+      const rawFee = BigInt(platformFeeLovelace);
+      feeLov = rawFee < MIN_OUTPUT ? MIN_OUTPUT : rawFee;
+    }
+
     const totalOutput = merchantLov + feeLov;
 
     // Separate pure ADA UTxOs from those with native tokens
     const pureAdaUtxos = utxos
       .filter(u => u.amount.length === 1 && u.amount[0].unit === 'lovelace')
-      .sort((a, b) => Number(BigInt(b.amount[0].quantity) - BigInt(a.amount[0].quantity))); // largest first
+      .sort((a, b) => Number(BigInt(b.amount[0].quantity) - BigInt(a.amount[0].quantity)));
     const mixedUtxos = utxos.filter(u => u.amount.length > 1);
 
-    // Try first with pure ADA UTxOs only (cleaner tx, avoids native token complexity)
-    // If not enough, fall back to including mixed UTxOs
     const trySelect = (pool) => {
       const selected = [];
       let selectedLovelace = 0n;
@@ -240,10 +251,11 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Estimate fee based on current selection
-        const numOutputs = 2 + (feeLov > 0n ? 1 : 0) + (collectedAssets.size > 0 ? 1 : 0);
-        const fee = estimateFee(selected.length, numOutputs, collectedAssets.size > 0);
-        const needed = totalOutput + fee;
+        const hasChange = true; // always plan for change output
+        const numOutputs = 1 + (feeLov > 0n ? 1 : 0) + (hasChange ? 1 : 0);
+        const fee = estimateFee(selected.length, numOutputs, collectedAssets.size > 0) + FEE_BUFFER;
+        const minChange = collectedAssets.size > 0 ? 2_000_000n : MIN_OUTPUT;
+        const needed = totalOutput + fee + minChange;
 
         if (selectedLovelace >= needed) {
           return { selected, selectedLovelace, collectedAssets, fee };
@@ -252,7 +264,6 @@ Deno.serve(async (req) => {
       return null;
     };
 
-    // Try pure ADA first, then mixed
     let selection = trySelect(pureAdaUtxos);
     if (!selection) {
       selection = trySelect([...pureAdaUtxos, ...mixedUtxos]);
@@ -264,7 +275,7 @@ Deno.serve(async (req) => {
         return sum + (lov ? BigInt(lov.quantity) : 0n);
       }, 0n);
       return Response.json({
-        error: `Insufficient ADA. Need ₳${Number(totalOutput) / 1_000_000 + 0.2} (incl. fees), have ₳${Number(totalAvailable) / 1_000_000}`
+        error: `Insufficient ADA. Need ₳${Number(totalOutput) / 1_000_000 + 0.5} (incl. fees + min outputs), have ₳${Number(totalAvailable) / 1_000_000}`
       }, { status: 400 });
     }
 
@@ -277,21 +288,19 @@ Deno.serve(async (req) => {
     // Build outputs
     const outputsData = [];
 
-    // Merchant output (pure ADA)
+    // Merchant output — guaranteed >= MIN_OUTPUT
     outputsData.push({ addrBytes: merchantAddrBytes, lovelace: merchantLov, assets: new Map() });
 
-    // Platform fee output (pure ADA)
+    // Platform fee output — guaranteed >= MIN_OUTPUT
     if (feeLov > 0n && PAYADA_FEE_WALLET) {
       const feeAddrBytes = getAddrBytes(PAYADA_FEE_WALLET);
       outputsData.push({ addrBytes: feeAddrBytes, lovelace: feeLov, assets: new Map() });
     }
 
-    // Change output: ADA change + all native tokens back to sender
-    // Minimum ADA for change output: 1 ADA (pure ADA) or 2 ADA (with native tokens)
-    const minChangeForTokens = collectedAssets.size > 0 ? 2_000_000n : MIN_LOVELACE_PER_OUTPUT;
-    if (changeLovelace >= minChangeForTokens || collectedAssets.size > 0) {
-      const changeAda = changeLovelace >= minChangeForTokens ? changeLovelace : minChangeForTokens;
-      outputsData.push({ addrBytes: walletAddrBytes, lovelace: changeAda, assets: collectedAssets });
+    // Change output — guaranteed >= MIN_OUTPUT (or 2 ADA with native tokens)
+    const minChange = collectedAssets.size > 0 ? 2_000_000n : MIN_OUTPUT;
+    if (changeLovelace >= minChange) {
+      outputsData.push({ addrBytes: walletAddrBytes, lovelace: changeLovelace, assets: collectedAssets });
     }
 
     // Encode transaction body
