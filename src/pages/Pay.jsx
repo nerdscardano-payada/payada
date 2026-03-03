@@ -79,18 +79,29 @@ export default function Pay() {
     setTxSubmitted(true);
     setPaymentStatus("detected");
 
-    // Record the payment in the database
+    // Record the payment in the database, with retries to allow Blockfrost to index the tx
     if (paymentLink) {
-      try {
-        await base44.functions.invoke('recordWalletPayment', {
-          txHash: hash,
-          paymentLinkId: paymentLink.id,
-          merchantId: paymentLink.merchant_id,
-          payerEmail: payerEmail || null,
-          payerName: payerName || null
-        });
-      } catch (err) {
-        console.error("Failed to record payment:", err);
+      const maxAttempts = 5;
+      const delayMs = 15000;
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          await base44.functions.invoke('recordWalletPayment', {
+            txHash: hash,
+            paymentLinkId: paymentLink.id,
+            merchantId: paymentLink.merchant_id,
+            payerEmail: payerEmail || null,
+            payerName: payerName || null
+          });
+          console.log(`Payment recorded on attempt ${attempt}`);
+          break; // success
+        } catch (err) {
+          console.warn(`recordWalletPayment attempt ${attempt} failed:`, err?.message);
+          if (attempt < maxAttempts) {
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+          } else {
+            console.error("All attempts to record payment failed:", err);
+          }
+        }
       }
     }
 
