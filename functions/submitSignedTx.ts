@@ -2,29 +2,34 @@ const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
 
 function hexToBytes(hex) {
-  const result = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < hex.length; i += 2) {
-    result[i / 2] = parseInt(hex.substr(i, 2), 16);
-  }
-  return result;
+  return Uint8Array.from(
+    hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16))
+  );
 }
 
 Deno.serve(async (req) => {
   try {
 
-    const { signedTxCbor } = await req.json();
+    const rawBody = await req.json();
+    console.log("Incoming payload:", JSON.stringify(rawBody));
+
+    // Handle Base44 SDK wrapping
+    const signedTxCbor =
+      rawBody?.signedTxCbor ||
+      rawBody?.data?.signedTxCbor ||
+      rawBody?.tx ||
+      rawBody?.data?.tx;
 
     if (!signedTxCbor) {
       return Response.json(
-        { error: "Missing signedTxCbor" },
+        { error: "Missing signedTxCbor in request payload" },
         { status: 400 }
       );
     }
 
-    // Validate hex
     if (!/^[0-9a-fA-F]+$/.test(signedTxCbor)) {
       return Response.json(
-        { error: "signedTxCbor must be hex encoded CBOR string" },
+        { error: "signedTxCbor must be hex encoded string" },
         { status: 400 }
       );
     }
@@ -49,11 +54,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    const txHash = text.replace(/"/g, "").trim();
-
     return Response.json({
       success: true,
-      txHash,
+      txHash: text.replace(/"/g, "").trim(),
     });
 
   } catch (err) {
