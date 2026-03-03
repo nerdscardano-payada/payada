@@ -9,34 +9,57 @@ function hexToBytes(hex) {
   return result;
 }
 
-// signTx(tx, true) returns the full signed transaction — submit directly to Blockfrost
 Deno.serve(async (req) => {
   try {
+
     const { signedTxCbor } = await req.json();
 
     if (!signedTxCbor) {
-      return Response.json({ error: 'Missing signedTxCbor' }, { status: 400 });
+      return Response.json(
+        { error: "Missing signedTxCbor" },
+        { status: 400 }
+      );
     }
 
+    // Validate hex
+    if (!/^[0-9a-fA-F]+$/.test(signedTxCbor)) {
+      return Response.json(
+        { error: "signedTxCbor must be hex encoded CBOR string" },
+        { status: 400 }
+      );
+    }
+
+    const fullTxBytes = hexToBytes(signedTxCbor);
+
     const res = await fetch(`${BLOCKFROST_URL}/tx/submit`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'project_id': BLOCKFROST_API_KEY,
-        'Content-Type': 'application/cbor',
+        project_id: BLOCKFROST_API_KEY,
+        "Content-Type": "application/cbor",
       },
-      body: hexToBytes(signedTxCbor),
+      body: fullTxBytes,
     });
 
     const text = await res.text();
 
     if (!res.ok) {
-      return Response.json({ error: `Blockfrost submission failed: ${text}` }, { status: 400 });
+      return Response.json(
+        { error: `Blockfrost submission failed: ${text}` },
+        { status: 400 }
+      );
     }
 
-    const txHash = text.replace(/"/g, '').trim();
-    return Response.json({ success: true, txHash });
+    const txHash = text.replace(/"/g, "").trim();
 
-  } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({
+      success: true,
+      txHash,
+    });
+
+  } catch (err) {
+    return Response.json(
+      { error: err.message },
+      { status: 500 }
+    );
   }
 });
