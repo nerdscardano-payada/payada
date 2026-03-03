@@ -92,18 +92,18 @@ async function processConfirmations(base44) {
     )
   );
 
-  // Process confirmations in parallel
+  // Process confirmations in parallel — only await the Payment update, everything else is fire-and-forget
   await Promise.all(
     toConfirm.map(async ({ payment, confirmations }) => {
       const confirmedAt = new Date().toISOString();
       const updatedPayment = { ...payment, confirmations, confirmed_at: confirmedAt };
 
-      await Promise.all([
-        sr.entities.Payment.update(payment.id, { status: 'confirmed', confirmations, confirmed_at: confirmedAt }),
-        triggerWebhook(sr, updatedPayment, payment.merchant_id)
-      ]);
+      await sr.entities.Payment.update(payment.id, { status: 'confirmed', confirmations, confirmed_at: confirmedAt });
 
-      // Fire-and-forget side effects
+      // Fire-and-forget side effects (do NOT await)
+      triggerWebhook(sr, updatedPayment, payment.merchant_id)
+        .catch(err => console.error(`Webhook failed: ${err.message}`));
+
       base44.functions.invoke('logAuditEvent', {
         merchantId: payment.merchant_id,
         eventType: 'payment_confirmed',
