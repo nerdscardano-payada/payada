@@ -192,10 +192,13 @@ Deno.serve(async (req) => {
     const totalOutput = merchantLov + feeLov;
     const minFee = 200000n;
 
-    // Coin selection
+    // Coin selection - prefer pure ADA UTxOs (no native tokens) to avoid token bleed
+    const pureAdaUtxos = utxos.filter(u => u.amount.length === 1 && u.amount[0].unit === 'lovelace');
+    const utxosToUse = pureAdaUtxos.length > 0 ? pureAdaUtxos : utxos.filter(u => u.amount.find(a => a.unit === 'lovelace'));
+
     let selectedUtxos = [];
     let selectedTotal = 0n;
-    for (const utxo of utxos) {
+    for (const utxo of utxosToUse) {
       const adaAmount = utxo.amount.find(a => a.unit === 'lovelace');
       if (!adaAmount) continue;
       selectedUtxos.push(utxo);
