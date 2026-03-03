@@ -42,6 +42,10 @@ const navItems = [
 ];
 
 export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
+  const [user, setUser] = React.useState(null);
+  React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
+  const isAdmin = user?.role === "admin";
+
   return (
     <>
       {/* Mobile overlay */}
