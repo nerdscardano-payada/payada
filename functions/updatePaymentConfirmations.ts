@@ -4,12 +4,19 @@ const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
 
 async function getLatestBlockHeight() {
-  const response = await fetch(`${BLOCKFROST_URL}/blocks/latest`, {
-    headers: { "project_id": BLOCKFROST_API_KEY }
-  });
-  if (!response.ok) throw new Error(`Failed to get latest block: ${response.statusText}`);
-  const data = await response.json();
-  return data.height;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
+  try {
+    const response = await fetch(`${BLOCKFROST_URL}/blocks/latest`, {
+      headers: { "project_id": BLOCKFROST_API_KEY },
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`Failed to get latest block: ${response.statusText}`);
+    const data = await response.json();
+    return data.height;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 async function generateHmacSignature(payload, secret) {
