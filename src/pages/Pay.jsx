@@ -264,10 +264,7 @@ export default function Pay() {
                             connectedWallet={connectedWallet}
                             sessionData={sessionData}
                             paymentLink={paymentLink}
-                            onSuccess={(hash) => {
-                              setTxHash(hash);
-                              setPaymentStatus("detected");
-                            }}
+                            onSuccess={handleTxSuccess}
                           />
                           <p className="text-[11px] text-slate-500 text-center">
                             Your wallet will ask you to confirm and enter your password.
