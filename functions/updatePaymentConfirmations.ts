@@ -45,17 +45,19 @@ async function triggerWebhook(sr, payment, merchantId) {
           }
         });
         const signature = await generateHmacSignature(payload, webhook.secret);
+        // Both the HTTP call and the DB update are fire-and-forget
         fetch(webhook.url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-PayADA-Signature': signature, 'X-PayADA-Timestamp': String(timestamp), 'X-PayADA-Nonce': nonce },
           body: payload
         }).catch(err => console.error(`Webhook delivery failed: ${err.message}`));
-        return sr.entities.WebhookEndpoint.update(webhook.id, {
+        sr.entities.WebhookEndpoint.update(webhook.id, {
           last_triggered_at: new Date().toISOString(),
           delivery_count: (webhook.delivery_count || 0) + 1
-        });
+        }).catch(err => console.error(`Webhook stat update failed: ${err.message}`));
       });
-    await Promise.all(webhookPromises);
+    // intentionally not awaited — all fire-and-forget
+    Promise.all(webhookPromises).catch(() => {});
   } catch (error) {
     console.error(`Error triggering webhooks: ${error.message}`);
   }
