@@ -287,10 +287,10 @@ Deno.serve(async (req) => {
     }
 
     // Change output: ADA change + all native tokens back to sender
-    // Minimum ADA for change output with native tokens is ~1.5 ADA
-    const minChangeForTokens = collectedAssets.size > 0 ? 1_500_000n : 0n;
-    if (changeLovelace > 0n || collectedAssets.size > 0) {
-      const changeAda = changeLovelace > minChangeForTokens ? changeLovelace : changeLovelace + minChangeForTokens;
+    // Minimum ADA for change output: 1 ADA (pure ADA) or 2 ADA (with native tokens)
+    const minChangeForTokens = collectedAssets.size > 0 ? 2_000_000n : MIN_LOVELACE_PER_OUTPUT;
+    if (changeLovelace >= minChangeForTokens || collectedAssets.size > 0) {
+      const changeAda = changeLovelace >= minChangeForTokens ? changeLovelace : minChangeForTokens;
       outputsData.push({ addrBytes: walletAddrBytes, lovelace: changeAda, assets: collectedAssets });
     }
 
