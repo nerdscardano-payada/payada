@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     if (!paymentLink) return Response.json({ error: 'Payment link not found' }, { status: 404 });
 
     // Avoid duplicate payment records for same tx
-    const existingPayments = await sr.entities.Payment.filter({ tx_hash: txHash });
+    const existingPayments = await sr.entities.Payment.filter({ tx_hash: txHash }); 
     if (existingPayments.length > 0) {
       return Response.json({ success: true, paymentId: existingPayments[0].id, duplicate: true });
     }
