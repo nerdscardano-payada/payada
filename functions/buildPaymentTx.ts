@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
       const adaAmt = utxo.amount.find(a => a.unit === 'lovelace');
       const value = CSL.Value.new(CSL.BigNum.from_str(adaAmt.quantity));
       txBuilder.add_input(
-        CSL.Address.from_bech32(walletAddress),
+        CSL.Address.from_bech32(walletBech32),
         txInput,
         value
       );
@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
     // Add merchant output
     txBuilder.add_output(
       CSL.TransactionOutput.new(
-        CSL.Address.from_bech32(merchantAddress),
+        CSL.Address.from_bech32(merchantBech32),
         CSL.Value.new(CSL.BigNum.from_str(String(merchantLov)))
       )
     );
@@ -132,7 +132,7 @@ Deno.serve(async (req) => {
     if (changeLovelace > 0n) {
       txBuilder.add_output(
         CSL.TransactionOutput.new(
-          CSL.Address.from_bech32(walletAddress),
+          CSL.Address.from_bech32(walletBech32),
           CSL.Value.new(CSL.BigNum.from_str(String(changeLovelace)))
         )
       );
