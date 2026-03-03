@@ -117,35 +117,38 @@ Deno.serve(async (req) => {
         const confirmedAt = new Date().toISOString();
         const updatedPayment = { ...payment, confirmations, confirmed_at: confirmedAt };
 
-        // Update payment status + trigger side effects in parallel
+        // Update payment status + trigger webhooks (critical operations)
         await Promise.all([
           sr.entities.Payment.update(payment.id, {
             status: 'confirmed',
             confirmations,
             confirmed_at: confirmedAt
           }),
-          triggerWebhook(sr, updatedPayment, payment.merchant_id),
-          base44.functions.invoke('logAuditEvent', {
-            merchantId: payment.merchant_id,
-            eventType: 'payment_confirmed',
-            resourceType: 'payment',
-            resourceId: payment.id,
-            result: 'success',
-            changes: { status: 'confirmed', confirmations },
-            metadata: { block_height: latestBlock, amount_ada: payment.received_amount_ada }
-          }),
-          base44.functions.invoke('sendMerchantNotification', {
-            merchantId: payment.merchant_id,
-            notificationType: 'payment_confirmed',
-            title: '✅ Payment Confirmed',
-            message: `Payment of ${(payment.received_amount_ada || 0).toFixed(2)} ADA has been confirmed with ${confirmations} confirmations.`,
-            resourceType: 'payment',
-            resourceId: payment.id,
-            actionUrl: `/payments/${payment.id}`,
-            severity: 'info',
-            metadata: { confirmations, amount_ada: payment.received_amount_ada }
-          })
+          triggerWebhook(sr, updatedPayment, payment.merchant_id)
         ]);
+
+        // Fire-and-forget: audit log + notification (non-blocking)
+        base44.functions.invoke('logAuditEvent', {
+          merchantId: payment.merchant_id,
+          eventType: 'payment_confirmed',
+          resourceType: 'payment',
+          resourceId: payment.id,
+          result: 'success',
+          changes: { status: 'confirmed', confirmations },
+          metadata: { block_height: latestBlock, amount_ada: payment.received_amount_ada }
+        }).catch(err => console.error(`Audit log failed: ${err.message}`));
+
+        base44.functions.invoke('sendMerchantNotification', {
+          merchantId: payment.merchant_id,
+          notificationType: 'payment_confirmed',
+          title: '✅ Payment Confirmed',
+          message: `Payment of ${(payment.received_amount_ada || 0).toFixed(2)} ADA has been confirmed with ${confirmations} confirmations.`,
+          resourceType: 'payment',
+          resourceId: payment.id,
+          actionUrl: `/payments/${payment.id}`,
+          severity: 'info',
+          metadata: { confirmations, amount_ada: payment.received_amount_ada }
+        }).catch(err => console.error(`Notification failed: ${err.message}`));
 
         confirmedCount++;
       })
