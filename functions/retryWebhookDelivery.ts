@@ -48,9 +48,9 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const sr = base44.asServiceRole;
 
-    // Fetch all webhook logs that are due for retry
+    // Fetch webhook logs due for retry (limit to 20 per run to stay within time limits)
     const now = new Date().toISOString();
-    const retryingLogs = await sr.entities.WebhookLog.filter({ status: 'retrying' });
+    const retryingLogs = await sr.entities.WebhookLog.filter({ status: 'retrying' }, '-next_retry_at', 20);
     const dueLogs = retryingLogs.filter(log => !log.next_retry_at || log.next_retry_at <= now);
 
     console.log(`[retryWebhookDelivery] Found ${retryingLogs.length} retrying logs, ${dueLogs.length} due now`);
