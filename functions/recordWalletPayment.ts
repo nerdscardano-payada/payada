@@ -94,7 +94,7 @@ Deno.serve(async (req) => {
       payment_count: (paymentLink.payment_count || 0) + 1
     });
 
-    return Response.json({ success: true, paymentId: payment.id, receivedAmountAda });
+    return Response.json({ success: true, paymentId: payment.id, receivedAmountAda, feeAmountAda, feeOutputValidated });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
