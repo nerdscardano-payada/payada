@@ -28,6 +28,7 @@ export default function Pay() {
   const [txHash, setTxHash] = useState(null);
   const [txLoading, setTxLoading] = useState(false);
   const [pollCount, setPollCount] = useState(0);
+  const [txSubmitted, setTxSubmitted] = useState(false);
 
   // Extract slug from URL query params
   useEffect(() => {
