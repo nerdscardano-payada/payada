@@ -47,18 +47,26 @@ Deno.serve(async (req) => {
     const [txInfo, utxos] = await Promise.all([fetchTxInfo(txHash), fetchTxUtxos(txHash)]);
     const outputs = utxos.outputs || [];
 
-    // Calculate amounts from outputs sent to merchant address
+    // Calculate amounts from outputs
     let merchantLovelace = 0;
+    let feeLovelace = 0;
     outputs.forEach(output => {
       if (output.address === paymentLink.receive_address) {
         output.amount.forEach(a => {
           if (a.unit === 'lovelace') merchantLovelace += parseInt(a.quantity);
         });
       }
+      if (PAYADA_FEE_WALLET && output.address === PAYADA_FEE_WALLET) {
+        output.amount.forEach(a => {
+          if (a.unit === 'lovelace') feeLovelace += parseInt(a.quantity);
+        });
+      }
     });
 
     const receivedAmountAda = merchantLovelace / 1_000_000;
+    const feeAmountAda = feeLovelace / 1_000_000;
     const expectedAmountAda = paymentLink.amount_ada || 0;
+    const feeOutputValidated = PAYADA_FEE_WALLET ? feeLovelace > 0 : false;
 
     // Create Payment record
     const payment = await sr.entities.Payment.create({
@@ -75,6 +83,8 @@ Deno.serve(async (req) => {
       confirmations: 0,
       detected_at: new Date().toISOString(),
       merchant_output_validated: merchantLovelace > 0,
+      fee_output_validated: feeOutputValidated,
+      fee_amount_ada: feeAmountAda,
       merchant_amount_ada: receivedAmountAda
     });
 
