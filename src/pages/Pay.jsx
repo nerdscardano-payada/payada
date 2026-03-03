@@ -95,17 +95,20 @@ export default function Pay() {
           recipients.push({ address: feeAddress, amount: platformFeeLovelace });
         }
         hash = await api.experimental.sendLovelace(recipients);
-      } else if (api.submitTx) {
-        // Fallback: use backend to build tx CBOR, then sign + submit via wallet
+      } else if (api.signTx) {
+        // Fallback: use backend to build tx CBOR, sign with wallet, then submit via backend
         const buildRes = await base44.functions.invoke('buildPaymentTx', {
           walletAddress: connectedWallet.address,
           merchantAddress,
           merchantLovelace,
           platformFeeLovelace
         });
-        if (!buildRes?.data?.success) throw new Error(buildRes?.data?.error || "Failed to build transaction");
-        const signedTx = await api.signTx(buildRes.data.txCbor, true);
-        const submitRes = await base44.functions.invoke('submitSignedTx', { signedTxCbor: signedTx });
+        if (!buildRes?.data?.txCbor) throw new Error(buildRes?.data?.error || "Failed to build transaction");
+        const witnessCbor = await api.signTx(buildRes.data.txCbor, true);
+        const submitRes = await base44.functions.invoke('submitSignedTx', {
+          unsignedTxCbor: buildRes.data.txCbor,
+          witnessCbor
+        });
         if (!submitRes?.data?.success) throw new Error(submitRes?.data?.error || "Failed to submit transaction");
         hash = submitRes.data.txHash;
       } else {

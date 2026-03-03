@@ -1,5 +1,3 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-
 const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
 const PAYADA_FEE_WALLET = Deno.env.get("PAYADA_FEE_WALLET");
@@ -56,29 +54,18 @@ function encodeCborMapHeader(len) {
   return [0xb8, len];
 }
 
-// Encode a TxOut value - supports both pure ADA and multi-asset
-// assets = Map<policyIdHex, Map<assetNameHex, BigInt>>
 function encodeTxOutValue(lovelace, assets) {
   if (!assets || assets.size === 0) {
-    // Pure ADA: just encode as uint
     return encodeCborUint(lovelace);
   }
-
-  // Multi-asset: [lovelace, {policyId: {assetName: quantity}}]
   const result = [];
-  result.push(0x82); // array of 2
-
-  // lovelace
+  result.push(0x82);
   result.push(...encodeCborUint(lovelace));
-
-  // multi-asset map
   const sortedPolicies = Array.from(assets.keys()).sort();
   result.push(...encodeCborMapHeader(sortedPolicies.length));
-
   for (const policyId of sortedPolicies) {
     const assetMap = assets.get(policyId);
     result.push(...encodeCborBytes(hexToBytes(policyId)));
-
     const sortedAssetNames = Array.from(assetMap.keys()).sort();
     result.push(...encodeCborMapHeader(sortedAssetNames.length));
     for (const assetName of sortedAssetNames) {
@@ -86,14 +73,12 @@ function encodeTxOutValue(lovelace, assets) {
       result.push(...encodeCborUint(assetMap.get(assetName)));
     }
   }
-
   return result;
 }
 
-// Encode a full TxOut: [address_bytes, value]
 function encodeTxOut(addrBytes, lovelace, assets) {
   const result = [];
-  result.push(0x82); // array of 2
+  result.push(0x82);
   result.push(...encodeCborBytes(Array.from(addrBytes)));
   result.push(...encodeTxOutValue(lovelace, assets));
   return result;
@@ -181,6 +166,19 @@ function getAddrBytes(addr) {
   return hexToBytes(addr);
 }
 
+// Estimate fee more accurately based on tx size
+// Cardano fee formula: a + b * size (a=155381, b=44 lovelace per byte)
+function estimateFee(numInputs, numOutputs, hasNativeTokens) {
+  // Approximate tx size in bytes
+  const baseSize = 160;
+  const inputSize = 41 * numInputs;
+  const outputSize = hasNativeTokens ? 100 * numOutputs : 65 * numOutputs;
+  const txSize = baseSize + inputSize + outputSize;
+  const fee = 155381n + 44n * BigInt(txSize);
+  // Add buffer for safety
+  return fee + 50000n;
+}
+
 Deno.serve(async (req) => {
   try {
     const { walletAddress, merchantAddress, merchantLovelace, platformFeeLovelace } = await req.json();
@@ -193,58 +191,82 @@ Deno.serve(async (req) => {
     const walletAddrBytes = getAddrBytes(walletAddress);
     const merchantAddrBytes = getAddrBytes(merchantAddress);
 
+    if (!walletAddrBytes || !merchantAddrBytes) {
+      return Response.json({ error: 'Invalid wallet or merchant address' }, { status: 400 });
+    }
+
     // Fetch UTxOs and latest block in parallel
     const [utxos, latestBlock] = await Promise.all([
-      blockfrost(`/addresses/${walletBech32}/utxos`),
+      blockfrost(`/addresses/${walletBech32}/utxos?count=100&order=desc`),
       blockfrost('/blocks/latest')
     ]);
 
     if (!utxos || utxos.length === 0) {
-      return Response.json({ error: 'No UTxOs found for wallet address.' }, { status: 400 });
+      return Response.json({ error: 'No UTxOs found for wallet address. Ensure your wallet has ADA.' }, { status: 400 });
     }
 
-    const ttl = latestBlock.slot + 7200;
+    const ttl = latestBlock.slot + 7200; // ~2 hour TTL
     const merchantLov = BigInt(merchantLovelace);
     const feeLov = platformFeeLovelace && PAYADA_FEE_WALLET ? BigInt(platformFeeLovelace) : 0n;
     const totalOutput = merchantLov + feeLov;
-    const minFee = 200000n;
-    const needed = totalOutput + minFee;
 
-    // Prefer pure ADA UTxOs to avoid picking up native tokens unnecessarily
-    const pureAdaUtxos = utxos.filter(u => u.amount.length === 1 && u.amount[0].unit === 'lovelace');
+    // Separate pure ADA UTxOs from those with native tokens
+    const pureAdaUtxos = utxos
+      .filter(u => u.amount.length === 1 && u.amount[0].unit === 'lovelace')
+      .sort((a, b) => Number(BigInt(b.amount[0].quantity) - BigInt(a.amount[0].quantity))); // largest first
     const mixedUtxos = utxos.filter(u => u.amount.length > 1);
-    const orderedUtxos = [...pureAdaUtxos, ...mixedUtxos];
 
-    // Select UTxOs - collect lovelace AND all native tokens from selected UTxOs
-    const selectedUtxos = [];
-    let selectedLovelace = 0n;
-    const collectedAssets = new Map(); // policyId -> Map<assetName, BigInt>
+    // Try first with pure ADA UTxOs only (cleaner tx, avoids native token complexity)
+    // If not enough, fall back to including mixed UTxOs
+    const trySelect = (pool) => {
+      const selected = [];
+      let selectedLovelace = 0n;
+      const collectedAssets = new Map();
 
-    for (const utxo of orderedUtxos) {
-      selectedUtxos.push(utxo);
-      for (const asset of utxo.amount) {
-        if (asset.unit === 'lovelace') {
-          selectedLovelace += BigInt(asset.quantity);
-        } else {
-          const policyId = asset.unit.slice(0, 56);
-          const assetName = asset.unit.slice(56);
-          if (!collectedAssets.has(policyId)) collectedAssets.set(policyId, new Map());
-          const prev = collectedAssets.get(policyId).get(assetName) || 0n;
-          collectedAssets.get(policyId).set(assetName, prev + BigInt(asset.quantity));
+      for (const utxo of pool) {
+        selected.push(utxo);
+        for (const asset of utxo.amount) {
+          if (asset.unit === 'lovelace') {
+            selectedLovelace += BigInt(asset.quantity);
+          } else {
+            const policyId = asset.unit.slice(0, 56);
+            const assetName = asset.unit.slice(56);
+            if (!collectedAssets.has(policyId)) collectedAssets.set(policyId, new Map());
+            const prev = collectedAssets.get(policyId).get(assetName) || 0n;
+            collectedAssets.get(policyId).set(assetName, prev + BigInt(asset.quantity));
+          }
+        }
+
+        // Estimate fee based on current selection
+        const numOutputs = 2 + (feeLov > 0n ? 1 : 0) + (collectedAssets.size > 0 ? 1 : 0);
+        const fee = estimateFee(selected.length, numOutputs, collectedAssets.size > 0);
+        const needed = totalOutput + fee;
+
+        if (selectedLovelace >= needed) {
+          return { selected, selectedLovelace, collectedAssets, fee };
         }
       }
-      if (selectedLovelace >= needed) break;
+      return null;
+    };
+
+    // Try pure ADA first, then mixed
+    let selection = trySelect(pureAdaUtxos);
+    if (!selection) {
+      selection = trySelect([...pureAdaUtxos, ...mixedUtxos]);
     }
 
-    if (selectedLovelace < needed) {
+    if (!selection) {
+      const totalAvailable = utxos.reduce((sum, u) => {
+        const lov = u.amount.find(a => a.unit === 'lovelace');
+        return sum + (lov ? BigInt(lov.quantity) : 0n);
+      }, 0n);
       return Response.json({
-        error: `Insufficient ADA. Need ₳${Number(needed) / 1_000_000}, have ₳${Number(selectedLovelace) / 1_000_000}`
+        error: `Insufficient ADA. Need ₳${Number(totalOutput) / 1_000_000 + 0.2} (incl. fees), have ₳${Number(totalAvailable) / 1_000_000}`
       }, { status: 400 });
     }
 
-    const changeLovelace = selectedLovelace - needed;
-    // All collected native tokens go back as change to the sender
-    const changeAssets = collectedAssets;
+    const { selected: selectedUtxos, selectedLovelace, collectedAssets, fee } = selection;
+    const changeLovelace = selectedLovelace - totalOutput - fee;
 
     // Build inputs
     const inputs = selectedUtxos.map(u => [hexToBytes(u.tx_hash), u.tx_index]);
@@ -255,27 +277,36 @@ Deno.serve(async (req) => {
     // Merchant output (pure ADA)
     outputsData.push({ addrBytes: merchantAddrBytes, lovelace: merchantLov, assets: new Map() });
 
-    // Fee output (pure ADA)
+    // Platform fee output (pure ADA)
     if (feeLov > 0n && PAYADA_FEE_WALLET) {
       const feeAddrBytes = getAddrBytes(PAYADA_FEE_WALLET);
       outputsData.push({ addrBytes: feeAddrBytes, lovelace: feeLov, assets: new Map() });
     }
 
-    // Change output (ADA + all native tokens back to sender)
-    if (changeLovelace > 0n || changeAssets.size > 0) {
-      outputsData.push({ addrBytes: walletAddrBytes, lovelace: changeLovelace, assets: changeAssets });
+    // Change output: ADA change + all native tokens back to sender
+    // Minimum ADA for change output with native tokens is ~1.5 ADA
+    const minChangeForTokens = collectedAssets.size > 0 ? 1_500_000n : 0n;
+    if (changeLovelace > 0n || collectedAssets.size > 0) {
+      const changeAda = changeLovelace > minChangeForTokens ? changeLovelace : changeLovelace + minChangeForTokens;
+      outputsData.push({ addrBytes: walletAddrBytes, lovelace: changeAda, assets: collectedAssets });
     }
 
     // Encode transaction body
     const cborBytes = [];
     cborBytes.push(...encodeCborMapHeader(4));
 
-    // Key 0: inputs
+    // Key 0: inputs (sorted for determinism)
+    const sortedInputs = [...inputs].sort((a, b) => {
+      const hexA = bytesToHex(a[0]) + a[1].toString().padStart(8, '0');
+      const hexB = bytesToHex(b[0]) + b[1].toString().padStart(8, '0');
+      return hexA < hexB ? -1 : 1;
+    });
+
     cborBytes.push(...encodeCborUint(0));
-    cborBytes.push(...encodeCborArrayHeader(inputs.length));
-    for (const [txHash, txIndex] of inputs) {
+    cborBytes.push(...encodeCborArrayHeader(sortedInputs.length));
+    for (const [txHashBytes, txIndex] of sortedInputs) {
       cborBytes.push(0x82);
-      cborBytes.push(...encodeCborBytes(Array.from(txHash)));
+      cborBytes.push(...encodeCborBytes(Array.from(txHashBytes)));
       cborBytes.push(...encodeCborUint(txIndex));
     }
 
@@ -288,7 +319,7 @@ Deno.serve(async (req) => {
 
     // Key 2: fee
     cborBytes.push(...encodeCborUint(2));
-    cborBytes.push(...encodeCborUint(minFee));
+    cborBytes.push(...encodeCborUint(fee));
 
     // Key 3: ttl
     cborBytes.push(...encodeCborUint(3));
@@ -298,7 +329,17 @@ Deno.serve(async (req) => {
     const fullTx = [0x84, ...cborBytes, 0xa0, 0xf5, 0xf6];
     const txCbor = bytesToHex(new Uint8Array(fullTx));
 
-    return Response.json({ success: true, txCbor });
+    return Response.json({
+      success: true,
+      txCbor,
+      debug: {
+        inputs: selectedUtxos.length,
+        outputs: outputsData.length,
+        fee: Number(fee) / 1_000_000,
+        change: Number(changeLovelace) / 1_000_000,
+        hasNativeTokens: collectedAssets.size > 0
+      }
+    });
 
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

@@ -56,17 +56,38 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       const changeAddr = await api.getChangeAddress();
       const address = changeAddr; // hex CBOR — backend will convert to bech32
 
-      // Get balance in lovelace
+      // Get balance in lovelace — CBOR decode
       const balanceCbor = await api.getBalance();
-      // balanceCbor is a CBOR-encoded value; try to parse lovelace naively
       let lovelace = 0;
       try {
-        // Simple: if it's a plain number string in CBOR, parse it
-        // Most wallets return a hex-encoded CBOR integer for ADA-only balances
-        const balHex = balanceCbor;
-        // Attempt hex decode for simple integer
-        const num = parseInt(balHex, 16);
-        if (!isNaN(num) && num > 0) lovelace = num;
+        // CBOR hex: first byte encodes type+value
+        // Major type 0 (uint): 0x00-0x1b → integer directly
+        // Major type 2 (array with value [lovelace, multiasset]): 0x82 → parse first element
+        const bytes = balanceCbor.match(/.{1,2}/g).map(b => parseInt(b, 16));
+        const firstByte = bytes[0];
+        const majorType = firstByte >> 5;
+        const addInfo = firstByte & 0x1f;
+
+        if (majorType === 0) {
+          // Simple uint
+          if (addInfo <= 23) lovelace = addInfo;
+          else if (addInfo === 24) lovelace = bytes[1];
+          else if (addInfo === 25) lovelace = (bytes[1] << 8) | bytes[2];
+          else if (addInfo === 26) lovelace = ((bytes[1] << 24) | (bytes[2] << 16) | (bytes[3] << 8) | bytes[4]) >>> 0;
+          else if (addInfo === 27) lovelace = Number(BigInt('0x' + bytes.slice(1, 9).map(b => b.toString(16).padStart(2,'0')).join('')));
+        } else if (majorType === 4 && addInfo === 2) {
+          // Array [lovelace, multiasset] — parse first element (lovelace)
+          const b1 = bytes[1];
+          const mt1 = b1 >> 5;
+          const ai1 = b1 & 0x1f;
+          if (mt1 === 0) {
+            if (ai1 <= 23) lovelace = ai1;
+            else if (ai1 === 24) lovelace = bytes[2];
+            else if (ai1 === 25) lovelace = (bytes[2] << 8) | bytes[3];
+            else if (ai1 === 26) lovelace = ((bytes[2] << 24) | (bytes[3] << 16) | (bytes[4] << 8) | bytes[5]) >>> 0;
+            else if (ai1 === 27) lovelace = Number(BigInt('0x' + bytes.slice(2, 10).map(b => b.toString(16).padStart(2,'0')).join('')));
+          }
+        }
       } catch {}
 
       const adaBalance = lovelace / 1_000_000;
