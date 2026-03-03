@@ -52,22 +52,9 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     try {
       const api = await window.cardano[walletId].enable();
       
-      // Get address
-      const rawAddresses = await api.getUsedAddresses();
-      let address = null;
-      if (rawAddresses.length > 0) {
-        // Try to get bech32 address via changeAddress
-        try {
-          const changeAddr = await api.getChangeAddress();
-          // changeAddr is hex-encoded CBOR, use as fallback display
-          address = changeAddr;
-        } catch {
-          address = rawAddresses[0];
-        }
-      } else {
-        const changeAddr = await api.getChangeAddress();
-        address = changeAddr;
-      }
+      // Get address (CIP-30 returns hex-encoded CBOR)
+      const changeAddr = await api.getChangeAddress();
+      const address = changeAddr; // hex CBOR — backend will convert to bech32
 
       // Get balance in lovelace
       const balanceCbor = await api.getBalance();
