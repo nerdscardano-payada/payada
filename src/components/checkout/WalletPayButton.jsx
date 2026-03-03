@@ -34,10 +34,14 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       }
 
       // Sign with wallet (CIP-30) — opens wallet popup
-      const signedTx = await api.signTx(buildRes.data.txCbor, true);
+      // wallet returns only the witness set CBOR
+      const witnessCbor = await api.signTx(buildRes.data.txCbor, true);
 
-      // Submit via Blockfrost backend (avoids CSP eval issue with wallet's submitTx)
-      const submitRes = await base44.functions.invoke('submitSignedTx', { signedTxCbor: signedTx });
+      // Submit via Blockfrost backend — pass both original tx body and witness set
+      const submitRes = await base44.functions.invoke('submitSignedTx', {
+        unsignedTxCbor: buildRes.data.txCbor,
+        witnessCbor,
+      });
       if (!submitRes?.data?.success) {
         throw new Error(submitRes?.data?.error || "Failed to submit transaction");
       }
