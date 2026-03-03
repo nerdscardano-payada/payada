@@ -74,79 +74,24 @@ export default function Pay() {
     toast.success("Address copied!");
   };
 
-  const handleWalletPay = async () => {
-    if (!connectedWallet || !sessionData) return;
-    setTxLoading(true);
-    try {
-      const { api } = connectedWallet;
-      const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
-      const feeAddress = sessionData.fee_wallet_address;
-      const merchantLovelace = String(Math.floor(sessionData.merchant_amount_ada * 1_000_000));
-      const platformFeeLovelace = String(Math.floor(sessionData.platform_fee_ada * 1_000_000));
-
-      // Use CIP-30 experimental.sendLovelace (supported by Eternl, Lace, Nami)
-      // This opens the wallet popup for user to confirm + enter password
-      let hash;
-
-      if (api.experimental?.sendLovelace) {
-        // Single output: total to merchant (simpler, no fee split via wallet API)
-        // Some wallets support multi-output via sendLovelace array
-        const recipients = [{ address: merchantAddress, amount: merchantLovelace }];
-        if (feeAddress && platformFeeLovelace && BigInt(platformFeeLovelace) > 0n) {
-          recipients.push({ address: feeAddress, amount: platformFeeLovelace });
+  const handleTxSuccess = useCallback((hash) => {
+    setTxHash(hash);
+    setTxSubmitted(true);
+    setPaymentStatus("detected");
+    // Poll for confirmation
+    let attempts = 0;
+    const interval = setInterval(async () => {
+      attempts++;
+      try {
+        const res = await base44.functions.invoke('checkTxConfirmation', { txHash: hash });
+        if (res?.data?.confirmed) {
+          clearInterval(interval);
+          setPaymentStatus("confirmed");
         }
-        hash = await api.experimental.sendLovelace(recipients);
-      } else if (api.signTx) {
-        // Fallback: use backend to build tx CBOR, sign with wallet, then submit via backend
-        const buildRes = await base44.functions.invoke('buildPaymentTx', {
-          walletAddress: connectedWallet.address,
-          merchantAddress,
-          merchantLovelace,
-          platformFeeLovelace
-        });
-        if (!buildRes?.data?.txCbor) throw new Error(buildRes?.data?.error || "Failed to build transaction");
-        const witnessCbor = await api.signTx(buildRes.data.txCbor, true);
-        const submitRes = await base44.functions.invoke('submitSignedTx', {
-          unsignedTxCbor: buildRes.data.txCbor,
-          witnessCbor
-        });
-        if (!submitRes?.data?.success) throw new Error(submitRes?.data?.error || "Failed to submit transaction");
-        hash = submitRes.data.txHash;
-      } else {
-        // No wallet TX API available — show manual fallback
-        toast.info("Your wallet doesn't support direct sending. Use the Manual tab to send manually.");
-        setPaymentMethod("manual");
-        return;
-      }
-
-      if (hash) {
-        setTxHash(hash);
-        setPaymentStatus("detected");
-        toast.success("Transaction submitted! Waiting for confirmation…");
-        // Poll for confirmation
-        let attempts = 0;
-        const interval = setInterval(async () => {
-          attempts++;
-          try {
-            const res = await base44.functions.invoke('checkTxConfirmation', { txHash: hash });
-            if (res?.data?.confirmed) {
-              clearInterval(interval);
-              setPaymentStatus("confirmed");
-            }
-          } catch {}
-          if (attempts >= 30) clearInterval(interval);
-        }, 10000);
-      }
-    } catch (err) {
-      if (err?.code === 2) {
-        toast.error("Transaction cancelled by user.");
-      } else {
-        toast.error(err?.message || "Transaction failed");
-      }
-    } finally {
-      setTxLoading(false);
-    }
-  };
+      } catch {}
+      if (attempts >= 30) clearInterval(interval);
+    }, 10000);
+  }, []);
 
   if (!slug) {
     return (
