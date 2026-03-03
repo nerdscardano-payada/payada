@@ -65,11 +65,11 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     toast.info("Please confirm the transaction in your wallet…", { duration: 60000, id: "wallet-sign" });
     setTxStatus('signing');
 
-    let signedTxCbor;
+    // Step 3: Sign — ask only for witness set (false = don't return full tx)
+    let witnessSetHex;
     try {
-      // true = return full signed tx, not just witness set
-      signedTxCbor = await api.signTx(txCbor, true);
-      console.log("Transaction signed successfully.");
+      witnessSetHex = await api.signTx(txCbor, false);
+      console.log("Witness set received:", witnessSetHex?.slice(0, 20));
     } catch (signErr) {
       toast.dismiss("wallet-sign");
       if (signErr?.code === 2 || signErr?.info?.includes("cancelled") || signErr?.info?.includes("declined")) {
@@ -84,24 +84,34 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     toast.dismiss("wallet-sign");
     setTxStatus('submitting');
 
-    // Normalize signedTxCbor to hex string (submitTx requires hex-encoded CBOR)
-    let normalizedSignedTx;
-    console.log("signedTxCbor type:", typeof signedTxCbor);
-    if (typeof signedTxCbor === "string") {
-      console.log("signedTxCbor preview:", signedTxCbor.slice(0, 20));
-      if (/^[0-9a-fA-F]+$/.test(signedTxCbor)) {
-        normalizedSignedTx = signedTxCbor; // already hex
-      } else {
-        // base64 → hex
-        const bytes = Uint8Array.from(atob(signedTxCbor), c => c.charCodeAt(0));
-        normalizedSignedTx = Array.from(bytes).map(b => b.toString(16).padStart(2, "0")).join("");
-      }
-    } else {
-      // Uint8Array or similar → hex
-      console.log("signedTxCbor is object/bytes:", signedTxCbor);
-      normalizedSignedTx = Array.from(signedTxCbor).map(b => b.toString(16).padStart(2, "0")).join("");
+    // Assemble full signed tx: [txBody, witnessSet, true, null]
+    // txCbor from backend is already: 84 <txBody> a0 f5 f6
+    // We need to replace the empty witness set (a0) with the real one from the wallet.
+    // Strategy: decode txCbor to extract txBody bytes, then re-assemble with real witnessSet.
+    function hexToBytes2(hex) {
+      return Uint8Array.from(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
     }
-    console.log("normalizedSignedTx preview:", normalizedSignedTx.slice(0, 20));
+    function bytesToHex2(bytes) {
+      return Array.from(bytes).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    // txCbor = 84 [txBody] [witnessSet] f5 f6
+    // Parse: skip 0x84 array header, extract txBody bytes, then append real witnessSet
+    const unsignedTxBytes = hexToBytes2(txCbor);
+    const witnessBytes = hexToBytes2(witnessSetHex);
+
+    // Find txBody: bytes 1 onwards until we hit the witness set marker
+    // The txBody starts right after 0x84. We need to find its length.
+    // txBody is a CBOR map starting with a4/a5/... — we read its length by finding the witness set
+    // Simplest: the backend builds: [0x84, ...cborBytes, 0xa0, 0xf5, 0xf6]
+    // So unsignedTxBytes = [0x84, txBodyBytes..., 0xa0, 0xf5, 0xf6]
+    // We find 0xa0 0xf5 0xf6 at the end to get txBody length
+    const txBodyBytes = unsignedTxBytes.slice(1, unsignedTxBytes.length - 3); // strip 0x84 header and a0 f5 f6
+
+    // Re-assemble: 0x84 array(4) header + txBody + witnessSet + 0xf5 (true) + 0xf6 (null)
+    const assembled = new Uint8Array([0x84, ...txBodyBytes, ...witnessBytes, 0xf5, 0xf6]);
+    const normalizedSignedTx = bytesToHex2(assembled);
+    console.log("Assembled signed tx preview:", normalizedSignedTx.slice(0, 20));
 
     // Step 4: Submit via wallet (CIP-30), fallback to backend
     try {
