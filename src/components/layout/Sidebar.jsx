@@ -107,6 +107,33 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
               </Link>
             );
           })}
+
+          {/* Admin-only section */}
+          {isAdmin && (
+            <>
+              {!collapsed && (
+                <div className="px-3 pt-4 pb-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">Admin</span>
+                </div>
+              )}
+              <Link
+                to={createPageUrl("AdminDashboard")}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all group",
+                  currentPage === "AdminDashboard"
+                    ? "bg-amber-500/15 text-amber-400"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                )}
+              >
+                <ShieldCheck className={cn(
+                  "w-[18px] h-[18px] flex-shrink-0",
+                  currentPage === "AdminDashboard" ? "text-amber-400" : "text-slate-500 group-hover:text-slate-300"
+                )} />
+                {!collapsed && <span className="truncate">Admin Dashboard</span>}
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* Logout + Collapse toggle (desktop only) */}
