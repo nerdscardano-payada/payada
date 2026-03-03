@@ -53,6 +53,14 @@ export default function AdminDashboard() {
           </p>
         </div>
 
+        {/* Fee Revenue Stats */}
+        <section>
+          <h2 className="text-xl font-semibold text-slate-900 mb-4">
+            💰 Fee Inkomsten (Platform Revenue)
+          </h2>
+          <FeeRevenueStats />
+        </section>
+
         {/* Platform Health Metrics */}
         <section>
           <h2 className="text-xl font-semibold text-slate-900 mb-4">
