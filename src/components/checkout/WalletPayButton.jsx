@@ -48,11 +48,12 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       return;
     }
 
-    // Step 2: Re-enable wallet fresh (avoid stale port from bfcache)
-    // This re-establishes the connection right before signing
+    // Step 2: Re-enable wallet fresh right before signing
     let api;
     try {
       api = await window.cardano[walletId].enable();
+      const networkId = await api.getNetworkId();
+      console.log("Wallet network:", networkId === 1 ? "Mainnet ✅" : `Testnet ⚠️ (ID: ${networkId})`);
     } catch (err) {
       toast.error("Could not connect to wallet. Please ensure your wallet extension is open.");
       setTxLoading(false);
@@ -60,20 +61,21 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       return;
     }
 
-    // Step 3: Sign — zero React state updates between enable() and signTx() resolving
-    // Any setState here causes re-render which can destroy the extension port
+    // Step 3: Sign
     toast.info("Please confirm the transaction in your wallet…", { duration: 60000, id: "wallet-sign" });
+    setTxStatus('signing');
 
     let signedTxCbor;
     try {
-      // signTx returns the fully signed tx CBOR (CIP-30 standard)
+      // true = return full signed tx, not just witness set
       signedTxCbor = await api.signTx(txCbor, true);
+      console.log("Transaction signed successfully.");
     } catch (signErr) {
       toast.dismiss("wallet-sign");
       if (signErr?.code === 2 || signErr?.info?.includes("cancelled") || signErr?.info?.includes("declined")) {
         toast.error("Transaction cancelled.");
       } else {
-        toast.error("Wallet signing failed. Keep this tab open and try again. Error: " + (signErr?.info || signErr?.message || "Unknown"));
+        toast.error("Wallet signing failed: " + (signErr?.info || signErr?.message || "Unknown"));
       }
       setTxLoading(false);
       setTxStatus(null);
@@ -82,23 +84,23 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     toast.dismiss("wallet-sign");
     setTxStatus('submitting');
 
-    // Step 4: Submit — try wallet's own submitTx first (most reliable, stays on correct network)
-    // Fall back to backend Blockfrost submission if wallet doesn't support it
+    // Step 4: Submit via wallet (CIP-30), fallback to backend
     try {
       let txHash;
       try {
-        // CIP-30: wallet.submitTx() sends the signed tx directly to its own node
         txHash = await api.submitTx(signedTxCbor);
+        console.log("TX HASH (wallet submit):", txHash);
       } catch (walletSubmitErr) {
-        // Wallet doesn't support submitTx or failed — use backend
+        console.warn("Wallet submitTx failed, trying backend:", walletSubmitErr?.info || walletSubmitErr?.message);
+        // signTx(tx, true) returns full signed tx — send directly to Blockfrost via backend
         const submitRes = await base44.functions.invoke('submitSignedTx', {
-          unsignedTxCbor: txCbor,
-          witnessCbor: signedTxCbor,
+          signedTxCbor,
         });
         if (!submitRes?.data?.success) {
           throw new Error(submitRes?.data?.error || "Failed to submit transaction");
         }
         txHash = submitRes.data.txHash;
+        console.log("TX HASH (backend submit):", txHash);
       }
       toast.success("Transaction submitted! Waiting for confirmation…");
       onSuccess?.(txHash);
