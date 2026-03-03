@@ -87,12 +87,14 @@ async function processConfirmations(base44) {
     }
   }
 
-  // Update confirmation counts in parallel
-  await Promise.all(
-    toUpdateOnly.map(({ payment, confirmations }) =>
+  // Update confirmation counts — batched with a concurrency limit to avoid overloading
+  const batchSize = 5;
+  for (let i = 0; i < toUpdateOnly.length; i += batchSize) {
+    const batch = toUpdateOnly.slice(i, i + batchSize);
+    await Promise.all(batch.map(({ payment, confirmations }) =>
       sr.entities.Payment.update(payment.id, { confirmations })
-    )
-  );
+    ));
+  }
 
   // Process confirmations in parallel — only await the Payment update, everything else is fire-and-forget
   await Promise.all(
