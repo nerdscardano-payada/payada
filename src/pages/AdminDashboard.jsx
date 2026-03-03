@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import PlatformHealthOverview from "@/components/admin/PlatformHealthOverview";
 import SystemErrorLogs from "@/components/admin/SystemErrorLogs";
+import FeeRevenueStats from "@/components/admin/FeeRevenueStats";
 
 export default function AdminDashboard() {
   const { data: user, isLoading } = useQuery({
