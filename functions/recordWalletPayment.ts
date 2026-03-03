@@ -19,6 +19,9 @@ async function fetchTxInfo(txHash) {
   return res.json();
 }
 
+const PAYADA_FEE_WALLET = Deno.env.get("PAYADA_FEE_WALLET");
+const PLATFORM_FEE_PERCENT = 1.75;
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
