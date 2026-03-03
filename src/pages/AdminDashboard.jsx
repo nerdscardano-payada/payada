@@ -62,6 +62,14 @@ export default function AdminDashboard() {
           <FeeRevenueStats />
         </section>
 
+        {/* Merchant Overview */}
+        <section>
+          <h2 className="text-xl font-semibold text-slate-900 mb-4">
+            🏢 Merchant Overzicht & Reset
+          </h2>
+          <MerchantOverview />
+        </section>
+
         {/* Platform Health Metrics */}
         <section>
           <h2 className="text-xl font-semibold text-slate-900 mb-4">
