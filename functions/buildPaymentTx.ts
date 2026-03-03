@@ -23,8 +23,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Import CSL (Cardano Serialization Library) for Deno
-    const CSL = await import("npm:@emurgo/cardano-serialization-lib-nodejs@14.1.0");
+    // Import CSL (Cardano Serialization Library) - asm.js version (no eval/WASM)
+    const CSL = await import("npm:@emurgo/cardano-serialization-lib-asmjs@14.1.0");
 
     // Convert hex CBOR address to bech32 if needed (CIP-30 wallets return hex)
     const toBech32 = (addr) => {
