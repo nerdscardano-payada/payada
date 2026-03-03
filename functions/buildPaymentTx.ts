@@ -170,14 +170,17 @@ function getAddrBytes(addr) {
 // Cardano fee formula: a + b * size (a=155381, b=44 lovelace per byte)
 function estimateFee(numInputs, numOutputs, hasNativeTokens) {
   // Approximate tx size in bytes
-  const baseSize = 160;
-  const inputSize = 41 * numInputs;
-  const outputSize = hasNativeTokens ? 100 * numOutputs : 65 * numOutputs;
+  const baseSize = 300;
+  const inputSize = 100 * numInputs;
+  const outputSize = hasNativeTokens ? 150 * numOutputs : 100 * numOutputs;
   const txSize = baseSize + inputSize + outputSize;
   const fee = 155381n + 44n * BigInt(txSize);
-  // Add buffer for safety
-  return fee + 50000n;
+  // Add generous buffer for witness overhead and safety
+  return fee + 200000n;
 }
+
+// Minimum ADA per output (Cardano minimum UTxO requirement)
+const MIN_LOVELACE_PER_OUTPUT = 1_000_000n; // 1 ADA
 
 Deno.serve(async (req) => {
   try {
