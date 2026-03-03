@@ -17,7 +17,18 @@ export default function PaymentLinkForm({ link, onBack }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    base44.auth.me().then(setUser);
+    base44.auth.me().then((u) => {
+      setUser(u);
+      // Pre-fill receive_address with merchant default when creating a new link
+      if (!isEditing && u?.email) {
+        base44.entities.MerchantProfile.filter({ user_id: u.email }).then((profiles) => {
+          const defaultAddress = profiles?.[0]?.default_receive_address;
+          if (defaultAddress) {
+            setForm((prev) => ({ ...prev, receive_address: prev.receive_address || defaultAddress }));
+          }
+        });
+      }
+    });
   }, []);
 
   const [form, setForm] = useState({
