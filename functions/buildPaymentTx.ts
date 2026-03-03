@@ -31,7 +31,8 @@ Deno.serve(async (req) => {
       if (!addr) return addr;
       if (addr.startsWith("addr") || addr.startsWith("stake")) return addr; // already bech32
       try {
-        return CSL.Address.from_bytes(Buffer.from(addr, 'hex')).to_bech32();
+        const bytes = new Uint8Array(addr.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+        return CSL.Address.from_bytes(bytes).to_bech32();
       } catch {
         return addr; // return as-is if conversion fails
       }
