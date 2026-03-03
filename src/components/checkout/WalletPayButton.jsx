@@ -7,96 +7,93 @@ import { base44 } from "@/api/base44Client";
 export default function WalletPayButton({ connectedWallet, sessionData, paymentLink, onSuccess }) {
   const [txLoading, setTxLoading] = useState(false);
   const [txStatus, setTxStatus] = useState(null); // null | 'building' | 'signing' | 'submitting'
-  const [pageHidden, setPageHidden] = useState(false);
-  const abortRef = useRef(false);
 
-  // Detect bfcache / page visibility changes that kill wallet connection
+  // Prevent bfcache — this kills the wallet extension port
   useEffect(() => {
-    const onVisChange = () => {
-      if (document.visibilityState === "hidden") {
-        setPageHidden(true);
-      } else {
-        setPageHidden(false);
-      }
-    };
-    // Prevent bfcache: tell browser this page should not be cached
     const onPageShow = (e) => {
-      if (e.persisted) {
-        // Page was restored from bfcache — reload to restore wallet connection
-        window.location.reload();
-      }
+      if (e.persisted) window.location.reload();
     };
-    document.addEventListener("visibilitychange", onVisChange);
     window.addEventListener("pageshow", onPageShow);
-    return () => {
-      document.removeEventListener("visibilitychange", onVisChange);
-      window.removeEventListener("pageshow", onPageShow);
-    };
+    return () => window.removeEventListener("pageshow", onPageShow);
   }, []);
 
   const handlePay = async () => {
     if (!connectedWallet || !sessionData) return;
+
+    const { walletId, address: walletAddress } = connectedWallet;
+    const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
+    const merchantLovelace = String(Math.floor(sessionData.merchant_amount_ada * 1_000_000));
+    const platformFeeLovelace = String(Math.floor(sessionData.platform_fee_ada * 1_000_000));
+
     setTxLoading(true);
-    abortRef.current = false;
+    setTxStatus('building');
 
+    let txCbor;
     try {
-      const { api, address: walletAddress } = connectedWallet;
-      const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
-      const merchantLovelace = String(Math.floor(sessionData.merchant_amount_ada * 1_000_000));
-      const platformFeeLovelace = String(Math.floor(sessionData.platform_fee_ada * 1_000_000));
-
-      // Step 1: Build the tx via backend
-      setTxStatus('building');
+      // Step 1: Build tx via backend BEFORE re-enabling wallet
       const buildRes = await base44.functions.invoke('buildPaymentTx', {
         walletAddress,
         merchantAddress,
         merchantLovelace,
         platformFeeLovelace,
       });
-
       if (!buildRes?.data?.txCbor) {
         throw new Error(buildRes?.data?.error || "Failed to build transaction CBOR");
       }
+      txCbor = buildRes.data.txCbor;
+    } catch (err) {
+      toast.error(err?.message || "Failed to build transaction.");
+      setTxLoading(false);
+      setTxStatus(null);
+      return;
+    }
 
-      // Step 2: Sign with wallet — opens wallet popup
-      setTxStatus('signing');
-      toast.info("Please confirm the transaction in your wallet…", { duration: 30000, id: "wallet-sign" });
+    // Step 2: Re-enable wallet fresh (avoid stale port from bfcache)
+    // This re-establishes the connection right before signing
+    let api;
+    try {
+      api = await window.cardano[walletId].enable();
+    } catch (err) {
+      toast.error("Could not connect to wallet. Please ensure your wallet extension is open.");
+      setTxLoading(false);
+      setTxStatus(null);
+      return;
+    }
 
-      let witnessCbor;
-      try {
-        witnessCbor = await api.signTx(buildRes.data.txCbor, true);
-      } catch (signErr) {
-        toast.dismiss("wallet-sign");
-        // Code 2 = user declined
-        if (signErr?.code === 2 || signErr?.info?.includes("cancelled") || signErr?.info?.includes("declined")) {
-          throw { code: 2, message: "Transaction cancelled by user." };
-        }
-        // Connection lost — give helpful message
-        throw new Error("Wallet signing failed. Please ensure your wallet extension is open and try again. Error: " + (signErr?.info || signErr?.message || JSON.stringify(signErr)));
-      }
+    // Step 3: Sign — NO state updates, NO redirects, NO navigation until this resolves
+    setTxStatus('signing');
+    toast.info("Please confirm the transaction in your wallet…", { duration: 60000, id: "wallet-sign" });
+
+    let witnessCbor;
+    try {
+      witnessCbor = await api.signTx(txCbor, true);
+    } catch (signErr) {
       toast.dismiss("wallet-sign");
+      if (signErr?.code === 2 || signErr?.info?.includes("cancelled") || signErr?.info?.includes("declined")) {
+        toast.error("Transaction cancelled.");
+      } else {
+        toast.error("Wallet signing failed. Keep this tab open and try again. Error: " + (signErr?.info || signErr?.message || "Unknown"));
+      }
+      setTxLoading(false);
+      setTxStatus(null);
+      return;
+    }
+    toast.dismiss("wallet-sign");
 
-      // Step 3: Submit via backend (avoids CSP issues with direct Blockfrost calls)
-      setTxStatus('submitting');
+    // Step 4: Submit via backend
+    setTxStatus('submitting');
+    try {
       const submitRes = await base44.functions.invoke('submitSignedTx', {
-        unsignedTxCbor: buildRes.data.txCbor,
+        unsignedTxCbor: txCbor,
         witnessCbor,
       });
-
       if (!submitRes?.data?.success) {
         throw new Error(submitRes?.data?.error || "Failed to submit transaction");
       }
-
-      const txHash = submitRes.data.txHash;
       toast.success("Transaction submitted! Waiting for confirmation…");
-      onSuccess?.(txHash);
-
+      onSuccess?.(submitRes.data.txHash);
     } catch (err) {
-      if (err?.code === 2) {
-        toast.error("Transaction cancelled.");
-      } else {
-        toast.error(err?.message || "Transaction failed. Please try again.");
-      }
+      toast.error(err?.message || "Failed to submit transaction.");
     } finally {
       setTxLoading(false);
       setTxStatus(null);
