@@ -1,5 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
-// Force latest SDK - fixes app.base44.com DNS issue
+import { createClientFromRequest } from 'npm:@base44/sdk';
 
 const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
@@ -29,7 +28,6 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing required fields: txHash, paymentLinkId, merchantId' }, { status: 400 });
     }
 
-    // Use service role for all operations - this is called from a public page
     const sr = base44.asServiceRole;
 
     const paymentLinks = await sr.entities.PaymentLink.filter({ id: paymentLinkId, merchant_id: merchantId });
