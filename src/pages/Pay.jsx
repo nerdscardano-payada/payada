@@ -117,6 +117,19 @@ export default function Pay() {
         setTxHash(hash);
         setPaymentStatus("detected");
         toast.success("Transaction submitted! Waiting for confirmation…");
+        // Poll for confirmation
+        let attempts = 0;
+        const interval = setInterval(async () => {
+          attempts++;
+          try {
+            const res = await base44.functions.invoke('checkTxConfirmation', { txHash: hash });
+            if (res?.data?.confirmed) {
+              clearInterval(interval);
+              setPaymentStatus("confirmed");
+            }
+          } catch {}
+          if (attempts >= 30) clearInterval(interval);
+        }, 10000);
       }
     } catch (err) {
       if (err?.code === 2) {
