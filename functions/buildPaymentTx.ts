@@ -211,7 +211,7 @@ Deno.serve(async (req) => {
     const ttl = latestBlock.slot + 7200; // ~2 hour TTL
 
     // ⭐ Smart Payment Rules Engine: enforce minimum outputs
-    const MIN_OUTPUT = 1_500_000n;       // 1.5 ADA minimum for merchant output
+    const MIN_OUTPUT = MIN_LOVELACE_PER_OUTPUT; // use Cardano minimum UTxO
     const MIN_FEE_OUTPUT = 200_000n;     // Cardano minimum UTxO for fee output
     const FEE_BUFFER = 300_000n;         // 0.3 ADA fee buffer on top of estimate
 
