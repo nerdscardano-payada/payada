@@ -19,8 +19,7 @@ export default function PayTerminal() {
   const [name, setName] = useState("");
   const [sessionData, setSessionData] = useState(null);
   const [connectedWallet, setConnectedWallet] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState("manual");
-  const [txLoading, setTxLoading] = useState(false);
+  const [txHash, setTxHash] = useState(null);
 
   const { data: terminals = [], isLoading: loadingTerminal } = useQuery({
     queryKey: ["pay-terminal", terminalId],
