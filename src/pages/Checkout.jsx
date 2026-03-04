@@ -256,76 +256,30 @@ export default function Checkout() {
                     </div>
                   )}
 
-                  {/* Payment method toggle */}
-                  <div className="flex rounded-lg overflow-hidden border border-slate-700">
-                    <button
-                      className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${paymentMethod === "wallet" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
-                      onClick={() => setPaymentMethod("wallet")}
-                    >
-                      <Wallet className="w-3.5 h-3.5" /> Wallet
-                    </button>
-                    <button
-                      className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${paymentMethod === "manual" ? "bg-indigo-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
-                      onClick={() => setPaymentMethod("manual")}
-                    >
-                      Manual Transfer
-                    </button>
-                  </div>
-
-                  {/* Wallet flow */}
-                  {paymentMethod === "wallet" && (
-                    <div className="space-y-3">
-                      {!connectedWallet ? (
-                        <WalletConnect
-                          onConnected={(w) => setConnectedWallet(w)}
-                          onDisconnected={() => setConnectedWallet(null)}
-                        />
-                      ) : (
-                        <>
-                          <WalletConnect
-                            onConnected={(w) => setConnectedWallet(w)}
-                            onDisconnected={() => setConnectedWallet(null)}
-                          />
-                          <WalletPayButton
-                            connectedWallet={connectedWallet}
-                            sessionData={sessionData}
-                            paymentLink={paymentLink}
-                            onSuccess={(hash) => {
-                              setTxHash(hash);
-                              setPaymentStatus("detected");
-                              startPolling(hash);
-                            }}
-                          />
-                          <p className="text-[11px] text-slate-500 text-center">
-                            This sends a multi-output transaction: merchant + PayADA fee in one click.
-                          </p>
-                        </>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Manual flow */}
-                  {paymentMethod === "manual" && (
+                  {/* Wallet flow only */}
                   <div className="space-y-3">
-                    <div>
-
-                        <Label className="text-xs text-slate-500">Send exactly ₳ {sessionData?.amount_total_ada?.toFixed(3)} to:</Label>
-                        <div className="flex items-center gap-2 mt-1.5">
-                          <code className="flex-1 bg-slate-800 px-3 py-2.5 rounded-lg text-xs text-slate-300 font-mono break-all border border-slate-700">
-                            {sessionData?.receive_address || paymentLink.receive_address}
-                          </code>
-                          <Button variant="outline" size="icon"
-                            onClick={() => copyAddress(sessionData?.receive_address || paymentLink.receive_address)}
-                            className="border-slate-700 text-slate-400 hover:text-white flex-shrink-0">
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                      <p className="text-[11px] text-slate-500">
-                        Send from any Cardano wallet. Payment is auto-detected after 2+ block confirmations.
-                      </p>
-                    </div>
-                  )}
+                    <WalletConnect
+                      onConnected={(w) => setConnectedWallet(w)}
+                      onDisconnected={() => setConnectedWallet(null)}
+                    />
+                    {connectedWallet && (
+                      <>
+                        <WalletPayButton
+                          connectedWallet={connectedWallet}
+                          sessionData={sessionData}
+                          paymentLink={paymentLink}
+                          onSuccess={(hash) => {
+                            setTxHash(hash);
+                            setPaymentStatus("detected");
+                            startPolling(hash);
+                          }}
+                        />
+                        <p className="text-[11px] text-slate-500 text-center">
+                          This sends a multi-output transaction: merchant + PayADA fee in one click.
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </>
               )}
 

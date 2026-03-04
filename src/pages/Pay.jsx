@@ -237,7 +237,7 @@ export default function Pay() {
                     {paymentStatus === "pending" ? "Awaiting payment" : `Confirming on-chain…`}
                   </p>
                   <p className="text-[11px] text-slate-500">
-                    {paymentStatus === "pending" ? "Choose how you'd like to pay below" : "Your transaction was submitted."}
+                    {paymentStatus === "pending" ? "Connect your Cardano wallet to pay" : "Your transaction was submitted."}
                   </p>
                 </div>
               </div>
