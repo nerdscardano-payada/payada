@@ -297,8 +297,8 @@ Deno.serve(async (req) => {
       outputsData.push({ addrBytes: feeAddrBytes, lovelace: feeLov, assets: new Map() });
     }
 
-    // Change output — guaranteed >= MIN_OUTPUT (or 2 ADA with native tokens)
-    const minChange = collectedAssets.size > 0 ? 2_000_000n : MIN_OUTPUT;
+    // Change output — guaranteed >= MIN_LOVELACE_PER_OUTPUT (or 2 ADA with native tokens)
+    const minChange = collectedAssets.size > 0 ? 2_000_000n : MIN_LOVELACE_PER_OUTPUT;
     if (changeLovelace >= minChange) {
       outputsData.push({ addrBytes: walletAddrBytes, lovelace: changeLovelace, assets: collectedAssets });
     }
