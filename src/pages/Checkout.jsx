@@ -253,6 +253,12 @@ export default function Checkout() {
                         <span>Merchant receives</span>
                         <span className="text-emerald-400 font-semibold">₳ {sessionData.merchant_amount_ada?.toFixed(3)}</span>
                       </div>
+                      {sessionData.amount_total_ada < 60 && (
+                        <div className="border-t border-slate-700 pt-1.5 flex items-start gap-1.5 text-amber-400/80">
+                          <AlertCircle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                          <span>For payments under ₳60, a minimum platform fee of ₳1 applies, resulting in a higher effective fee percentage.</span>
+                        </div>
+                      )}
                     </div>
                   )}
 
