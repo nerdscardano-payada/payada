@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import WalletConnect from "@/components/checkout/WalletConnect";
+import WalletPayButton from "@/components/checkout/WalletPayButton";
 
 export default function PayTerminal() {
   const params = new URLSearchParams(window.location.search);
