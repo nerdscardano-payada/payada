@@ -176,7 +176,7 @@ function estimateFee(numInputs, numOutputs, hasNativeTokens) {
   const txSize = baseSize + inputSize + outputSize;
   const fee = 155381n + 44n * BigInt(txSize);
   // Add generous buffer for witness overhead and safety
-  return fee + 200000n;
+  return fee + 400000n; // 0.4 ADA buffer to cover protocol fee validation
 }
 
 // Minimum ADA per output (Cardano minimum UTxO requirement)
