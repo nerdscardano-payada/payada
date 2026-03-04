@@ -211,17 +211,18 @@ Deno.serve(async (req) => {
     const ttl = latestBlock.slot + 7200; // ~2 hour TTL
 
     // ⭐ Smart Payment Rules Engine: enforce minimum outputs
-    const MIN_OUTPUT = 1_500_000n; // 1.5 ADA minimum per output (Cardano safety)
-    const FEE_BUFFER = 300_000n;   // 0.3 ADA fee buffer on top of estimate
+    const MIN_OUTPUT = 1_500_000n;       // 1.5 ADA minimum for merchant output
+    const MIN_FEE_OUTPUT = 200_000n;     // Cardano minimum UTxO for fee output
+    const FEE_BUFFER = 300_000n;         // 0.3 ADA fee buffer on top of estimate
 
     // Enforce minimum merchant output
     const merchantLov = BigInt(merchantLovelace) < MIN_OUTPUT ? MIN_OUTPUT : BigInt(merchantLovelace);
 
-    // Enforce minimum fee output
+    // Enforce Cardano minimum UTxO for fee output (do NOT inflate to 1.5 ADA)
     let feeLov = 0n;
     if (platformFeeLovelace && PAYADA_FEE_WALLET) {
       const rawFee = BigInt(platformFeeLovelace);
-      feeLov = rawFee < MIN_OUTPUT ? MIN_OUTPUT : rawFee;
+      feeLov = rawFee < MIN_FEE_OUTPUT ? MIN_FEE_OUTPUT : rawFee;
     }
 
     const totalOutput = merchantLov + feeLov;
