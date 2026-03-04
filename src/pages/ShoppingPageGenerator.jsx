@@ -177,10 +177,10 @@ export default function ShoppingPageGenerator() {
       -webkit-font-smoothing: antialiased;
     }
     a { color: inherit; }
-    .container { max-width: 920px; margin: 0 auto; padding: 0 28px; }
-    @media (max-width: 640px) {
-      .product-card > div { min-width: 100% !important; flex-direction: column !important; }
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+    .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr; } }
     /* Noise overlay for depth */
     body::before {
       content: '';
