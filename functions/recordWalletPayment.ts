@@ -153,6 +153,32 @@ Deno.serve(async (req) => {
       payment_count: (paymentLink.payment_count || 0) + 1
     });
 
+    // Upsert Customer record (identified by wallet address or email)
+    const customerIdentifier = payerEmail || normalizeAddress(payerAddress);
+    if (customerIdentifier) {
+      const filterKey = payerEmail ? { merchant_id: merchantId, email: payerEmail } : { merchant_id: merchantId, wallet_address: normalizeAddress(payerAddress) };
+      const existingCustomers = await sr.entities.Customer.filter(filterKey);
+      if (existingCustomers.length > 0) {
+        const existing = existingCustomers[0];
+        await sr.entities.Customer.update(existing.id, {
+          total_paid_ada: (existing.total_paid_ada || 0) + receivedAmountAda,
+          payment_count: (existing.payment_count || 0) + 1,
+          wallet_address: normalizeAddress(payerAddress) || existing.wallet_address,
+          name: payerName || existing.name,
+        });
+      } else {
+        await sr.entities.Customer.create({
+          merchant_id: merchantId,
+          email: payerEmail || null,
+          name: payerName || "Anonymous",
+          wallet_address: normalizeAddress(payerAddress) || null,
+          total_paid_ada: receivedAmountAda,
+          payment_count: 1,
+          has_active_subscription: false,
+        });
+      }
+    }
+
     return Response.json({ success: true, paymentId: payment.id, receivedAmountAda, feeAmountAda, feeOutputValidated });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
