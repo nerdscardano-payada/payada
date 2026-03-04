@@ -45,8 +45,12 @@ async function deliverWebhook(log) {
 
 Deno.serve(async (req) => {
   try {
+    // For scheduled automations there is no user session — always use service role directly
     const base44 = createClientFromRequest(req);
     const sr = base44.asServiceRole;
+
+    // Consume the body to avoid parse errors on empty scheduled invocations
+    try { await req.json(); } catch (_) { /* scheduled run has empty body, that's fine */ }
 
     // Fetch webhook logs due for retry (limit to 20 per run to stay within time limits)
     const now = new Date().toISOString();
