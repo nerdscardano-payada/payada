@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Code, BookOpen, Zap, GitBranch } from "lucide-react";
+import { Code, BookOpen, Zap, GitBranch, Wallet } from "lucide-react";
+
+const SUPPORTED_WALLETS = [
+  { name: "Nami", url: "https://namiwallet.io" },
+  { name: "Eternl", url: "https://eternl.io" },
+  { name: "Flint", url: "https://flint-wallet.com" },
+  { name: "Lace", url: "https://www.lace.io" },
+  { name: "Typhon", url: "https://typhonwallet.io" },
+  { name: "GeroWallet", url: "https://gerowallet.io" },
+  { name: "Yoroi", url: "https://yoroi-wallet.com" },
+];
 
 const sections = [
   {

@@ -1,8 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { CheckCircle, Zap, Shield, Globe, ArrowRight, MessageSquare } from "lucide-react";
+import { CheckCircle, Zap, Shield, Globe, ArrowRight, MessageSquare, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const SUPPORTED_WALLETS = [
+  { name: "Nami", url: "https://namiwallet.io" },
+  { name: "Eternl", url: "https://eternl.io" },
+  { name: "Flint", url: "https://flint-wallet.com" },
+  { name: "Lace", url: "https://www.lace.io" },
+  { name: "Typhon", url: "https://typhonwallet.io" },
+  { name: "GeroWallet", url: "https://gerowallet.io" },
+  { name: "Yoroi", url: "https://yoroi-wallet.com" },
+];
 
 const features = [
   {
