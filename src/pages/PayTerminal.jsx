@@ -109,25 +109,7 @@ export default function PayTerminal() {
     }
   };
 
-  const handleWalletPay = async () => {
-    if (!connectedWallet || !sessionData) return;
-    setTxLoading(true);
-    try {
-      const buildRes = await base44.functions.invoke("buildPaymentTx", {
-        walletAddress: connectedWallet.address,
-        merchantAddress: sessionData.merchant_address || sessionData.receive_address,
-        merchantLovelace: String(Math.floor((sessionData.merchant_amount_ada || sessionData.merchant_amount_lovelace / 1e6) * 1e6)),
-        platformFeeLovelace: String(Math.floor((sessionData.platform_fee_ada || sessionData.platform_fee_lovelace / 1e6) * 1e6)),
-      });
-      if (!buildRes?.data?.success) throw new Error(buildRes?.data?.error || "Build failed");
-      toast.info(`Send ₳ ${sessionData.amount_total_ada?.toFixed(2)} from your wallet to the address below.`);
-      setPaymentMethod("manual");
-    } catch (err) {
-      toast.error(err?.message || "Transaction failed");
-    } finally {
-      setTxLoading(false);
-    }
-  };
+
 
   const copyAddress = (addr) => {
     navigator.clipboard.writeText(addr);
