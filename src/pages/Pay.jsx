@@ -24,7 +24,6 @@ export default function Pay() {
 
   // Wallet state
   const [connectedWallet, setConnectedWallet] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState("wallet");
   const [txHash, setTxHash] = useState(null);
   const [txLoading, setTxLoading] = useState(false);
   const [pollCount, setPollCount] = useState(0);

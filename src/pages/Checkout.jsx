@@ -28,7 +28,6 @@ export default function Checkout() {
 
   // Wallet state
   const [connectedWallet, setConnectedWallet] = useState(null); // { api, walletId, address }
-  const [paymentMethod, setPaymentMethod] = useState("manual"); // "wallet" | "manual"
   const [txHash, setTxHash] = useState(null);
   const [txLoading, setTxLoading] = useState(false);
   const [pollCount, setPollCount] = useState(0);
