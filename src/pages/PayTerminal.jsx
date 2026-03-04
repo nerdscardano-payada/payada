@@ -148,7 +148,7 @@ export default function PayTerminal() {
           <p className="text-xs text-slate-500 uppercase tracking-widest">Powered by PayADA</p>
         </div>
 
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
+        <div className="bg-slate-900 rounded-2xl border border-slate-800">
 
           {/* ── STEP: SELECT PLAN (subscription meerkeuze) ── */}
           {step === "select" && terminal.mode === "subscription" && (
