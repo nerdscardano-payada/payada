@@ -170,7 +170,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
           </Button>
 
           {showPicker && (
-            <div className="absolute top-full mt-2 left-0 right-0 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-50 overflow-hidden">
+            <div className="absolute top-full mt-2 left-0 right-0 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-50 overflow-y-auto max-h-60">
               {installedWallets.map((w) => (
                 <button
                   key={w.id}
