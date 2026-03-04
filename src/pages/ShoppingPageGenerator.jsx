@@ -108,61 +108,54 @@ export default function ShoppingPageGenerator() {
       const link = links.find((l) => l.id === p.linkId);
       const slug = link?.slug || "";
       const featList = p.features
-        ? p.features.split("\n").filter(Boolean).map((f) => `<li style="padding:6px 0;display:flex;align-items:center;gap:10px;font-size:14px;color:${theme.text};opacity:0.8;"><span style="color:${accent};font-size:16px;">✦</span> ${f}</li>`).join("")
+        ? p.features.split("\n").filter(Boolean).map((f) => `<li style="padding:4px 0;display:flex;align-items:center;gap:8px;font-size:13px;color:${theme.text};opacity:0.8;"><span style="color:${accent};font-size:12px;">✦</span> ${f}</li>`).join("")
         : "";
       const badgeHtml = showBadges && p.badge
-        ? `<span style="display:inline-flex;align-items:center;gap:5px;background:${accent}18;color:${accent};border:1px solid ${accent}40;font-size:10px;font-weight:700;padding:4px 12px;border-radius:999px;margin-bottom:16px;letter-spacing:0.08em;text-transform:uppercase;">${p.badge}</span>`
+        ? `<span style="display:inline-flex;align-items:center;gap:5px;background:${accent}18;color:${accent};border:1px solid ${accent}40;font-size:10px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:12px;letter-spacing:0.08em;text-transform:uppercase;">${p.badge}</span>`
         : "";
       const reviewHtml = showReviews
-        ? `<div style="display:flex;align-items:center;gap:6px;margin:12px 0 4px;">
-            <div style="display:flex;gap:2px;">${'<span style="color:#fbbf24;font-size:14px;">★</span>'.repeat(5)}</div>
-            <span style="color:${theme.text};opacity:0.35;font-size:12px;">5.0 · ${Math.floor(Math.random() * 80) + 20} reviews</span>
+        ? `<div style="display:flex;align-items:center;gap:6px;margin:8px 0 4px;">
+            <div style="display:flex;gap:2px;">${'<span style="color:#fbbf24;font-size:12px;">★</span>'.repeat(5)}</div>
+            <span style="color:${theme.text};opacity:0.35;font-size:11px;">5.0 · ${Math.floor(Math.random() * 80) + 20} reviews</span>
            </div>`
         : "";
-      const flexDir = layout === "right" ? "row-reverse" : "row";
 
       return `
       <div class="product-card" style="
         background:${theme.card};
         border:1px solid ${cardBorder};
-        border-radius:24px;
+        border-radius:20px;
         overflow:hidden;
-        margin-bottom:48px;
         display:flex;
-        flex-wrap:wrap;
-        flex-direction:${flexDir};
-        gap:0;
-        box-shadow:0 0 0 1px ${cardBorder},0 32px 64px rgba(0,0,0,0.4);
+        flex-direction:column;
+        box-shadow:0 0 0 1px ${cardBorder},0 16px 40px rgba(0,0,0,0.3);
         backdrop-filter:blur(20px);
       ">
-        ${p.imageUrl ? `<div style="flex:1;min-width:280px;max-width:${layout === 'center' ? '100%' : '460px'};position:relative;overflow:hidden;">
-          <img src="${p.imageUrl}" alt="${p.name}" style="width:100%;height:100%;min-height:340px;object-fit:cover;display:block;" />
-          <div style="position:absolute;inset:0;background:linear-gradient(to right,transparent 60%,${theme.card}22);pointer-events:none;"></div>
+        ${p.imageUrl ? `<div style="width:100%;height:200px;overflow:hidden;flex-shrink:0;">
+          <img src="${p.imageUrl}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
         </div>` : ""}
-        <div style="flex:1;min-width:280px;padding:48px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="padding:24px;display:flex;flex-direction:column;flex:1;">
           ${badgeHtml}
-          <h2 style="font-size:clamp(22px,3vw,32px);font-weight:800;margin:0 0 4px 0;color:${theme.text};letter-spacing:-0.03em;line-height:1.15;">${p.name || "Product Name"}</h2>
+          <h2 style="font-size:18px;font-weight:800;margin:0 0 4px 0;color:${theme.text};letter-spacing:-0.02em;line-height:1.2;">${p.name || "Product Name"}</h2>
           ${reviewHtml}
-          <div style="width:40px;height:2px;background:${accent};margin:20px 0;border-radius:2px;opacity:0.6;"></div>
-          <p style="color:${theme.text};opacity:0.6;margin:0 0 24px 0;line-height:1.8;font-size:15px;">${p.description || ""}</p>
-          ${featList ? `<ul style="list-style:none;margin:0 0 28px 0;padding:0;">${featList}</ul>` : ""}
-          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:32px;">
-            <span style="font-size:42px;font-weight:900;color:${accent};letter-spacing:-0.04em;line-height:1;">₳ ${p.price || "0"}</span>
-            <span style="font-size:13px;color:${theme.text};opacity:0.35;font-weight:500;">ADA</span>
+          <div style="width:32px;height:2px;background:${accent};margin:12px 0;border-radius:2px;opacity:0.6;"></div>
+          <p style="color:${theme.text};opacity:0.6;margin:0 0 16px 0;line-height:1.7;font-size:13px;flex:1;">${p.description || ""}</p>
+          ${featList ? `<ul style="list-style:none;margin:0 0 16px 0;padding:0;">${featList}</ul>` : ""}
+          <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:20px;">
+            <span style="font-size:28px;font-weight:900;color:${accent};letter-spacing:-0.03em;line-height:1;">₳ ${p.price || "0"}</span>
+            <span style="font-size:12px;color:${theme.text};opacity:0.35;font-weight:500;">ADA</span>
           </div>
-          ${slug ? `<div>
-            <a href="${baseUrl}/Pay?slug=${slug}" style="
-              display:inline-flex;align-items:center;gap:10px;
+          ${slug ? `<a href="${baseUrl}/Pay?slug=${slug}" style="
+              display:flex;align-items:center;justify-content:center;gap:8px;
               background:${accent};color:#fff;
-              text-decoration:none;font-weight:700;font-size:15px;
-              padding:16px 36px;border-radius:14px;
+              text-decoration:none;font-weight:700;font-size:14px;
+              padding:12px 20px;border-radius:12px;
               letter-spacing:-0.01em;
-              box-shadow:0 8px 32px ${accent}50;
+              box-shadow:0 6px 20px ${accent}40;
               transition:transform 0.15s,box-shadow 0.15s;
-            " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 40px ${accent}70'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 32px ${accent}50'">
-              🛒 Buy with Cardano ADA
-            </a>
-          </div>` : `<div style="color:${theme.text};opacity:0.3;font-size:13px;font-style:italic;">No payment link selected</div>`}
+            " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px ${accent}60'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px ${accent}40'">
+              🛒 Buy with ADA
+            </a>` : `<div style="color:${theme.text};opacity:0.3;font-size:13px;font-style:italic;text-align:center;">No payment link selected</div>`}
         </div>
       </div>`;
     }).join("");
