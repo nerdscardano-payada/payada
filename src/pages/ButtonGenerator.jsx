@@ -247,6 +247,9 @@ export default function ButtonGenerator() {
                   </span>
                 )}
               </button>
+              {selectedLink && (
+                <p className="text-xs text-slate-400">↑ Click to test the checkout page</p>
+              )}
             </div>
           </div>
 
