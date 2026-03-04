@@ -135,7 +135,7 @@ Deno.serve(async (req) => {
       expected_amount_ada: expectedAmountAda,
       received_amount_ada: receivedAmountAda,
       tx_hash: txHash,
-      payer_address: payerAddress || null,
+      payer_address: normalizeAddress(payerAddress) || null,
       payer_email: payerEmail || null,
       payer_name: payerName || null,
       block_height_detected: txInfo.block_height,
