@@ -69,7 +69,7 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     // Step 3: Sign — ask only for witness set (false = don't return full tx)
     let witnessSetHex;
     try {
-      witnessSetHex = await api.signTx(txCbor, false);
+      witnessSetHex = await api.signTx(txCbor, true);
       console.log("Witness set received:", witnessSetHex?.slice(0, 20));
     } catch (signErr) {
       toast.dismiss("wallet-sign");
