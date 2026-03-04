@@ -254,7 +254,7 @@ Deno.serve(async (req) => {
         const hasChange = true; // always plan for change output
         const numOutputs = 1 + (feeLov > 0n ? 1 : 0) + (hasChange ? 1 : 0);
         const fee = estimateFee(selected.length, numOutputs, collectedAssets.size > 0) + FEE_BUFFER;
-        const minChange = collectedAssets.size > 0 ? 2_000_000n : MIN_OUTPUT;
+        const minChange = collectedAssets.size > 0 ? 2_000_000n : MIN_LOVELACE_PER_OUTPUT;
         const needed = totalOutput + fee + minChange;
 
         if (selectedLovelace >= needed) {
