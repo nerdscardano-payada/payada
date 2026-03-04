@@ -126,8 +126,26 @@ export default function DocumentationPage() {
           ))}
         </div>
 
+        {/* Supported Wallets */}
+        <div className="mt-16 max-w-3xl mx-auto">
+          <div className="flex items-center gap-3 mb-6">
+            <Wallet className="w-6 h-6 text-indigo-600" />
+            <h2 className="text-2xl font-bold text-slate-900">Supported Wallets</h2>
+          </div>
+          <p className="text-slate-600 mb-5">PayADA auto-detects installed Cardano browser wallets. Customers can pay with one click using any of the following wallets:</p>
+          <div className="flex flex-wrap gap-3">
+            {SUPPORTED_WALLETS.map((w) => (
+              <a key={w.name} href={w.url} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-full text-indigo-700 text-sm font-medium hover:bg-indigo-100 transition">
+                <Wallet className="w-3.5 h-3.5" />
+                {w.name}
+              </a>
+            ))}
+          </div>
+        </div>
+
         {/* Quick Links */}
-        <div className="mt-20 max-w-3xl mx-auto">
+        <div className="mt-16 max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold text-slate-900 mb-8">Additional Resources</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <Link to={createPageUrl("APIReference")} className="border border-slate-200 rounded-lg p-6 hover:border-indigo-300 hover:shadow-lg transition">

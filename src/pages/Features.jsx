@@ -83,6 +83,24 @@ export default function FeaturesPage() {
           ))}
         </div>
 
+        {/* Supported Wallets */}
+        <div className="mb-20">
+          <div className="text-center mb-10">
+            <Wallet className="w-10 h-10 text-indigo-600 mx-auto mb-3" />
+            <h2 className="text-3xl font-bold text-slate-900 mb-3">Compatible Wallets</h2>
+            <p className="text-slate-600">PayADA works seamlessly with all major Cardano wallets. Your customers can pay in one click.</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            {SUPPORTED_WALLETS.map((w) => (
+              <a key={w.name} href={w.url} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 px-5 py-3 border border-slate-200 rounded-full hover:border-indigo-400 hover:shadow-md transition bg-white text-slate-700 font-medium text-sm">
+                <Wallet className="w-4 h-4 text-indigo-500" />
+                {w.name}
+              </a>
+            ))}
+          </div>
+        </div>
+
         {/* CTA */}
         <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg p-12 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
