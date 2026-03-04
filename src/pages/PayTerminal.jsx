@@ -274,71 +274,32 @@ export default function PayTerminal() {
                 </div>
               </div>
 
-              {/* Method toggle */}
-              <div className="flex rounded-lg overflow-hidden border border-slate-700">
-                <button
-                  className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${paymentMethod === "wallet" ? "text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
-                  style={paymentMethod === "wallet" ? { backgroundColor: accentColor } : {}}
-                  onClick={() => setPaymentMethod("wallet")}
-                >
-                  <Wallet className="w-3.5 h-3.5" /> Wallet
-                </button>
-                <button
-                  className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${paymentMethod === "manual" ? "text-white" : "bg-slate-800 text-slate-400 hover:text-white"}`}
-                  style={paymentMethod === "manual" ? { backgroundColor: accentColor } : {}}
-                  onClick={() => setPaymentMethod("manual")}
-                >
-                  Manual
-                </button>
+              {/* Wallet only */}
+              <div className="space-y-3">
+                <p className="text-[11px] text-slate-500 text-center">
+                  Supported: Nami · Eternl · Flint · Lace · Typhon · GeroWallet · Yoroi
+                </p>
+                <WalletConnect
+                  onConnected={(w) => setConnectedWallet(w)}
+                  onDisconnected={() => setConnectedWallet(null)}
+                />
+                {connectedWallet && (
+                  <>
+                    <WalletPayButton
+                      connectedWallet={connectedWallet}
+                      sessionData={sessionData}
+                      paymentLink={paymentLink}
+                      onSuccess={(hash) => {
+                        setTxHash(hash);
+                        setStep("awaiting");
+                      }}
+                    />
+                    <p className="text-[11px] text-slate-500 text-center">
+                      Your wallet will ask you to confirm and enter your password.
+                    </p>
+                  </>
+                )}
               </div>
-
-              {/* Wallet */}
-              {paymentMethod === "wallet" && (
-                <div className="space-y-3">
-                  <WalletConnect
-                    onConnected={(w) => setConnectedWallet(w)}
-                    onDisconnected={() => setConnectedWallet(null)}
-                  />
-                  {connectedWallet && (
-                    <Button onClick={handleWalletPay} disabled={txLoading}
-                      className="w-full h-12 text-base font-semibold text-white gap-2"
-                      style={{ backgroundColor: accentColor }}>
-                      {txLoading
-                        ? <><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>
-                        : <>Pay ₳ {sessionData?.amount_total_ada?.toFixed(2)}</>}
-                    </Button>
-                  )}
-                  <p className="text-[11px] text-slate-500 text-center">
-                    Connect your Cardano wallet (Nami, Eternl, Flint, Lace, …)
-                  </p>
-                </div>
-              )}
-
-              {/* Manual */}
-              {paymentMethod === "manual" && (
-                <div className="space-y-3">
-
-                  <div>
-                    <Label className="text-xs text-slate-500">Send exactly ₳ {sessionData?.amount_total_ada?.toFixed(3)} to:</Label>
-                    <div className="flex items-center gap-2 mt-1.5">
-                      <code className="flex-1 bg-slate-800 px-3 py-2.5 rounded-lg text-xs text-slate-300 font-mono break-all border border-slate-700">
-                        {receiveAddress}
-                      </code>
-                      <Button variant="outline" size="icon" onClick={() => copyAddress(receiveAddress)}
-                        className="border-slate-700 text-slate-400 hover:text-white flex-shrink-0">
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <p className="text-[11px] text-slate-500">
-                    Payment is automatically detected after 2+ confirmations.
-                  </p>
-                  <Button onClick={() => setStep("awaiting")} className="w-full text-white"
-                    style={{ backgroundColor: accentColor }}>
-                    I have paid
-                  </Button>
-                </div>
-              )}
             </div>
           )}
 
