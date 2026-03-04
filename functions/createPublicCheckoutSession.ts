@@ -41,10 +41,11 @@ Deno.serve(async (req) => {
       amountLovelace = Math.floor(adaAmount * 1_000_000);
     }
 
-    // Fee is added ON TOP of the merchant amount (merchant receives full amount_ada)
+    // Fee is deducted FROM the merchant amount — customer pays original amount only
+    // e.g. ₳25 total: merchant gets ₳24.5625, platform gets ₳0.4375
     const platformFeeLovelace = Math.floor(amountLovelace * feePercent);
-    const merchantAmountLovelace = amountLovelace;
-    amountLovelace = merchantAmountLovelace + platformFeeLovelace;
+    const merchantAmountLovelace = amountLovelace - platformFeeLovelace;
+    // amountLovelace stays unchanged — customer pays the original amount
 
     const session = await base44.asServiceRole.entities.CheckoutSession.create({
       payment_link_id: paymentLinkId,
