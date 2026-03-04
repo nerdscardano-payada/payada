@@ -212,7 +212,7 @@ Deno.serve(async (req) => {
 
     // Minimum UTxO and fee buffer
     const MIN_FEE_OUTPUT = 200_000n;     // Cardano minimum UTxO for fee output
-    const FEE_BUFFER = 100_000n;         // 0.1 ADA buffer on top of estimate
+    const FEE_BUFFER = 200_000n;         // 0.2 ADA buffer on top of estimate
 
     // Merchant receives exact amount — no minimum inflation
     const merchantLov = BigInt(merchantLovelace);
