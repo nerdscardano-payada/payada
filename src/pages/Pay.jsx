@@ -167,7 +167,7 @@ export default function Pay() {
         </div>
 
         {/* Checkout Card */}
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
+        <div className="bg-slate-900 rounded-2xl border border-slate-800">
           <div className="p-6 border-b border-slate-800">
             <h1 className="text-xl font-bold text-white">{paymentLink.title}</h1>
             {paymentLink.description && (
