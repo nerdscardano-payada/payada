@@ -222,7 +222,9 @@ export default function ShoppingPageGenerator() {
   <!-- Products -->
   <main style="padding:16px 0 100px;position:relative;z-index:1;">
     <div class="container">
-      ${productCards}
+      <div class="product-grid">
+        ${productCards}
+      </div>
     </div>
   </main>
 
