@@ -14,6 +14,9 @@ export default function TerminalForm({ terminal, onBack }) {
   const queryClient = useQueryClient();
   const isEditing = !!terminal?.id;
 
+  const [logoMode, setLogoMode] = useState(terminal?.logo_url ? "url" : "upload");
+  const [uploading, setUploading] = useState(false);
+
   const [form, setForm] = useState({
     name: terminal?.name || "",
     description: terminal?.description || "",
