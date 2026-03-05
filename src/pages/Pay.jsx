@@ -93,42 +93,35 @@ export default function Pay() {
   }, [links, slug]);
 
   useEffect(() => {
-    if (cartItems.length > 0) {
-      // Check if all required slugs have been found
-      const allSlugsFound = cartItems.every(item => 
-        cartLinks.some(link => link.slug === item.slug)
-      );
-
-      if (allSlugsFound && cartLinks.length > 0) {
-        // For cart, create a virtual payment link with combined totals
+    if (cartItems.length > 0 && !cartLinksFetching) {
+      // Create payment link from cart items, even if some links aren't found
+      if (cartLinks.length > 0) {
         const totalAda = cartItems.reduce((sum, item) => {
-          const link = cartLinks.find(l => l.slug === item.slug);
+          const link = cartLinks.find(l => l.slug === item.slug || l.slug === item.id);
           const itemPrice = link?.amount_ada || parseFloat(item.price) || 0;
           const qty = item.quantity || 1;
           return sum + (itemPrice * qty);
         }, 0);
 
         const firstLink = cartLinks[0];
-        if (!firstLink?.merchant_id || !firstLink?.receive_address) {
-          console.error("Cart links missing required fields:", firstLink);
-          setLoading(false);
-          return;
-        }
-
         setPaymentLink({
           id: "cart-" + Date.now(),
           title: `${cartItems.length} items`,
-          amount_ada: isNaN(totalAda) ? 0 : totalAda,
-          merchant_id: firstLink.merchant_id,
-          receive_address: firstLink.receive_address,
-          collect_email: firstLink.collect_email || false,
-          collect_name: firstLink.collect_name || false,
-          collect_shipping: firstLink.collect_shipping || false,
+          amount_ada: isNaN(totalAda) || totalAda === 0 ? cartItems.reduce((sum, item) => sum + (parseFloat(item.price) || 0) * (item.quantity || 1), 0) : totalAda,
+          merchant_id: firstLink?.merchant_id || "default",
+          receive_address: firstLink?.receive_address,
+          collect_email: firstLink?.collect_email || false,
+          collect_name: firstLink?.collect_name || false,
+          collect_shipping: firstLink?.collect_shipping || false,
         });
+        setLoading(false);
+      } else if (uniqueSlugs.length > 0) {
+        // No links found after searching
+        console.warn("No payment links found for slugs:", uniqueSlugs);
         setLoading(false);
       }
     }
-  }, [cartItems, cartLinks]);
+  }, [cartItems, cartLinks, cartLinksFetching, uniqueSlugs]);
 
   const handleStartCheckout = async () => {
    try {
