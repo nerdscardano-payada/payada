@@ -242,15 +242,24 @@ export default function DiscordPlugin() {
         )}
       </div>
 
-      <Button
-        onClick={handleSave}
-        disabled={saveMutation.isPending}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white w-full h-11"
-      >
-        {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-        {plugin ? "Save changes" : "Activate Discord Gate"}
-        <ChevronRight className="w-4 h-4 ml-1" />
-      </Button>
+      <div className="flex gap-3">
+        <Button
+          variant="outline"
+          onClick={() => setShowWizard(true)}
+          className="border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+        >
+          <Settings className="w-4 h-4 mr-2" /> Reconfigure
+        </Button>
+        <Button
+          onClick={handleSave}
+          disabled={saveMutation.isPending}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white flex-1 h-11"
+        >
+          {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+          Save changes
+          <ChevronRight className="w-4 h-4 ml-1" />
+        </Button>
+      </div>
     </div>
   );
 }
