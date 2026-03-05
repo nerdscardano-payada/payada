@@ -41,6 +41,9 @@ const navItems = [
   { name: "Customers", icon: Users, page: "Customers" },
   { name: "Billing", icon: Receipt, page: "Billing" },
 
+  { type: "header", name: "Plugins" },
+  { name: "Discord Gate", icon: Bot, page: "DiscordPlugin" },
+
   { type: "header", name: "Developers" },
   { name: "Webhooks", icon: Webhook, page: "Webhooks" },
   { name: "API Keys", icon: Key, page: "ApiKeys" },
