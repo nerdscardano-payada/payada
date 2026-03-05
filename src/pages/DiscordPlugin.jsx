@@ -260,6 +260,67 @@ export default function DiscordPlugin() {
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
+
+      {/* Share links section */}
+      {plugin && (() => {
+        const selectedLinks = form.payment_link_ids.length > 0
+          ? paymentLinks.filter(l => form.payment_link_ids.includes(l.id))
+          : paymentLinks;
+        if (selectedLinks.length === 0) return null;
+        return (
+          <ShareLinksInfo links={selectedLinks} />
+        );
+      })()}
+    </div>
+  );
+}
+
+function ShareLinksInfo({ links }) {
+  const [copiedId, setCopiedId] = React.useState(null);
+  const baseUrl = window.location.origin;
+
+  const copyUrl = (slug, id) => {
+    navigator.clipboard.writeText(`${baseUrl}/pay/${slug}`);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  return (
+    <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-5 space-y-4">
+      <div className="flex items-center gap-2">
+        <ExternalLink className="w-4 h-4 text-indigo-600" />
+        <p className="text-sm font-semibold text-indigo-900">Share these links in your Discord server</p>
+      </div>
+      <p className="text-xs text-indigo-700 leading-relaxed">
+        Post the link(s) below in a Discord channel (e.g. <code className="bg-indigo-100 px-1 rounded">#get-access</code>). 
+        After a successful payment, the bot will automatically assign the Discord role to the buyer.
+      </p>
+      <div className="space-y-2">
+        {links.map(link => {
+          const url = `${baseUrl}/pay/${link.slug}`;
+          return (
+            <div key={link.id} className="flex items-center justify-between bg-white rounded-lg px-3 py-2.5 border border-indigo-100">
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-slate-800 truncate">{link.title}</p>
+                <p className="text-xs text-slate-500 font-mono truncate">{url}</p>
+              </div>
+              <button
+                onClick={() => copyUrl(link.slug, link.id)}
+                className="ml-3 flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 transition-colors flex-shrink-0"
+              >
+                {copiedId === link.id
+                  ? <><Check className="w-3.5 h-3.5 text-emerald-500" /> Copied!</>
+                  : <><Copy className="w-3.5 h-3.5" /> Copy</>
+                }
+              </button>
+            </div>
+          );
+        })}
+      </div>
+      <p className="text-xs text-indigo-600 flex items-center gap-1.5">
+        <Info className="w-3.5 h-3.5 flex-shrink-0" />
+        Tip: create a dedicated <strong>#get-access</strong> channel in Discord and paste the link(s) there.
+      </p>
     </div>
   );
 }
