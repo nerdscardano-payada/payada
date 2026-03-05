@@ -114,23 +114,21 @@ export default function Payments() {
                       <div>
                         <p className="text-sm font-medium text-slate-900">{p.payer_email || "Anonymous"}</p>
                         {p.payer_name && <p className="text-xs text-slate-400">{p.payer_name}</p>}
+                        {p.payer_address ? (
+                          <a
+                            href={`https://cardanoscan.io/address/${p.payer_address}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-indigo-600 hover:text-indigo-700 font-mono flex items-center gap-1 mt-0.5"
+                            title={p.payer_address}
+                          >
+                            {p.payer_address.slice(0, 14)}…{p.payer_address.slice(-6)}
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        ) : (
+                          <span className="text-xs text-slate-400">No wallet</span>
+                        )}
                       </div>
-                    </td>
-                    <td className="px-5 py-3.5 hidden lg:table-cell">
-                      {p.payer_address ? (
-                        <a
-                          href={`https://cardanoscan.io/address/${p.payer_address}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-indigo-600 hover:text-indigo-700 font-mono flex items-center gap-1"
-                          title={p.payer_address}
-                        >
-                          {p.payer_address.slice(0, 12)}…{p.payer_address.slice(-6)}
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      ) : (
-                        <span className="text-xs text-slate-400">—</span>
-                      )}
                     </td>
                     <td className="px-5 py-3.5">
                       <div>
