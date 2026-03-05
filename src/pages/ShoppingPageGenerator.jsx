@@ -363,14 +363,19 @@ export default function ShoppingPageGenerator() {
       document.getElementById('cart-panel').style.transform = 'translateY(100%)';
     });
 
-    document.getElementById('checkout-btn').addEventListener('click', () => {
-      if (cart.length === 0) return alert('Cart is empty');
-      
-      // Serialize cart items (supports multiple different payment links)
-      const itemsJson = JSON.stringify(cart);
-      const itemsParam = btoa(itemsJson);
-      window.location.href = '${baseUrl}/Pay?cartItems=' + itemsParam;
-    });
+    document.getElementById('checkout-btn').addEventListener('click', async () => {
+       if (cart.length === 0) return alert('Cart is empty');
+
+       try {
+         // Serialize cart items
+         const itemsJson = JSON.stringify(cart);
+         const itemsParam = btoa(itemsJson);
+         window.location.href = '${baseUrl}/Pay?cartItems=' + itemsParam;
+       } catch (error) {
+         console.error('Checkout error:', error);
+         alert('Error initiating checkout');
+       }
+     });
 
     document.querySelectorAll('.category-filter').forEach(btn => {
       btn.addEventListener('click', () => {
