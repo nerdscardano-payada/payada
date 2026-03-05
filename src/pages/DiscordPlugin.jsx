@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import {
   Bot, Shield, Hash, Key, Zap, CheckCircle2,
-  ExternalLink, Info, ChevronRight, Loader2, Settings, Plus
+  ExternalLink, Info, ChevronRight, Loader2, Settings, Plus, Copy, Check
 } from "lucide-react";
 import DiscordSetupWizard from "@/components/discord/DiscordSetupWizard";
 

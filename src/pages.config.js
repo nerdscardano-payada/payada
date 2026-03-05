@@ -57,6 +57,7 @@ import Checkout from './pages/Checkout';
 import Contact from './pages/Contact';
 import Customers from './pages/Customers';
 import Dashboard from './pages/Dashboard';
+import DiscordPlugin from './pages/DiscordPlugin';
 import Documentation from './pages/Documentation';
 import Features from './pages/Features';
 import Home from './pages/Home';
@@ -76,7 +77,6 @@ import SubscriberPortal from './pages/SubscriberPortal';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
-import DiscordPlugin from './pages/DiscordPlugin';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +91,7 @@ export const PAGES = {
     "Contact": Contact,
     "Customers": Customers,
     "Dashboard": Dashboard,
+    "DiscordPlugin": DiscordPlugin,
     "Documentation": Documentation,
     "Features": Features,
     "Home": Home,
@@ -110,7 +111,6 @@ export const PAGES = {
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
-    "DiscordPlugin": DiscordPlugin,
 }
 
 export const pagesConfig = {
