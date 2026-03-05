@@ -320,7 +320,7 @@ export default function ButtonGenerator() {
             </div>
             {showIcon && (
               <div className="space-y-2">
-                <Label className="text-xs text-slate-500">Icon kiezen</Label>
+                <Label className="text-xs text-slate-500">Icon</Label>
                 <Select value={selectedIcon} onValueChange={setSelectedIcon}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
