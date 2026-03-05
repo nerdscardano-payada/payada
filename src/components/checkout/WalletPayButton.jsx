@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 
-export default function WalletPayButton({ connectedWallet, sessionData, paymentLink, onSuccess }) {
+export default function WalletPayButton({ connectedWallet, sessionData, paymentLink, payerEmail, payerName, payerDiscordUsername, onSuccess }) {
   const [txLoading, setTxLoading] = useState(false);
   const [txStatus, setTxStatus] = useState(null); // null | 'building' | 'signing' | 'submitting'
 
@@ -37,6 +37,9 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
         merchantAddress,
         merchantLovelace,
         platformFeeLovelace,
+        payerEmail: payerEmail || null,
+        payerName: payerName || null,
+        payerDiscordUsername: payerDiscordUsername || null,
       });
       if (!buildRes?.data?.txCbor) {
         throw new Error(buildRes?.data?.error || "Failed to build transaction CBOR");
