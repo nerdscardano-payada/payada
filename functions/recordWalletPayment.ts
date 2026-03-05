@@ -138,6 +138,7 @@ Deno.serve(async (req) => {
       payer_address: normalizeAddress(payerAddress) || null,
       payer_email: payerEmail || null,
       payer_name: payerName || null,
+      payer_discord_username: payerDiscordUsername || null,
       block_height_detected: txInfo.block_height,
       confirmations: 0,
       detected_at: new Date().toISOString(),
