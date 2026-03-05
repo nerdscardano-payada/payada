@@ -147,9 +147,19 @@ function StepCreateApp({ onNext }) {
         Open Discord Developer Portal
         <ExternalLink className="w-3.5 h-3.5" />
       </a>
-      <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 flex gap-2">
-        <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-amber-700">Make sure to invite the bot to your server with <strong>Manage Roles</strong> permission before continuing. Use OAuth2 → URL Generator → select "bot" scope and "Manage Roles" permission.</p>
+      <div className="bg-amber-50 border border-amber-100 rounded-xl p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0" />
+          <p className="text-sm font-semibold text-amber-800">Invite the bot to your server:</p>
+        </div>
+        <div className="space-y-3">
+          <InstructionStep number="6" text='Still in the Developer Portal, click "OAuth2" in the left sidebar.' />
+          <InstructionStep number="7" text='Click "URL Generator" in the sub-menu that appears under OAuth2.' />
+          <InstructionStep number="8" text='Under "Scopes", tick the checkbox "bot".' />
+          <InstructionStep number="9" text='A new section "Bot Permissions" appears below. Tick "Manage Roles".' />
+          <InstructionStep number="10" text='Scroll down and copy the "Generated URL" at the bottom of the page.' />
+          <InstructionStep number="11" text="Paste that URL in your browser, select your server, and click Authorise. Your bot is now added!" />
+        </div>
       </div>
       <Button onClick={onNext} className="w-full bg-indigo-600 hover:bg-indigo-700">
         I've created the bot & added it to my server <ChevronRight className="w-4 h-4 ml-1" />
