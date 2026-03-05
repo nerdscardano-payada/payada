@@ -66,19 +66,19 @@ import Pay from './pages/Pay';
 import PayTerminal from './pages/PayTerminal';
 import PayTerminals from './pages/PayTerminals';
 import PaymentLinks from './pages/PaymentLinks';
+import PaymentProof from './pages/PaymentProof';
 import Payments from './pages/Payments';
 import Pricing from './pages/Pricing';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import SDKDocumentation from './pages/SDKDocumentation';
 import Security from './pages/Security';
 import ShoppingPageGenerator from './pages/ShoppingPageGenerator';
+import Store from './pages/Store';
 import SubscriberPortal from './pages/SubscriberPortal';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
-import Webhooks from './pages/Webhooks';
-import PaymentProof from './pages/PaymentProof';
 import Unlock from './pages/Unlock';
-import Store from './pages/Store';
+import Webhooks from './pages/Webhooks';
 import __Layout from './Layout.jsx';
 
 
@@ -102,19 +102,19 @@ export const PAGES = {
     "PayTerminal": PayTerminal,
     "PayTerminals": PayTerminals,
     "PaymentLinks": PaymentLinks,
+    "PaymentProof": PaymentProof,
     "Payments": Payments,
     "Pricing": Pricing,
     "PrivacyPolicy": PrivacyPolicy,
     "SDKDocumentation": SDKDocumentation,
     "Security": Security,
     "ShoppingPageGenerator": ShoppingPageGenerator,
+    "Store": Store,
     "SubscriberPortal": SubscriberPortal,
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
-    "Webhooks": Webhooks,
-    "PaymentProof": PaymentProof,
     "Unlock": Unlock,
-    "Store": Store,
+    "Webhooks": Webhooks,
 }
 
 export const pagesConfig = {

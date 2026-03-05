@@ -3,7 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import {
   Copy, Check, Monitor, ShoppingCart, Plus, Trash2, Image, Palette,
-  Type, Layout, Code2, Eye, ChevronDown, ChevronUp, Star
+  Type, Layout, Code2, Eye, ChevronDown, ChevronUp, Star, Tag, Grid3x3, 
+  Search, Filter, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,12 +33,6 @@ const FONTS = [
   { label: "System Default", value: "system-ui, sans-serif" },
 ];
 
-const LAYOUTS = [
-  { label: "Product Left", value: "left" },
-  { label: "Product Right", value: "right" },
-  { label: "Centered Hero", value: "center" },
-];
-
 const emptyProduct = () => ({
   id: Date.now(),
   name: "",
@@ -47,6 +42,7 @@ const emptyProduct = () => ({
   linkId: "",
   badge: "",
   features: "",
+  category: "uncategorized",
 });
 
 export default function ShoppingPageGenerator() {
@@ -57,16 +53,20 @@ export default function ShoppingPageGenerator() {
   const [customAccent, setCustomAccent] = useState("#6366f1");
   const [useCustomAccent, setUseCustomAccent] = useState(false);
   const [font, setFont] = useState(FONTS[0].value);
-  const [layout, setLayout] = useState("left");
   const [showReviews, setShowReviews] = useState(true);
   const [showBadges, setShowBadges] = useState(true);
   const [showPoweredBy, setShowPoweredBy] = useState(true);
   const [footerText, setFooterText] = useState("© 2025 MyShop. Powered by PayADA.");
-  const [products, setProducts] = useState([{ ...emptyProduct(), id: 1, name: "Product 1", description: "Describe your product here.", price: "10", badge: "Best Seller" }]);
+  const [enableCart, setEnableCart] = useState(true);
+  const [enableCategories, setEnableCategories] = useState(true);
+  const [enableSearch, setEnableSearch] = useState(true);
+  const [products, setProducts] = useState([
+    { ...emptyProduct(), id: 1, name: "Premium Digital Plan", description: "Full access to all features", price: "25", badge: "Best Seller", category: "digital" },
+    { ...emptyProduct(), id: 2, name: "Basic Physical Item", description: "Quality product with fast shipping", price: "15", category: "physical" }
+  ]);
   const [expandedProduct, setExpandedProduct] = useState(1);
   const [copied, setCopied] = useState(null);
   const [activeTab, setActiveTab] = useState("page");
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -81,6 +81,7 @@ export default function ShoppingPageGenerator() {
 
   const baseUrl = window.location.origin;
   const accent = useCustomAccent ? customAccent : theme.accent;
+  const categories = [...new Set(products.map(p => p.category || "uncategorized"))];
 
   const addProduct = () => {
     const newP = { ...emptyProduct() };
@@ -96,13 +97,46 @@ export default function ShoppingPageGenerator() {
     setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
   };
 
-  // ── Generate full standalone HTML page ──
+  // ── Generate full e-commerce HTML page ──
   const generatePage = () => {
     const fontImport = font.includes("Inter")
       ? `<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">`
       : "";
 
     const cardBorder = theme.cardBorder || "rgba(255,255,255,0.07)";
+
+    // Generate category filters
+    const categoriesHtml = enableCategories ? `
+      <div class="category-filters" style="display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding-bottom:8px;">
+        <button class="category-filter active" data-category="all" style="
+          padding:8px 16px;border-radius:999px;border:2px solid ${accent};
+          background:${accent};color:#fff;font-size:13px;font-weight:600;
+          cursor:pointer;white-space:nowrap;transition:all 0.2s;
+        ">All Products</button>
+        ${categories.map(cat => `
+          <button class="category-filter" data-category="${cat}" style="
+            padding:8px 16px;border-radius:999px;border:2px solid ${accent}40;
+            background:transparent;color:${theme.text};font-size:13px;font-weight:600;
+            cursor:pointer;white-space:nowrap;transition:all 0.2s;text-transform:capitalize;
+          ">${cat}</button>
+        `).join('')}
+      </div>
+    ` : '';
+
+    // Generate search bar
+    const searchHtml = enableSearch ? `
+      <div class="search-wrapper" style="margin-bottom:24px;">
+        <div style="position:relative;display:flex;align-items:center;">
+          <input type="text" class="search-input" placeholder="Search products..." style="
+            width:100%;padding:12px 16px 12px 40px;border-radius:12px;
+            border:1px solid ${accent}30;background:${theme.card};
+            color:${theme.text};font-size:14px;font-family:${font};
+            transition:border-color 0.2s;
+          " />
+          <span style="position:absolute;left:12px;color:${accent};">🔍</span>
+        </div>
+      </div>
+    ` : '';
 
     const productCards = products.map((p) => {
       const link = links.find((l) => l.id === p.linkId);
@@ -121,19 +155,17 @@ export default function ShoppingPageGenerator() {
         : "";
 
       return `
-      <div class="product-card" style="
-        background:${theme.card};
-        border:1px solid ${cardBorder};
-        border-radius:20px;
-        overflow:hidden;
-        display:flex;
-        flex-direction:column;
+      <div class="product-card" data-category="${p.category || 'uncategorized'}" style="
+        background:${theme.card};border:1px solid ${cardBorder};
+        border-radius:20px;overflow:hidden;display:flex;
+        flex-direction:column;cursor:pointer;
         box-shadow:0 0 0 1px ${cardBorder},0 16px 40px rgba(0,0,0,0.3);
-        backdrop-filter:blur(20px);
-      ">
-        ${p.imageUrl ? `<div style="width:100%;height:200px;overflow:hidden;flex-shrink:0;">
+        backdrop-filter:blur(20px);transition:transform 0.2s,box-shadow 0.2s;
+      " onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 0 0 1px ${cardBorder},0 24px 48px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 0 0 1px ${cardBorder},0 16px 40px rgba(0,0,0,0.3)'">
+        ${p.imageUrl ? `<div style="width:100%;height:220px;overflow:hidden;flex-shrink:0;position:relative;">
           <img src="${p.imageUrl}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
-        </div>` : ""}
+          <div style="position:absolute;top:8px;right:8px;background:${accent};color:#fff;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:700;">₳ ${p.price}</div>
+        </div>` : ''}
         <div style="padding:24px;display:flex;flex-direction:column;flex:1;">
           ${badgeHtml}
           <h2 style="font-size:18px;font-weight:800;margin:0 0 4px 0;color:${theme.text};letter-spacing:-0.02em;line-height:1.2;">${p.name || "Product Name"}</h2>
@@ -145,7 +177,21 @@ export default function ShoppingPageGenerator() {
             <span style="font-size:28px;font-weight:900;color:${accent};letter-spacing:-0.03em;line-height:1;">₳ ${p.price || "0"}</span>
             <span style="font-size:12px;color:${theme.text};opacity:0.35;font-weight:500;">ADA</span>
           </div>
-          ${slug ? `<a href="${baseUrl}/Pay?slug=${slug}" style="
+          ${enableCart ? `
+            <button class="add-to-cart" data-product='${JSON.stringify({id: p.id, name: p.name, price: parseFloat(p.price), slug})}' style="
+              display:flex;align-items:center;justify-content:center;gap:8px;
+              background:${accent};color:#fff;
+              text-decoration:none;font-weight:700;font-size:14px;
+              padding:12px 20px;border-radius:12px;border:none;cursor:pointer;
+              letter-spacing:-0.01em;
+              box-shadow:0 6px 20px ${accent}40;
+              transition:transform 0.15s,box-shadow 0.15s;
+              font-family:${font};
+            " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px ${accent}60'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px ${accent}40'">
+              🛒 Add to Cart
+            </button>
+          ` : slug ? `
+            <a href="${baseUrl}/Pay?slug=${slug}" style="
               display:flex;align-items:center;justify-content:center;gap:8px;
               background:${accent};color:#fff;
               text-decoration:none;font-weight:700;font-size:14px;
@@ -154,11 +200,37 @@ export default function ShoppingPageGenerator() {
               box-shadow:0 6px 20px ${accent}40;
               transition:transform 0.15s,box-shadow 0.15s;
             " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px ${accent}60'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px ${accent}40'">
-              🛒 Buy with ADA
-            </a>` : `<div style="color:${theme.text};opacity:0.3;font-size:13px;font-style:italic;text-align:center;">No payment link selected</div>`}
+              🛒 Buy Now
+            </a>
+          ` : `<div style="color:${theme.text};opacity:0.3;font-size:13px;font-style:italic;text-align:center;">No payment link</div>`}
         </div>
       </div>`;
     }).join("");
+
+    const cartHtml = enableCart ? `
+      <div id="cart-panel" style="position:fixed;bottom:0;left:0;right:0;background:${theme.card};border-top:1px solid ${cardBorder};padding:20px;z-index:1000;transform:translateY(100%);transition:transform 0.3s ease;">
+        <div class="container" style="max-width:1100px;margin:0 auto;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <h3 style="font-size:18px;font-weight:800;color:${theme.text};margin:0;">Shopping Cart</h3>
+            <button id="close-cart" style="background:none;border:none;color:${theme.text};cursor:pointer;font-size:20px;">✕</button>
+          </div>
+          <div id="cart-items" style="margin-bottom:16px;max-height:200px;overflow-y:auto;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;border-top:1px solid ${cardBorder};">
+            <div>
+              <span style="color:${theme.text};opacity:0.6;font-size:13px;">Total:</span>
+              <div style="font-size:24px;font-weight:900;color:${accent};margin-top:2px;">₳ <span id="cart-total">0.00</span></div>
+            </div>
+            <button id="checkout-btn" style="
+              background:${accent};color:#fff;border:none;padding:12px 32px;
+              border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;
+              box-shadow:0 6px 20px ${accent}40;transition:transform 0.2s;
+            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+              Checkout
+            </button>
+          </div>
+        </div>
+      </div>
+    ` : '';
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -181,7 +253,6 @@ export default function ShoppingPageGenerator() {
     .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
     @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr; } }
-    /* Noise overlay for depth */
     body::before {
       content: '';
       position: fixed;
@@ -192,23 +263,35 @@ export default function ShoppingPageGenerator() {
       opacity: 0.4;
     }
     body > * { position: relative; z-index: 1; }
+    .category-filter.active { background: ${accent} !important; color: #fff !important; border-color: ${accent} !important; }
+    .product-card.hidden { display: none; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: ${theme.bg}; margin-bottom: 8px; border-radius: 8px; }
   </style>
 </head>
 <body>
-  <!-- Ambient glow -->
   <div style="position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,${accent}18 0%,transparent 70%);pointer-events:none;z-index:0;"></div>
 
-  <!-- Header -->
   <header style="background:${theme.card}cc;border-bottom:1px solid ${cardBorder};padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);">
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:18px;font-weight:800;letter-spacing:-0.03em;">${logoText}</span>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:18px;font-weight:800;letter-spacing:-0.03em;">${logoText}</span>
+        ${enableCart ? `<button id="cart-toggle" style="
+          position:relative;background:none;border:none;cursor:pointer;font-size:24px;
+          transition:transform 0.2s;
+        " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+          🛒 <span id="cart-count" style="
+            position:absolute;top:-8px;right:-8px;background:${accent};
+            color:#fff;width:20px;height:20px;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;
+          ">0</span>
+        </button>` : ''}
+      </div>
       <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;background:${accent}15;color:${accent};border:1px solid ${accent}30;padding:5px 12px;border-radius:999px;font-weight:600;">
         ✦ Cardano ADA
       </span>
     </div>
   </header>
 
-  <!-- Hero -->
   <section style="padding:100px 0 64px;text-align:center;position:relative;overflow:hidden;">
     <div class="container" style="position:relative;z-index:1;">
       <div style="display:inline-flex;align-items:center;gap:6px;background:${accent}12;color:${accent};border:1px solid ${accent}25;padding:6px 16px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:24px;letter-spacing:0.04em;">
@@ -219,20 +302,106 @@ export default function ShoppingPageGenerator() {
     </div>
   </section>
 
-  <!-- Products -->
   <main style="padding:16px 0 100px;position:relative;z-index:1;">
     <div class="container">
+      ${searchHtml}
+      ${categoriesHtml}
       <div class="product-grid">
         ${productCards}
       </div>
     </div>
   </main>
 
-  <!-- Footer -->
   <footer style="border-top:1px solid ${cardBorder};padding:40px 0;text-align:center;position:relative;z-index:1;">
     <div style="font-size:13px;opacity:0.3;">${footerText}</div>
     ${showPoweredBy ? `<a href="https://payada.io" style="display:inline-flex;align-items:center;gap:6px;color:${accent};text-decoration:none;font-size:12px;font-weight:600;margin-top:10px;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">✦ Powered by PayADA</a>` : ""}
   </footer>
+
+  ${cartHtml}
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const accent = '${accent}';
+    const baseUrl = '${baseUrl}';
+
+    function updateCart() {
+      const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      document.getElementById('cart-count').textContent = cart.length;
+      document.getElementById('cart-total').textContent = total.toFixed(2);
+      
+      const itemsDiv = document.getElementById('cart-items');
+      itemsDiv.innerHTML = cart.map((item, i) => \`
+        <div class="cart-item">
+          <div>
+            <div style="font-weight:600;margin-bottom:4px;">\${item.name}</div>
+            <div style="font-size:12px;opacity:0.6;">₳\${item.price} × \${item.qty}</div>
+          </div>
+          <button onclick="removeFromCart(\${i})" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:14px;">×</button>
+        </div>
+      \`).join('');
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCart();
+    }
+
+    function addToCart(product) {
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) existing.qty++;
+      else cart.push({...product, qty: 1});
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCart();
+    }
+
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const product = JSON.parse(btn.dataset.product);
+        addToCart(product);
+        document.getElementById('cart-panel').style.transform = 'translateY(0)';
+      });
+    });
+
+    document.getElementById('cart-toggle').addEventListener('click', () => {
+      const panel = document.getElementById('cart-panel');
+      panel.style.transform = panel.style.transform === 'translateY(0%)' ? 'translateY(100%)' : 'translateY(0)';
+    });
+
+    document.getElementById('close-cart').addEventListener('click', () => {
+      document.getElementById('cart-panel').style.transform = 'translateY(100%)';
+    });
+
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+      if (cart.length === 0) return alert('Cart is empty');
+      const checkoutUrl = '${enableCart && products.some(p => p.linkId) ? baseUrl + '/Pay?items=' + encodeURIComponent(JSON.stringify(cart)) : '#'}';
+      if (checkoutUrl !== '#') window.location.href = checkoutUrl;
+    });
+
+    document.querySelectorAll('.category-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.category-filter').forEach(b => {
+          b.style.background = b === btn ? accent : 'transparent';
+          b.style.color = b === btn ? '#fff' : '${theme.text}';
+          b.style.borderColor = b === btn ? accent : accent + '40';
+        });
+        const category = btn.dataset.category;
+        document.querySelectorAll('.product-card').forEach(card => {
+          card.classList.toggle('hidden', category !== 'all' && card.dataset.category !== category);
+        });
+      });
+    });
+
+    document.querySelector('.search-input')?.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      document.querySelectorAll('.product-card').forEach(card => {
+        const matches = card.textContent.toLowerCase().includes(query);
+        card.style.display = matches ? '' : 'none';
+      });
+    });
+
+    updateCart();
+  </script>
 </body>
 </html>`;
     return html;
@@ -256,7 +425,7 @@ export default function ShoppingPageGenerator() {
     <div>
       <PageHeader
         title="Shopping Page Generator"
-        subtitle="Build a complete, copy-pasteable ADA-powered product page"
+        subtitle="Build a modern 2026 ADA-powered e-commerce platform"
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_480px] gap-6">
@@ -288,6 +457,27 @@ export default function ShoppingPageGenerator() {
             </div>
           </div>
 
+          {/* Features */}
+          <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-4">
+            <h2 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+              <Grid3x3 className="w-4 h-4 text-slate-400" /> Features
+            </h2>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-xs text-slate-500">Shopping Cart & Bulk Checkout</Label>
+                <Switch checked={enableCart} onCheckedChange={setEnableCart} />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label className="text-xs text-slate-500">Category Filters</Label>
+                <Switch checked={enableCategories} onCheckedChange={setEnableCategories} />
+              </div>
+              <div className="flex items-center justify-between">
+                <Label className="text-xs text-slate-500">Product Search</Label>
+                <Switch checked={enableSearch} onCheckedChange={setEnableSearch} />
+              </div>
+            </div>
+          </div>
+
           {/* Design */}
           <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-4">
             <h2 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
@@ -309,7 +499,6 @@ export default function ShoppingPageGenerator() {
                   </button>
                 ))}
               </div>
-              <div className="text-xs text-slate-400">Selected: {theme.label}</div>
             </div>
 
             <div className="flex items-center justify-between">
@@ -323,25 +512,14 @@ export default function ShoppingPageGenerator() {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label className="text-xs text-slate-500">Font</Label>
-                <Select value={font} onValueChange={setFont}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {FONTS.map((f) => <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs text-slate-500">Product Layout</Label>
-                <Select value={layout} onValueChange={setLayout}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {LAYOUTS.map((l) => <SelectItem key={l.value} value={l.value}>{l.label}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-slate-500">Font</Label>
+              <Select value={font} onValueChange={setFont}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {FONTS.map((f) => <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -374,7 +552,6 @@ export default function ShoppingPageGenerator() {
             <div className="space-y-3">
               {products.map((p) => (
                 <div key={p.id} className="border border-slate-200 rounded-lg overflow-hidden">
-                  {/* Product header */}
                   <div
                     className="flex items-center justify-between p-3 cursor-pointer hover:bg-slate-50 transition-colors"
                     onClick={() => setExpandedProduct(expandedProduct === p.id ? null : p.id)}
@@ -383,6 +560,7 @@ export default function ShoppingPageGenerator() {
                       <ShoppingCart className="w-3.5 h-3.5 text-slate-400" />
                       <span className="text-sm font-medium text-slate-700">{p.name || "Unnamed Product"}</span>
                       {p.price && <span className="text-xs bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">₳ {p.price}</span>}
+                      {p.category && <span className="text-xs bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded">{p.category}</span>}
                     </div>
                     <div className="flex items-center gap-1">
                       <button onClick={(e) => { e.stopPropagation(); removeProduct(p.id); }} className="p-1 hover:text-red-500 text-slate-400 transition-colors">
@@ -402,6 +580,23 @@ export default function ShoppingPageGenerator() {
                         <div className="space-y-1.5">
                           <Label className="text-xs text-slate-500">Price (ADA)</Label>
                           <Input value={p.price} onChange={(e) => updateProduct(p.id, "price", e.target.value)} placeholder="10" type="number" />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-1.5">
+                          <Label className="text-xs text-slate-500">Category</Label>
+                          <Input value={p.category} onChange={(e) => updateProduct(p.id, "category", e.target.value.toLowerCase())} placeholder="digital, physical, etc" />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label className="text-xs text-slate-500">Payment Link</Label>
+                          <Select value={p.linkId} onValueChange={(v) => updateProduct(p.id, "linkId", v)}>
+                            <SelectTrigger><SelectValue placeholder="Select link…" /></SelectTrigger>
+                            <SelectContent>
+                              {links.map((l) => (
+                                <SelectItem key={l.id} value={l.id}>{l.title} — ₳{l.amount_ada}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
                       <div className="space-y-1.5">
@@ -439,17 +634,6 @@ export default function ShoppingPageGenerator() {
                           <Label className="text-xs text-slate-500">Badge (e.g. Best Seller)</Label>
                           <Input value={p.badge} onChange={(e) => updateProduct(p.id, "badge", e.target.value)} placeholder="Best Seller" />
                         </div>
-                        <div className="space-y-1.5">
-                          <Label className="text-xs text-slate-500">Payment Link</Label>
-                          <Select value={p.linkId} onValueChange={(v) => updateProduct(p.id, "linkId", v)}>
-                            <SelectTrigger><SelectValue placeholder="Select link…" /></SelectTrigger>
-                            <SelectContent>
-                              {links.map((l) => (
-                                <SelectItem key={l.id} value={l.id}>{l.title} — ₳{l.amount_ada}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
                       </div>
                       <div className="space-y-1.5">
                         <Label className="text-xs text-slate-500">Feature Bullets (one per line)</Label>
@@ -475,23 +659,23 @@ export default function ShoppingPageGenerator() {
                 <Eye className="w-3.5 h-3.5" /> Open Full Preview
               </Button>
             </div>
-            {/* Mini visual preview */}
             <div
               className="rounded-lg overflow-hidden"
               style={{ background: theme.bg, fontFamily: font, minHeight: 240 }}
             >
-              {/* Mini header */}
               <div style={{ background: theme.card, padding: "10px 16px", borderBottom: `1px solid rgba(255,255,255,0.06)`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span style={{ color: theme.text, fontWeight: 800, fontSize: 13 }}>{logoText}</span>
-                <span style={{ color: accent, fontSize: 10, fontWeight: 700 }}>Cardano ADA</span>
+                {enableCart && <span style={{ fontSize: 14 }}>🛒</span>}
               </div>
-              {/* Mini hero */}
               <div style={{ padding: "20px 16px 12px", textAlign: "center", background: `linear-gradient(160deg,${theme.bg} 0%,${theme.card} 100%)` }}>
                 <div style={{ color: theme.text, fontWeight: 800, fontSize: 15, marginBottom: 4 }}>{shopTitle}</div>
                 <div style={{ color: theme.text, opacity: 0.5, fontSize: 10 }}>{shopSubtitle}</div>
               </div>
-              {/* Mini products */}
               <div style={{ padding: "12px 16px" }}>
+                {enableCategories && <div style={{ display: "flex", gap: "6px", marginBottom: "10px", fontSize: "9px" }}>
+                  <span style={{ background: accent, color: "#fff", padding: "2px 6px", borderRadius: 4 }}>All</span>
+                  {categories.slice(0, 2).map(cat => <span key={cat} style={{ background: accent + "40", color: theme.text, padding: "2px 6px", borderRadius: 4, fontSize: "8px" }}>{cat}</span>)}
+                </div>}
                 {products.slice(0, 2).map((p) => (
                   <div key={p.id} style={{ background: theme.card, borderRadius: 10, marginBottom: 10, padding: 12, display: "flex", gap: 10 }}>
                     {p.imageUrl && <img src={p.imageUrl} alt="" style={{ width: 60, height: 60, borderRadius: 8, objectFit: "cover", flexShrink: 0 }} />}
@@ -503,7 +687,6 @@ export default function ShoppingPageGenerator() {
                     </div>
                   </div>
                 ))}
-                {products.length > 2 && <div style={{ color: theme.text, opacity: 0.3, fontSize: 10, textAlign: "center" }}>+{products.length - 2} more products</div>}
               </div>
             </div>
           </div>
@@ -522,40 +705,25 @@ export default function ShoppingPageGenerator() {
               <TabsContent value="page">
                 <div className="relative">
                   <pre className="bg-slate-900 text-slate-200 rounded-lg p-4 text-xs overflow-auto max-h-64 leading-relaxed whitespace-pre-wrap break-all">
-                    {generatePage()}
+                    {generatePage().slice(0, 500)}...
                   </pre>
                   <Button size="sm" variant="secondary" className="absolute top-2 right-2" onClick={() => copy(generatePage(), "page")}>
                     {copied === "page" ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   </Button>
                 </div>
-                <p className="text-xs text-slate-400 mt-3">Complete standalone HTML page. Save as <code className="bg-slate-100 px-1 rounded">.html</code> and host anywhere — Netlify, GitHub Pages, Vercel, etc.</p>
+                <p className="text-xs text-slate-400 mt-3">Complete standalone HTML with cart & filtering. Save as <code className="bg-slate-100 px-1 rounded">.html</code> and host anywhere.</p>
               </TabsContent>
 
               <TabsContent value="section">
                 <div className="relative">
                   <pre className="bg-slate-900 text-slate-200 rounded-lg p-4 text-xs overflow-auto max-h-64 leading-relaxed whitespace-pre-wrap break-all">
-                    {`<iframe
-  src="data:text/html;charset=utf-8,${encodeURIComponent(generatePage()).slice(0, 200)}…"
-  width="100%"
-  height="800"
-  frameborder="0"
-  style="border-radius:16px;border:none;"
-></iframe>
-
-<!-- OR host the HTML file and use: -->
-<iframe
-  src="https://your-domain.com/shop.html"
-  width="100%"
-  height="800"
-  frameborder="0"
-  style="border-radius:16px;border:none;"
-></iframe>`}
+                    {`<iframe src="https://your-domain.com/shop.html" width="100%" height="800" frameborder="0" style="border-radius:16px;border:none;"></iframe>`}
                   </pre>
                   <Button size="sm" variant="secondary" className="absolute top-2 right-2" onClick={() => copy(`<iframe src="https://your-domain.com/shop.html" width="100%" height="800" frameborder="0" style="border-radius:16px;border:none;"></iframe>`, "section")}>
                     {copied === "section" ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   </Button>
                 </div>
-                <p className="text-xs text-slate-400 mt-3">Embed your shop on any existing website using an iframe. First host the generated HTML file, then use the iframe snippet above.</p>
+                <p className="text-xs text-slate-400 mt-3">Embed your shop on any existing website using an iframe.</p>
               </TabsContent>
             </Tabs>
 
