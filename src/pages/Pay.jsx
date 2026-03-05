@@ -61,10 +61,11 @@ export default function Pay() {
   });
 
   // For multi-item cart checkout
-  const uniqueSlugs = [...new Set(cartItems.map(item => item.slug))];
-  const { data: cartLinks = [] } = useQuery({
+  const uniqueSlugs = [...new Set(cartItems.map(item => item.slug || item.id))].filter(Boolean);
+  const { data: cartLinks = [], isFetching: cartLinksFetching } = useQuery({
     queryKey: ["checkout-links-cart", uniqueSlugs],
     queryFn: async () => {
+      if (uniqueSlugs.length === 0) return [];
       const results = await Promise.all(
         uniqueSlugs.map(s => base44.entities.PaymentLink.filter({ slug: s, status: "active" }, "-created_date", 1))
       );
@@ -72,6 +73,15 @@ export default function Pay() {
     },
     enabled: cartItems.length > 0 && uniqueSlugs.length > 0,
   });
+
+  // For debugging
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      console.log("Cart items:", cartItems);
+      console.log("Unique slugs to search:", uniqueSlugs);
+      console.log("Found payment links:", cartLinks);
+    }
+  }, [cartItems, uniqueSlugs, cartLinks]);
 
   useEffect(() => {
     if (slug && links.length > 0) {
