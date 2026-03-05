@@ -356,7 +356,6 @@ export default function PayTerminal() {
                   <p className="text-sm font-semibold text-white">Waiting for confirmation</p>
                   <p className="text-xs text-slate-400 mt-0.5">
                     Your transaction is being processed on the Cardano blockchain.
-                    {email && ` A confirmation will be sent to ${email}.`}
                   </p>
                 </div>
               </div>
