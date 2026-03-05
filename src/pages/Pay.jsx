@@ -63,7 +63,7 @@ export default function Pay() {
   }, []);
 
   // For single slug checkout
-  const { data: links = [] } = useQuery({
+  const { data: links = [], isLoading: linksLoading } = useQuery({
     queryKey: ["checkout-link", slug],
     queryFn: () => base44.entities.PaymentLink.filter({ slug, status: "active" }, "-created_date", 1),
     enabled: !!slug,
