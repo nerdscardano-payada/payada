@@ -86,17 +86,15 @@ export default function Pay() {
 
 
   useEffect(() => {
-    if (slug && links.length > 0) {
-      setPaymentLink(links[0]);
-      setLoading(false);
-    } else if (slug && links.length === 0 && !loading) {
-      // Only show error if we've finished querying and found nothing
-      setLoading(false);
-    } else if (slug && links.length === 0) {
-      // Wait for query to complete
-      setLoading(true);
+    if (slug) {
+      if (!linksLoading) {
+        if (links.length > 0) {
+          setPaymentLink(links[0]);
+        }
+        setLoading(false);
+      }
     }
-  }, [links, slug]);
+  }, [links, slug, linksLoading]);
 
   useEffect(() => {
     if (cartItems.length > 0 && !cartLinksFetching) {
