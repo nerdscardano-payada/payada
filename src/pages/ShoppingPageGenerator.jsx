@@ -225,7 +225,7 @@ export default function ShoppingPageGenerator() {
               border-radius:12px;font-weight:700;cursor:pointer;font-size:14px;
               box-shadow:0 6px 20px ${accent}40;transition:transform 0.2s;
             " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-              Checkout
+              Proceed to Pay
             </button>
           </div>
         </div>
@@ -374,8 +374,10 @@ export default function ShoppingPageGenerator() {
 
     document.getElementById('checkout-btn').addEventListener('click', () => {
       if (cart.length === 0) return alert('Cart is empty');
-      const checkoutUrl = '${enableCart && products.some(p => p.linkId) ? baseUrl + '/Pay?items=' + encodeURIComponent(JSON.stringify(cart)) : '#'}';
-      if (checkoutUrl !== '#') window.location.href = checkoutUrl;
+      // For multi-item checkout, open Pay page with items serialized in URL
+      const itemsJson = JSON.stringify(cart);
+      const itemsParam = btoa(itemsJson); // Base64 encode to avoid URL length issues
+      window.location.href = '${baseUrl}/Pay?cartItems=' + itemsParam;
     });
 
     document.querySelectorAll('.category-filter').forEach(btn => {
