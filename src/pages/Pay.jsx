@@ -300,11 +300,11 @@ export default function Pay() {
                              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                          </div>
                         <div className="space-y-2">
-                          <Label className="text-slate-300 text-xs">Postal Code</Label>
-                          <Input value={shippingPostalCode} onChange={(e) => setShippingPostalCode(e.target.value)}
-                            placeholder="1000"
-                            className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
-                        </div>
+                           <Label htmlFor="shipping-postal" className="text-slate-300 text-xs">Postal Code</Label>
+                           <Input id="shipping-postal" value={shippingPostalCode} onChange={(e) => setShippingPostalCode(e.target.value)}
+                             placeholder="1000"
+                             className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                         </div>
                       </div>
                       <div className="space-y-2">
                         <Label className="text-slate-300 text-xs">Country</Label>
