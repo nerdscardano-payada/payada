@@ -29,6 +29,9 @@ export default function ButtonGenerator() {
   const [size, setSize] = useState("md");
   const [showAmount, setShowAmount] = useState(true);
   const [showPoweredBy, setShowPoweredBy] = useState(true);
+  const [showIcon, setShowIcon] = useState(true);
+  const [hoverEffect, setHoverEffect] = useState(true);
+  const [shadow, setShadow] = useState(true);
   const [copied, setCopied] = useState(null);
 
   const [user, setUser] = useState(null);
