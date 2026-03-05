@@ -297,7 +297,7 @@ function ShareLinksInfo({ links }) {
       </p>
       <div className="space-y-2">
         {links.map(link => {
-          const url = `${baseUrl}/pay/${link.slug}`;
+          const url = `${baseUrl}/Checkout?slug=${link.slug}`;
           return (
             <div key={link.id} className="flex items-center justify-between bg-white rounded-lg px-3 py-2.5 border border-indigo-100">
               <div className="min-w-0 flex-1">
