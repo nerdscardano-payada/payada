@@ -53,8 +53,6 @@ export default function ShoppingPageGenerator() {
   const [customAccent, setCustomAccent] = useState("#6366f1");
   const [useCustomAccent, setUseCustomAccent] = useState(false);
   const [font, setFont] = useState(FONTS[0].value);
-  const [showReviews, setShowReviews] = useState(true);
-  const [showBadges, setShowBadges] = useState(true);
   const [showPoweredBy, setShowPoweredBy] = useState(true);
   const [footerText, setFooterText] = useState("© 2025 MyShop. Powered by PayADA.");
   const [enableCart, setEnableCart] = useState(true);
@@ -144,15 +142,8 @@ export default function ShoppingPageGenerator() {
       const featList = p.features
         ? p.features.split("\n").filter(Boolean).map((f) => `<li style="padding:4px 0;display:flex;align-items:center;gap:8px;font-size:13px;color:${theme.text};opacity:0.8;"><span style="color:${accent};font-size:12px;">✦</span> ${f}</li>`).join("")
         : "";
-      const badgeHtml = showBadges && p.badge
-        ? `<span style="display:inline-flex;align-items:center;gap:5px;background:${accent}18;color:${accent};border:1px solid ${accent}40;font-size:10px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:12px;letter-spacing:0.08em;text-transform:uppercase;">${p.badge}</span>`
-        : "";
-      const reviewHtml = showReviews
-        ? `<div style="display:flex;align-items:center;gap:6px;margin:8px 0 4px;">
-            <div style="display:flex;gap:2px;">${'<span style="color:#fbbf24;font-size:12px;">★</span>'.repeat(5)}</div>
-            <span style="color:${theme.text};opacity:0.35;font-size:11px;">5.0 · ${Math.floor(Math.random() * 80) + 20} reviews</span>
-           </div>`
-        : "";
+      const badgeHtml = "";
+      const reviewHtml = "";
 
       return `
       <div class="product-card" data-category="${p.category || 'uncategorized'}" style="
@@ -524,19 +515,9 @@ export default function ShoppingPageGenerator() {
               </Select>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <Label className="text-xs text-slate-500">Show Star Reviews</Label>
-                <Switch checked={showReviews} onCheckedChange={setShowReviews} />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label className="text-xs text-slate-500">Show Badges</Label>
-                <Switch checked={showBadges} onCheckedChange={setShowBadges} />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label className="text-xs text-slate-500">Show "Powered by PayADA"</Label>
-                <Switch checked={showPoweredBy} onCheckedChange={setShowPoweredBy} />
-              </div>
+            <div className="flex items-center justify-between">
+              <Label className="text-xs text-slate-500">Show "Powered by PayADA"</Label>
+              <Switch checked={showPoweredBy} onCheckedChange={setShowPoweredBy} />
             </div>
           </div>
 
@@ -682,9 +663,7 @@ export default function ShoppingPageGenerator() {
                   <div key={p.id} style={{ background: theme.card, borderRadius: 10, marginBottom: 10, padding: 12, display: "flex", gap: 10 }}>
                     {p.imageUrl && <img src={p.imageUrl} alt="" style={{ width: 60, height: 60, borderRadius: 8, objectFit: "cover", flexShrink: 0 }} />}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      {showBadges && p.badge && <span style={{ background: accent, color: "#fff", fontSize: 8, fontWeight: 700, padding: "2px 6px", borderRadius: 99, display: "inline-block", marginBottom: 4 }}>{p.badge.toUpperCase()}</span>}
                       <div style={{ color: theme.text, fontWeight: 700, fontSize: 12, marginBottom: 2 }}>{p.name || "Product"}</div>
-                      {showReviews && <div style={{ color: "#f59e0b", fontSize: 9, marginBottom: 4 }}>★★★★★</div>}
                       <div style={{ color: accent, fontWeight: 800, fontSize: 14 }}>₳ {p.price || "0"}</div>
                     </div>
                   </div>
