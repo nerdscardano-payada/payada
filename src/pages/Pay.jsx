@@ -126,10 +126,8 @@ export default function Pay() {
             collect_shipping: firstLink?.collect_shipping || false,
           };
         });
-        setLoading(false);
-      } else if (uniqueSlugs.length > 0) {
-        setLoading(false);
       }
+      setLoading(false);
     }
   }, [cartItems, cartLinks, cartLinksFetching, uniqueSlugs]);
 
