@@ -297,6 +297,9 @@ export default function Checkout() {
                           connectedWallet={connectedWallet}
                           sessionData={sessionData}
                           paymentLink={paymentLink}
+                          payerEmail={payerEmail}
+                          payerName={payerName}
+                          payerDiscordUsername={payerDiscord}
                           onSuccess={(hash) => {
                             setTxHash(hash);
                             setPaymentStatus("detected");
