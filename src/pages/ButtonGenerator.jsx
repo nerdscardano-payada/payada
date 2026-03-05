@@ -231,6 +231,18 @@ export default function ButtonGenerator() {
               <Switch checked={showAmount} onCheckedChange={setShowAmount} />
             </div>
             <div className="flex items-center justify-between">
+              <Label className="text-xs text-slate-500">Show wallet icon</Label>
+              <Switch checked={showIcon} onCheckedChange={setShowIcon} />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label className="text-xs text-slate-500">Hover animation</Label>
+              <Switch checked={hoverEffect} onCheckedChange={setHoverEffect} />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label className="text-xs text-slate-500">Drop shadow</Label>
+              <Switch checked={shadow} onCheckedChange={setShadow} />
+            </div>
+            <div className="flex items-center justify-between">
               <Label className="text-xs text-slate-500">Show "Powered by PayADA"</Label>
               <Switch checked={showPoweredBy} onCheckedChange={setShowPoweredBy} />
             </div>
