@@ -48,8 +48,16 @@ export default function PaymentLinkForm({ link, onBack }) {
     status: link?.status || "active",
   });
 
+  const generateMerchantPrefix = (email) => {
+    if (!email) return "m";
+    return email.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8);
+  };
+
   const generateSlug = (title) => {
-    return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const base = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    if (isEditing) return base; // don't re-prefix when editing
+    const prefix = generateMerchantPrefix(user?.email);
+    return `${prefix}-${base}`;
   };
 
   const mutation = useMutation({
