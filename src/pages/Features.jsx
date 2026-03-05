@@ -41,9 +41,9 @@ const features = [
     description: "Generate shareable payment links in seconds. No technical knowledge required."
   },
   {
-    icon: Zap,
-    title: "Subscriptions",
-    description: "Set up recurring billing and subscription plans with automatic payment collection."
+    icon: Users,
+    title: "Discord Plugin",
+    description: "Automatically grant Discord roles after payment. Gate your community and give access instantly."
   }
 ];
 
