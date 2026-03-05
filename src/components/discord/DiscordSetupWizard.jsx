@@ -234,7 +234,7 @@ function StepRoleId({ value, onChange, onNext, onBack }) {
           <InstructionStep number="1" text="In Discord, open your Server Settings → Roles." />
           <InstructionStep number="2" text='Click "Create Role", give it a name (e.g. "Member" or "VIP"), and save.' />
           <InstructionStep number="3" text="Right-click the role → Copy Role ID." />
-          <InstructionStep number="4" text="⚠️ Drag the bot's role ABOVE this member role in the role list!" />
+          <InstructionStep number="4" text='Go back to Server Settings → Roles. You will see a list of roles. Your bot has its own role (named after your bot app). Drag that bot role ABOVE the member role you just created. Discord only allows a bot to assign roles that are ranked lower than its own role.' />
         </div>
       </div>
       <div className="space-y-2">
