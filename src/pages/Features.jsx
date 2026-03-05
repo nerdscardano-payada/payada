@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { CheckCircle, Zap, Shield, Globe, ArrowRight, MessageSquare, Wallet } from "lucide-react";
+import { CheckCircle, Zap, Shield, Globe, ArrowRight, MessageSquare, Wallet, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const SUPPORTED_WALLETS = [
