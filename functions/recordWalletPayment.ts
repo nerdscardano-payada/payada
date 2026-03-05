@@ -68,14 +68,26 @@ function normalizeAddress(addr) {
   if (!addr) return null;
   // Already bech32
   if (addr.startsWith('addr') || addr.startsWith('stake')) return addr;
-  // Hex CBOR from CIP-30 getChangeAddress — strip leading 5820/5839 CBOR header if present
-  let hex = addr;
-  if (hex.startsWith('5820') || hex.startsWith('5839') || hex.startsWith('581c') || hex.startsWith('581d') || hex.startsWith('581e')) {
-    // CBOR byte string: first 2 bytes = type+length, rest = actual address bytes
+  // Hex CBOR from CIP-30 getChangeAddress
+  let hex = addr.toLowerCase();
+  // Strip CBOR byte string header: 58xx or 59xxxx
+  if (hex.startsWith('58')) {
+    // 58 + 1 byte length = 4 hex chars header
     hex = hex.slice(4);
+  } else if (hex.startsWith('59')) {
+    // 59 + 2 byte length = 6 hex chars header
+    hex = hex.slice(6);
+  } else if (hex.startsWith('4') || hex.startsWith('5')) {
+    // Short form: 4x where x encodes length in same byte
+    hex = hex.slice(2);
   }
   try {
-    return encodeBech32('addr', Array.from(hexToBytes(hex)));
+    const bytes = hexToBytes(hex);
+    // Determine HRP from header byte
+    const headerByte = bytes[0];
+    const networkId = headerByte & 0x0f;
+    const hrp = networkId === 1 ? 'addr' : 'addr_test';
+    return encodeBech32(hrp, Array.from(bytes));
   } catch {
     return addr; // fallback to original
   }
