@@ -36,6 +36,7 @@ const navItems = [
   { type: "header", name: "Overview" },
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
   { name: "Payments", icon: CreditCard, page: "Payments" },
+  { name: "Subscriptions", icon: RefreshCw, page: "Subscriptions" },
   { name: "Customers", icon: Users, page: "Customers" },
   { name: "Billing", icon: Receipt, page: "Billing" },
 

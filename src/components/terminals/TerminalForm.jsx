@@ -39,11 +39,7 @@ export default function TerminalForm({ terminal, onBack }) {
     enabled: !!me?.email,
   });
 
-  const { data: plans = [] } = useQuery({
-    queryKey: ["subscription-plans-active", me?.email],
-    queryFn: () => base44.entities.SubscriptionPlan.filter({ status: "active", merchant_id: me.email }, "-created_date", 50),
-    enabled: !!me?.email,
-  });
+  const plans = [];
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {

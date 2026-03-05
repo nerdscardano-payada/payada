@@ -39,7 +39,7 @@ export default function Dashboard() {
   });
 
   const { data: subscriptions = [], isLoading: loadingSubs } = useQuery({
-    queryKey: ["subscriptions", user?.email],
+    queryKey: ["subscriptions-dash", user?.email],
     queryFn: () => base44.entities.Subscription.filter({ merchant_id: user.email }, "-created_date", 50),
     enabled: !!user,
   });
