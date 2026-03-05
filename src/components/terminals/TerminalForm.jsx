@@ -89,58 +89,18 @@ export default function TerminalForm({ terminal, onBack }) {
           <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Optional description" />
         </div>
 
-        {/* Mode */}
+        {/* One-time: pick payment link */}
         <div className="space-y-2">
-          <Label>Terminal Type *</Label>
-          <Select value={form.mode} onValueChange={(v) => setForm({ ...form, mode: v })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+          <Label>Payment Link *</Label>
+          <Select value={form.payment_link_slug} onValueChange={(v) => setForm({ ...form, payment_link_slug: v })}>
+            <SelectTrigger><SelectValue placeholder="Select a payment link" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="one_time">One-time payment</SelectItem>
-              <SelectItem value="subscription">Subscription (multi-plan)</SelectItem>
+              {paymentLinks.map((pl) => (
+                <SelectItem key={pl.id} value={pl.slug}>{pl.title} (₳ {pl.amount_ada})</SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-
-        {/* One-time: pick payment link */}
-        {form.mode === "one_time" && (
-          <div className="space-y-2">
-            <Label>Payment Link *</Label>
-            <Select value={form.payment_link_slug} onValueChange={(v) => setForm({ ...form, payment_link_slug: v })}>
-              <SelectTrigger><SelectValue placeholder="Select a payment link" /></SelectTrigger>
-              <SelectContent>
-                {paymentLinks.map((pl) => (
-                  <SelectItem key={pl.id} value={pl.slug}>{pl.title} (₳ {pl.amount_ada})</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        )}
-
-        {/* Subscription: pick plans */}
-        {form.mode === "subscription" && (
-          <div className="space-y-2">
-            <Label>Select Subscription Plans *</Label>
-            <div className="border border-slate-200 rounded-lg divide-y divide-slate-100">
-              {plans.length === 0 && (
-                <p className="text-sm text-slate-400 p-3">No active plans found</p>
-              )}
-              {plans.map((plan) => (
-                <label key={plan.id} className="flex items-center gap-3 p-3 cursor-pointer hover:bg-slate-50">
-                  <Checkbox
-                    checked={form.plan_ids.includes(plan.id)}
-                    onCheckedChange={() => togglePlan(plan.id)}
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-slate-900">{plan.name}</p>
-                    <p className="text-xs text-slate-400">
-                      {plan.amount_mode === "fixed_ada" ? `₳ ${plan.amount_ada}` : `${plan.fiat_currency} ${plan.amount_fiat}`} · {plan.interval_type}
-                    </p>
-                  </div>
-                </label>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Collect fields */}
         <div className="space-y-3">
