@@ -85,12 +85,8 @@ export default function Pay() {
 
   // For debugging
   useEffect(() => {
-    if (cartItems.length > 0) {
-      console.log("Cart items:", cartItems);
-      console.log("Unique slugs to search:", uniqueSlugs);
-      console.log("Found payment links:", cartLinks);
-    }
-  }, [cartItems, uniqueSlugs, cartLinks]);
+    console.log("State update - cartItems:", cartItems, "paymentLink:", paymentLink, "loading:", loading);
+  }, [cartItems, paymentLink, loading]);
 
   useEffect(() => {
     if (slug && links.length > 0) {
