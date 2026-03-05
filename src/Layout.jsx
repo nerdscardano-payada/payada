@@ -13,6 +13,10 @@ export default function Layout({ children, currentPageName }) {
   const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPageName]);
+
+  useEffect(() => {
     if (publicPages.includes(currentPageName)) {
       setAuthChecked(true);
       return;
