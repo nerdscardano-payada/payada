@@ -87,13 +87,15 @@ export default function Pay() {
       // For cart, create a virtual payment link with combined totals
       const totalAda = cartItems.reduce((sum, item) => {
         const link = cartLinks.find(l => l.slug === item.slug);
-        return sum + (link?.amount_ada || item.price || 0) * item.quantity;
+        const itemPrice = link?.amount_ada || parseFloat(item.price) || 0;
+        const qty = item.quantity || 1;
+        return sum + (itemPrice * qty);
       }, 0);
 
       setPaymentLink({
         id: "cart-" + Date.now(),
         title: `${cartItems.length} items`,
-        amount_ada: totalAda,
+        amount_ada: isNaN(totalAda) ? 0 : totalAda,
         merchant_id: cartLinks[0]?.merchant_id,
         receive_address: cartLinks[0]?.receive_address,
         collect_email: cartLinks[0]?.collect_email,
