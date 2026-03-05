@@ -17,6 +17,10 @@ export default function Pay() {
   const [paymentLink, setPaymentLink] = useState(null);
   const [payerEmail, setPayerEmail] = useState("");
   const [payerName, setPayerName] = useState("");
+  const [shippingStreet, setShippingStreet] = useState("");
+  const [shippingCity, setShippingCity] = useState("");
+  const [shippingPostalCode, setShippingPostalCode] = useState("");
+  const [shippingCountry, setShippingCountry] = useState("");
   const [sessionStarted, setSessionStarted] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState("pending");
   const [loading, setLoading] = useState(true);
@@ -90,7 +94,11 @@ export default function Pay() {
             merchantId: paymentLink.merchant_id,
             payerEmail: payerEmail || null,
             payerName: payerName || null,
-            payerAddress: connectedWallet?.address || null
+            payerAddress: connectedWallet?.address || null,
+            shippingStreet: shippingStreet || null,
+            shippingCity: shippingCity || null,
+            shippingPostalCode: shippingPostalCode || null,
+            shippingCountry: shippingCountry || null
           });
           console.log(`Payment recorded on attempt ${attempt}`);
           break; // success
