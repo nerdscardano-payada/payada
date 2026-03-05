@@ -153,8 +153,8 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
           )}
         </nav>
 
-        {/* Logout + Collapse toggle (desktop only) */}
-        <div className="hidden lg:flex flex-col p-3 border-t border-white/5 gap-1">
+        {/* Logout + Collapse toggle */}
+        <div className="flex flex-col p-3 border-t border-white/5 gap-1">
           <button
             onClick={() => base44.auth.logout(createPageUrl("Home"))}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
