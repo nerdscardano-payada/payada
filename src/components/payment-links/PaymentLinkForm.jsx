@@ -196,6 +196,14 @@ export default function PaymentLinkForm({ link, onBack }) {
             <Switch checked={form.collect_name} onCheckedChange={(v) => update("collect_name", v)} />
           </div>
 
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-700">Collect shipping address</p>
+              <p className="text-xs text-slate-400">Ask payer for street, city, postal code & country</p>
+            </div>
+            <Switch checked={form.collect_shipping} onCheckedChange={(v) => update("collect_shipping", v)} />
+          </div>
+
           <div className="space-y-2">
             <Label>Redirect URL after success</Label>
             <Input

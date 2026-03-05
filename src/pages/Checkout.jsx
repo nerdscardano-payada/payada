@@ -87,7 +87,11 @@ export default function Checkout() {
             payerEmail: payerEmail || null,
             payerName: payerName || null,
             payerAddress: connectedWallet?.address || null,
-            payerDiscordUsername: payerDiscord || null
+            payerDiscordUsername: payerDiscord || null,
+            shippingStreet: shippingStreet || null,
+            shippingCity: shippingCity || null,
+            shippingPostalCode: shippingPostalCode || null,
+            shippingCountry: shippingCountry || null
           });
           console.log(`Payment recorded on attempt ${attempt}`);
           break;
