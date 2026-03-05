@@ -114,7 +114,7 @@ export default function Dashboard() {
       </div>
 
       {/* Chart + Top Customers */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-6">
         {isLoading ? (
           <>
             <div className="bg-white rounded-xl border border-slate-200/60 p-5"><Skeleton className="h-48 w-full" /></div>
