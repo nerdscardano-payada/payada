@@ -260,7 +260,7 @@ function StepRoleId({ value, onChange, onNext, onBack }) {
       </div>
       <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 flex gap-2">
         <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-        <p className="text-xs text-amber-700">The bot's role must be positioned <strong>above</strong> this role in Server Settings → Roles. Otherwise role assignment will fail.</p>
+        <p className="text-xs text-amber-700"><strong>Important:</strong> In Discord, a bot can only assign roles that are ranked <strong>below</strong> its own role. Go to Server Settings → Roles, find your bot's role (named after your bot app), and drag it <strong>above</strong> the member role you just created. If you skip this, the bot will fail to grant access after payment.</p>
       </div>
       <div className="flex gap-3">
         <Button variant="outline" onClick={onBack} className="flex-1"><ChevronLeft className="w-4 h-4 mr-1" /> Back</Button>
