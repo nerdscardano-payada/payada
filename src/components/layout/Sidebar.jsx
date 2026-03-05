@@ -5,8 +5,6 @@ import {
   LayoutDashboard,
   Link2,
   CreditCard,
-  RefreshCw,
-  ListOrdered,
   Users,
   Webhook,
   Key,
