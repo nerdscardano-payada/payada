@@ -89,8 +89,12 @@ export default function Pay() {
     if (slug && links.length > 0) {
       setPaymentLink(links[0]);
       setLoading(false);
+    } else if (slug && links.length === 0 && !loading) {
+      // Only show error if we've finished querying and found nothing
+      setLoading(false);
     } else if (slug && links.length === 0) {
-      setTimeout(() => setLoading(false), 1500);
+      // Wait for query to complete
+      setLoading(true);
     }
   }, [links, slug]);
 
