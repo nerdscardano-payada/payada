@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
     const session = await base44.asServiceRole.entities.CheckoutSession.create({
       payment_link_id: paymentLinkId,
       merchant_id: paymentLink.merchant_id || merchant?.user_id || 'unknown',
-      amount_total_lovelace: amountLovelace,
+      amount_total_lovelace: totalAmountLovelace,
       platform_fee_lovelace: platformFeeLovelace,
       merchant_amount_lovelace: merchantAmountLovelace,
       fee_percent: merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT,
@@ -65,8 +65,8 @@ Deno.serve(async (req) => {
     return Response.json({
       success: true,
       session_id: session.id,
-      amount_total_lovelace: amountLovelace,
-      amount_total_ada: amountLovelace / 1_000_000,
+      amount_total_lovelace: totalAmountLovelace,
+      amount_total_ada: totalAmountLovelace / 1_000_000,
       platform_fee_lovelace: platformFeeLovelace,
       platform_fee_ada: platformFeeLovelace / 1_000_000,
       platform_fee_percent: merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT,
