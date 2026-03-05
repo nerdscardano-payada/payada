@@ -142,51 +142,15 @@ export default function PaymentLinkForm({ link, onBack }) {
           <h3 className="text-sm font-semibold text-slate-900">Pricing</h3>
 
           <div className="space-y-2">
-            <Label>Amount Mode</Label>
-            <Select value={form.amount_mode} onValueChange={(v) => update("amount_mode", v)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="fixed_ada">Fixed ADA</SelectItem>
-                <SelectItem value="fixed_fiat">Fixed Fiat</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label>Amount (ADA)</Label>
+            <Input
+              type="number"
+              step="0.01"
+              value={form.amount_ada}
+              onChange={(e) => update("amount_ada", e.target.value)}
+              placeholder="e.g. 25"
+            />
           </div>
-
-          {form.amount_mode === "fixed_ada" ? (
-            <div className="space-y-2">
-              <Label>Amount (ADA)</Label>
-              <Input
-                type="number"
-                step="0.01"
-                value={form.amount_ada}
-                onChange={(e) => update("amount_ada", e.target.value)}
-                placeholder="e.g. 25"
-              />
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Amount</Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  value={form.amount_fiat}
-                  onChange={(e) => update("amount_fiat", e.target.value)}
-                  placeholder="e.g. 10.00"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Currency</Label>
-                <Select value={form.fiat_currency} onValueChange={(v) => update("fiat_currency", v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="USD">USD</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          )}
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-5">
