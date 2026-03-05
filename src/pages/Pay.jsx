@@ -205,6 +205,41 @@ export default function Pay() {
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                 </div>
               )}
+              {paymentLink.collect_shipping && (
+                <div className="space-y-3">
+                  <div className="border-t border-slate-800 pt-3">
+                    <p className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Shipping Address</p>
+                    <div className="space-y-2">
+                      <div className="space-y-2">
+                        <Label className="text-slate-300 text-xs">Street Address</Label>
+                        <Input value={shippingStreet} onChange={(e) => setShippingStreet(e.target.value)}
+                          placeholder="123 Main St"
+                          className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="space-y-2">
+                          <Label className="text-slate-300 text-xs">City</Label>
+                          <Input value={shippingCity} onChange={(e) => setShippingCity(e.target.value)}
+                            placeholder="Brussels"
+                            className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-slate-300 text-xs">Postal Code</Label>
+                          <Input value={shippingPostalCode} onChange={(e) => setShippingPostalCode(e.target.value)}
+                            placeholder="1000"
+                            className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-slate-300 text-xs">Country</Label>
+                        <Input value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)}
+                          placeholder="Belgium"
+                          className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               <Button onClick={handleStartCheckout}
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 text-base font-semibold">
                 Continue to Payment
