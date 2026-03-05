@@ -44,7 +44,7 @@ export default function Pay() {
     
     if (paySlug) {
       setSlug(paySlug);
-      setLoading(false);
+      setLoading(true);
     } else if (cartParam) {
       try {
         const decoded = atob(cartParam);
