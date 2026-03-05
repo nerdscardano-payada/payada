@@ -92,7 +92,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
             if (item.type === "header") {
               return !collapsed ? (
                 <div key={index} className="px-3 pt-4 pb-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">{item.name}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">{item.name}</span>
                 </div>
               ) : (
                 <div key={index} className="border-t border-white/5 my-2" />
