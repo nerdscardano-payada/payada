@@ -41,11 +41,16 @@ Deno.serve(async (req) => {
       amountLovelace = Math.floor(adaAmount * 1_000_000);
     }
 
-    // Fee is deducted FROM the merchant amount — customer pays original amount only
-    // e.g. ₳25 total: merchant gets ₳24.5625, platform gets ₳0.4375
-    const platformFeeLovelace = Math.floor(amountLovelace * feePercent);
-    const merchantAmountLovelace = amountLovelace - platformFeeLovelace;
-    // amountLovelace stays unchanged — customer pays the original amount
+    // Fee is added ON TOP of the merchant amount — customer pays product price + fee
+    // e.g. ₳25 product: fee = max(₳0.4375, ₳1) = ₳1 → customer pays ₳26, merchant gets ₳25
+    const MIN_FEE_LOVELACE = 1_000_000; // ₳1 minimum fee for amounts under ₳60
+    const MIN_FEE_THRESHOLD_LOVELACE = 60_000_000; // ₳60
+    let platformFeeLovelace = Math.floor(amountLovelace * feePercent);
+    if (amountLovelace < MIN_FEE_THRESHOLD_LOVELACE && platformFeeLovelace < MIN_FEE_LOVELACE) {
+      platformFeeLovelace = MIN_FEE_LOVELACE;
+    }
+    const merchantAmountLovelace = amountLovelace; // merchant always receives the full product amount
+    const totalAmountLovelace = amountLovelace + platformFeeLovelace; // customer pays product + fee
 
     const session = await base44.asServiceRole.entities.CheckoutSession.create({
       payment_link_id: paymentLinkId,
