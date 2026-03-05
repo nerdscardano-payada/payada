@@ -132,6 +132,14 @@ export default function Payments() {
                         ) : (
                           <span className="text-xs text-slate-400 font-mono">No wallet</span>
                         )}
+                        {p.shipping_street && (
+                          <div className="flex items-start gap-1 mt-1">
+                            <MapPin className="w-3 h-3 text-slate-400 mt-0.5 flex-shrink-0" />
+                            <span className="text-xs text-slate-500">
+                              {p.shipping_street}, {p.shipping_postal_code} {p.shipping_city}{p.shipping_country ? `, ${p.shipping_country}` : ""}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
