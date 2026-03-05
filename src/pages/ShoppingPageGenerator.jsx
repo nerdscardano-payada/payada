@@ -169,7 +169,7 @@ export default function ShoppingPageGenerator() {
             <span style="font-size:12px;color:${theme.text};opacity:0.35;font-weight:500;">ADA</span>
           </div>
           ${enableCart ? `
-            <button class="add-to-cart" data-product='${JSON.stringify({id: p.id, name: p.name, price: parseFloat(p.price), slug})}' style="
+            <button class="add-to-cart" data-product='${JSON.stringify({id: p.id, name: p.name, price: parseFloat(p.price), slug: slug || p.id})}' style="
               display:flex;align-items:center;justify-content:center;gap:8px;
               background:${accent};color:#fff;
               text-decoration:none;font-weight:700;font-size:14px;
