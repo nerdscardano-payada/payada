@@ -414,23 +414,13 @@ export default function DiscordSetupWizard({ initialForm, plugin, userId, onSave
     setValidating(true);
     setValidationResult(null);
     try {
-      const res = await fetch(`https://discord.com/api/v10/guilds/${form.guild_id}`, {
-        headers: { Authorization: `Bot ${form.bot_token}` }
+      const res = await base44.functions.invoke('validateDiscordConfig', {
+        guild_id: form.guild_id,
+        bot_token: form.bot_token
       });
-      if (res.ok) {
-        const guild = await res.json();
-        setValidationResult({ success: true, message: `Connected to server: "${guild.name}" with ${guild.member_count || "?"} members.` });
-      } else if (res.status === 401) {
-        setValidationResult({ success: false, message: "Invalid bot token. Please double-check it in the Discord Developer Portal." });
-      } else if (res.status === 403) {
-        setValidationResult({ success: false, message: "Bot doesn't have access to this server. Make sure the bot is added to your server." });
-      } else if (res.status === 404) {
-        setValidationResult({ success: false, message: "Server not found. Check the Guild ID and make sure the bot is in the server." });
-      } else {
-        setValidationResult({ success: false, message: `Unexpected error (${res.status}). Please try again.` });
-      }
-    } catch {
-      setValidationResult({ success: false, message: "Network error. Please check your connection and try again." });
+      setValidationResult(res.data);
+    } catch (err) {
+      setValidationResult({ success: false, message: `Error: ${err.message}` });
     } finally {
       setValidating(false);
     }
