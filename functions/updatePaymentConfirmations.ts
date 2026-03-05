@@ -129,6 +129,12 @@ async function processConfirmations(base44) {
         severity: 'info',
         metadata: { confirmations, amount_ada: payment.received_amount_ada }
       }).catch(err => console.error(`Notification failed: ${err.message}`));
+
+      // Discord Gate: grant role if Discord username is present
+      if (payment.payer_discord_username) {
+        base44.functions.invoke('grantDiscordAccess', { paymentId: payment.id })
+          .catch(err => console.error(`Discord grant failed: ${err.message}`));
+      }
     })
   );
 
