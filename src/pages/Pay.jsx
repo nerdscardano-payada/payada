@@ -87,10 +87,8 @@ export default function Pay() {
 
   useEffect(() => {
     if (slug) {
-      if (!linksLoading) {
-        if (links.length > 0) {
-          setPaymentLink(links[0]);
-        }
+      if (!linksLoading && links.length > 0) {
+        setPaymentLink(links[0]);
         setLoading(false);
       }
     }
