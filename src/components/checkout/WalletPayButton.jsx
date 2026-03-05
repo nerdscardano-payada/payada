@@ -135,6 +135,16 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
         console.log("TX HASH (backend submit):", txHash);
       }
       toast.success("Transaction submitted! Waiting for confirmation…");
+      // Record wallet payment with payer info (fire-and-forget)
+      base44.functions.invoke('recordWalletPayment', {
+        txHash,
+        paymentLinkId: paymentLink.id,
+        merchantId: paymentLink.merchant_id,
+        payerAddress: walletAddress,
+        payerEmail: payerEmail || null,
+        payerName: payerName || null,
+        payerDiscordUsername: payerDiscordUsername || null,
+      }).catch(() => {});
       onSuccess?.(txHash);
     } catch (err) {
       toast.error(err?.message || "Failed to submit transaction.");
