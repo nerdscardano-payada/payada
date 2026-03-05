@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
