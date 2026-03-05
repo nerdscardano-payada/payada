@@ -77,6 +77,9 @@ import SubscriberPortal from './pages/SubscriberPortal';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
+import PaymentProof from './pages/PaymentProof';
+import Unlock from './pages/Unlock';
+import Store from './pages/Store';
 import __Layout from './Layout.jsx';
 
 
@@ -111,6 +114,9 @@ export const PAGES = {
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
+    "PaymentProof": PaymentProof,
+    "Unlock": Unlock,
+    "Store": Store,
 }
 
 export const pagesConfig = {
