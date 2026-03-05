@@ -294,11 +294,11 @@ export default function Pay() {
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         <div className="space-y-2">
-                          <Label className="text-slate-300 text-xs">City</Label>
-                          <Input value={shippingCity} onChange={(e) => setShippingCity(e.target.value)}
-                            placeholder="Brussels"
-                            className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
-                        </div>
+                           <Label htmlFor="shipping-city" className="text-slate-300 text-xs">City</Label>
+                           <Input id="shipping-city" value={shippingCity} onChange={(e) => setShippingCity(e.target.value)}
+                             placeholder="Brussels"
+                             className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                         </div>
                         <div className="space-y-2">
                           <Label className="text-slate-300 text-xs">Postal Code</Label>
                           <Input value={shippingPostalCode} onChange={(e) => setShippingPostalCode(e.target.value)}
