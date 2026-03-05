@@ -114,6 +114,7 @@ export default function ButtonGenerator() {
   const [showAmount, setShowAmount] = useState(true);
   const [showPoweredBy, setShowPoweredBy] = useState(true);
   const [showIcon, setShowIcon] = useState(true);
+  const [selectedIcon, setSelectedIcon] = useState("gift");
   const [hoverEffect, setHoverEffect] = useState(true);
   const [shadow, setShadow] = useState(true);
   const [copied, setCopied] = useState(null);
