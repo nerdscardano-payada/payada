@@ -64,13 +64,33 @@ export default function ButtonGenerator() {
   ].join("");
 
   // ---- Embed code generators ----
+  const shadowStyle = shadow ? "0 4px 14px rgba(0,0,0,0.25)" : "none";
+  const hoverScript = hoverEffect
+    ? `
+      btn.addEventListener("mouseover", function() {
+        btn.style.filter = "brightness(1.12)";
+        btn.style.transform = "translateY(-1px)";
+      });
+      btn.addEventListener("mouseout", function() {
+        btn.style.filter = "brightness(1)";
+        btn.style.transform = "translateY(0)";
+      });`
+    : "";
+
+  const iconSvg = showIcon
+    ? `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:7px;margin-bottom:1px"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>`
+    : "";
+
   const buttonCode = `<!-- PayADA Button -->
+<style>
+  .payada-btn { transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease; }
+</style>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".payada-btn").forEach(function(btn) {
       btn.addEventListener("click", function() {
         window.location.href = "${baseUrl}/Pay?slug=" + btn.getAttribute("data-slug");
-      });
+      });${hoverScript}
     });
   });
 </script>
@@ -83,13 +103,16 @@ export default function ButtonGenerator() {
     color: #fff;
     border: none;
     cursor: pointer;
-    font-family: sans-serif;
-    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 700;
     padding: ${sizeStyles[size].padding};
     font-size: ${sizeStyles[size].fontSize};
     border-radius: ${borderRadii[rounded]};
+    box-shadow: ${shadowStyle};
+    letter-spacing: -0.01em;
+    line-height: 1.3;
   "
->${previewLabel}${showPoweredBy ? '\n  <span style="display:block;font-size:10px;opacity:0.7;margin-top:2px;">Powered by PayADA</span>' : ""}
+>${iconSvg}${previewLabel}${showPoweredBy ? '\n  <span style="display:block;font-size:10px;opacity:0.7;margin-top:2px;">Powered by PayADA</span>' : ""}
 </button>`;
 
   const iframeCode = `<iframe
