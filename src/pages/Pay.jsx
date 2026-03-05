@@ -53,21 +53,56 @@ export default function Pay() {
     setLoading(false);
   }, []);
 
-  // Load payment link by slug
+  // For single slug checkout
   const { data: links = [] } = useQuery({
     queryKey: ["checkout-link", slug],
     queryFn: () => base44.entities.PaymentLink.filter({ slug, status: "active" }, "-created_date", 1),
     enabled: !!slug,
   });
 
+  // For multi-item cart checkout
+  const uniqueSlugs = [...new Set(cartItems.map(item => item.slug))];
+  const { data: cartLinks = [] } = useQuery({
+    queryKey: ["checkout-links-cart", uniqueSlugs],
+    queryFn: async () => {
+      const results = await Promise.all(
+        uniqueSlugs.map(s => base44.entities.PaymentLink.filter({ slug: s, status: "active" }, "-created_date", 1))
+      );
+      return results.flat();
+    },
+    enabled: cartItems.length > 0 && uniqueSlugs.length > 0,
+  });
+
   useEffect(() => {
-    if (links.length > 0) {
+    if (slug && links.length > 0) {
       setPaymentLink(links[0]);
       setLoading(false);
-    } else if (links.length === 0 && slug) {
+    } else if (slug && links.length === 0) {
       setTimeout(() => setLoading(false), 1500);
     }
   }, [links, slug]);
+
+  useEffect(() => {
+    if (cartItems.length > 0 && cartLinks.length > 0) {
+      // For cart, create a virtual payment link with combined totals
+      const totalAda = cartItems.reduce((sum, item) => {
+        const link = cartLinks.find(l => l.slug === item.slug);
+        return sum + (link?.amount_ada || item.price || 0) * item.quantity;
+      }, 0);
+
+      setPaymentLink({
+        id: "cart-" + Date.now(),
+        title: `${cartItems.length} items`,
+        amount_ada: totalAda,
+        merchant_id: cartLinks[0]?.merchant_id,
+        receive_address: cartLinks[0]?.receive_address,
+        collect_email: cartLinks[0]?.collect_email,
+        collect_name: cartLinks[0]?.collect_name,
+        collect_shipping: cartLinks[0]?.collect_shipping,
+      });
+      setLoading(false);
+    }
+  }, [cartItems, cartLinks]);
 
   const handleStartCheckout = async () => {
     try {
