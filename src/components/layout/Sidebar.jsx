@@ -125,7 +125,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
             <>
               {!collapsed && (
                 <div className="px-3 pt-4 pb-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">Admin</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Admin</span>
                 </div>
               )}
               <Link
