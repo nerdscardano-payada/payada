@@ -73,7 +73,6 @@ import SDKDocumentation from './pages/SDKDocumentation';
 import Security from './pages/Security';
 import ShoppingPageGenerator from './pages/ShoppingPageGenerator';
 import SubscriberPortal from './pages/SubscriberPortal';
-import SubscriptionPlans from './pages/SubscriptionPlans';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
@@ -107,7 +106,6 @@ export const PAGES = {
     "Security": Security,
     "ShoppingPageGenerator": ShoppingPageGenerator,
     "SubscriberPortal": SubscriberPortal,
-    "SubscriptionPlans": SubscriptionPlans,
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
