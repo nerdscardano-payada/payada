@@ -132,7 +132,7 @@ function StepCreateApp({ onNext }) {
         <div className="space-y-3">
           <InstructionStep number="1" text='Go to discord.com/developers/applications and click "New Application".' />
           <InstructionStep number="2" text='Give your app a name (e.g. "MyShop Access Bot") and click "Create".' />
-          <InstructionStep number="3" text='In the left sidebar, click "Bot", then click "Add Bot" → "Yes, do it!".' />
+          <InstructionStep number="3" text='In the left sidebar, click "Bot" (the bot is created automatically — no "Add Bot" needed).' />
           <InstructionStep number="4" text='Scroll down to "Privileged Gateway Intents" and enable "Server Members Intent".' />
           <InstructionStep number="5" text='Click "Save Changes".' />
         </div>
