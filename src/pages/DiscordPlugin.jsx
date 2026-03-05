@@ -102,6 +102,30 @@ export default function DiscordPlugin() {
     </div>
   );
 
+  // Show wizard for new setup or when triggered
+  if (showWizard || (!plugin && !isLoading)) {
+    return (
+      <div className="max-w-2xl space-y-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Discord Gate</h1>
+          <p className="text-slate-500 text-sm mt-1">Automatically grant Discord roles after confirmed ADA payments.</p>
+        </div>
+        <DiscordSetupWizard
+          initialForm={plugin ? {
+            guild_id: plugin.guild_id || "", role_id: plugin.role_id || "",
+            bot_token: plugin.bot_token || "", invite_channel_id: plugin.invite_channel_id || "",
+            welcome_message: plugin.welcome_message || "", payment_link_ids: plugin.payment_link_ids || [],
+            enabled: plugin.enabled || false
+          } : undefined}
+          plugin={plugin}
+          userId={user?.email}
+          onSaved={() => { queryClient.invalidateQueries({ queryKey: ["discord-plugin"] }); setShowWizard(false); }}
+          onCancel={plugin ? () => setShowWizard(false) : undefined}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-2xl space-y-6">
       {/* Header */}
@@ -115,22 +139,6 @@ export default function DiscordPlugin() {
         <Badge className={plugin?.enabled ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"}>
           {plugin?.enabled ? "Active" : "Inactive"}
         </Badge>
-      </div>
-
-      {/* Setup guide */}
-      <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 space-y-2 text-sm text-indigo-800">
-        <p className="font-semibold flex items-center gap-2"><Info className="w-4 h-4" /> Setup checklist</p>
-        <ol className="list-decimal list-inside space-y-1 text-indigo-700">
-          <li>Create a bot in <a href="https://discord.com/developers/applications" target="_blank" rel="noopener noreferrer" className="underline">Discord Developer Portal</a></li>
-          <li>Add the bot to your server with <strong>Manage Roles</strong> permission</li>
-          <li>Create a role for paying members and copy its ID</li>
-          <li>Make sure the bot's role is <strong>above</strong> the member role in server settings</li>
-          <li>Customers must already be in your Discord server before paying</li>
-        </ol>
-        <a href="https://discord.com/developers/applications" target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-indigo-600 font-medium mt-1 hover:underline">
-          Open Discord Developer Portal <ExternalLink className="w-3 h-3" />
-        </a>
       </div>
 
       {/* Form */}
