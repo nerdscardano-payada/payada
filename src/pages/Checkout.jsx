@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Hexagon, Copy, CheckCircle2, Clock, Loader2,
-  ExternalLink, AlertCircle, Wallet, ArrowRight, RefreshCw
+  Hexagon, CheckCircle2, Clock, Loader2,
+  ExternalLink, AlertCircle, ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,8 +11,6 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import WalletConnect from "@/components/checkout/WalletConnect";
 import WalletPayButton from "@/components/checkout/WalletPayButton";
-
-const BLOCKFROST_API_KEY = null; // Not needed frontend-side; tx is built client-side
 
 export default function Checkout() {
   const params = new URLSearchParams(window.location.search);
@@ -26,12 +24,8 @@ export default function Checkout() {
   const [paymentStatus, setPaymentStatus] = useState("pending");
   const [loading, setLoading] = useState(true);
   const [sessionData, setSessionData] = useState(null);
-
-  // Wallet state
-  const [connectedWallet, setConnectedWallet] = useState(null); // { api, walletId, address }
+  const [connectedWallet, setConnectedWallet] = useState(null);
   const [txHash, setTxHash] = useState(null);
-  const [txLoading, setTxLoading] = useState(false);
-  const [pollCount, setPollCount] = useState(0);
 
   const { data: links = [] } = useQuery({
     queryKey: ["checkout-link", slug],
@@ -72,84 +66,53 @@ export default function Checkout() {
     }
   };
 
-  const copyAddress = (addr) => {
-    navigator.clipboard.writeText(addr || paymentLink?.receive_address);
-    toast.success("Address copied!");
-  };
+  const handleTxSuccess = useCallback(async (hash) => {
+    setTxHash(hash);
+    setPaymentStatus("detected");
 
-  // ── Wallet payment: build multi-output tx via backend + CIP-30 signing ──
-  const handleWalletPay = async () => {
-    if (!connectedWallet || !sessionData) return;
-    setTxLoading(true);
-    try {
-      const { api, address: walletAddress } = connectedWallet;
-      const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
-      const merchantLovelace = String(Math.floor(sessionData.merchant_amount_ada * 1_000_000));
-      const platformFeeLovelace = String(Math.floor(sessionData.platform_fee_ada * 1_000_000));
-
-      // Get bech32 change address from wallet (CIP-30 returns hex CBOR, backend will use walletAddress)
-      // Use backend to fetch UTxOs and build the tx structure
-      const buildRes = await base44.functions.invoke('buildPaymentTx', {
-        walletAddress: walletAddress,
-        merchantAddress,
-        merchantLovelace,
-        platformFeeLovelace
-      });
-
-      if (!buildRes?.data?.success) {
-        throw new Error(buildRes?.data?.error || "Failed to build transaction");
+    // Record the payment with retries to allow Blockfrost to index the tx
+    if (paymentLink) {
+      const maxAttempts = 5;
+      const delayMs = 15000;
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          await base44.functions.invoke('recordWalletPayment', {
+            txHash: hash,
+            paymentLinkId: paymentLink.id,
+            merchantId: paymentLink.merchant_id,
+            payerEmail: payerEmail || null,
+            payerName: payerName || null,
+            payerAddress: connectedWallet?.address || null,
+            payerDiscordUsername: payerDiscord || null
+          });
+          console.log(`Payment recorded on attempt ${attempt}`);
+          break;
+        } catch (err) {
+          console.warn(`recordWalletPayment attempt ${attempt} failed:`, err?.message);
+          if (attempt < maxAttempts) {
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+          } else {
+            console.error("All attempts to record payment failed:", err);
+          }
+        }
       }
-
-      // Use CIP-30 to sign and submit — wallet handles CBOR tx building internally
-      // We instruct the user's wallet to send to our outputs using sendLovelace approach
-      // Since we can't build raw CBOR without Node.js crypto, we use the wallet's own
-      // coin selection by calling signTx on a tx built by the wallet extension itself.
-      // The wallet's sendLovelace / send methods handle this natively via CIP-30.
-
-      // Most CIP-30 wallets expose `cardano[wallet].experimental.sendLovelace` or similar.
-      // For maximum compatibility, we use the standard signTx flow with a pre-built tx from backend.
-      // For now: show the address + amount and let user confirm in wallet (manual send as fallback).
-
-      // Try to use wallet's own send API (some wallets support it)
-      const feeWallet = buildRes.data.feeWallet;
-      const outputs = buildRes.data.outputs;
-
-      // Attempt: use wallet's signTx if we have a CBOR tx (future), 
-      // or guide the user to send via the address shown
-      toast.info("Please send ₳ " + sessionData.amount_total_ada?.toFixed(3) + " from your wallet to the address shown below.");
-      setPaymentMethod("manual");
-      
-    } catch (err) {
-      toast.error(err?.message || "Transaction failed");
-    } finally {
-      setTxLoading(false);
     }
-  };
 
-  // ── Poll Blockfrost for tx confirmation via backend ──
-  const startPolling = useCallback((hash) => {
+    // Poll for confirmation
     let attempts = 0;
-    const maxAttempts = 30;
     const interval = setInterval(async () => {
       attempts++;
-      setPollCount(attempts);
       try {
         const res = await base44.functions.invoke('checkTxConfirmation', { txHash: hash });
         if (res?.data?.confirmed) {
           clearInterval(interval);
           setPaymentStatus("confirmed");
-          setTxHash(hash);
         }
       } catch {}
-      if (attempts >= maxAttempts) {
-        clearInterval(interval);
-        // Show as confirmed anyway after timeout (let them check manually)
-        setPaymentStatus("confirmed");
-      }
-    }, 10000); // every 10s
-  }, []);
+      if (attempts >= 30) clearInterval(interval);
+    }, 10000);
+  }, [paymentLink, payerEmail, payerName, payerDiscord, connectedWallet]);
 
-  // ── Render helpers ──
   if (!slug) return <ErrorScreen message="No payment link slug provided." />;
   if (loading) return <LoadingScreen />;
   if (!paymentLink) return <ErrorScreen message="This link may have expired or been disabled." title="Payment link not found" />;
@@ -157,7 +120,6 @@ export default function Checkout() {
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center mx-auto mb-4">
             <Hexagon className="w-6 h-6 text-white" />
@@ -165,7 +127,6 @@ export default function Checkout() {
           <p className="text-xs text-slate-500 uppercase tracking-widest">Powered by PayADA</p>
         </div>
 
-        {/* Checkout Card */}
         <div className="bg-slate-900 rounded-2xl border border-slate-800">
           {/* Product info */}
           <div className="p-6 border-b border-slate-800">
@@ -216,7 +177,6 @@ export default function Checkout() {
             </div>
 
           ) : paymentStatus === "confirmed" ? (
-            /* Confirmed */
             <div className="p-6">
               <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6 text-center">
                 <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
@@ -240,25 +200,22 @@ export default function Checkout() {
             </div>
 
           ) : (
-            /* Step 2: Pay */
             <div className="p-6 space-y-5">
-              {/* Status bar */}
               <div className="flex items-center gap-3 p-3 bg-slate-800/60 rounded-lg">
                 {paymentStatus === "pending" && <Clock className="w-4 h-4 text-amber-400 flex-shrink-0" />}
                 {paymentStatus === "detected" && <Loader2 className="w-4 h-4 text-blue-400 animate-spin flex-shrink-0" />}
                 <div>
                   <p className="text-xs font-semibold text-white">
-                    {paymentStatus === "pending" ? "Awaiting payment" : `Confirming on-chain… (${pollCount * 10}s)`}
+                    {paymentStatus === "pending" ? "Awaiting payment" : "Confirming on-chain…"}
                   </p>
                   <p className="text-[11px] text-slate-500">
-                    {paymentStatus === "pending" ? "Choose how you'd like to pay below" : "Your transaction was submitted. Waiting for block confirmation."}
+                    {paymentStatus === "pending" ? "Connect your Cardano wallet to pay" : "Your transaction was submitted."}
                   </p>
                 </div>
               </div>
 
               {paymentStatus === "pending" && (
                 <>
-                  {/* Fee breakdown */}
                   {sessionData && (
                     <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
                       <div className="flex justify-between">
@@ -276,13 +233,12 @@ export default function Checkout() {
                       {sessionData.amount_total_ada < 60 && (
                         <div className="border-t border-slate-700 pt-1.5 flex items-start gap-1.5 text-amber-400/80">
                           <AlertCircle className="w-3 h-3 mt-0.5 flex-shrink-0" />
-                          <span>For payments under ₳60, a minimum platform fee of ₳1 applies, resulting in a higher effective fee percentage.</span>
+                          <span>For payments under ₳60, a minimum platform fee of ₳1 applies.</span>
                         </div>
                       )}
                     </div>
                   )}
 
-                  {/* Wallet flow only */}
                   <div className="space-y-3">
                     <p className="text-[11px] text-slate-500 text-center">
                       Supported: Nami · Eternl · Flint · Lace · Typhon · GeroWallet · Yoroi
@@ -300,14 +256,10 @@ export default function Checkout() {
                           payerEmail={payerEmail}
                           payerName={payerName}
                           payerDiscordUsername={payerDiscord}
-                          onSuccess={(hash) => {
-                            setTxHash(hash);
-                            setPaymentStatus("detected");
-                            startPolling(hash);
-                          }}
+                          onSuccess={handleTxSuccess}
                         />
                         <p className="text-[11px] text-slate-500 text-center">
-                          This sends a multi-output transaction: merchant + PayADA fee in one click.
+                          Your wallet will ask you to confirm and enter your password.
                         </p>
                       </>
                     )}
@@ -315,9 +267,8 @@ export default function Checkout() {
                 </>
               )}
 
-              {/* Detected state */}
               {paymentStatus === "detected" && txHash && (
-                <div className="text-center space-y-2">
+                <div className="text-center">
                   <a href={`https://cardanoscan.io/transaction/${txHash}`} target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 text-indigo-400 text-xs hover:underline font-mono">
                     View on Cardanoscan <ExternalLink className="w-3 h-3" />
