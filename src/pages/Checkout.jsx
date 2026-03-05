@@ -39,6 +39,14 @@ export default function Checkout() {
     enabled: !!slug,
   });
 
+  const merchantId = links[0]?.merchant_id;
+  const { data: discordPlugins = [] } = useQuery({
+    queryKey: ["discord-plugin-checkout", merchantId],
+    queryFn: () => base44.entities.MerchantPlugin.filter({ merchant_id: merchantId, plugin_type: "discord_gate", enabled: true }),
+    enabled: !!merchantId,
+  });
+  const hasDiscordPlugin = discordPlugins.length > 0;
+
   useEffect(() => {
     if (links.length > 0) {
       setPaymentLink(links[0]);
@@ -188,6 +196,17 @@ export default function Checkout() {
                   <Input value={payerName} onChange={(e) => setPayerName(e.target.value)}
                     placeholder="Your name"
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                </div>
+              )}
+              {hasDiscordPlugin && (
+                <div className="space-y-2">
+                  <Label className="text-slate-300 text-xs flex items-center gap-1.5">
+                    <span className="text-indigo-400">🎮</span> Discord Username
+                  </Label>
+                  <Input value={payerDiscord} onChange={(e) => setPayerDiscord(e.target.value)}
+                    placeholder="yourname (without @)"
+                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                  <p className="text-[11px] text-slate-500">Required to receive access to the Discord community after payment.</p>
                 </div>
               )}
               <Button onClick={handleStartCheckout}
