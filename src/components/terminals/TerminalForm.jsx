@@ -138,8 +138,52 @@ export default function TerminalForm({ terminal, onBack }) {
             </div>
           </div>
           <div className="space-y-2">
-            <Label>Logo URL</Label>
-            <Input value={form.logo_url} onChange={(e) => setForm({ ...form, logo_url: e.target.value })} placeholder="https://..." />
+            <Label>Logo</Label>
+            {/* Toggle */}
+            <div className="flex gap-1 bg-slate-100 rounded-lg p-1 w-fit">
+              <button
+                type="button"
+                onClick={() => setLogoMode("upload")}
+                className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md font-medium transition-all ${logoMode === "upload" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+              >
+                <Upload className="w-3 h-3" /> Upload
+              </button>
+              <button
+                type="button"
+                onClick={() => setLogoMode("url")}
+                className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md font-medium transition-all ${logoMode === "url" ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+              >
+                <Link className="w-3 h-3" /> URL
+              </button>
+            </div>
+
+            {logoMode === "url" ? (
+              <Input value={form.logo_url} onChange={(e) => setForm({ ...form, logo_url: e.target.value })} placeholder="https://..." />
+            ) : (
+              <div className="flex items-center gap-3">
+                <label className="cursor-pointer flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors">
+                  {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                  {uploading ? "Uploading..." : "Choose image"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      setUploading(true);
+                      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                      setForm((f) => ({ ...f, logo_url: file_url }));
+                      setUploading(false);
+                      toast.success("Logo uploaded");
+                    }}
+                  />
+                </label>
+                {form.logo_url && (
+                  <img src={form.logo_url} alt="Logo preview" className="h-10 w-10 object-contain rounded border border-slate-200" />
+                )}
+              </div>
+            )}
           </div>
         </div>
 
