@@ -16,6 +16,7 @@ import DiscordSetupWizard from "@/components/discord/DiscordSetupWizard";
 export default function DiscordPlugin() {
   const queryClient = useQueryClient();
   const [user, setUser] = React.useState(null);
+  const [showWizard, setShowWizard] = React.useState(false);
   React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
 
   const { data: plugins = [], isLoading } = useQuery({
