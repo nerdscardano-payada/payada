@@ -40,17 +40,26 @@ export default function Pay() {
     const paySlug = params.get("slug");
     const cartParam = params.get("cartItems");
     
+    console.log("URL params - slug:", paySlug, "cartParam:", cartParam);
+    
     if (paySlug) {
       setSlug(paySlug);
+      setLoading(false);
     } else if (cartParam) {
       try {
-        const items = JSON.parse(atob(cartParam));
+        const decoded = atob(cartParam);
+        console.log("Decoded cartParam:", decoded);
+        const items = JSON.parse(decoded);
+        console.log("Parsed cart items:", items);
         setCartItems(items);
+        setLoading(false);
       } catch (e) {
         console.error("Failed to parse cartItems:", e);
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   // For single slug checkout
