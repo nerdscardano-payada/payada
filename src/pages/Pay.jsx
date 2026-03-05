@@ -14,6 +14,7 @@ import WalletPayButton from "@/components/checkout/WalletPayButton";
 
 export default function Pay() {
   const [slug, setSlug] = useState("");
+  const [cartItems, setCartItems] = useState([]);
   const [paymentLink, setPaymentLink] = useState(null);
   const [payerEmail, setPayerEmail] = useState("");
   const [payerName, setPayerName] = useState("");
@@ -33,15 +34,23 @@ export default function Pay() {
   const [pollCount, setPollCount] = useState(0);
   const [txSubmitted, setTxSubmitted] = useState(false);
 
-  // Extract slug from URL query params
+  // Extract slug or cartItems from URL query params
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const paySlug = params.get("slug");
+    const cartParam = params.get("cartItems");
+    
     if (paySlug) {
       setSlug(paySlug);
-    } else {
-      setLoading(false);
+    } else if (cartParam) {
+      try {
+        const items = JSON.parse(atob(cartParam));
+        setCartItems(items);
+      } catch (e) {
+        console.error("Failed to parse cartItems:", e);
+      }
     }
+    setLoading(false);
   }, []);
 
   // Load payment link by slug
@@ -128,7 +137,7 @@ export default function Pay() {
     }, 10000);
   }, [paymentLink, payerEmail, payerName]);
 
-  if (!slug) {
+  if (!slug && cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-center">
