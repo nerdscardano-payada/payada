@@ -378,12 +378,7 @@ export default function ButtonGenerator() {
                 onMouseOver={hoverEffect ? (e) => { e.currentTarget.style.filter = "brightness(1.12)"; e.currentTarget.style.transform = "translateY(-1px)"; } : undefined}
                 onMouseOut={hoverEffect ? (e) => { e.currentTarget.style.filter = "brightness(1)"; e.currentTarget.style.transform = "translateY(0)"; } : undefined}
               >
-                {showIcon && (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: "inline", verticalAlign: "middle", marginRight: "7px", marginBottom: "1px" }}>
-                    <path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/>
-                    <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
-                  </svg>
-                )}
+                {showIcon && activeIcon.jsx}
                 {previewLabel}
                 {showPoweredBy && (
                   <span style={{ display: "block", fontSize: "10px", opacity: 0.7, marginTop: "2px" }}>
