@@ -366,17 +366,10 @@ export default function ShoppingPageGenerator() {
     document.getElementById('checkout-btn').addEventListener('click', () => {
       if (cart.length === 0) return alert('Cart is empty');
       
-      // Check if all items have the same slug
-      const slugs = [...new Set(cart.map(item => item.slug))];
-      if (slugs.length === 0 || !slugs[0]) {
-        return alert('No payment link configured for items in cart');
-      }
-      if (slugs.length > 1) {
-        return alert('All items in cart must be from the same product (different payment link)');
-      }
-      
-      // Redirect to Pay page with the slug
-      window.location.href = '${baseUrl}/Pay?slug=' + slugs[0];
+      // Serialize cart items (supports multiple different payment links)
+      const itemsJson = JSON.stringify(cart);
+      const itemsParam = btoa(itemsJson);
+      window.location.href = '${baseUrl}/Pay?cartItems=' + itemsParam;
     });
 
     document.querySelectorAll('.category-filter').forEach(btn => {
