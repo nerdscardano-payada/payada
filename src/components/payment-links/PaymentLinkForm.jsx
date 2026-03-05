@@ -45,6 +45,7 @@ export default function PaymentLinkForm({ link, onBack }) {
     cancel_redirect_url: link?.cancel_redirect_url || "",
     collect_email: link?.collect_email || false,
     collect_name: link?.collect_name || false,
+    collect_shipping: link?.collect_shipping || false,
     status: link?.status || "active",
   });
 
