@@ -76,6 +76,7 @@ import SubscriberPortal from './pages/SubscriberPortal';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Webhooks from './pages/Webhooks';
+import DiscordPlugin from './pages/DiscordPlugin';
 import __Layout from './Layout.jsx';
 
 
@@ -109,6 +110,7 @@ export const PAGES = {
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Webhooks": Webhooks,
+    "DiscordPlugin": DiscordPlugin,
 }
 
 export const pagesConfig = {
