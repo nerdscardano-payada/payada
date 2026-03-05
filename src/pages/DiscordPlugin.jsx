@@ -280,7 +280,7 @@ function ShareLinksInfo({ links }) {
   const baseUrl = window.location.origin;
 
   const copyUrl = (slug, id) => {
-    navigator.clipboard.writeText(`${baseUrl}/Checkout?slug=${slug}`);
+    navigator.clipboard.writeText(`${baseUrl}/Pay?slug=${slug}`);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -297,7 +297,7 @@ function ShareLinksInfo({ links }) {
       </p>
       <div className="space-y-2">
         {links.map(link => {
-          const url = `${baseUrl}/Checkout?slug=${link.slug}`;
+            const url = `${baseUrl}/Pay?slug=${link.slug}`;
           return (
             <div key={link.id} className="flex items-center justify-between bg-white rounded-lg px-3 py-2.5 border border-indigo-100">
               <div className="min-w-0 flex-1">
