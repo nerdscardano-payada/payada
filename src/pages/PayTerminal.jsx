@@ -116,6 +116,47 @@ export default function PayTerminal() {
     toast.success("Address copied!");
   };
 
+  const handleTxSuccess = async (hash) => {
+    setTxHash(hash);
+    setStep("awaiting");
+
+    if (terminal.mode === "one_time" && paymentLink) {
+      const maxAttempts = 5;
+      const delayMs = 15000;
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          await base44.functions.invoke("recordWalletPayment", {
+            txHash: hash,
+            paymentLinkId: paymentLink.id,
+            merchantId: paymentLink.merchant_id,
+            payerEmail: email || null,
+            payerName: name || null,
+            payerAddress: connectedWallet?.address || null,
+          });
+          break;
+        } catch (err) {
+          if (attempt < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, delayMs));
+          }
+        }
+      }
+    }
+
+    // Poll for confirmation
+    let attempts = 0;
+    const interval = setInterval(async () => {
+      attempts++;
+      try {
+        const res = await base44.functions.invoke("checkTxConfirmation", { txHash: hash });
+        if (res?.data?.confirmed) {
+          clearInterval(interval);
+          setStep("confirmed");
+        }
+      } catch {}
+      if (attempts >= 30) clearInterval(interval);
+    }, 10000);
+  };
+
   const intervalLabel = (plan) => {
     if (!plan) return "";
     if (plan.interval_type === "weekly") return "/ week";
