@@ -18,7 +18,8 @@ import {
   ShoppingCart,
   Monitor,
   LogOut,
-  ShieldCheck
+  ShieldCheck,
+  RefreshCw
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
