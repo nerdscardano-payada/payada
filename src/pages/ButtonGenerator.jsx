@@ -63,7 +63,7 @@ const ICONS = [
     ),
   },
   {
-    label: "Munt / Coin",
+    label: "Coin",
     key: "coin",
     svg: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:7px;margin-bottom:1px"><circle cx="12" cy="12" r="10"/><path d="M12 6v2m0 8v2M9 10h4.5a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3H15"/></svg>`,
     jsx: (
