@@ -275,8 +275,8 @@ export default function Pay() {
               )}
               {paymentLink.collect_name && (
                 <div className="space-y-2">
-                  <Label htmlFor="payer-name" className="text-slate-300 text-xs">Name</Label>
-                  <Input id="payer-name" name="payer-name" value={payerName} onChange={(e) => setPayerName(e.target.value)}
+                   <Label htmlFor="payer-name" className="text-slate-300 text-xs">Name</Label>
+                   <Input id="payer-name" value={payerName} onChange={(e) => setPayerName(e.target.value)}
                     placeholder="Your name"
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                 </div>
