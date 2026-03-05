@@ -315,9 +315,22 @@ export default function ButtonGenerator() {
               <Switch checked={showAmount} onCheckedChange={setShowAmount} />
             </div>
             <div className="flex items-center justify-between">
-              <Label className="text-xs text-slate-500">Show wallet icon</Label>
+              <Label className="text-xs text-slate-500">Show icon</Label>
               <Switch checked={showIcon} onCheckedChange={setShowIcon} />
             </div>
+            {showIcon && (
+              <div className="space-y-2">
+                <Label className="text-xs text-slate-500">Icon kiezen</Label>
+                <Select value={selectedIcon} onValueChange={setSelectedIcon}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {ICONS.map((ic) => (
+                      <SelectItem key={ic.key} value={ic.key}>{ic.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="flex items-center justify-between">
               <Label className="text-xs text-slate-500">Hover animation</Label>
               <Switch checked={hoverEffect} onCheckedChange={setHoverEffect} />
