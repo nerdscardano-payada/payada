@@ -280,7 +280,7 @@ function ShareLinksInfo({ links }) {
   const baseUrl = window.location.origin;
 
   const copyUrl = (slug, id) => {
-    navigator.clipboard.writeText(`${baseUrl}/pay/${slug}`);
+    navigator.clipboard.writeText(`${baseUrl}/Checkout?slug=${slug}`);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
