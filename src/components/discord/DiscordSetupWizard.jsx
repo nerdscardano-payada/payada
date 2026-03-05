@@ -270,7 +270,7 @@ function StepBotToken({ value, onChange, onNext, onBack }) {
         <p className="text-sm font-semibold text-indigo-800">How to get your Bot Token:</p>
         <div className="space-y-3">
           <InstructionStep number="1" text="Go to Discord Developer Portal → Your Application → Bot." />
-          <InstructionStep number="2" text='Click "Reset Token" and confirm. Copy the token immediately — it won\'t be shown again!' />
+          <InstructionStep number="2" text={"Click \"Reset Token\" and confirm. Copy the token immediately — it won't be shown again!"} />
           <InstructionStep number="3" text="Paste it in the field below." />
         </div>
       </div>
