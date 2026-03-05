@@ -307,8 +307,8 @@ export default function Pay() {
                          </div>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-slate-300 text-xs">Country</Label>
-                        <Input value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)}
+                        <Label htmlFor="shipping-country" className="text-slate-300 text-xs">Country</Label>
+                        <Input id="shipping-country" value={shippingCountry} onChange={(e) => setShippingCountry(e.target.value)}
                           placeholder="Belgium"
                           className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                       </div>
