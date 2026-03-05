@@ -96,7 +96,7 @@ function normalizeAddress(addr) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName, payerDiscordUsername } = await req.json();
+    const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName, payerDiscordUsername, shippingStreet, shippingCity, shippingPostalCode, shippingCountry } = await req.json();
 
     if (!txHash || !paymentLinkId || !merchantId) {
       return Response.json({ error: 'Missing required fields: txHash, paymentLinkId, merchantId' }, { status: 400 });
@@ -151,6 +151,10 @@ Deno.serve(async (req) => {
       payer_email: payerEmail || null,
       payer_name: payerName || null,
       payer_discord_username: payerDiscordUsername || null,
+      shipping_street: shippingStreet || null,
+      shipping_city: shippingCity || null,
+      shipping_postal_code: shippingPostalCode || null,
+      shipping_country: shippingCountry || null,
       block_height_detected: txInfo.block_height,
       confirmations: 0,
       detected_at: new Date().toISOString(),
