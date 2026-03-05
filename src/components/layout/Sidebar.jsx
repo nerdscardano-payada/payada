@@ -88,7 +88,16 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
-          {navItems.map((item) => {
+          {navItems.map((item, index) => {
+            if (item.type === "header") {
+              return !collapsed ? (
+                <div key={index} className="px-3 pt-4 pb-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">{item.name}</span>
+                </div>
+              ) : (
+                <div key={index} className="border-t border-white/5 my-2" />
+              );
+            }
             const isActive = currentPage === item.page;
             return (
               <Link
