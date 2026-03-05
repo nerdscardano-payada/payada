@@ -287,8 +287,8 @@ export default function Pay() {
                     <p className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Shipping Address</p>
                     <div className="space-y-2">
                       <div className="space-y-2">
-                        <Label className="text-slate-300 text-xs">Street Address</Label>
-                        <Input value={shippingStreet} onChange={(e) => setShippingStreet(e.target.value)}
+                        <Label htmlFor="shipping-street" className="text-slate-300 text-xs">Street Address</Label>
+                        <Input id="shipping-street" value={shippingStreet} onChange={(e) => setShippingStreet(e.target.value)}
                           placeholder="123 Main St"
                           className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                       </div>
