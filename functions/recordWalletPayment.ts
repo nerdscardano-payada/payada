@@ -84,7 +84,7 @@ function normalizeAddress(addr) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName } = await req.json();
+    const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName, payerDiscordUsername } = await req.json();
 
     if (!txHash || !paymentLinkId || !merchantId) {
       return Response.json({ error: 'Missing required fields: txHash, paymentLinkId, merchantId' }, { status: 400 });
