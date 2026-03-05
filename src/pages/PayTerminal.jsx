@@ -373,6 +373,12 @@ export default function PayTerminal() {
                     ? `Your subscription to ${selectedPlan?.name} has been activated.`
                     : "Your transaction has been confirmed on the Cardano blockchain."}
                 </p>
+                {txHash && (
+                  <a href={`https://cardanoscan.io/transaction/${txHash}`} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-indigo-400 text-xs mt-3 hover:underline font-mono">
+                    {txHash.slice(0, 16)}…{txHash.slice(-8)} <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
               </div>
             </div>
           )}
