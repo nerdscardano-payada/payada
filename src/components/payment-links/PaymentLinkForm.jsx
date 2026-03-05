@@ -63,7 +63,10 @@ export default function PaymentLinkForm({ link, onBack }) {
   const mutation = useMutation({
     mutationFn: (data) => {
       if (isEditing) return base44.entities.PaymentLink.update(link.id, data);
-      return base44.entities.PaymentLink.create({ ...data, merchant_id: user?.email });
+      // Ensure slug is prefixed with merchant prefix before saving
+      const prefix = user?.email?.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "m";
+      const slug = data.slug.startsWith(prefix + "-") ? data.slug : `${prefix}-${data.slug}`;
+      return base44.entities.PaymentLink.create({ ...data, slug, merchant_id: user?.email });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["paymentLinks"] });
