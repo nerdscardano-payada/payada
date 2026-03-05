@@ -96,7 +96,6 @@ export default function Pay() {
 
   useEffect(() => {
     if (cartItems.length > 0 && !cartLinksFetching) {
-      // Create payment link from cart items, even if some links aren't found
       if (cartLinks.length > 0) {
         const totalAda = cartItems.reduce((sum, item) => {
           const link = cartLinks.find(l => l.slug === item.slug || l.slug === item.id);
@@ -106,20 +105,25 @@ export default function Pay() {
         }, 0);
 
         const firstLink = cartLinks[0];
-        setPaymentLink({
-          id: "cart-" + Date.now(),
-          title: `${cartItems.length} items`,
-          amount_ada: isNaN(totalAda) || totalAda === 0 ? cartItems.reduce((sum, item) => sum + (parseFloat(item.price) || 0) * (item.quantity || 1), 0) : totalAda,
-          merchant_id: firstLink?.merchant_id || "default",
-          receive_address: firstLink?.receive_address,
-          collect_email: firstLink?.collect_email || false,
-          collect_name: firstLink?.collect_name || false,
-          collect_shipping: firstLink?.collect_shipping || false,
+        const finalTotal = isNaN(totalAda) || totalAda === 0 ? cartItems.reduce((sum, item) => sum + (parseFloat(item.price) || 0) * (item.quantity || 1), 0) : totalAda;
+        
+        setPaymentLink(prev => {
+          if (prev?.id?.startsWith("cart-") && prev.amount_ada === finalTotal) {
+            return prev;
+          }
+          return {
+            id: "cart-" + Date.now(),
+            title: `${cartItems.length} items`,
+            amount_ada: finalTotal,
+            merchant_id: firstLink?.merchant_id || "default",
+            receive_address: firstLink?.receive_address,
+            collect_email: firstLink?.collect_email || false,
+            collect_name: firstLink?.collect_name || false,
+            collect_shipping: firstLink?.collect_shipping || false,
+          };
         });
         setLoading(false);
       } else if (uniqueSlugs.length > 0) {
-        // No links found after searching
-        console.warn("No payment links found for slugs:", uniqueSlugs);
         setLoading(false);
       }
     }
