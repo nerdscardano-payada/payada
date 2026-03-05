@@ -24,17 +24,24 @@ import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 
 const navItems = [
+  { type: "header", name: "Account" },
   { name: "Merchant Profile", icon: Building2, page: "MerchantProfile" },
-  { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
+
+  { type: "header", name: "Sales Tools" },
   { name: "Payment Links", icon: Link2, page: "PaymentLinks" },
-  { name: "Payments", icon: CreditCard, page: "Payments" },
-  { name: "Customers", icon: Users, page: "Customers" },
-  { name: "Webhooks", icon: Webhook, page: "Webhooks" },
-  { name: "API Keys", icon: Key, page: "ApiKeys" },
   { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
   { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
   { name: "Shop Generator", icon: ShoppingCart, page: "ShoppingPageGenerator" },
+
+  { type: "header", name: "Overview" },
+  { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
+  { name: "Payments", icon: CreditCard, page: "Payments" },
+  { name: "Customers", icon: Users, page: "Customers" },
   { name: "Billing", icon: Receipt, page: "Billing" },
+
+  { type: "header", name: "Developers" },
+  { name: "Webhooks", icon: Webhook, page: "Webhooks" },
+  { name: "API Keys", icon: Key, page: "ApiKeys" },
 ];
 
 export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
