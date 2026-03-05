@@ -19,7 +19,8 @@ import {
   Monitor,
   LogOut,
   ShieldCheck,
-  RefreshCw
+  RefreshCw,
+  Bot
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
