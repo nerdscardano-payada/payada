@@ -30,8 +30,6 @@ const navItems = [
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
   { name: "Payment Links", icon: Link2, page: "PaymentLinks" },
   { name: "Payments", icon: CreditCard, page: "Payments" },
-  { name: "Subscriptions", icon: RefreshCw, page: "SubscriptionPlans" },
-  { name: "Subscribers", icon: ListOrdered, page: "Subscriptions" },
   { name: "Customers", icon: Users, page: "Customers" },
   { name: "Webhooks", icon: Webhook, page: "Webhooks" },
   { name: "API Keys", icon: Key, page: "ApiKeys" },
