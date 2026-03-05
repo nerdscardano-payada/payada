@@ -112,8 +112,12 @@ export default function Payments() {
                   <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
                     <td className="px-5 py-3.5">
                       <div>
-                        <p className="text-sm font-medium text-slate-900">{p.payer_email || "Anonymous"}</p>
-                        {p.payer_name && <p className="text-xs text-slate-400">{p.payer_name}</p>}
+                        <p className="text-sm font-medium text-slate-900">
+                          {p.payer_name || p.payer_email || "Anonymous"}
+                        </p>
+                        {p.payer_name && p.payer_email && (
+                          <p className="text-xs text-slate-400">{p.payer_email}</p>
+                        )}
                         {p.payer_address ? (
                           <a
                             href={`https://cardanoscan.io/address/${p.payer_address}`}
@@ -126,7 +130,7 @@ export default function Payments() {
                             <ExternalLink className="w-3 h-3" />
                           </a>
                         ) : (
-                          <span className="text-xs text-slate-400">No wallet</span>
+                          <span className="text-xs text-slate-400 font-mono">No wallet</span>
                         )}
                       </div>
                     </td>
