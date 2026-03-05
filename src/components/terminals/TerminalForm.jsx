@@ -17,7 +17,7 @@ export default function TerminalForm({ terminal, onBack }) {
   const [form, setForm] = useState({
     name: terminal?.name || "",
     description: terminal?.description || "",
-    mode: terminal?.mode || "one_time",
+    mode: "one_time",
     payment_link_slug: terminal?.payment_link_slug || "",
     plan_ids: terminal?.plan_ids || [],
     collect_name: terminal?.collect_name ?? true,
