@@ -164,7 +164,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
           </button>
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="w-full flex items-center justify-center py-2 rounded-lg hover:bg-white/5 text-slate-500 hover:text-slate-300 transition-colors"
+            className="hidden lg:flex w-full items-center justify-center py-2 rounded-lg hover:bg-white/5 text-slate-500 hover:text-slate-300 transition-colors"
           >
             {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
