@@ -83,26 +83,40 @@ export default function Pay() {
   }, [links, slug]);
 
   useEffect(() => {
-    if (cartItems.length > 0 && cartLinks.length > 0) {
-      // For cart, create a virtual payment link with combined totals
-      const totalAda = cartItems.reduce((sum, item) => {
-        const link = cartLinks.find(l => l.slug === item.slug);
-        const itemPrice = link?.amount_ada || parseFloat(item.price) || 0;
-        const qty = item.quantity || 1;
-        return sum + (itemPrice * qty);
-      }, 0);
+    if (cartItems.length > 0) {
+      // Check if all required slugs have been found
+      const allSlugsFound = cartItems.every(item => 
+        cartLinks.some(link => link.slug === item.slug)
+      );
 
-      setPaymentLink({
-        id: "cart-" + Date.now(),
-        title: `${cartItems.length} items`,
-        amount_ada: isNaN(totalAda) ? 0 : totalAda,
-        merchant_id: cartLinks[0]?.merchant_id,
-        receive_address: cartLinks[0]?.receive_address,
-        collect_email: cartLinks[0]?.collect_email,
-        collect_name: cartLinks[0]?.collect_name,
-        collect_shipping: cartLinks[0]?.collect_shipping,
-      });
-      setLoading(false);
+      if (allSlugsFound && cartLinks.length > 0) {
+        // For cart, create a virtual payment link with combined totals
+        const totalAda = cartItems.reduce((sum, item) => {
+          const link = cartLinks.find(l => l.slug === item.slug);
+          const itemPrice = link?.amount_ada || parseFloat(item.price) || 0;
+          const qty = item.quantity || 1;
+          return sum + (itemPrice * qty);
+        }, 0);
+
+        const firstLink = cartLinks[0];
+        if (!firstLink?.merchant_id || !firstLink?.receive_address) {
+          console.error("Cart links missing required fields:", firstLink);
+          setLoading(false);
+          return;
+        }
+
+        setPaymentLink({
+          id: "cart-" + Date.now(),
+          title: `${cartItems.length} items`,
+          amount_ada: isNaN(totalAda) ? 0 : totalAda,
+          merchant_id: firstLink.merchant_id,
+          receive_address: firstLink.receive_address,
+          collect_email: firstLink.collect_email || false,
+          collect_name: firstLink.collect_name || false,
+          collect_shipping: firstLink.collect_shipping || false,
+        });
+        setLoading(false);
+      }
     }
   }, [cartItems, cartLinks]);
 
