@@ -21,6 +21,7 @@ export default function Checkout() {
   const [paymentLink, setPaymentLink] = useState(null);
   const [payerEmail, setPayerEmail] = useState("");
   const [payerName, setPayerName] = useState("");
+  const [payerDiscord, setPayerDiscord] = useState("");
   const [sessionStarted, setSessionStarted] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState("pending");
   const [loading, setLoading] = useState(true);
