@@ -147,8 +147,9 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       // Record wallet payment with payer info (fire-and-forget)
       base44.functions.invoke('recordWalletPayment', {
         txHash,
-        paymentLinkId: paymentLink.id,
+        paymentLinkId: paymentLink.id || null,
         merchantId: paymentLink.merchant_id,
+        accessLinkId: paymentLink.accessLinkId || null,
         payerAddress: walletAddress,
         payerEmail: payerEmail || null,
         payerName: payerName || null,
