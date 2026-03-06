@@ -16,6 +16,7 @@ import {
   TrendingUp,
   ArrowRight
 } from "lucide-react";
+import { subDays } from "date-fns";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 

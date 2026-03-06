@@ -62,6 +62,7 @@ import Features from './pages/Features';
 import Home from './pages/Home';
 import MerchantProfile from './pages/MerchantProfile';
 import Onboarding from './pages/Onboarding';
+import POS from './pages/POS';
 import Pay from './pages/Pay';
 import PayTerminal from './pages/PayTerminal';
 import PayTerminals from './pages/PayTerminals';
@@ -79,7 +80,6 @@ import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import Webhooks from './pages/Webhooks';
-import POS from './pages/POS';
 import __Layout from './Layout.jsx';
 
 
@@ -99,6 +99,7 @@ export const PAGES = {
     "Home": Home,
     "MerchantProfile": MerchantProfile,
     "Onboarding": Onboarding,
+    "POS": POS,
     "Pay": Pay,
     "PayTerminal": PayTerminal,
     "PayTerminals": PayTerminals,
@@ -116,7 +117,6 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "Unlock": Unlock,
     "Webhooks": Webhooks,
-    "POS": POS,
 }
 
 export const pagesConfig = {
