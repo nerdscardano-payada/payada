@@ -225,7 +225,10 @@ export default function Access() {
             onDisconnected={() => setConnectedWallet(null)}
           />
 
-          {connectedWallet && (
+          {connectedWallet && !memberName.trim() && (
+            <p className="text-amber-400 text-sm text-center">Please enter your name to continue.</p>
+          )}
+          {connectedWallet && memberName.trim() && (
             <WalletPayButton
               connectedWallet={connectedWallet}
               sessionData={{
