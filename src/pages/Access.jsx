@@ -57,30 +57,36 @@ export default function Access() {
   }, [slug]);
 
   const handlePaymentConfirmed = async (txHash) => {
-    setPaymentConfirmed(true);
     setGrantingAccess(true);
 
-    // Wait for recordWalletPayment to finish indexing (retries with delay)
-    let grantRes = null;
-    const maxAttempts = 6;
-    const delayMs = 8000;
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    // Poll for payment confirmation (detected → confirmed status)
+    let payment = null;
+    const maxCheckAttempts = 20;
+    const checkDelayMs = 3000;
+    for (let attempt = 1; attempt <= maxCheckAttempts; attempt++) {
       try {
-        if (attempt > 1) await new Promise(r => setTimeout(r, delayMs));
-        const res = await base44.functions.invoke("grantCommunityAccess", { txHash, accessLinkId: accessLink.id });
-        grantRes = res.data;
-        break;
+        if (attempt > 1) await new Promise(r => setTimeout(r, checkDelayMs));
+        const res = await base44.functions.invoke("checkTxConfirmation", { txHash });
+        payment = res.data;
+        if (payment?.status === "confirmed") break;
       } catch {
-        if (attempt === maxAttempts) {
-          grantRes = { invite_link: accessLink.invite_link };
-        }
+        // Endpoint may not exist yet, continue polling
       }
     }
 
+    // Now that payment is confirmed, grant access
+    let grantRes = null;
+    try {
+      const res = await base44.functions.invoke("grantCommunityAccess", { txHash, accessLinkId: accessLink.id });
+      grantRes = res.data;
+    } catch {
+      grantRes = { invite_link: accessLink.invite_link };
+    }
+
     setInviteLink(grantRes?.invite_link || accessLink.invite_link);
+    setPaymentConfirmed(true);
     setAccessGranted(true);
     setGrantingAccess(false);
-    // NOTE: CommunityAccessLink stats are updated by recordWalletPayment (backend), no need to duplicate here
   };
 
   if (loading) {
