@@ -2,7 +2,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req);
+    const base44 = createClientFromRequest(req, { skipAuth: true });
     const { paymentId, txHash, accessLinkId } = await req.json();
 
     if ((!paymentId && !txHash) || !accessLinkId) {
