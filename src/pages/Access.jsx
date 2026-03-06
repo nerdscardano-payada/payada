@@ -244,6 +244,7 @@ export default function Access() {
               onSuccess={handlePaymentConfirmed}
             />
           )}
+          
         </div>
 
         {/* Fee info */}
