@@ -54,19 +54,17 @@ export default function Access() {
     }).catch(() => { setError("Failed to load access link."); setLoading(false); });
   }, [slug]);
 
-  const handlePaymentConfirmed = async (paymentId) => {
+  const handlePaymentConfirmed = async (txHash) => {
     setPaymentConfirmed(true);
-    setConfirmedPaymentId(paymentId);
     setGrantingAccess(true);
     try {
-      const res = await base44.functions.invoke("grantCommunityAccess", { paymentId, accessLinkId: accessLink.id });
+      const res = await base44.functions.invoke("grantCommunityAccess", { txHash, accessLinkId: accessLink.id });
       setInviteLink(res.data?.invite_link || accessLink.invite_link);
     } catch {
       setInviteLink(accessLink.invite_link);
     }
     setAccessGranted(true);
     setGrantingAccess(false);
-    // Update payment count
     base44.entities.CommunityAccessLink.update(accessLink.id, {
       payment_count: (accessLink.payment_count || 0) + 1,
       total_received_ada: (accessLink.total_received_ada || 0) + accessLink.price_ada,
