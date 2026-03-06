@@ -92,7 +92,7 @@ Deno.serve(async (req) => {
       title: 'Community access granted',
       message: `${discordUsername} received Discord access for "${link.title}" — ₳${payment.received_amount_ada?.toFixed(2)}`,
       resource_type: 'payment',
-      resource_id: paymentId,
+      resource_id: payment.id,
       severity: 'info'
     });
 
