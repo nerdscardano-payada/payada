@@ -25,6 +25,7 @@ export default function Pay() {
   const [sessionStarted, setSessionStarted] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState("pending");
   const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [sessionData, setSessionData] = useState(null);
 
   // Wallet state
