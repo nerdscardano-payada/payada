@@ -59,9 +59,18 @@ export default function Dashboard() {
     .filter(p => p.status === "confirmed")
     .reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
 
+  const [paymentPeriod, setPaymentPeriod] = useState("all");
+
   const confirmedPayments = payments.filter(p => p.status === "confirmed").length;
   const activeLinks = paymentLinks.filter(l => l.status === "active").length;
   const activeSubs = subscriptions.filter(s => s.status === "active" || s.status === "trial").length;
+
+  const now = new Date();
+  const filteredPayments = payments.filter(p => {
+    if (paymentPeriod === "7d") return new Date(p.created_date) >= subDays(now, 7);
+    if (paymentPeriod === "30d") return new Date(p.created_date) >= subDays(now, 30);
+    return true;
+  });
 
   const isLoading = loadingPayments || loadingLinks || loadingSubs || loadingCustomers;
 
