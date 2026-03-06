@@ -34,6 +34,8 @@ export default function Access() {
 
   const [connectedWallet, setConnectedWallet] = useState(null); // { api, walletId, address, lovelace }
 
+  const [memberName, setMemberName] = useState("");
+  const [memberEmail, setMemberEmail] = useState("");
   const [discordUsername, setDiscordUsername] = useState("");
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const [confirmedPaymentId, setConfirmedPaymentId] = useState(null);
