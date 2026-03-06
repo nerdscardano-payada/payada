@@ -32,8 +32,7 @@ export default function Access() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [connectedAddress, setConnectedAddress] = useState(null);
-  const [connectedWalletApi, setConnectedWalletApi] = useState(null);
+  const [connectedWallet, setConnectedWallet] = useState(null); // { api, walletId, address, lovelace }
 
   const [discordUsername, setDiscordUsername] = useState("");
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
