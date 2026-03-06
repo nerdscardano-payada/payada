@@ -23,6 +23,9 @@ const currencies = ["EUR", "USD"];
 export default function MerchantProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
+  const [logoMode, setLogoMode] = useState("url"); // "url" or "upload"
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoUploading, setLogoUploading] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: user, isLoading: userLoading } = useQuery({
