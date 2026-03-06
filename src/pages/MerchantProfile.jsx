@@ -135,6 +135,11 @@ export default function MerchantProfilePage() {
             <h3 className="text-lg font-semibold text-slate-900 mb-4">Business Information</h3>
             <div className="space-y-4">
               <div>
+                <Label className="text-sm font-medium text-slate-700">Email Address</Label>
+                <Input disabled value={user?.email || ""} className="mt-1 text-slate-500" />
+              </div>
+
+              <div>
                 <Label htmlFor="business_name" className="text-sm font-medium text-slate-700">Business Name *</Label>
                 <Input
                   id="business_name"
