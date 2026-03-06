@@ -183,19 +183,40 @@ export default function Access() {
           </div>
         </div>
 
-        {/* Discord username field */}
-        {accessLink.platform === "discord" && accessLink.discord_bot_token && (
-          <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4 space-y-2">
-            <Label className="text-slate-300 text-sm">Your Discord Username</Label>
+        {/* Member info fields */}
+        <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4 space-y-3">
+          <div className="space-y-1.5">
+            <Label className="text-slate-300 text-sm">Your Name <span className="text-red-400">*</span></Label>
             <Input
-              value={discordUsername}
-              onChange={e => setDiscordUsername(e.target.value)}
-              placeholder="yourname (no @ needed)"
+              value={memberName}
+              onChange={e => setMemberName(e.target.value)}
+              placeholder="Full name"
               className="bg-white/10 border-white/20 text-white placeholder:text-slate-500"
             />
-            <p className="text-xs text-slate-500">Required for automatic role assignment</p>
           </div>
-        )}
+          <div className="space-y-1.5">
+            <Label className="text-slate-300 text-sm">Email Address <span className="text-slate-500 font-normal">(optional)</span></Label>
+            <Input
+              type="email"
+              value={memberEmail}
+              onChange={e => setMemberEmail(e.target.value)}
+              placeholder="your@email.com"
+              className="bg-white/10 border-white/20 text-white placeholder:text-slate-500"
+            />
+          </div>
+          {accessLink.platform === "discord" && accessLink.discord_bot_token && (
+            <div className="space-y-1.5">
+              <Label className="text-slate-300 text-sm">Discord Username <span className="text-red-400">*</span></Label>
+              <Input
+                value={discordUsername}
+                onChange={e => setDiscordUsername(e.target.value)}
+                placeholder="yourname (no @ needed)"
+                className="bg-white/10 border-white/20 text-white placeholder:text-slate-500"
+              />
+              <p className="text-xs text-slate-500">Required for automatic role assignment</p>
+            </div>
+          )}
+        </div>
 
         {/* Wallet section */}
         <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4 space-y-3">
