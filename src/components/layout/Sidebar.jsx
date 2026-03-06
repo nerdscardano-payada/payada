@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 const navItems = [
   { type: "header", name: "Account" },
@@ -156,22 +157,23 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
           )}
         </nav>
 
-        {/* Logout + Collapse toggle */}
-        <div className="flex flex-col p-3 border-t border-white/5 gap-1">
-          <button
-            onClick={() => base44.auth.logout(createPageUrl("Home"))}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-          >
-            <LogOut className="w-[18px] h-[18px] flex-shrink-0" />
-            {!collapsed && <span>Uitloggen</span>}
-          </button>
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="hidden lg:flex w-full items-center justify-center py-2 rounded-lg hover:bg-white/5 text-slate-500 hover:text-slate-300 transition-colors"
-          >
-            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </button>
-        </div>
+        {/* Notification Bell + Logout + Collapse toggle */}
+         <div className="flex flex-col p-3 border-t border-white/5 gap-1">
+           <NotificationBell user={user} collapsed={collapsed} />
+           <button
+             onClick={() => base44.auth.logout(createPageUrl("Home"))}
+             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+           >
+             <LogOut className="w-[18px] h-[18px] flex-shrink-0" />
+             {!collapsed && <span>Uitloggen</span>}
+           </button>
+           <button
+             onClick={() => setCollapsed(!collapsed)}
+             className="hidden lg:flex w-full items-center justify-center py-2 rounded-lg hover:bg-white/5 text-slate-500 hover:text-slate-300 transition-colors"
+           >
+             {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+           </button>
+         </div>
       </aside>
     </>
   );
