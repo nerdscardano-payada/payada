@@ -256,8 +256,10 @@ Deno.serve(async (req) => {
       }
     }
 
+    console.log(`[recordWalletPayment] SUCCESS: Payment recorded and returned`);
     return Response.json({ success: true, paymentId: payment.id, receivedAmountAda, feeAmountAda, feeOutputValidated });
   } catch (error) {
+    console.log(`[recordWalletPayment] ERROR: ${error.message}`);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
