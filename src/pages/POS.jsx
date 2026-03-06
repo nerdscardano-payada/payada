@@ -109,7 +109,7 @@ export default function POS() {
             <Zap className="w-6 h-6 text-white" />
           </div>
           <h1 className="text-xl font-bold text-white">PayADA POS</h1>
-          <p className="text-xs text-slate-500 mt-1">Fysieke kassa · Cardano ADA</p>
+          <p className="text-xs text-slate-500 mt-1">Physical point of sale · Cardano ADA</p>
         </div>
 
         <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
