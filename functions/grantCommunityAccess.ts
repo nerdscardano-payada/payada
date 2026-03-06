@@ -11,21 +11,23 @@ Deno.serve(async (req) => {
 
     const sr = base44.asServiceRole;
 
+    // Find the access link first
+    const links = await sr.entities.CommunityAccessLink.filter({ id: accessLinkId });
+    const link = links[0];
+    if (!link) return Response.json({ error: 'Access link not found' }, { status: 404 });
+
     // Find payment by id or txHash
     let payment;
     if (paymentId) {
       const payments = await sr.entities.Payment.filter({ id: paymentId });
       payment = payments[0];
-    } else {
+    } else if (txHash) {
       const payments = await sr.entities.Payment.filter({ tx_hash: txHash });
       payment = payments[0];
     }
 
-    // If payment not yet recorded (tx just submitted), return invite link directly
+    // If payment not yet recorded (tx still indexing), return invite link directly
     if (!payment) {
-      const links = await sr.entities.CommunityAccessLink.filter({ id: accessLinkId });
-      const link = links[0];
-      if (!link) return Response.json({ error: 'Access link not found' }, { status: 404 });
       return Response.json({ success: true, platform: link.platform, invite_link: link.invite_link, note: 'Payment still indexing, using static invite' });
     }
 
