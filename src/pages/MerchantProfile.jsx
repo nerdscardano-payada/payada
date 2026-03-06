@@ -291,9 +291,10 @@ export default function MerchantProfilePage() {
                   onClick={handleSave}
                   disabled={updateMutation.isPending}
                   className="gap-2 bg-indigo-600 hover:bg-indigo-700"
+                  disabled={updateMutation.isPending || logoUploading}
                 >
                   <Save className="w-4 h-4" />
-                  Save Changes
+                  {logoUploading ? "Uploading logo..." : "Save Changes"}
                 </Button>
               </div>
             </>
