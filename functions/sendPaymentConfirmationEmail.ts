@@ -46,39 +46,39 @@ Deno.serve(async (req) => {
         <div style="background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <!-- Header -->
           <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #1a202c; margin: 0; font-size: 24px;">✓ Betaling Bevestigd</h1>
+            <h1 style="color: #1a202c; margin: 0; font-size: 24px;">✓ Payment Confirmed</h1>
           </div>
 
           <!-- Main Content -->
           <div style="margin: 30px 0; padding: 20px; background: #f0f7ff; border-left: 4px solid #3b82f6; border-radius: 4px;">
             <p style="color: #374151; margin: 0 0 20px 0;">
-              Goedendag,
+              Hello,
             </p>
             <p style="color: #374151; margin: 0 0 20px 0;">
-              Een betaling is zojuist bevestigd op uw PayADA account!
+              A payment has been confirmed on your PayADA account!
             </p>
           </div>
 
           <!-- Payment Details -->
           <div style="margin: 30px 0;">
-            <h2 style="color: #1a202c; font-size: 18px; margin: 0 0 20px 0;">Betalingsdetails</h2>
+            <h2 style="color: #1a202c; font-size: 18px; margin: 0 0 20px 0;">Payment Details</h2>
             
             <div style="background: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 15px;">
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
-                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Betaler:</td>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Payer:</td>
                   <td style="padding: 8px 0; color: #1a202c; font-weight: 600; text-align: right;">${escapeHtml(payerInfo)}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Bedrag:</td>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Amount:</td>
                   <td style="padding: 8px 0; color: #1a202c; font-weight: 600; text-align: right;">₳ ${amountAda}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Platform fee:</td>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Platform Fee:</td>
                   <td style="padding: 8px 0; color: #ef4444; text-align: right;">-₳ ${feeAda}</td>
                 </tr>
                 <tr style="border-top: 2px solid #e5e7eb;">
-                  <td style="padding: 12px 0; color: #1a202c; font-weight: 700; font-size: 16px;">Netto:</td>
+                  <td style="padding: 12px 0; color: #1a202c; font-weight: 700; font-size: 16px;">Net:</td>
                   <td style="padding: 12px 0; color: #10b981; font-weight: 700; font-size: 16px; text-align: right;">₳ ${netAda}</td>
                 </tr>
               </table>
@@ -86,7 +86,7 @@ Deno.serve(async (req) => {
 
             <!-- Transaction Hash -->
             <div style="margin: 20px 0;">
-              <p style="color: #6b7280; font-size: 12px; margin: 0 0 8px 0;">Transactiehash:</p>
+              <p style="color: #6b7280; font-size: 12px; margin: 0 0 8px 0;">Transaction Hash:</p>
               <p style="color: #3b82f6; font-family: monospace; font-size: 12px; margin: 0; word-break: break-all;">
                 ${txHash}
               </p>
@@ -96,14 +96,14 @@ Deno.serve(async (req) => {
           <!-- CTA Button -->
           <div style="text-align: center; margin: 30px 0;">
             <a href="${blockUrl}" target="_blank" style="display: inline-block; background: #3b82f6; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">
-              Bekijk op Cardano Explorer →
+              View on Cardano Explorer →
             </a>
           </div>
 
           <!-- Footer -->
           <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 30px; text-align: center; color: #6b7280; font-size: 12px;">
-            <p style="margin: 0;">Dit is een automatische melding van PayADA.</p>
-            <p style="margin: 8px 0 0 0;">Bezoek je dashboard voor meer details.</p>
+            <p style="margin: 0;">This is an automated notification from PayADA.</p>
+            <p style="margin: 8px 0 0 0;">Visit your dashboard for more details.</p>
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
     // Send email
     const emailResult = await base44.integrations.Core.SendEmail({
       to: user.email,
-      subject: `✓ Betaling bevestigd - ₳ ${amountAda}`,
+      subject: `✓ Payment confirmed - ₳ ${amountAda}`,
       body: htmlBody
     });
 
