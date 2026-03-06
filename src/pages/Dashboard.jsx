@@ -107,9 +107,21 @@ export default function Dashboard() {
               accentColor="indigo"
             />
             <StatCard
-              title="Active Subscriptions"
-              value={activeSubs}
-              subtitle={`${subscriptions.length} total`}
+              title="Payments"
+              value={filteredPayments.filter(p => p.status === "confirmed").length}
+              subtitle={
+                <div className="flex gap-1 mt-1">
+                  {["7d", "30d", "all"].map(p => (
+                    <button
+                      key={p}
+                      onClick={() => setPaymentPeriod(p)}
+                      className={`text-xs px-1.5 py-0.5 rounded font-medium transition-colors ${paymentPeriod === p ? "bg-cyan-600 text-white" : "text-slate-500 hover:text-slate-700"}`}
+                    >
+                      {p === "all" ? "All" : p}
+                    </button>
+                  ))}
+                </div>
+              }
               icon={RefreshCw}
               accentColor="cyan"
             />
