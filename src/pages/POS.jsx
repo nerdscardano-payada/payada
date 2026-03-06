@@ -134,11 +134,11 @@ export default function POS() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-slate-400 text-xs">Omschrijving (optioneel)</Label>
+                <Label className="text-slate-400 text-xs">Description (optional)</Label>
                 <Input
                   value={label}
                   onChange={(e) => setLabel(e.target.value)}
-                  placeholder="bijv. Koffie, Ticket, Bier..."
+                  placeholder="e.g. Coffee, Ticket, Beer..."
                   className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-600"
                 />
               </div>
