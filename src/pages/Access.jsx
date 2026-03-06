@@ -114,17 +114,42 @@ export default function Access() {
     );
   }
 
-  // Success screen
-  if (paymentConfirmed) {
+  // Payment status screen
+  if (grantingAccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
         <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 max-w-md w-full text-center space-y-6">
-          {grantingAccess ? (
+          {/* Status indicator */}
+          <div className="flex items-center justify-center gap-2">
+            {paymentStatus === "detected" && <Clock className="w-5 h-5 text-amber-400 animate-pulse" />}
+            {paymentStatus === "confirmed" && <CheckCircle className="w-5 h-5 text-emerald-400" />}
+            <span className="text-sm font-semibold text-slate-300">
+              {paymentStatus === "detected" ? "Confirming payment..." : "Payment confirmed"}
+            </span>
+          </div>
+
+          {paymentStatus === "detected" && (
+            <>
+              <div className="space-y-2">
+                <p className="text-white text-lg font-semibold">Transaction submitted</p>
+                <p className="text-slate-400 text-sm">Waiting for blockchain confirmation. This usually takes 20-30 seconds.</p>
+              </div>
+              {txHash && (
+                <a href={`https://cardanoscan.io/transaction/${txHash}`} target="_blank" rel="noopener noreferrer" className="text-indigo-400 text-xs hover:underline break-all">
+                  {txHash.slice(0, 20)}...
+                </a>
+              )}
+            </>
+          )}
+
+          {paymentStatus === "confirmed" && (
             <>
               <Loader2 className="w-12 h-12 text-indigo-400 animate-spin mx-auto" />
               <p className="text-white text-lg font-semibold">Granting access...</p>
             </>
-          ) : (
+          )}
+
+          {paymentConfirmed && !grantingAccess && (
             <>
               <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle className="w-9 h-9 text-emerald-400" />
