@@ -118,26 +118,27 @@ Deno.serve(async (req) => {
     let accessLink = null;
 
     if (paymentLinkId) {
-      const results = await sr.entities.PaymentLink.filter({ id: paymentLinkId });
-      paymentLink = results[0];
-      if (paymentLink) {
-        receiveAddress = paymentLink.receive_address;
-        expectedAmountAda = paymentLink.amount_ada || 0;
-      }
+      try {
+        paymentLink = await sr.entities.PaymentLink.get(paymentLinkId);
+        if (paymentLink) {
+          receiveAddress = paymentLink.receive_address;
+          expectedAmountAda = paymentLink.amount_ada || 0;
+        }
+      } catch { /* not found */ }
     }
 
     if (!receiveAddress && accessLinkId) {
-      const results = await sr.entities.CommunityAccessLink.filter({ id: accessLinkId });
-      accessLink = results[0];
-      if (accessLink) {
-        receiveAddress = accessLink.receive_address;
-        expectedAmountAda = accessLink.price_ada || 0;
-        // fallback: get merchant default address
-        if (!receiveAddress) {
-          const profiles = await sr.entities.MerchantProfile.filter({ user_id: merchantId });
-          receiveAddress = profiles[0]?.default_receive_address;
+      try {
+        accessLink = await sr.entities.CommunityAccessLink.get(accessLinkId);
+        if (accessLink) {
+          receiveAddress = accessLink.receive_address;
+          expectedAmountAda = accessLink.price_ada || 0;
+          if (!receiveAddress) {
+            const profiles = await sr.entities.MerchantProfile.filter({ user_id: merchantId });
+            receiveAddress = profiles[0]?.default_receive_address;
+          }
         }
-      }
+      } catch { /* not found */ }
     }
 
     // Fetch blockchain data
