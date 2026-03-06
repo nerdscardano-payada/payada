@@ -97,14 +97,14 @@ export default function NotificationBell({ user, collapsed }) {
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700">
             <h3 className="text-sm font-semibold text-white">
-              Betalingen {unreadCount > 0 && `(${unreadCount})`}
+              Payments {unreadCount > 0 && `(${unreadCount})`}
             </h3>
             {notifications.length > 0 && (
               <button
                 onClick={clearAll}
                 className="text-xs text-slate-400 hover:text-white transition-colors"
               >
-                Alles wissen
+                Clear all
               </button>
             )}
           </div>
@@ -114,7 +114,7 @@ export default function NotificationBell({ user, collapsed }) {
             {notifications.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
                 <Bell className="w-8 h-8 text-slate-600 mb-2" />
-                <p className="text-sm text-slate-400">Geen meldingen</p>
+                <p className="text-sm text-slate-400">No notifications</p>
               </div>
             ) : (
               <div className="divide-y divide-slate-700">
@@ -126,7 +126,7 @@ export default function NotificationBell({ user, collapsed }) {
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white truncate">
-                          Betaling bevestigd
+                          Payment confirmed
                         </p>
                         <p className="text-xs text-slate-400 truncate">
                           {notif.payer}
@@ -152,7 +152,7 @@ export default function NotificationBell({ user, collapsed }) {
                 href="/payments"
                 className="text-xs font-medium text-cyan-400 hover:text-cyan-300 transition-colors"
               >
-                Alle betalingen weergeven →
+                View all payments →
               </a>
             </div>
           )}
