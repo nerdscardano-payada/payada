@@ -104,12 +104,15 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req, { skipAuth: true });
     const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName, payerDiscordUsername, shippingStreet, shippingCity, shippingPostalCode, shippingCountry, accessLinkId } = await req.json();
 
+    console.log(`[recordWalletPayment] txHash=${txHash}, merchantId=${merchantId}, accessLinkId=${accessLinkId}`);
+
     if (!txHash || !merchantId) {
       return Response.json({ error: 'Missing required fields: txHash, merchantId' }, { status: 400 });
     }
 
     // Always use service role — this endpoint is called from public pages (no user session)
     const sr = base44.asServiceRole;
+    console.log('[recordWalletPayment] Service role client initialized');
 
     // Avoid duplicate payment records for same tx
     const existingPayments = await sr.entities.Payment.filter({ tx_hash: txHash }); 
