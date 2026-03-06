@@ -18,6 +18,7 @@ const PLATFORM_COLORS = { discord: "bg-indigo-100 text-indigo-700", telegram: "b
 export default function AccessLinks() {
   const [showForm, setShowForm] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
+  const [view, setView] = useState("links"); // "links" | "members"
   const [user, setUser] = React.useState(null);
   const queryClient = useQueryClient();
 
