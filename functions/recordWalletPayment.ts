@@ -3,20 +3,26 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
 
+async function fetchWithRetry(url, retries = 5, delayMs = 4000) {
+  for (let i = 0; i < retries; i++) {
+    const res = await fetch(url, { headers: { project_id: BLOCKFROST_API_KEY } });
+    if (res.ok) return res.json();
+    if (res.status === 404 && i < retries - 1) {
+      // TX not yet indexed, wait and retry
+      await new Promise(r => setTimeout(r, delayMs));
+      continue;
+    }
+    throw new Error(`Blockfrost error ${res.status}: ${res.statusText}`);
+  }
+  throw new Error('TX not found on Blockfrost after retries');
+}
+
 async function fetchTxUtxos(txHash) {
-  const res = await fetch(`${BLOCKFROST_URL}/txs/${txHash}/utxos`, {
-    headers: { project_id: BLOCKFROST_API_KEY }
-  });
-  if (!res.ok) throw new Error(`Blockfrost UTXOs error: ${res.statusText}`);
-  return res.json();
+  return fetchWithRetry(`${BLOCKFROST_URL}/txs/${txHash}/utxos`);
 }
 
 async function fetchTxInfo(txHash) {
-  const res = await fetch(`${BLOCKFROST_URL}/txs/${txHash}`, {
-    headers: { project_id: BLOCKFROST_API_KEY }
-  });
-  if (!res.ok) throw new Error(`Blockfrost TX error: ${res.statusText}`);
-  return res.json();
+  return fetchWithRetry(`${BLOCKFROST_URL}/txs/${txHash}`);
 }
 
 const PAYADA_FEE_WALLET = Deno.env.get("PAYADA_FEE_WALLET");
