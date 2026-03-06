@@ -389,7 +389,7 @@ export default function Pay() {
                       {/* Wallet flow only */}
                   <div className="space-y-3">
                     <p className="text-[11px] text-slate-500 text-center">
-                      Supported: Nami · Eternl · Flint · Lace · Typhon · GeroWallet · Yoroi
+                      Supported: Nami · Eternl · Lace · Typhon · GeroWallet · Yoroi
                     </p>
                     <WalletConnect
                       onConnected={(w) => setConnectedWallet(w)}

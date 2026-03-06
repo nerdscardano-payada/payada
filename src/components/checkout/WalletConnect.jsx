@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 const KNOWN_WALLETS = [
   { id: "nami", name: "Nami" },
   { id: "eternl", name: "Eternl" },
-  { id: "flint", name: "Flint" },
   { id: "lace", name: "Lace" },
   { id: "typhon", name: "Typhon" },
   { id: "gerowallet", name: "GeroWallet" },

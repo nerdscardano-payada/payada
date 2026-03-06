@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 const SUPPORTED_WALLETS = [
   { name: "Nami", url: "https://namiwallet.io" },
   { name: "Eternl", url: "https://eternl.io" },
-  { name: "Flint", url: "https://flint-wallet.com" },
   { name: "Lace", url: "https://www.lace.io" },
   { name: "Typhon", url: "https://typhonwallet.io" },
   { name: "GeroWallet", url: "https://gerowallet.io" },
