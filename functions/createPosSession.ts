@@ -34,7 +34,8 @@ Deno.serve(async (req) => {
     });
 
     const amountLovelace = Math.floor(parseFloat(amountAda) * 1_000_000);
-    const platformFeeLovelace = Math.max(Math.floor(amountLovelace * feePercent), 1_000_000);
+    // Identical fee calculation as createPublicCheckoutSession — fee deducted from merchant, customer pays original amount
+    const platformFeeLovelace = Math.floor(amountLovelace * feePercent);
     const merchantAmountLovelace = amountLovelace - platformFeeLovelace;
 
     const session = await base44.asServiceRole.entities.CheckoutSession.create({
