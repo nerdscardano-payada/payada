@@ -151,6 +151,8 @@ export default function Access() {
   };
 
   const extraData = {
+    payer_name: memberName || undefined,
+    payer_email: memberEmail || undefined,
     payer_discord_username: discordUsername || undefined,
     access_link_id: accessLink.id,
   };
