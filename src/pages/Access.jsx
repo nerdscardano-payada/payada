@@ -114,8 +114,8 @@ export default function Access() {
     );
   }
 
-  // Payment status screen
-  if (grantingAccess) {
+  // Payment status screen OR success screen
+  if (grantingAccess || paymentConfirmed) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
         <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-8 max-w-md w-full text-center space-y-6">
