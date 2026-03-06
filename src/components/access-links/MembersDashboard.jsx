@@ -165,7 +165,11 @@ export default function MembersDashboard({ links, user }) {
     queryFn: async () => {
       if (!linkIds.length) return [];
       const all = await base44.entities.Payment.filter({ merchant_id: user.email }, "-confirmed_at", 500);
-      return all.filter(p => p.payment_link_id && linkIds.includes(p.payment_link_id) && p.status === "confirmed");
+      return all.filter(p => {
+        const isAccessPayment = linkIds.includes(p.access_link_id);
+        const isPaymentLinkPayment = p.payment_link_id && linkIds.includes(p.payment_link_id);
+        return (isAccessPayment || isPaymentLinkPayment) && p.status === "confirmed";
+      });
     },
     enabled: !!user && linkIds.length > 0,
   });
