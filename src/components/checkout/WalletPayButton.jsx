@@ -34,6 +34,7 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
         : Math.floor((sessionData.platform_fee_ada || 0) * 1_000_000)
     );
 
+    console.log("[PayButton] merchantLovelace:", merchantLovelace, "feeLovelace:", platformFeeLovelace, "totalAda:", sessionData?.amount_total_ada);
     setTxLoading(true);
     setTxStatus('building');
 
