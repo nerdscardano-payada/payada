@@ -76,24 +76,27 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
         )}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between px-4 h-16 border-b border-white/5">
-          <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center flex-shrink-0">
-              <Hexagon className="w-4.5 h-4.5 text-white" />
-            </div>
-            {!collapsed && (
-              <span className="font-bold text-base tracking-tight truncate">
-                Pay<span className="text-cyan-400">ADA</span>
-              </span>
-            )}
-          </Link>
-          <button
-            onClick={() => setMobileOpen(false)}
-            className="lg:hidden p-1 rounded hover:bg-white/10"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+         <div className="flex items-center justify-between px-4 h-16 border-b border-white/5">
+           <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition-opacity">
+             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center flex-shrink-0">
+               <Hexagon className="w-4.5 h-4.5 text-white" />
+             </div>
+             {!collapsed && (
+               <span className="font-bold text-base tracking-tight truncate">
+                 Pay<span className="text-cyan-400">ADA</span>
+               </span>
+             )}
+           </Link>
+           <div className="flex items-center gap-1">
+             <NotificationBell user={user} collapsed={collapsed} />
+             <button
+               onClick={() => setMobileOpen(false)}
+               className="lg:hidden p-1 rounded hover:bg-white/10"
+             >
+               <X className="w-4 h-4" />
+             </button>
+           </div>
+         </div>
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
@@ -157,9 +160,8 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
           )}
         </nav>
 
-        {/* Notification Bell + Logout + Collapse toggle */}
+        {/* Logout + Collapse toggle */}
          <div className="flex flex-col p-3 border-t border-white/5 gap-1">
-           <NotificationBell user={user} collapsed={collapsed} />
            <button
              onClick={() => base44.auth.logout(createPageUrl("Home"))}
              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
