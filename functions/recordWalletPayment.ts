@@ -189,6 +189,8 @@ Deno.serve(async (req) => {
 
     // Create Payment record
     console.log(`[recordWalletPayment] Creating payment: merchantLovelace=${merchantLovelace}, receivedAda=${receivedAmountAda}`);
+    const normalizedAddress = normalizeAddress(payerAddress) || payerAddress || null;
+    console.log(`[recordWalletPayment] Payer address: raw=${payerAddress}, normalized=${normalizedAddress}`);
     const payment = await sr.entities.Payment.create({
      merchant_id: merchantId,
      payment_link_id: paymentLinkId || null,
@@ -196,7 +198,7 @@ Deno.serve(async (req) => {
      expected_amount_ada: expectedAmountAda,
      received_amount_ada: receivedAmountAda,
      tx_hash: txHash,
-     payer_address: normalizeAddress(payerAddress) || null,
+     payer_address: normalizedAddress,
      payer_email: payerEmail || null,
      payer_name: payerName || null,
      payer_discord_username: payerDiscordUsername || null,
