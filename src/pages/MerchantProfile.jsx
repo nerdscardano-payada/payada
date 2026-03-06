@@ -70,7 +70,14 @@ export default function MerchantProfilePage() {
   };
 
   const handleSave = async () => {
-    updateMutation.mutate(formData);
+    let data = { ...formData };
+    if (logoMode === "upload" && logoFile) {
+      setLogoUploading(true);
+      const { file_url } = await base44.integrations.Core.UploadFile({ file: logoFile });
+      data.logo_url = file_url;
+      setLogoUploading(false);
+    }
+    updateMutation.mutate(data);
   };
 
   if (userLoading || profileLoading) {
