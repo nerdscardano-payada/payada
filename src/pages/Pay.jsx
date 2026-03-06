@@ -315,9 +315,9 @@ export default function Pay() {
                   </div>
                 </div>
               )}
-              <Button onClick={handleStartCheckout} disabled={loading}
+              <Button onClick={handleStartCheckout} disabled={checkoutLoading}
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 text-base font-semibold">
-                {loading ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Setting up checkout…</> : "Continue to Payment"}
+                {checkoutLoading ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Setting up checkout…</> : "Continue to Payment"}
               </Button>
             </div>
 
