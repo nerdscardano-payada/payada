@@ -101,7 +101,7 @@ function normalizeAddress(addr) {
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req, { skipAuth: true });
+    const base44 = createClientFromRequest(req);
     const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName, payerDiscordUsername, shippingStreet, shippingCity, shippingPostalCode, shippingCountry, accessLinkId } = await req.json();
 
     console.log(`[recordWalletPayment] txHash=${txHash}, merchantId=${merchantId}, accessLinkId=${accessLinkId}`);
