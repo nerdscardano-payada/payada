@@ -80,6 +80,7 @@ import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import Webhooks from './pages/Webhooks';
+import AccessLinks from './pages/AccessLinks';
 import __Layout from './Layout.jsx';
 
 
@@ -117,6 +118,7 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "Unlock": Unlock,
     "Webhooks": Webhooks,
+    "AccessLinks": AccessLinks,
 }
 
 export const pagesConfig = {
