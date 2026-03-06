@@ -130,7 +130,7 @@ export default function Pay() {
         // Single item: use regular checkout session
         if (!paymentLink?.id || paymentLink.id.startsWith("cart-")) {
           toast.error("Invalid payment link");
-          setLoading(false);
+          setCheckoutLoading(false);
           return;
         }
         response = await base44.functions.invoke('createPublicCheckoutSession', {
