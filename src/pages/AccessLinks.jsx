@@ -54,6 +54,22 @@ export default function AccessLinks() {
         actionIcon={Plus}
       />
 
+      {/* View toggle */}
+      <div className="flex items-center gap-2 mb-4">
+        <button
+          onClick={() => setView("links")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${view === "links" ? "bg-indigo-100 text-indigo-700" : "text-slate-500 hover:bg-slate-100"}`}
+        >
+          <ExternalLink className="w-3.5 h-3.5" /> Links
+        </button>
+        <button
+          onClick={() => setView("members")}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${view === "members" ? "bg-indigo-100 text-indigo-700" : "text-slate-500 hover:bg-slate-100"}`}
+        >
+          <Users className="w-3.5 h-3.5" /> Members
+        </button>
+      </div>
+
       <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
         {isLoading ? (
           <div className="p-5 space-y-3">{Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}</div>
