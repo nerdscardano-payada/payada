@@ -102,7 +102,7 @@ export default function MerchantProfilePage() {
           variant={isEditing ? "outline" : "default"}
           className="gap-2"
         >
-          {isEditing ? "Cancel" : <Edit2 className="w-4 h-4" />}
+          {isEditing ? null : <Edit2 className="w-4 h-4" />}
           {isEditing ? "Cancel" : "Edit"}
         </Button>
       </div>
