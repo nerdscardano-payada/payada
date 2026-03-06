@@ -117,22 +117,33 @@ export default function Pay() {
   }, [cartItems, cartLinks, cartLinksFetching]);
 
   const handleStartCheckout = async () => {
-   try {
-     const linkId = paymentLink.id || slug;
-     if (!linkId) {
-       toast.error("Invalid payment link");
-       return;
-     }
-     const response = await base44.functions.invoke('createPublicCheckoutSession', {
-       paymentLinkId: linkId,
-       cartItems: cartItems.length > 0 ? cartItems : undefined
-     });
-     setSessionData(response.data);
-     setSessionStarted(true);
-   } catch (err) {
-     console.error("Checkout error:", err);
-     toast.error("Failed to start checkout");
-   }
+    setLoading(true);
+    try {
+      let response;
+      if (cartItems.length > 0) {
+        // Multi-item cart: use bulk checkout session
+        response = await base44.functions.invoke('createBulkCheckoutSession', {
+          cartItems: cartItems
+        });
+      } else {
+        // Single item: use regular checkout session
+        if (!paymentLink?.id || paymentLink.id.startsWith("cart-")) {
+          toast.error("Invalid payment link");
+          setLoading(false);
+          return;
+        }
+        response = await base44.functions.invoke('createPublicCheckoutSession', {
+          paymentLinkId: paymentLink.id
+        });
+      }
+      setSessionData(response.data);
+      setSessionStarted(true);
+    } catch (err) {
+      console.error("Checkout error:", err);
+      toast.error("Failed to start checkout");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const copyAddress = (addr) => {
