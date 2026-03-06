@@ -241,6 +241,8 @@ export default function Access() {
                 amount_total_ada: totalAda,
               }}
               paymentLink={paymentLinkConfig}
+              payerName={memberName || null}
+              payerEmail={memberEmail || null}
               payerDiscordUsername={discordUsername || null}
               onSuccess={handlePaymentConfirmed}
             />
