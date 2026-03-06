@@ -103,9 +103,7 @@ Deno.serve(async (req) => {
     }
 
     // Always use service role — this endpoint is called from public pages (no user session)
-    // Create a fresh service-role client that doesn't rely on request auth headers
-    const srClient = createClient({ serviceRole: true });
-    const sr = srClient.asServiceRole;
+    const sr = base44.asServiceRole;
 
     // Avoid duplicate payment records for same tx
     const existingPayments = await sr.entities.Payment.filter({ tx_hash: txHash }); 
