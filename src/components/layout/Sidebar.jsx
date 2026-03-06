@@ -20,7 +20,8 @@ import {
   LogOut,
   ShieldCheck,
   RefreshCw,
-  Bot
+  Bot,
+  Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
