@@ -145,12 +145,7 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       }
       toast.success("Transaction submitted! Waiting for confirmation…");
       // Record wallet payment with payer info (fire-and-forget)
-      // Use direct fetch so it works for unauthenticated (public) pages too
-      const appId = import.meta.env.VITE_APP_ID || window.__APP_ID__;
-      const fnUrl = appId
-        ? `https://api.base44.app/api/apps/${appId}/functions/recordWalletPayment`
-        : null;
-      const recordPayload = {
+      base44.functions.invoke('recordWalletPayment', {
         txHash,
         paymentLinkId: paymentLink.id || null,
         merchantId: paymentLink.merchant_id,
@@ -159,12 +154,7 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
         payerEmail: payerEmail || null,
         payerName: payerName || null,
         payerDiscordUsername: payerDiscordUsername || null,
-      };
-      if (fnUrl) {
-        fetch(fnUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(recordPayload) }).catch(() => {});
-      } else {
-        base44.functions.invoke('recordWalletPayment', recordPayload).catch(() => {});
-      }
+      }).catch(() => {});
       onSuccess?.(txHash);
     } catch (err) {
       toast.error(err?.message || "Failed to submit transaction.");
