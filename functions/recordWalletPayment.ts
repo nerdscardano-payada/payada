@@ -96,12 +96,13 @@ function normalizeAddress(addr) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName, payerDiscordUsername, shippingStreet, shippingCity, shippingPostalCode, shippingCountry } = await req.json();
+    const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName, payerDiscordUsername, shippingStreet, shippingCity, shippingPostalCode, shippingCountry, accessLinkId } = await req.json();
 
-    if (!txHash || !paymentLinkId || !merchantId) {
-      return Response.json({ error: 'Missing required fields: txHash, paymentLinkId, merchantId' }, { status: 400 });
+    if (!txHash || !merchantId) {
+      return Response.json({ error: 'Missing required fields: txHash, merchantId' }, { status: 400 });
     }
 
+    // Always use service role — this endpoint is called from public pages (no user session)
     const sr = base44.asServiceRole;
 
     const paymentLinks = await sr.entities.PaymentLink.filter({ id: paymentLinkId, merchant_id: merchantId });
