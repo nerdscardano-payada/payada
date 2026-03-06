@@ -72,7 +72,7 @@ export default function AccessLinks() {
 
       {view === "members" && <MembersDashboard links={links} user={user} />}
 
-      <div className={view === "members" ? "hidden" : ""}>
+      {view === "links" && (
       <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
         {isLoading ? (
           <div className="p-5 space-y-3">{Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}</div>
