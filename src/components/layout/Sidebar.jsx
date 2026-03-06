@@ -32,6 +32,7 @@ const navItems = [
 
   { type: "header", name: "Sales Tools" },
   { name: "Payment Links", icon: Link2, page: "PaymentLinks" },
+  { name: "Access Links", icon: Users, page: "AccessLinks" },
   { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
   { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
   { name: "Shop Generator", icon: ShoppingCart, page: "ShoppingPageGenerator" },
