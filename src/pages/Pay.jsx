@@ -69,16 +69,15 @@ export default function Pay() {
     enabled: !!slug,
   });
 
-  // For multi-item cart checkout
+  // For multi-item cart checkout — fetch merchant info from first item's slug
   const uniqueSlugs = [...new Set(cartItems.map(item => item.slug || item.id))].filter(Boolean);
   const { data: cartLinks = [], isFetching: cartLinksFetching } = useQuery({
     queryKey: ["checkout-links-cart", uniqueSlugs],
     queryFn: async () => {
       if (uniqueSlugs.length === 0) return [];
-      const results = await Promise.all(
-        uniqueSlugs.map(s => base44.entities.PaymentLink.filter({ slug: s, status: "active" }, "-created_date", 1))
-      );
-      return results.flat();
+      // Only need first link to get merchant address/settings
+      const results = await base44.entities.PaymentLink.filter({ slug: uniqueSlugs[0], status: "active" }, "-created_date", 1);
+      return results;
     },
     enabled: cartItems.length > 0 && uniqueSlugs.length > 0,
   });
