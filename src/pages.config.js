@@ -49,6 +49,8 @@
  */
 import APIReference from './pages/APIReference';
 import About from './pages/About';
+import Access from './pages/Access';
+import AccessLinks from './pages/AccessLinks';
 import AdminDashboard from './pages/AdminDashboard';
 import ApiKeys from './pages/ApiKeys';
 import Billing from './pages/Billing';
@@ -80,14 +82,14 @@ import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import Webhooks from './pages/Webhooks';
-import AccessLinks from './pages/AccessLinks';
-import Access from './pages/Access';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "APIReference": APIReference,
     "About": About,
+    "Access": Access,
+    "AccessLinks": AccessLinks,
     "AdminDashboard": AdminDashboard,
     "ApiKeys": ApiKeys,
     "Billing": Billing,
@@ -119,8 +121,6 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "Unlock": Unlock,
     "Webhooks": Webhooks,
-    "AccessLinks": AccessLinks,
-    "Access": Access,
 }
 
 export const pagesConfig = {

@@ -139,7 +139,8 @@ export default function Access() {
 
   // Build a fake payment link config for WalletPayButton
   const paymentLinkConfig = {
-    id: accessLink.id,
+    id: null, // this is an access link, not a payment link
+    accessLinkId: accessLink.id,
     merchant_id: accessLink.merchant_id,
     slug: accessLink.slug,
     amount_ada: totalAda,
