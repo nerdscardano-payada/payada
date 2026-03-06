@@ -159,15 +159,45 @@ export default function MerchantProfilePage() {
               </div>
 
               <div>
-                <Label htmlFor="logo_url" className="text-sm font-medium text-slate-700">Logo URL</Label>
-                <Input
-                  id="logo_url"
-                  placeholder="https://example.com/logo.png"
-                  value={formData.logo_url || ""}
-                  onChange={(e) => handleInputChange("logo_url", e.target.value)}
-                  disabled={!isEditing}
-                  className="mt-1"
-                />
+                <Label className="text-sm font-medium text-slate-700">Logo</Label>
+                {isEditing ? (
+                  <div className="mt-1 space-y-2">
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setLogoMode("url")}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${logoMode === "url" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"}`}
+                      >
+                        <Link className="w-3 h-3" /> URL
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setLogoMode("upload")}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${logoMode === "upload" ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"}`}
+                      >
+                        <Upload className="w-3 h-3" /> Upload
+                      </button>
+                    </div>
+                    {logoMode === "url" ? (
+                      <Input
+                        placeholder="https://example.com/logo.png"
+                        value={formData.logo_url || ""}
+                        onChange={(e) => handleInputChange("logo_url", e.target.value)}
+                      />
+                    ) : (
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setLogoFile(e.target.files[0])}
+                      />
+                    )}
+                  </div>
+                ) : (
+                  <div className="mt-1 flex items-center gap-3">
+                    {formData.logo_url && <img src={formData.logo_url} alt="Logo" className="w-10 h-10 object-contain rounded border border-slate-200" />}
+                    <Input disabled value={formData.logo_url || ""} className="text-xs" />
+                  </div>
+                )}
               </div>
             </div>
           </div>
