@@ -79,6 +79,7 @@ import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import Webhooks from './pages/Webhooks';
+import POS from './pages/POS';
 import __Layout from './Layout.jsx';
 
 
@@ -115,6 +116,7 @@ export const PAGES = {
     "TermsOfService": TermsOfService,
     "Unlock": Unlock,
     "Webhooks": Webhooks,
+    "POS": POS,
 }
 
 export const pagesConfig = {

@@ -34,6 +34,7 @@ const navItems = [
   { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
   { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
   { name: "Shop Generator", icon: ShoppingCart, page: "ShoppingPageGenerator" },
+  { name: "POS Terminal", icon: Zap, page: "POS" },
 
   { type: "header", name: "Overview" },
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
