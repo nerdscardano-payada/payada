@@ -198,23 +198,22 @@ export default function Access() {
         {/* Wallet section */}
         <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4 space-y-3">
           <WalletConnect
-            onConnected={({ api, address }) => {
-              setConnectedAddress(address);
-              setConnectedWalletApi(api);
-            }}
-            onDisconnected={() => {
-              setConnectedAddress(null);
-              setConnectedWalletApi(null);
-            }}
+            onConnected={(walletData) => setConnectedWallet(walletData)}
+            onDisconnected={() => setConnectedWallet(null)}
           />
 
-          {connectedAddress && (
+          {connectedWallet && (
             <WalletPayButton
+              connectedWallet={connectedWallet}
+              sessionData={{
+                merchant_address: paymentLinkConfig.receive_address,
+                merchant_amount_lovelace: Math.floor(merchantAda * 1_000_000),
+                platform_fee_lovelace: Math.floor(feeAda * 1_000_000),
+                amount_total_ada: totalAda,
+              }}
               paymentLink={paymentLinkConfig}
-              payerAddress={connectedAddress}
-              walletApi={connectedWalletApi}
-              extraPaymentData={extraData}
-              onPaymentConfirmed={handlePaymentConfirmed}
+              payerDiscordUsername={discordUsername || null}
+              onSuccess={handlePaymentConfirmed}
             />
           )}
         </div>
