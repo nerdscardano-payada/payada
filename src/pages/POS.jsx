@@ -117,7 +117,7 @@ export default function POS() {
             /* Amount entry */
             <div className="p-6 space-y-5">
               <div className="space-y-2">
-                <Label className="text-slate-400 text-xs">Bedrag (ADA)</Label>
+                <Label className="text-slate-400 text-xs">Amount (ADA)</Label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-lg">₳</span>
                   <Input
