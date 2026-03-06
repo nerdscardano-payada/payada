@@ -42,6 +42,8 @@ export default function Access() {
   const [accessGranted, setAccessGranted] = useState(false);
   const [grantingAccess, setGrantingAccess] = useState(false);
   const [inviteLink, setInviteLink] = useState(null);
+  const [paymentStatus, setPaymentStatus] = useState("pending"); // pending, detected, confirmed
+  const [txHash, setTxHash] = useState(null);
 
   useEffect(() => {
     if (!slug) { setError("No access link specified."); setLoading(false); return; }
