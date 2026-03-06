@@ -45,15 +45,15 @@ export default function Access() {
 
   useEffect(() => {
     if (!slug) { setError("No access link specified."); setLoading(false); return; }
-    base44.entities.CommunityAccessLink.filter({ slug }).then(results => {
-      const link = results[0];
-      if (!link) { setError("Access link not found."); setLoading(false); return; }
-      setAccessLink(link);
-      base44.entities.MerchantProfile.filter({ user_id: link.merchant_id }).then(profiles => {
-        setMerchantProfile(profiles[0] || null);
+    base44.functions.invoke("getAccessLinkBySlug", { slug })
+      .then(res => {
+        const { link, merchantProfile } = res.data;
+        if (!link) { setError("Access link not found."); setLoading(false); return; }
+        setAccessLink(link);
+        setMerchantProfile(merchantProfile);
         setLoading(false);
-      });
-    }).catch(() => { setError("Failed to load access link."); setLoading(false); });
+      })
+      .catch(() => { setError("Failed to load access link."); setLoading(false); });
   }, [slug]);
 
   const handlePaymentConfirmed = async (txHash) => {
