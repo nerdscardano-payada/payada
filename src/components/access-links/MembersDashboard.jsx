@@ -55,7 +55,7 @@ function PlatformGroup({ platform, links, payments }) {
   const [search, setSearch] = useState("");
 
   const platformPayments = payments.filter(p =>
-    links.some(l => l.id === p.payment_link_id)
+    links.some(l => l.id === p.payment_link_id || l.id === p.access_link_id)
   );
 
   const filteredBySearch = platformPayments.filter(p => {
