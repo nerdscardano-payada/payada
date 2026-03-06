@@ -199,8 +199,14 @@ export default function Access() {
         {/* Wallet section */}
         <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4 space-y-3">
           <WalletConnect
-            onAddressChange={setConnectedAddress}
-            onWalletApiChange={setConnectedWalletApi}
+            onConnected={({ api, address }) => {
+              setConnectedAddress(address);
+              setConnectedWalletApi(api);
+            }}
+            onDisconnected={() => {
+              setConnectedAddress(null);
+              setConnectedWalletApi(null);
+            }}
           />
 
           {connectedAddress && (
