@@ -72,7 +72,8 @@ function PlatformGroup({ platform, links, payments }) {
   const byLink = {};
   links.forEach(l => { byLink[l.id] = { link: l, members: [] }; });
   filteredBySearch.forEach(p => {
-    if (byLink[p.payment_link_id]) byLink[p.payment_link_id].members.push(p);
+    const linkId = p.access_link_id || p.payment_link_id;
+    if (byLink[linkId]) byLink[linkId].members.push(p);
   });
 
   const totalMembers = platformPayments.length;
