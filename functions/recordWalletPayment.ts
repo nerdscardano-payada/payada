@@ -151,8 +151,10 @@ Deno.serve(async (req) => {
     }
 
     // Fetch blockchain data
+    console.log(`[recordWalletPayment] Fetching blockchain data for txHash=${txHash}`);
     const [txInfo, utxos] = await Promise.all([fetchTxInfo(txHash), fetchTxUtxos(txHash)]);
     const outputs = utxos.outputs || [];
+    console.log(`[recordWalletPayment] TX confirmed at block ${txInfo.block_height}, found ${outputs.length} outputs`);
 
     // Calculate amounts from outputs
     let merchantLovelace = 0;
