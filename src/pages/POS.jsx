@@ -199,15 +199,15 @@ export default function POS() {
                 {paymentStatus === "error" && <AlertCircle className="w-5 h-5 flex-shrink-0" />}
                 <div>
                   <p className="text-sm font-semibold text-white">
-                    {paymentStatus === "pending" && "Wachten op betaling…"}
-                    {paymentStatus === "detected" && "Transactie gedetecteerd!"}
-                    {paymentStatus === "confirmed" && "✅ Betaling bevestigd!"}
-                    {paymentStatus === "error" && "Fout opgetreden"}
+                    {paymentStatus === "pending" && "Awaiting payment…"}
+                    {paymentStatus === "detected" && "Transaction detected!"}
+                    {paymentStatus === "confirmed" && "✅ Payment confirmed!"}
+                    {paymentStatus === "error" && "An error occurred"}
                   </p>
                   <p className="text-[11px] text-slate-500">
-                    {paymentStatus === "pending" && "Laat de klant de QR-code scannen met een Cardano wallet."}
-                    {paymentStatus === "detected" && "Wachten op bevestiging van het netwerk…"}
-                    {paymentStatus === "confirmed" && "De betaling is succesvol verwerkt op de blockchain."}
+                    {paymentStatus === "pending" && "Ask the customer to scan the QR code with a Cardano wallet."}
+                    {paymentStatus === "detected" && "Waiting for network confirmation…"}
+                    {paymentStatus === "confirmed" && "Payment successfully processed on the blockchain."}
                   </p>
                 </div>
               </div>
