@@ -32,6 +32,7 @@ Deno.serve(async (req) => {
     // Payment found but not yet confirmed — still allow access for wallet-direct flow
     // (recordWalletPayment may mark it confirmed slightly later)
 
+    // For non-discord: just look up link and return invite
     const links = await sr.entities.CommunityAccessLink.filter({ id: accessLinkId });
     const link = links[0];
     if (!link) return Response.json({ error: 'Access link not found' }, { status: 404 });
