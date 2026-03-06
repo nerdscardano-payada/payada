@@ -12,15 +12,18 @@ Deno.serve(async (req) => {
     const sr = base44.asServiceRole;
 
     // Find the access link first
-    const links = await sr.entities.CommunityAccessLink.filter({ id: accessLinkId });
-    const link = links[0];
+    let link;
+    try {
+      link = await sr.entities.CommunityAccessLink.get(accessLinkId);
+    } catch { /* not found */ }
     if (!link) return Response.json({ error: 'Access link not found' }, { status: 404 });
 
     // Find payment by id or txHash
     let payment;
     if (paymentId) {
-      const payments = await sr.entities.Payment.filter({ id: paymentId });
-      payment = payments[0];
+      try {
+        payment = await sr.entities.Payment.get(paymentId);
+      } catch { /* not found */ }
     } else if (txHash) {
       const payments = await sr.entities.Payment.filter({ tx_hash: txHash });
       payment = payments[0];
