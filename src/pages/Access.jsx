@@ -58,7 +58,9 @@ export default function Access() {
       .catch(() => { setError("Failed to load access link."); setLoading(false); });
   }, [slug]);
 
-  const handlePaymentConfirmed = async (txHash) => {
+  const handlePaymentConfirmed = async (hash) => {
+    setTxHash(hash);
+    setPaymentStatus("detected");
     setGrantingAccess(true);
 
     // Poll for payment confirmation (detected → confirmed status)
@@ -68,9 +70,12 @@ export default function Access() {
     for (let attempt = 1; attempt <= maxCheckAttempts; attempt++) {
       try {
         if (attempt > 1) await new Promise(r => setTimeout(r, checkDelayMs));
-        const res = await base44.functions.invoke("checkTxConfirmation", { txHash });
+        const res = await base44.functions.invoke("checkTxConfirmation", { txHash: hash });
         payment = res.data;
-        if (payment?.status === "confirmed") break;
+        if (payment?.status === "confirmed") {
+          setPaymentStatus("confirmed");
+          break;
+        }
       } catch {
         // Endpoint may not exist yet, continue polling
       }
@@ -79,7 +84,7 @@ export default function Access() {
     // Now that payment is confirmed, grant access
     let grantRes = null;
     try {
-      const res = await base44.functions.invoke("grantCommunityAccess", { txHash, accessLinkId: accessLink.id });
+      const res = await base44.functions.invoke("grantCommunityAccess", { txHash: hash, accessLinkId: accessLink.id });
       grantRes = res.data;
     } catch {
       grantRes = { invite_link: accessLink.invite_link };
