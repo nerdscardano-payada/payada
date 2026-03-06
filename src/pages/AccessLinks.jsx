@@ -24,6 +24,12 @@ export default function AccessLinks() {
 
   React.useEffect(() => { base44.auth.me().then(setUser); }, []);
 
+  React.useEffect(() => {
+    if (view === "members") {
+      queryClient.invalidateQueries({ queryKey: ["accessPayments"] });
+    }
+  }, [view, queryClient]);
+
   const { data: links = [], isLoading } = useQuery({
     queryKey: ["accessLinks", user?.email],
     queryFn: () => base44.entities.CommunityAccessLink.filter({ merchant_id: user.email }, "-created_date", 100),
