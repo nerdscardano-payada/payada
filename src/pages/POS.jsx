@@ -162,9 +162,9 @@ export default function POS() {
                 className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-base"
               >
                 {loading ? (
-                  <><Loader2 className="w-4 h-4 animate-spin mr-2" />Even wachten…</>
+                  <><Loader2 className="w-4 h-4 animate-spin mr-2" />Please wait…</>
                 ) : (
-                  "Genereer QR-code"
+                  "Generate QR Code"
                 )}
               </Button>
             </div>
