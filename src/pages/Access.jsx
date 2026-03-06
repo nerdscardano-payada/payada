@@ -59,18 +59,28 @@ export default function Access() {
   const handlePaymentConfirmed = async (txHash) => {
     setPaymentConfirmed(true);
     setGrantingAccess(true);
-    try {
-      const res = await base44.functions.invoke("grantCommunityAccess", { txHash, accessLinkId: accessLink.id });
-      setInviteLink(res.data?.invite_link || accessLink.invite_link);
-    } catch {
-      setInviteLink(accessLink.invite_link);
+
+    // Wait for recordWalletPayment to finish indexing (retries with delay)
+    let grantRes = null;
+    const maxAttempts = 6;
+    const delayMs = 8000;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        if (attempt > 1) await new Promise(r => setTimeout(r, delayMs));
+        const res = await base44.functions.invoke("grantCommunityAccess", { txHash, accessLinkId: accessLink.id });
+        grantRes = res.data;
+        break;
+      } catch {
+        if (attempt === maxAttempts) {
+          grantRes = { invite_link: accessLink.invite_link };
+        }
+      }
     }
+
+    setInviteLink(grantRes?.invite_link || accessLink.invite_link);
     setAccessGranted(true);
     setGrantingAccess(false);
-    base44.entities.CommunityAccessLink.update(accessLink.id, {
-      payment_count: (accessLink.payment_count || 0) + 1,
-      total_received_ada: (accessLink.total_received_ada || 0) + accessLink.price_ada,
-    });
+    // NOTE: CommunityAccessLink stats are updated by recordWalletPayment (backend), no need to duplicate here
   };
 
   if (loading) {
