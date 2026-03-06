@@ -230,7 +230,7 @@ export default function POS() {
                 className="w-full border-slate-700 text-slate-300 hover:bg-slate-800"
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
-                Nieuwe betaling
+                New Payment
               </Button>
             </div>
           )}
