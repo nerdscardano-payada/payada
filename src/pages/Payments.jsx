@@ -99,8 +99,6 @@ export default function Payments() {
                   <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Payer</th>
 
                   <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Amount</th>
-                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Fee (1.75%)</th>
-                  <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Net</th>
                   <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3">Status</th>
                   <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3 hidden md:table-cell">Confirmations</th>
                   <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-5 py-3 hidden lg:table-cell">Tx Hash</th>
@@ -143,26 +141,18 @@ export default function Payments() {
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <div>
-                        <span className="text-sm font-semibold text-slate-900 tabular-nums">
-                          ₳ {(p.received_amount_ada || p.expected_amount_ada)?.toFixed(3)}
-                        </span>
-                        {p.fiat_value_snapshot && (
-                          <p className="text-xs text-slate-400">{p.fiat_currency} {p.fiat_value_snapshot.toFixed(2)}</p>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span className="text-sm text-slate-600 tabular-nums">₳ {(p.fee_amount_ada || 0).toFixed(3)}</span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <span className="text-sm font-semibold text-emerald-600 tabular-nums">
-                        ₳ {((p.merchant_amount_ada || p.received_amount_ada || p.expected_amount_ada) - (p.fee_amount_ada || 0))?.toFixed(3)}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <StatusBadge status={p.status} />
-                    </td>
+                       <div>
+                         <span className="text-sm font-semibold text-slate-900 tabular-nums">
+                           ₳ {(p.received_amount_ada || p.expected_amount_ada)?.toFixed(3)}
+                         </span>
+                         {p.fiat_value_snapshot && (
+                           <p className="text-xs text-slate-400">{p.fiat_currency} {p.fiat_value_snapshot.toFixed(2)}</p>
+                         )}
+                       </div>
+                     </td>
+                     <td className="px-5 py-3.5">
+                       <StatusBadge status={p.status} />
+                     </td>
                     <td className="px-5 py-3.5 hidden md:table-cell">
                       <span className="text-sm text-slate-600 tabular-nums">{p.confirmations || 0}</span>
                     </td>
