@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertCircle, CheckCircle2, Edit2, Save } from "lucide-react";
+import { AlertCircle, CheckCircle2, Edit2, Save, Upload, Link } from "lucide-react";
 
 const timezones = [
   "UTC", "Europe/London", "Europe/Berlin", "Europe/Paris", "Europe/Amsterdam",
