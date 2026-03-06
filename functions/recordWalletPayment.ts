@@ -105,14 +105,39 @@ Deno.serve(async (req) => {
     // Always use service role — this endpoint is called from public pages (no user session)
     const sr = base44.asServiceRole;
 
-    const paymentLinks = await sr.entities.PaymentLink.filter({ id: paymentLinkId, merchant_id: merchantId });
-    const paymentLink = paymentLinks[0];
-    if (!paymentLink) return Response.json({ error: 'Payment link not found' }, { status: 404 });
-
     // Avoid duplicate payment records for same tx
     const existingPayments = await sr.entities.Payment.filter({ tx_hash: txHash }); 
     if (existingPayments.length > 0) {
       return Response.json({ success: true, paymentId: existingPayments[0].id, duplicate: true });
+    }
+
+    // Load payment link or access link to get merchant receive address
+    let receiveAddress = null;
+    let expectedAmountAda = 0;
+    let paymentLink = null;
+    let accessLink = null;
+
+    if (paymentLinkId) {
+      const results = await sr.entities.PaymentLink.filter({ id: paymentLinkId });
+      paymentLink = results[0];
+      if (paymentLink) {
+        receiveAddress = paymentLink.receive_address;
+        expectedAmountAda = paymentLink.amount_ada || 0;
+      }
+    }
+
+    if (!receiveAddress && accessLinkId) {
+      const results = await sr.entities.CommunityAccessLink.filter({ id: accessLinkId });
+      accessLink = results[0];
+      if (accessLink) {
+        receiveAddress = accessLink.receive_address;
+        expectedAmountAda = accessLink.price_ada || 0;
+        // fallback: get merchant default address
+        if (!receiveAddress) {
+          const profiles = await sr.entities.MerchantProfile.filter({ user_id: merchantId });
+          receiveAddress = profiles[0]?.default_receive_address;
+        }
+      }
     }
 
     // Fetch blockchain data
@@ -123,7 +148,7 @@ Deno.serve(async (req) => {
     let merchantLovelace = 0;
     let feeLovelace = 0;
     outputs.forEach(output => {
-      if (output.address === paymentLink.receive_address) {
+      if (receiveAddress && output.address === receiveAddress) {
         output.amount.forEach(a => {
           if (a.unit === 'lovelace') merchantLovelace += parseInt(a.quantity);
         });
@@ -135,15 +160,25 @@ Deno.serve(async (req) => {
       }
     });
 
+    // If we couldn't match merchant output by address, sum all non-fee outputs
+    if (merchantLovelace === 0 && !receiveAddress) {
+      outputs.forEach(output => {
+        if (!PAYADA_FEE_WALLET || output.address !== PAYADA_FEE_WALLET) {
+          output.amount.forEach(a => {
+            if (a.unit === 'lovelace') merchantLovelace += parseInt(a.quantity);
+          });
+        }
+      });
+    }
+
     const receivedAmountAda = merchantLovelace / 1_000_000;
     const feeAmountAda = feeLovelace / 1_000_000;
-    const expectedAmountAda = paymentLink.amount_ada || 0;
     const feeOutputValidated = PAYADA_FEE_WALLET ? feeLovelace > 0 : false;
 
     // Create Payment record
     const payment = await sr.entities.Payment.create({
       merchant_id: merchantId,
-      payment_link_id: paymentLinkId,
+      payment_link_id: paymentLinkId || null,
       status: 'detected',
       expected_amount_ada: expectedAmountAda,
       received_amount_ada: receivedAmountAda,
@@ -165,11 +200,21 @@ Deno.serve(async (req) => {
       merchant_amount_ada: receivedAmountAda
     });
 
-    // Update PaymentLink stats
-    await sr.entities.PaymentLink.update(paymentLinkId, {
-      total_received_ada: (paymentLink.total_received_ada || 0) + receivedAmountAda,
-      payment_count: (paymentLink.payment_count || 0) + 1
-    });
+    // Update PaymentLink stats (regular payment link)
+    if (paymentLink) {
+      await sr.entities.PaymentLink.update(paymentLink.id, {
+        total_received_ada: (paymentLink.total_received_ada || 0) + receivedAmountAda,
+        payment_count: (paymentLink.payment_count || 0) + 1
+      });
+    }
+
+    // Update CommunityAccessLink stats
+    if (accessLink) {
+      await sr.entities.CommunityAccessLink.update(accessLink.id, {
+        total_received_ada: (accessLink.total_received_ada || 0) + receivedAmountAda,
+        payment_count: (accessLink.payment_count || 0) + 1
+      });
+    }
 
     // Upsert Customer record (identified by wallet address or email)
     const customerIdentifier = payerEmail || normalizeAddress(payerAddress);
