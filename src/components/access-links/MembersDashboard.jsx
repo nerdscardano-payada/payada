@@ -162,17 +162,21 @@ export default function MembersDashboard({ links, user }) {
   const linkIds = links.map(l => l.id);
 
   const { data: payments = [], isLoading } = useQuery({
-    queryKey: ["accessPayments", user?.email],
+    queryKey: ["accessPayments", user?.email, linkIds],
     queryFn: async () => {
       if (!linkIds.length) return [];
-      const all = await base44.entities.Payment.filter({ merchant_id: user.email }, "-confirmed_at", 500);
+      // Get all confirmed payments for this merchant
+      const all = await base44.entities.Payment.filter({
+        merchant_id: user.email,
+        status: "confirmed"
+      }, "-confirmed_at", 500);
+      // Filter to only those linked to our access links
       return all.filter(p => {
-        const isAccessPayment = linkIds.includes(p.access_link_id);
-        const isPaymentLinkPayment = p.payment_link_id && linkIds.includes(p.payment_link_id);
-        return (isAccessPayment || isPaymentLinkPayment) && p.status === "confirmed";
+        return linkIds.includes(p.access_link_id) || (p.payment_link_id && linkIds.includes(p.payment_link_id));
       });
     },
     enabled: !!user && linkIds.length > 0,
+    staleTime: 0, // Always refetch to get latest
   });
 
   // Group links by platform
