@@ -143,7 +143,7 @@ export default function Pay() {
       console.error("Checkout error:", err);
       toast.error("Failed to start checkout");
     } finally {
-      setLoading(false);
+      setCheckoutLoading(false);
     }
   };
 
