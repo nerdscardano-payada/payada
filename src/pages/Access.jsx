@@ -186,11 +186,11 @@ export default function Access() {
         {/* Member info fields */}
         <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4 space-y-3">
           <div className="space-y-1.5">
-            <Label className="text-slate-300 text-sm">Your Name <span className="text-red-400">*</span></Label>
+            <Label className="text-slate-300 text-sm">Your Name / Username <span className="text-red-400">*</span></Label>
             <Input
               value={memberName}
               onChange={e => setMemberName(e.target.value)}
-              placeholder="Full name"
+              placeholder="Full name or username"
               className="bg-white/10 border-white/20 text-white placeholder:text-slate-500"
             />
           </div>
