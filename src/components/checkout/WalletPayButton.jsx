@@ -22,9 +22,17 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
 
     const { walletId, address: walletAddress } = connectedWallet;
     const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
-    // merchant_amount_lovelace = product price minus platform fee (what merchant actually receives)
-    const merchantLovelace = String(sessionData.merchant_amount_lovelace || Math.floor(sessionData.merchant_amount_ada * 1_000_000));
-    const platformFeeLovelace = String(sessionData.platform_fee_lovelace || Math.floor(sessionData.platform_fee_ada * 1_000_000));
+    // Use lovelace directly, fallback to ada conversion
+    const merchantLovelace = String(
+      sessionData.merchant_amount_lovelace > 0
+        ? sessionData.merchant_amount_lovelace
+        : Math.floor((sessionData.merchant_amount_ada || 0) * 1_000_000)
+    );
+    const platformFeeLovelace = String(
+      sessionData.platform_fee_lovelace > 0
+        ? sessionData.platform_fee_lovelace
+        : Math.floor((sessionData.platform_fee_ada || 0) * 1_000_000)
+    );
 
     setTxLoading(true);
     setTxStatus('building');
