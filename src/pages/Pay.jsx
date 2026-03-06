@@ -118,7 +118,7 @@ export default function Pay() {
   }, [cartItems, cartLinks, cartLinksFetching]);
 
   const handleStartCheckout = async () => {
-    setLoading(true);
+    setCheckoutLoading(true);
     try {
       let response;
       if (cartItems.length > 0) {
