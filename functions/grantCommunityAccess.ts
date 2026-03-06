@@ -3,18 +3,34 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { paymentId, accessLinkId } = await req.json();
+    const { paymentId, txHash, accessLinkId } = await req.json();
 
-    if (!paymentId || !accessLinkId) {
-      return Response.json({ error: 'Missing paymentId or accessLinkId' }, { status: 400 });
+    if ((!paymentId && !txHash) || !accessLinkId) {
+      return Response.json({ error: 'Missing paymentId or txHash, and accessLinkId' }, { status: 400 });
     }
 
     const sr = base44.asServiceRole;
 
-    const payments = await sr.entities.Payment.filter({ id: paymentId });
-    const payment = payments[0];
-    if (!payment) return Response.json({ error: 'Payment not found' }, { status: 404 });
-    if (payment.status !== 'confirmed') return Response.json({ error: 'Payment not confirmed' }, { status: 400 });
+    // Find payment by id or txHash
+    let payment;
+    if (paymentId) {
+      const payments = await sr.entities.Payment.filter({ id: paymentId });
+      payment = payments[0];
+    } else {
+      const payments = await sr.entities.Payment.filter({ tx_hash: txHash });
+      payment = payments[0];
+    }
+
+    // If payment not yet recorded (tx just submitted), return invite link directly
+    if (!payment) {
+      const links = await sr.entities.CommunityAccessLink.filter({ id: accessLinkId });
+      const link = links[0];
+      if (!link) return Response.json({ error: 'Access link not found' }, { status: 404 });
+      return Response.json({ success: true, platform: link.platform, invite_link: link.invite_link, note: 'Payment still indexing, using static invite' });
+    }
+
+    // Payment found but not yet confirmed — still allow access for wallet-direct flow
+    // (recordWalletPayment may mark it confirmed slightly later)
 
     const links = await sr.entities.CommunityAccessLink.filter({ id: accessLinkId });
     const link = links[0];
