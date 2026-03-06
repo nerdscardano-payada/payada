@@ -219,7 +219,7 @@ export default function POS() {
                   <span>₳ {session.platform_fee_ada?.toFixed(3)}</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
-                  <span>U ontvangt</span>
+                  <span>You receive</span>
                   <span className="text-emerald-400 font-semibold">₳ {session.merchant_amount_ada?.toFixed(3)}</span>
                 </div>
               </div>
