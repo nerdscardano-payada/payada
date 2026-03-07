@@ -382,9 +382,14 @@ export default function Pay() {
                   {/* CNT fee breakdown */}
                   {sessionData && paymentLink.amount_mode === "fixed_cnt" && (() => {
                     const total = paymentLink.cnt_amount || 0;
+                    const decimals = paymentLink.cnt_decimals || 0;
+                    const divisor = Math.pow(10, decimals);
                     const feePercent = sessionData.platform_fee_percent || 1.75;
-                    const feeAmt = Math.floor(total * (feePercent / 100));
+                    const feeAmt = Math.round(total * (feePercent / 100));
                     const merchantAmt = total - feeAmt;
+                    const totalDisplay = (total / divisor).toFixed(decimals);
+                    const feeDisplay = (feeAmt / divisor).toFixed(decimals);
+                    const merchantDisplay = (merchantAmt / divisor).toFixed(decimals);
                     return (
                       <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
                         <div className="flex justify-between">
