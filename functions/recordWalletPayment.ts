@@ -268,10 +268,15 @@ Deno.serve(async (req) => {
 
     // Update PaymentLink stats (regular payment link)
     if (paymentLink) {
-      await sr.entities.PaymentLink.update(paymentLink.id, {
-        total_received_ada: (paymentLink.total_received_ada || 0) + receivedAmountAda,
+      const update = {
         payment_count: (paymentLink.payment_count || 0) + 1
-      });
+      };
+      if (isCntPayment) {
+        update.total_received_cnt = (paymentLink.total_received_cnt || 0) + cntMerchantAmount;
+      } else {
+        update.total_received_ada = (paymentLink.total_received_ada || 0) + receivedAmountAda;
+      }
+      await sr.entities.PaymentLink.update(paymentLink.id, update);
     }
 
     // Update CommunityAccessLink stats
