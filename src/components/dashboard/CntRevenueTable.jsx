@@ -96,7 +96,7 @@ export default function CntRevenueTable({ payments }) {
                   <td className="py-3 font-medium text-slate-900">{data.ticker}</td>
                   <td className="py-3 text-slate-600">{data.paymentCount}</td>
                   <td className="py-3 text-right font-semibold text-green-600">
-                    {(data.netRevenue / Math.pow(10, data.decimals)).toFixed(4)} {data.ticker}
+                    {(data.netRevenue / Math.pow(10, data.decimals)).toFixed(2)} {data.ticker}
                   </td>
                 </tr>
               ))}
