@@ -81,22 +81,22 @@ export default function FeeRevenueStats() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Totale Fee Inkomsten"
-          value={`₳${totalFeeAda.toFixed(2)}`}
-          subtitle="Alle tijden"
+          value={`₳${(totalFeeAda + totalCntFeesAda).toFixed(2)}`}
+          subtitle="ADA + CNT (in ADA)"
           icon={TrendingUp}
           color="text-green-600"
         />
         <StatCard
           title="Fee (30 dagen)"
           value={`₳${recentFeeAda.toFixed(2)}`}
-          subtitle="Laatste 30 dagen"
+          subtitle="Laatste 30 dagen (ADA)"
           icon={DollarSign}
           color="text-green-600"
         />
         <StatCard
           title="Totaal Volume"
           value={`₳${totalVolumeAda.toFixed(2)}`}
-          subtitle={`${confirmedPayments.length} betalingen`}
+          subtitle={`${adaPayments.length} ADA payments`}
           icon={Activity}
         />
         <StatCard
