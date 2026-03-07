@@ -108,7 +108,11 @@ export default function WebhooksPage() {
           <div className="space-y-8">
             <div>
               <h3 className="font-semibold text-slate-900 mb-3">1. Configure Your Webhook URL</h3>
-              <p className="text-slate-600 mb-4">Go to your Dashboard → Webhooks and add your endpoint URL where you want to receive events. Your endpoint must:</p>
+              <p className="text-slate-600 mb-4">
+                Go to your Dashboard → Webhooks and add your endpoint URL where you want to receive events. You can use our{" "}
+                <Link to={createPageUrl("WebhookSetupWizard")} className="text-indigo-600 hover:underline font-medium">Webhook Setup Wizard</Link>{" "}
+                to get started quickly. Your endpoint must:
+              </p>
               <ul className="list-disc list-inside text-slate-600 space-y-2">
                 <li>Be a valid HTTPS URL</li>
                 <li>Accept POST requests</li>
