@@ -1,6 +1,8 @@
 import React from "react";
 import { Download, FileText, Zap, Lock, TrendingUp, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 export default function Litepaper() {
   const downloadPDF = () => {
@@ -367,21 +369,13 @@ For more information: www.payada.io
           {/* Roadmap */}
           <section>
             <h2 className="text-2xl font-bold text-slate-900 mb-4">Development Roadmap</h2>
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
-              <div className="space-y-4">
-                <div className="pb-4 border-b border-slate-200">
-                  <h4 className="font-semibold text-green-600 mb-2">Q1 2026 ✓ Completed</h4>
-                  <p className="text-slate-700 text-sm">Core ADA processing, CNT support, Merchant dashboard, Discord integration</p>
-                </div>
-                <div className="pb-4 border-b border-slate-200">
-                  <h4 className="font-semibold text-indigo-600 mb-2">Q2 2026</h4>
-                  <p className="text-slate-700 text-sm">Advanced analytics, Webhook filtering, Batch exports, Multi-merchant support</p>
-                </div>
-                <div className="pb-4 border-b border-slate-200">
-                  <h4 className="font-semibold text-slate-600 mb-2">Q3 2026+</h4>
-                  <p className="text-slate-700 text-sm">Mobile apps, Staking integration, Governance launch, Community marketplace</p>
-                </div>
-              </div>
+            <div className="bg-indigo-50 rounded-xl p-6 border border-indigo-200">
+              <p className="text-slate-700 mb-4">
+                For detailed updates on our development progress and upcoming features, visit our full roadmap.
+              </p>
+              <Link to={createPageUrl("Roadmap")} className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-semibold">
+                View Full Roadmap →
+              </Link>
             </div>
           </section>
 
