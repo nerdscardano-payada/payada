@@ -232,6 +232,14 @@ export default function AdminCNTLab() {
                       <p className="text-slate-500">{link.payment_count || 0} betalingen</p>
                       <p className="text-slate-400">{link.total_received_cnt || 0} {link.cnt_ticker} ontvangen</p>
                     </div>
+                    <Button
+                      size="sm"
+                      className="gap-1.5 bg-indigo-600 hover:bg-indigo-700"
+                      onClick={() => window.open(`/Pay?slug=${link.slug}`, "_blank")}
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      Testen
+                    </Button>
                     <Button variant="ghost" size="icon" className="text-red-400 hover:text-red-600 hover:bg-red-50"
                       onClick={() => deleteLinkMutation.mutate(link.id)}>
                       <Trash2 className="w-4 h-4" />
