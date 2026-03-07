@@ -245,13 +245,19 @@ export default function HomePage() {
                 <li><Link to={createPageUrl("Contact")} className="hover:text-white transition">Contact</Link></li>
               </ul>
             </div>
-          </div>
-          <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center text-sm">
-            <p>&copy; 2026 PayADA.io. All rights reserved.</p>
-            <div className="flex gap-6 mt-4 sm:mt-0">
-              <Link to={createPageUrl("PrivacyPolicy")} className="hover:text-white transition">Privacy Policy</Link>
-              <Link to={createPageUrl("TermsOfService")} className="hover:text-white transition">Terms of Service</Link>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to={createPageUrl("TermsOfService")} className="hover:text-white transition">Terms</Link></li>
+                <li><Link to={createPageUrl("PrivacyPolicy")} className="hover:text-white transition">Privacy</Link></li>
+                <li><Link to={createPageUrl("AcceptableUsePolicy")} className="hover:text-white transition">Acceptable Use</Link></li>
+                <li><Link to={createPageUrl("MerchantAgreement")} className="hover:text-white transition">Merchant Agreement</Link></li>
+                <li><Link to={createPageUrl("Disclaimer")} className="hover:text-white transition">Disclaimer</Link></li>
+              </ul>
             </div>
+          </div>
+          <div className="border-t border-slate-800 pt-8 text-center text-sm">
+            <p>&copy; 2026 PayADA.io. All rights reserved.</p>
           </div>
         </div>
       </footer>
