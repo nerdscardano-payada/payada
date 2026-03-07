@@ -27,6 +27,13 @@ export default function Dashboard() {
     base44.auth.me().then(setUser);
   }, []);
 
+  const { data: merchantProfile } = useQuery({
+    queryKey: ["merchantProfile-check", user?.email],
+    queryFn: () => base44.entities.MerchantProfile.filter({ user_id: user.email }),
+    enabled: !!user,
+    select: (data) => data[0] || null,
+  });
+
   const { data: payments = [], isLoading: loadingPayments } = useQuery({
     queryKey: ["payments", user?.email],
     queryFn: () => base44.entities.Payment.filter({ merchant_id: user.email }, "-created_date", 200),
