@@ -237,65 +237,43 @@ export default function FeeRevenueStats() {
         </>
       )}
 
-      {/* CNT Fee Breakdown - Admin Only */}
-      {Object.entries(cntFeesByToken).length > 0 && (
-        <div className="bg-blue-50 rounded-xl border border-blue-200 p-5">
-          <h3 className="text-sm font-semibold text-blue-900 mb-4">🧪 CNT Fee Inkomsten per Token</h3>
-          <div className="space-y-3">
-            {Object.entries(cntFeesByToken).map(([key, data]) => (
-              <div key={key} className="p-3 bg-white rounded-lg border border-blue-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-blue-900">{data.ticker || "Unknown Token"}</p>
-                    <p className="text-xs text-blue-600 font-mono">{data.policy_id.slice(0, 20)}...</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-semibold text-green-600">{(data.totalFees / Math.pow(10, data.decimals)).toFixed(4)} {data.ticker}</p>
-                    <p className="text-xs text-slate-500">Fee Earned</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+      {/* Recent payments table - shown for both tabs */}
+      {feeTypeTab === "ada" && (
+        <div className="bg-white rounded-xl border border-slate-200 p-5">
+          <h3 className="text-sm font-semibold text-slate-700 mb-4">Recente ADA Betalingen (met fee)</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-slate-400 border-b border-slate-100">
+                  <th className="pb-2 font-medium">TX Hash</th>
+                  <th className="pb-2 font-medium">Ontvangen</th>
+                  <th className="pb-2 font-medium">Fee</th>
+                  <th className="pb-2 font-medium">Datum</th>
+                </tr>
+              </thead>
+              <tbody>
+                {adaPayments.slice(0, 10).map(p => (
+                  <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50">
+                    <td className="py-2 font-mono text-xs text-slate-500">
+                      {p.tx_hash ? `${p.tx_hash.slice(0, 12)}...` : "—"}
+                    </td>
+                    <td className="py-2 text-slate-800 font-medium">₳{(p.received_amount_ada || 0).toFixed(4)}</td>
+                    <td className="py-2 text-green-600 font-medium">₳{(p.fee_amount_ada || 0).toFixed(4)}</td>
+                    <td className="py-2 text-slate-400 text-xs">
+                      {p.confirmed_at ? new Date(p.confirmed_at).toLocaleDateString("nl-BE") : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {adaPayments.length === 0 && (
+              <p className="text-slate-400 text-sm text-center py-4">Nog geen confirmed ADA betalingen.</p>
+            )}
           </div>
         </div>
       )}
 
-      {/* Recent confirmed ADA payments table */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <h3 className="text-sm font-semibold text-slate-700 mb-4">Recente ADA Betalingen (met fee)</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-xs text-slate-400 border-b border-slate-100">
-                <th className="pb-2 font-medium">TX Hash</th>
-                <th className="pb-2 font-medium">Ontvangen</th>
-                <th className="pb-2 font-medium">Fee</th>
-                <th className="pb-2 font-medium">Datum</th>
-              </tr>
-            </thead>
-            <tbody>
-              {adaPayments.slice(0, 10).map(p => (
-                <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="py-2 font-mono text-xs text-slate-500">
-                    {p.tx_hash ? `${p.tx_hash.slice(0, 12)}...` : "—"}
-                  </td>
-                  <td className="py-2 text-slate-800 font-medium">₳{(p.received_amount_ada || 0).toFixed(4)}</td>
-                  <td className="py-2 text-green-600 font-medium">₳{(p.fee_amount_ada || 0).toFixed(4)}</td>
-                  <td className="py-2 text-slate-400 text-xs">
-                    {p.confirmed_at ? new Date(p.confirmed_at).toLocaleDateString("nl-BE") : "—"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {adaPayments.length === 0 && (
-            <p className="text-slate-400 text-sm text-center py-4">Nog geen confirmed ADA betalingen.</p>
-          )}
-        </div>
-      </div>
-
-      {/* Recent CNT payments with fees - Admin Only */}
-      {cntPayments.length > 0 && (
+      {feeTypeTab === "cnt" && cntPayments.length > 0 && (
         <div className="bg-blue-50 rounded-xl border border-blue-200 p-5">
           <h3 className="text-sm font-semibold text-blue-900 mb-4">🧪 Recente CNT Betalingen</h3>
           <div className="space-y-4">
