@@ -134,8 +134,8 @@ export default function WebhookSetupWizard() {
         {step === 1 && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900 mb-1">Jouw Endpoint URL</h2>
-              <p className="text-slate-500 text-sm">Voer de HTTPS URL in waar je webhook-events naartoe gestuurd worden.</p>
+              <h2 className="text-lg font-semibold text-slate-900 mb-1">Your Endpoint URL</h2>
+              <p className="text-slate-500 text-sm">Enter the HTTPS URL where your webhook events will be sent.</p>
             </div>
             <div>
               <Label htmlFor="name">Naam (optioneel)</Label>
