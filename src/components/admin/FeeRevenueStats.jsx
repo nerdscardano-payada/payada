@@ -90,34 +90,87 @@ export default function FeeRevenueStats() {
 
   return (
     <div className="space-y-6">
+      {/* Tabs for ADA/CNT Fees */}
+      <div className="flex gap-2 border-b border-slate-200">
+        <button
+          onClick={() => setFeeTypeTab("ada")}
+          className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+            feeTypeTab === "ada"
+              ? "text-indigo-600 border-indigo-600"
+              : "text-slate-600 border-transparent hover:text-slate-900"
+          }`}
+        >
+          ADA Fees
+        </button>
+        {Object.entries(cntFeesByToken).length > 0 && (
+          <button
+            onClick={() => setFeeTypeTab("cnt")}
+            className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+              feeTypeTab === "cnt"
+                ? "text-indigo-600 border-indigo-600"
+                : "text-slate-600 border-transparent hover:text-slate-900"
+            }`}
+          >
+            CNT Fees
+          </button>
+        )}
+      </div>
+
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          title="Totale Fee Inkomsten"
-          value={`₳${totalFeeAda.toFixed(2)}`}
-          subtitle="Alle tijden"
-          icon={TrendingUp}
-          color="text-green-600"
-        />
-        <StatCard
-          title="Fee (30 dagen)"
-          value={`₳${recentFeeAda.toFixed(2)}`}
-          subtitle="Laatste 30 dagen"
-          icon={DollarSign}
-          color="text-green-600"
-        />
-        <StatCard
-          title="Totaal Volume"
-          value={`₳${totalVolumeAda.toFixed(2)}`}
-          subtitle={`${confirmedPayments.length} betalingen`}
-          icon={Activity}
-        />
-        <StatCard
-          title="Actieve Merchants"
-          value={merchants.length}
-          subtitle="Geregistreerd"
-          icon={Users}
-        />
+        {feeTypeTab === "ada" ? (
+          <>
+            <StatCard
+              title="Totale Fee Inkomsten"
+              value={`₳${totalFeeAda.toFixed(2)}`}
+              subtitle="Alle tijden"
+              icon={TrendingUp}
+              color="text-green-600"
+            />
+            <StatCard
+              title="Fee (30 dagen)"
+              value={`₳${recentFeeAda.toFixed(2)}`}
+              subtitle="Laatste 30 dagen"
+              icon={DollarSign}
+              color="text-green-600"
+            />
+            <StatCard
+              title="Totaal Volume"
+              value={`₳${totalVolumeAda.toFixed(2)}`}
+              subtitle={`${adaPayments.length} betalingen`}
+              icon={Activity}
+            />
+            <StatCard
+              title="Actieve Merchants"
+              value={merchants.length}
+              subtitle="Geregistreerd"
+              icon={Users}
+            />
+          </>
+        ) : (
+          <>
+            <StatCard
+              title="CNT Fee Tokens"
+              value={Object.entries(cntFeesByToken).length}
+              subtitle="Unieke tokens"
+              icon={TrendingUp}
+              color="text-green-600"
+            />
+            <StatCard
+              title="CNT Betalingen"
+              value={cntPayments.length}
+              subtitle="Transacties"
+              icon={Activity}
+            />
+            <StatCard
+              title="Actieve Merchants"
+              value={merchants.length}
+              subtitle="Geregistreerd"
+              icon={Users}
+            />
+            <div className="bg-white rounded-xl border border-slate-200 p-5"></div>
+          </>
+        )}
       </div>
 
       {/* Top merchants by fee */}
