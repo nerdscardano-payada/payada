@@ -425,7 +425,9 @@ export default function Pay() {
         </div>
 
         <p className="text-center text-[11px] text-slate-600 mt-6">
-          Secure Cardano ADA payment · PayADA.io
+          {paymentLink?.amount_mode === "fixed_cnt"
+            ? `Secure Cardano Native Token payment · PayADA.io`
+            : `Secure Cardano ADA payment · PayADA.io`}
         </p>
       </div>
     </div>
