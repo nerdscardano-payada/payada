@@ -234,7 +234,13 @@ export default function ButtonGenerator() {
               <SelectContent>
                 {links.map((l) => (
                   <SelectItem key={l.id} value={l.id}>
-                    {l.title} — ₳ {l.amount_ada?.toFixed(2)}
+                    {l.title} — {
+                      l.amount_mode === "fixed_cnt"
+                        ? `${l.cnt_amount?.toLocaleString() || "—"} ${l.cnt_ticker || "CNT"}`
+                        : l.amount_mode === "fixed_fiat"
+                        ? `${l.fiat_currency} ${l.amount_fiat?.toFixed(2) || "—"}`
+                        : `₳ ${l.amount_ada?.toFixed(2) || "—"}`
+                    }
                   </SelectItem>
                 ))}
               </SelectContent>
