@@ -18,7 +18,6 @@ const timezones = [
   "Australia/Sydney", "Australia/Melbourne"
 ];
 
-const currencies = ["EUR", "USD"];
 
 export default function MerchantProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
