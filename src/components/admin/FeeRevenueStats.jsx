@@ -47,15 +47,28 @@ export default function FeeRevenueStats() {
   const totalFeeAda = adaPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
   const totalVolumeAda = adaPayments.reduce((sum, p) => sum + (p.received_amount_ada || 0), 0);
 
-  // CNT totals
+  // CNT fee totals - aggregate from cnt_fees array in each payment
+  const cntFeesByToken = {};
+  confirmedPayments.forEach(p => {
+    if (p.cnt_fees && Array.isArray(p.cnt_fees)) {
+      p.cnt_fees.forEach(fee => {
+        const key = `${fee.policy_id}|${fee.ticker || "unknown"}`;
+        if (!cntFeesByToken[key]) {
+          cntFeesByToken[key] = { ticker: fee.ticker, policy_id: fee.policy_id, decimals: fee.decimals || 0, totalFees: 0 };
+        }
+        cntFeesByToken[key].totalFees += fee.amount || 0;
+      });
+    }
+  });
+
+  // CNT payment volume totals
   const cntByToken = {};
   cntPayments.forEach(p => {
     const key = `${p.cnt_policy_id}|${p.cnt_ticker || "unknown"}`;
     if (!cntByToken[key]) {
-      cntByToken[key] = { ticker: p.cnt_ticker, policy_id: p.cnt_policy_id, decimals: p.cnt_decimals || 0, amount: 0, fees: 0 };
+      cntByToken[key] = { ticker: p.cnt_ticker, policy_id: p.cnt_policy_id, decimals: p.cnt_decimals || 0, amount: 0 };
     }
     cntByToken[key].amount += p.received_amount_cnt || 0;
-    cntByToken[key].fees += p.fee_amount_cnt || 0;
   });
 
   // Last 30 days
@@ -132,29 +145,25 @@ export default function FeeRevenueStats() {
       </div>
 
       {/* CNT Fee Breakdown - Admin Only */}
-      {cntPayments.length > 0 && (
+      {Object.entries(cntFeesByToken).length > 0 && (
         <div className="bg-blue-50 rounded-xl border border-blue-200 p-5">
-          <h3 className="text-sm font-semibold text-blue-900 mb-4">🧪 CNT Fee Inkomsten (In Ontwikkeling)</h3>
-          {Object.entries(cntByToken).length === 0 ? (
-            <p className="text-blue-700 text-sm">Nog geen CNT betalingen.</p>
-          ) : (
-            <div className="space-y-3">
-              {Object.entries(cntByToken).map(([key, data]) => (
-                <div key={key} className="p-3 bg-white rounded-lg border border-blue-100">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-blue-900">{data.ticker || "Unknown Token"}</p>
-                      <p className="text-xs text-blue-600 font-mono">{key.split("|")[0].slice(0, 20)}...</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-blue-900">{(data.amount / Math.pow(10, data.decimals)).toFixed(4)} {data.ticker}</p>
-                      <p className="text-xs text-green-600 font-medium">Fee Earned: {(data.fees / Math.pow(10, data.decimals)).toFixed(4)} {data.ticker}</p>
-                    </div>
+          <h3 className="text-sm font-semibold text-blue-900 mb-4">🧪 CNT Fee Inkomsten per Token</h3>
+          <div className="space-y-3">
+            {Object.entries(cntFeesByToken).map(([key, data]) => (
+              <div key={key} className="p-3 bg-white rounded-lg border border-blue-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-blue-900">{data.ticker || "Unknown Token"}</p>
+                    <p className="text-xs text-blue-600 font-mono">{data.policy_id.slice(0, 20)}...</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-green-600">{(data.totalFees / Math.pow(10, data.decimals)).toFixed(4)} {data.ticker}</p>
+                    <p className="text-xs text-slate-500">Fee Earned</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -192,37 +201,37 @@ export default function FeeRevenueStats() {
         </div>
       </div>
 
-      {/* Recent CNT payments - Admin Only */}
+      {/* Recent CNT payments with fees - Admin Only */}
       {cntPayments.length > 0 && (
         <div className="bg-blue-50 rounded-xl border border-blue-200 p-5">
-          <h3 className="text-sm font-semibold text-blue-900 mb-4">🧪 Recente CNT Betalingen (In Ontwikkeling)</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-xs text-blue-600 border-b border-blue-100">
-                  <th className="pb-2 font-medium">Token</th>
-                  <th className="pb-2 font-medium">TX Hash</th>
-                  <th className="pb-2 font-medium">Ontvangen</th>
-                  <th className="pb-2 font-medium">Fee (ADA)</th>
-                  <th className="pb-2 font-medium">Datum</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cntPayments.slice(0, 10).map(p => (
-                  <tr key={p.id} className="border-b border-blue-50 hover:bg-blue-100/30">
-                    <td className="py-2 text-blue-900 font-medium">{p.cnt_ticker || "Unknown"}</td>
-                    <td className="py-2 font-mono text-xs text-blue-600">
-                      {p.tx_hash ? `${p.tx_hash.slice(0, 12)}...` : "—"}
-                    </td>
-                    <td className="py-2 text-blue-900 font-medium">{((p.received_amount_cnt || 0) / Math.pow(10, p.cnt_decimals || 0)).toFixed(4)} {p.cnt_ticker}</td>
-                    <td className="py-2 text-green-600 font-medium">₳{(p.fee_amount_ada || 0).toFixed(4)}</td>
-                    <td className="py-2 text-blue-600 text-xs">
-                      {p.confirmed_at ? new Date(p.confirmed_at).toLocaleDateString("nl-BE") : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <h3 className="text-sm font-semibold text-blue-900 mb-4">🧪 Recente CNT Betalingen</h3>
+          <div className="space-y-4">
+            {cntPayments.slice(0, 10).map(p => (
+              <div key={p.id} className="p-3 bg-white rounded-lg border border-blue-100">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <p className="text-sm font-medium text-blue-900">{p.cnt_ticker || "Unknown"}</p>
+                    <p className="text-xs text-blue-600 font-mono">{p.tx_hash ? `${p.tx_hash.slice(0, 20)}...` : "—"}</p>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    {p.confirmed_at ? new Date(p.confirmed_at).toLocaleDateString("nl-BE") : "—"}
+                  </p>
+                </div>
+                <p className="text-sm text-blue-900 mb-2">
+                  Ontvangen: {((p.received_amount_cnt || 0) / Math.pow(10, p.cnt_decimals || 0)).toFixed(4)} {p.cnt_ticker}
+                </p>
+                {p.cnt_fees && p.cnt_fees.length > 0 && (
+                  <div className="text-xs space-y-1 pt-2 border-t border-blue-100">
+                    <p className="font-medium text-green-700">Fees Earned:</p>
+                    {p.cnt_fees.map((fee, idx) => (
+                      <p key={idx} className="text-green-600">
+                        {(fee.amount / Math.pow(10, fee.decimals || 0)).toFixed(4)} {fee.ticker}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       )}
