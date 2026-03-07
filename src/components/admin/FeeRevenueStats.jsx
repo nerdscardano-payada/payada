@@ -121,7 +121,7 @@ export default function FeeRevenueStats() {
 
   // Per merchant breakdown
   const merchantFees = {};
-  confirmedPayments.forEach(p => {
+  allPayments.forEach(p => {
     if (!merchantFees[p.merchant_id]) merchantFees[p.merchant_id] = 0;
     merchantFees[p.merchant_id] += p.fee_amount_ada || 0;
   });
