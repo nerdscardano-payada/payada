@@ -156,15 +156,28 @@ export default function Payments() {
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                       <div>
-                         <span className="text-sm font-semibold text-slate-900 tabular-nums">
-                           ₳ {(p.received_amount_ada || p.expected_amount_ada)?.toFixed(3)}
-                         </span>
-                         {p.fiat_value_snapshot && (
-                           <p className="text-xs text-slate-400">{p.fiat_currency} {p.fiat_value_snapshot.toFixed(2)}</p>
-                         )}
-                       </div>
-                     </td>
+                        <div>
+                          {p.payment_type === "cnt" ? (
+                            <>
+                              <span className="text-sm font-semibold text-slate-900 tabular-nums">
+                                {((p.received_amount_cnt || p.expected_amount_cnt) / Math.pow(10, p.cnt_decimals || 0))?.toFixed(4)} {p.cnt_ticker}
+                              </span>
+                              {p.fiat_value_snapshot && (
+                                <p className="text-xs text-slate-400">{p.fiat_currency} {p.fiat_value_snapshot.toFixed(2)}</p>
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-sm font-semibold text-slate-900 tabular-nums">
+                                ₳ {(p.received_amount_ada || p.expected_amount_ada)?.toFixed(3)}
+                              </span>
+                              {p.fiat_value_snapshot && (
+                                <p className="text-xs text-slate-400">{p.fiat_currency} {p.fiat_value_snapshot.toFixed(2)}</p>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </td>
                      <td className="px-5 py-3.5">
                        <StatusBadge status={p.status} />
                      </td>
