@@ -8,13 +8,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, BookTemplate } from "lucide-react";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { useQueryClient, useMutation as useMut } from "@tanstack/react-query";
 
-export default function PaymentLinkForm({ link, onBack }) {
+export default function PaymentLinkForm({ link, prefill, onBack, merchantId: merchantIdProp }) {
   const isEditing = !!link;
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
+  const [showSaveTemplate, setShowSaveTemplate] = useState(false);
+  const [templateName, setTemplateName] = useState("");
 
   useEffect(() => {
     base44.auth.me().then((u) => {
@@ -31,23 +35,54 @@ export default function PaymentLinkForm({ link, onBack }) {
     });
   }, []);
 
+  // prefill takes priority over link when creating from template
+  const source = link || prefill || {};
   const [form, setForm] = useState({
-    title: link?.title || "",
+    title: source.title || "",
     slug: link?.slug || "",
-    description: link?.description || "",
-    amount_mode: link?.amount_mode || "fixed_ada",
-    amount_ada: link?.amount_ada || "",
-    amount_fiat: link?.amount_fiat || "",
-    fiat_currency: link?.fiat_currency || "EUR",
-    confirmations_required: link?.confirmations_required || 2,
+    description: source.description || "",
+    amount_mode: source.amount_mode || "fixed_ada",
+    amount_ada: source.amount_ada || "",
+    amount_fiat: source.amount_fiat || "",
+    fiat_currency: source.fiat_currency || "EUR",
+    confirmations_required: source.confirmations_required || 2,
     receive_address: link?.receive_address || "",
-    success_redirect_url: link?.success_redirect_url || "",
+    success_redirect_url: source.success_redirect_url || "",
     cancel_redirect_url: link?.cancel_redirect_url || "",
-    collect_email: link?.collect_email || false,
-    collect_name: link?.collect_name || false,
-    collect_shipping: link?.collect_shipping || false,
+    collect_email: source.collect_email || false,
+    collect_name: source.collect_name || false,
+    collect_shipping: source.collect_shipping || false,
     status: link?.status || "active",
   });
+
+  const saveTemplateMutation = useMut({
+    mutationFn: (data) => base44.entities.PaymentLinkTemplate.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["paymentLinkTemplates"] });
+      toast.success("Template saved!");
+      setShowSaveTemplate(false);
+      setTemplateName("");
+    },
+  });
+
+  const handleSaveTemplate = () => {
+    const mid = user?.email || merchantIdProp;
+    saveTemplateMutation.mutate({
+      merchant_id: mid,
+      name: templateName,
+      title: form.title,
+      description: form.description,
+      amount_mode: form.amount_mode,
+      amount_ada: form.amount_mode === "fixed_ada" ? parseFloat(form.amount_ada) || 0 : null,
+      amount_fiat: form.amount_mode === "fixed_fiat" ? parseFloat(form.amount_fiat) || 0 : null,
+      fiat_currency: form.fiat_currency,
+      confirmations_required: parseInt(form.confirmations_required) || 2,
+      collect_email: form.collect_email,
+      collect_name: form.collect_name,
+      collect_shipping: form.collect_shipping,
+      success_redirect_url: form.success_redirect_url,
+    });
+  };
 
   const generateMerchantPrefix = (email) => {
     if (!email) return "m";
@@ -214,16 +249,45 @@ export default function PaymentLinkForm({ link, onBack }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 pt-2">
+        <div className="flex flex-wrap items-center gap-3 pt-2">
           <Button type="submit" disabled={mutation.isPending} className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2">
             <Save className="w-4 h-4" />
             {isEditing ? "Update" : "Create"} Payment Link
           </Button>
-          <Button type="button" variant="outline" onClick={onBack}>
+          <Button type="button" variant="outline" className="gap-2" onClick={() => { setTemplateName(form.title || ""); setShowSaveTemplate(true); }}>
+            <BookTemplate className="w-4 h-4" />
+            Save as Template
+          </Button>
+          <Button type="button" variant="ghost" onClick={onBack}>
             Cancel
           </Button>
         </div>
       </form>
+
+      <Dialog open={showSaveTemplate} onOpenChange={setShowSaveTemplate}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Save as Template</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-slate-500">Give this template a name so you can reuse it later with one click.</p>
+          <Input
+            value={templateName}
+            onChange={(e) => setTemplateName(e.target.value)}
+            placeholder="e.g. Monthly Membership"
+            autoFocus
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSaveTemplate(false)}>Cancel</Button>
+            <Button
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
+              disabled={!templateName.trim() || saveTemplateMutation.isPending}
+              onClick={handleSaveTemplate}
+            >
+              Save Template
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
