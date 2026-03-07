@@ -24,6 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
+  const [paymentTypeTab, setPaymentTypeTab] = useState("ada");
 
   useEffect(() => {
     base44.auth.me().then(setUser);
