@@ -53,7 +53,7 @@ export default function FeaturesPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="text-indigo-600">ADA</span>
+            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Pricing")} className="text-sm text-slate-600 hover:text-slate-900">Pricing</Link>
@@ -74,8 +74,8 @@ export default function FeaturesPage() {
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {features.map((feature, idx) => (
-            <div key={idx} className="border border-slate-200 rounded-lg p-6 hover:border-indigo-300 hover:shadow-lg transition">
-              <feature.icon className="w-12 h-12 text-indigo-600 mb-4" />
+            <div key={idx} className="border border-slate-200 rounded-lg p-6 hover:border-cyan-300 hover:shadow-lg transition">
+               <feature.icon className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
               <h3 className="text-lg font-semibold text-slate-900 mb-2">{feature.title}</h3>
               <p className="text-slate-600">{feature.description}</p>
             </div>
@@ -85,15 +85,15 @@ export default function FeaturesPage() {
         {/* Supported Wallets */}
         <div className="mb-20">
           <div className="text-center mb-10">
-            <Wallet className="w-10 h-10 text-indigo-600 mx-auto mb-3" />
+            <Wallet className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mx-auto mb-3" />
             <h2 className="text-3xl font-bold text-slate-900 mb-3">Compatible Wallets</h2>
             <p className="text-slate-600">PayADA works seamlessly with all major Cardano wallets. Your customers can pay in one click.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             {SUPPORTED_WALLETS.map((w) => (
               <a key={w.name} href={w.url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-3 border border-slate-200 rounded-full hover:border-indigo-400 hover:shadow-md transition bg-white text-slate-700 font-medium text-sm">
-                <Wallet className="w-4 h-4 text-indigo-500" />
+                className="flex items-center gap-2 px-5 py-3 border border-slate-200 rounded-full hover:border-cyan-400 hover:shadow-md transition bg-white text-slate-700 font-medium text-sm">
+                  <Wallet className="w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent" />
                 {w.name}
               </a>
             ))}
@@ -101,11 +101,11 @@ export default function FeaturesPage() {
         </div>
 
         {/* CTA */}
-        <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg p-12 text-center text-white">
+        <div className="bg-gradient-to-r from-blue-500 to-cyan-400 rounded-lg p-12 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-lg mb-8 opacity-90">Start accepting Cardano payments today. Free to sign up, no credit card required.</p>
           <Link to={createPageUrl("Home")}>
-            <Button className="bg-white text-indigo-600 hover:bg-slate-100">
+            <Button className="bg-white text-blue-600 hover:bg-blue-50">
               Create Account <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </Link>

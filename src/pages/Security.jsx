@@ -42,7 +42,7 @@ export default function SecurityPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="text-indigo-600">ADA</span>
+            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Features")} className="text-sm text-slate-600 hover:text-slate-900">Features</Link>
@@ -65,7 +65,7 @@ export default function SecurityPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {securityFeatures.map((feature, idx) => (
             <div key={idx} className="border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-              <feature.icon className="w-10 h-10 text-indigo-600 mb-4" />
+              <feature.icon className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
               <h3 className="text-lg font-semibold text-slate-900 mb-2">{feature.title}</h3>
               <p className="text-slate-600 text-sm">{feature.description}</p>
             </div>
@@ -210,7 +210,7 @@ export default function SecurityPage() {
             <h2 className="text-3xl font-bold text-slate-900 mb-4">Responsible Disclosure</h2>
             <p className="text-slate-600">
               If you discover a security vulnerability in the PayADA platform, we encourage responsible disclosure.
-              Please report findings to <a href="mailto:security@payada.io" className="text-indigo-600 hover:underline">security@payada.io</a>.
+              Please report findings to <a href="mailto:security@payada.io" className="text-blue-600 hover:underline">security@payada.io</a>.
               We commit to acknowledging reports within 48 hours and keeping researchers informed of remediation progress.
               We do not pursue legal action against researchers acting in good faith.
             </p>

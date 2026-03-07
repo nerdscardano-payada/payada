@@ -50,7 +50,7 @@ export default function PricingPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="text-indigo-600">ADA</span>
+            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Features")} className="text-sm text-slate-600 hover:text-slate-900">Features</Link>
@@ -69,15 +69,15 @@ export default function PricingPage() {
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-1 gap-8 mb-20 max-w-2xl mx-auto">
           {plans.map((plan, idx) => (
-            <div key={idx} className="border border-indigo-300 shadow-lg ring-2 ring-indigo-100 rounded-lg p-8">
-              <div className="bg-indigo-600 text-white text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">Flat Rate</div>
+            <div key={idx} className="border border-blue-300 shadow-lg ring-2 ring-blue-100 rounded-lg p-8">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white text-sm font-semibold px-3 py-1 rounded-full inline-block mb-4">Flat Rate</div>
               <h3 className="text-2xl font-bold text-slate-900 mb-2">{plan.name}</h3>
               <p className="text-slate-600 mb-6">{plan.description}</p>
               <div className="mb-6">
                 <span className="text-4xl font-bold text-slate-900">{plan.price}</span>
                 {plan.period && <span className="text-slate-600">{plan.period}</span>}
               </div>
-              <Button className="w-full mb-8 bg-indigo-600 hover:bg-indigo-700">
+              <Button className="w-full mb-8 bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500">
                 {plan.cta}
               </Button>
               <div className="space-y-4">
