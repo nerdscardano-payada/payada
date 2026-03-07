@@ -244,9 +244,8 @@ export default function DocumentationPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    <tr><td className="px-4 py-3 font-mono text-xs text-indigo-600">fixed_ada</td><td className="px-4 py-3 text-slate-600">Fixed amount in ADA</td><td className="px-4 py-3 text-slate-600">Products priced in ADA</td></tr>
-                    <tr><td className="px-4 py-3 font-mono text-xs text-indigo-600">fixed_fiat</td><td className="px-4 py-3 text-slate-600">Amount in EUR/USD, converted at checkout</td><td className="px-4 py-3 text-slate-600">Stable pricing (€9.99/month)</td></tr>
-                    <tr><td className="px-4 py-3 font-mono text-xs text-indigo-600">fixed_cnt</td><td className="px-4 py-3 text-slate-600">Fixed amount in a Cardano Native Token</td><td className="px-4 py-3 text-slate-600">Token-gated content, NFT communities</td></tr>
+                    <tr><td className="px-4 py-3 font-mono text-xs text-indigo-600">fixed_ada</td><td className="px-4 py-3 text-slate-600">Fixed amount in ADA</td><td className="px-4 py-3 text-slate-600">Products and services priced in ADA</td></tr>
+                    <tr><td className="px-4 py-3 font-mono text-xs text-indigo-600">fixed_cnt</td><td className="px-4 py-3 text-slate-600">Fixed amount in a Cardano Native Token</td><td className="px-4 py-3 text-slate-500 italic">Coming soon — Token-gated content, NFT communities</td></tr>
                   </tbody>
                 </table>
               </div>
