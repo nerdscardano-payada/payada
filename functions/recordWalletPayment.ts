@@ -219,32 +219,51 @@ Deno.serve(async (req) => {
     const feeOutputValidated = PAYADA_FEE_WALLET ? feeLovelace > 0 : false;
 
     // Create Payment record
-    console.log(`[recordWalletPayment] Creating payment: merchantLovelace=${merchantLovelace}, receivedAda=${receivedAmountAda}`);
+    const isCntPayment = cntPolicyId && cntAssetName && cntMerchantAmount > 0;
+    console.log(`[recordWalletPayment] Creating payment: merchantLovelace=${merchantLovelace}, cntPayment=${isCntPayment}, cntAmount=${cntMerchantAmount}`);
     const normalizedAddress = normalizeAddress(payerAddress) || payerAddress || null;
     console.log(`[recordWalletPayment] Payer address: raw=${payerAddress}, normalized=${normalizedAddress}`);
-    const payment = await sr.entities.Payment.create({
-     merchant_id: merchantId,
-     payment_link_id: paymentLinkId || null,
-     status: 'detected',
-     expected_amount_ada: expectedAmountAda,
-     received_amount_ada: receivedAmountAda,
-     tx_hash: txHash,
-     payer_address: normalizedAddress,
-     payer_email: payerEmail || null,
-     payer_name: payerName || null,
-     payer_discord_username: payerDiscordUsername || null,
-     shipping_street: shippingStreet || null,
-     shipping_city: shippingCity || null,
-     shipping_postal_code: shippingPostalCode || null,
-     shipping_country: shippingCountry || null,
-     block_height_detected: txInfo.block_height,
-     confirmations: 0,
-     detected_at: new Date().toISOString(),
-     merchant_output_validated: merchantLovelace > 0,
-     fee_output_validated: feeOutputValidated,
-     fee_amount_ada: feeAmountAda,
-     merchant_amount_ada: receivedAmountAda
-    });
+
+    const paymentData = {
+    merchant_id: merchantId,
+    payment_link_id: paymentLinkId || null,
+    status: 'detected',
+    payment_type: isCntPayment ? 'cnt' : 'ada',
+    expected_amount_ada: expectedAmountAda,
+    received_amount_ada: receivedAmountAda,
+    tx_hash: txHash,
+    payer_address: normalizedAddress,
+    payer_email: payerEmail || null,
+    payer_name: payerName || null,
+    payer_discord_username: payerDiscordUsername || null,
+    shipping_street: shippingStreet || null,
+    shipping_city: shippingCity || null,
+    shipping_postal_code: shippingPostalCode || null,
+    shipping_country: shippingCountry || null,
+    block_height_detected: txInfo.block_height,
+    confirmations: 0,
+    detected_at: new Date().toISOString(),
+    merchant_output_validated: isCntPayment ? cntMerchantAmount > 0 : merchantLovelace > 0,
+    fee_output_validated: feeOutputValidated,
+    fee_amount_ada: feeAmountAda,
+    merchant_amount_ada: receivedAmountAda
+    };
+
+    if (isCntPayment) {
+     paymentData.cnt_policy_id = cntPolicyId;
+     paymentData.cnt_asset_name = cntAssetName;
+     paymentData.cnt_decimals = cntDecimals;
+     paymentData.received_amount_cnt = cntMerchantAmount;
+     paymentData.cnt_fees = cntFeeAmount > 0 ? [{
+       policy_id: cntPolicyId,
+       asset_name: cntAssetName,
+       ticker: cntTicker,
+       decimals: cntDecimals,
+       amount: cntFeeAmount
+     }] : null;
+    }
+
+    const payment = await sr.entities.Payment.create(paymentData);
     console.log(`[recordWalletPayment] Payment created: id=${payment.id}`);
 
     // Update PaymentLink stats (regular payment link)
