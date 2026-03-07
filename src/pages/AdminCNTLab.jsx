@@ -99,15 +99,35 @@ function CNTLinkForm({ onSuccess, merchantProfile, existingLink }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <Label>Titel</Label>
-          <Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. CNT Ticket Test" required />
-        </div>
-        <div className="space-y-1">
+      <div className="space-y-1">
+        <Label>Title</Label>
+        <Input value={form.title} onChange={handleTitleChange} placeholder="e.g. CNT Ticket Test" required />
+      </div>
+
+      <div className="space-y-1">
+        <div className="flex items-center justify-between">
           <Label>Slug (URL)</Label>
-          <Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value.toLowerCase().replace(/\s+/g, "-") }))} placeholder="e.g. cnt-ticket-test" required />
+          {!isEditing && (
+            <button type="button" onClick={() => setSlugLocked(l => !l)}
+              className="text-xs text-indigo-500 hover:underline">
+              {slugLocked ? "Override manually" : "Auto-generate"}
+            </button>
+          )}
         </div>
+        <div className="flex items-center gap-0">
+          <span className="text-xs text-slate-400 bg-slate-50 border border-r-0 border-slate-200 px-3 py-2.5 rounded-l-md whitespace-nowrap">/pay/</span>
+          <Input
+            value={form.slug}
+            onChange={e => setForm(f => ({ ...f, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "") }))}
+            className={`rounded-l-none font-mono text-xs ${slugLocked && !isEditing ? "bg-slate-50 text-slate-500" : ""}`}
+            readOnly={slugLocked && !isEditing}
+            placeholder="auto-generated"
+            required
+          />
+        </div>
+        {!isEditing && slugLocked && (
+          <p className="text-xs text-slate-400">Slug is auto-generated with a unique suffix to prevent duplicates.</p>
+        )}
       </div>
 
       <div className="space-y-2">
