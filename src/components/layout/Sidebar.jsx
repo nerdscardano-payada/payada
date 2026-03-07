@@ -185,7 +185,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
            >
              <LogOut className="w-[18px] h-[18px] flex-shrink-0" />
-             {!collapsed && <span>Uitloggen</span>}
+             {!collapsed && <span>Logout</span>}
            </button>
            <button
              onClick={() => setCollapsed(!collapsed)}
