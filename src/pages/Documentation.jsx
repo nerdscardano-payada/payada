@@ -256,8 +256,11 @@ export default function DocumentationPage() {
 
             {/* CNT Tokens */}
             <Section id="cnt-tokens" title="Cardano Native Token Payments — Coming Soon" icon={Package}>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm text-amber-800">
+                🚧 This feature is currently in development and not yet operational. Stay tuned for the launch announcement.
+              </div>
               <p className="text-slate-600 mb-4">
-                PayADA supports accepting any Cardano Native Token (CNT) as payment. Merchants can create payment links priced in tokens like $SNEK, $HOSKY, stablecoins (DJED, USDM, USDA), and more.
+                PayADA will support accepting any Cardano Native Token (CNT) as payment. Merchants will be able to create payment links priced in tokens like $SNEK, $HOSKY, stablecoins (DJED, USDM, USDA), and more.
               </p>
               <h3 className="font-semibold text-slate-900 mb-3">Whitelisted Tokens</h3>
               <p className="text-slate-600 text-sm mb-4">
