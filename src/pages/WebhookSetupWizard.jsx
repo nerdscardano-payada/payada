@@ -138,11 +138,11 @@ export default function WebhookSetupWizard() {
               <p className="text-slate-500 text-sm">Enter the HTTPS URL where your webhook events will be sent.</p>
             </div>
             <div>
-              <Label htmlFor="name">Naam (optioneel)</Label>
+              <Label htmlFor="name">Name (optional)</Label>
               <Input
                 id="name"
                 className="mt-1"
-                placeholder="bijv. Order Processing System"
+                placeholder="e.g. Order Processing System"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
