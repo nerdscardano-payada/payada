@@ -107,7 +107,7 @@ export default function FeeRevenueStats() {
 
       {/* Top merchants by fee */}
       <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <h3 className="text-sm font-semibold text-slate-700 mb-4">Top Merchants op Fee-inkomsten</h3>
+        <h3 className="text-sm font-semibold text-slate-700 mb-4">Top Merchants op Fee-inkomsten (ADA)</h3>
         {topMerchants.length === 0 ? (
           <p className="text-slate-400 text-sm">Nog geen confirmed betalingen.</p>
         ) : (
@@ -130,6 +130,33 @@ export default function FeeRevenueStats() {
           </div>
         )}
       </div>
+
+      {/* CNT Fee Breakdown - Admin Only */}
+      {cntPayments.length > 0 && (
+        <div className="bg-blue-50 rounded-xl border border-blue-200 p-5">
+          <h3 className="text-sm font-semibold text-blue-900 mb-4">🧪 CNT Fee Inkomsten (In Ontwikkeling)</h3>
+          {Object.entries(cntByToken).length === 0 ? (
+            <p className="text-blue-700 text-sm">Nog geen CNT betalingen.</p>
+          ) : (
+            <div className="space-y-2">
+              {Object.entries(cntByToken).map(([key, data]) => (
+                <div key={key} className="flex items-center justify-between py-2 border-b border-blue-100 last:border-0">
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">{data.ticker || "Unknown Token"}</p>
+                      <p className="text-xs text-blue-600 font-mono">{key.split("|")[0].slice(0, 20)}...</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-blue-900">{(data.amount / Math.pow(10, data.decimals)).toFixed(4)} {data.ticker}</p>
+                    <p className="text-xs text-green-600">Fee: ₳{data.fees.toFixed(4)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Recent confirmed payments table */}
       <div className="bg-white rounded-xl border border-slate-200 p-5">
