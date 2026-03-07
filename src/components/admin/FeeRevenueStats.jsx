@@ -264,7 +264,7 @@ export default function FeeRevenueStats() {
                       <tr key={key} className="border-b border-blue-100 hover:bg-white/50 transition-colors">
                         <td className="py-3 font-medium text-blue-900">{data.ticker || "Unknown"}</td>
                         <td className="py-3 text-blue-700">
-                          {confirmedPayments.filter(p => p.cnt_fees?.some(f => f.policy_id === data.policy_id)).length}
+                          {allPayments.filter(p => p.cnt_fees?.some(f => f.policy_id === data.policy_id)).length}
                         </td>
                         <td className="py-3 text-right font-semibold text-green-600">
                           {(data.totalFees / Math.pow(10, data.decimals)).toFixed(4)} {data.ticker}
