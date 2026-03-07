@@ -158,7 +158,7 @@ export default function WebhookSetupWizard() {
                 onChange={(e) => setFormData({ ...formData, url: e.target.value })}
               />
               {formData.url && !formData.url.startsWith("https://") && (
-                <p className="text-red-500 text-xs mt-1">URL moet beginnen met https://</p>
+                <p className="text-red-500 text-xs mt-1">URL must start with https://</p>
               )}
             </div>
             <div className="bg-slate-50 rounded-lg p-4 text-sm text-slate-600">
