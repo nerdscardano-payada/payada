@@ -97,25 +97,25 @@ export default function RoadmapPage() {
           <Link to={createPageUrl("Home")} className="flex items-center gap-2">
             <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69999e4306b9e4632bd7d454/1b4bc7fb6_be2b2b99e_1000069668.jpg" alt="PayADA Logo" className="w-8 h-8 rounded-lg" />
             <span className="text-lg font-bold text-slate-900">
-              Pay<span className="text-indigo-600">ADA</span>
+              Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
             </span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Features")} className="text-sm text-slate-600 hover:text-slate-900">Features</Link>
             <Link to={createPageUrl("Pricing")} className="text-sm text-slate-600 hover:text-slate-900">Pricing</Link>
-            <Link to={createPageUrl("Roadmap")} className="text-sm text-indigo-600 font-medium">Roadmap</Link>
+            <Link to={createPageUrl("Roadmap")} className="text-sm text-blue-600 font-medium">Roadmap</Link>
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
           </div>
-          <Button onClick={handleSignUp} className="bg-indigo-600 hover:bg-indigo-700">
+          <Button onClick={handleSignUp} className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500">
             Get Started
           </Button>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-indigo-50 to-white py-16 md:py-24">
+      <section className="bg-gradient-to-br from-blue-50 to-white py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-700 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
             <Rocket className="w-4 h-4" />
             Product Roadmap
           </div>
@@ -168,20 +168,20 @@ export default function RoadmapPage() {
       {/* Upcoming */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
         <div className="flex items-center gap-3 mb-10">
-          <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-            <Clock className="w-5 h-5 text-indigo-600" />
+          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+            <Clock className="w-5 h-5 text-blue-600" />
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Coming Soon</h2>
-          <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full">ROADMAP</span>
+          <span className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">ROADMAP</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {upcoming.map((item, i) => {
             const Icon = item.icon;
             return (
-              <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl p-6 hover:border-indigo-300 hover:shadow-sm transition-all">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-5 h-5 text-indigo-600" />
+              <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl p-6 hover:border-cyan-300 hover:shadow-sm transition-all">
+                 <div className="flex items-start gap-4">
+                   <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+                     <Icon className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -200,13 +200,13 @@ export default function RoadmapPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
+      <section className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
-          <p className="text-indigo-100 text-lg mb-8">
+          <p className="text-blue-100 text-lg mb-8">
             Join merchants who are already accepting Cardano payments with PayADA.
           </p>
-          <Button size="lg" onClick={handleSignUp} className="bg-white text-indigo-600 hover:bg-slate-100 gap-2">
+          <Button size="lg" onClick={handleSignUp} className="bg-white text-blue-600 hover:bg-blue-50 gap-2">
             Create Free Account <ArrowRight className="w-5 h-5" />
           </Button>
         </div>
