@@ -89,6 +89,7 @@ import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
 import Webhooks from './pages/Webhooks';
+import Litepaper from './pages/Litepaper';
 import __Layout from './Layout.jsx';
 
 
@@ -135,6 +136,7 @@ export const PAGES = {
     "Unlock": Unlock,
     "WebhookSetupWizard": WebhookSetupWizard,
     "Webhooks": Webhooks,
+    "Litepaper": Litepaper,
 }
 
 export const pagesConfig = {
