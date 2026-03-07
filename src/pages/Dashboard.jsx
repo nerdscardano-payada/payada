@@ -256,10 +256,10 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Recent Payments */}
+      {/* Recent Payments (filtered by tab) */}
       <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-          <h2 className="text-sm font-semibold text-slate-900">Recent Payments</h2>
+          <h2 className="text-sm font-semibold text-slate-900">Recent {paymentTypeTab === "ada" ? "ADA" : "CNT"} Payments</h2>
           <Link
             to={createPageUrl("Payments")}
             className="text-xs font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
