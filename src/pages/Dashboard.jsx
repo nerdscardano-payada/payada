@@ -131,12 +131,21 @@ export default function Dashboard() {
         ) : (
           <>
             <StatCard
-              title="Net Revenue"
-              value={`₳ ${(totalAda - totalFees).toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`}
-              subtitle={`${confirmedPayments} confirmed payments`}
-              icon={TrendingUp}
-              accentColor="green"
-            />
+               title="Net Revenue"
+               value={`₳ ${(totalAda - totalFees).toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`}
+               subtitle={`${confirmedPaymentsCount} confirmed ADA payments`}
+               icon={TrendingUp}
+               accentColor="green"
+             />
+             {confirmedCntPayments.length > 0 && (
+               <StatCard
+                 title="CNT Payments"
+                 value={confirmedCntPayments.length}
+                 subtitle="Cardano Native Tokens"
+                 icon={CreditCard}
+                 accentColor="indigo"
+               />
+             )}
             <StatCard
               title="Payment Links"
               value={activeLinks}
