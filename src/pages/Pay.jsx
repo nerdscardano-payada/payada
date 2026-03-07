@@ -126,8 +126,16 @@ export default function Pay() {
         response = await base44.functions.invoke('createBulkCheckoutSession', {
           cartItems: cartItems
         });
+        setSessionData(response.data);
+      } else if (paymentLink?.amount_mode === "fixed_cnt") {
+        // CNT payment: no checkout session needed, build mock session data
+        setSessionData({
+          merchant_address: paymentLink.receive_address,
+          platform_fee_percent: 1.75,
+          amount_total_cnt: paymentLink.cnt_amount,
+        });
       } else {
-        // Single item: use regular checkout session
+        // Single item ADA: use regular checkout session
         if (!paymentLink?.id || paymentLink.id.startsWith("cart-")) {
           toast.error("Invalid payment link");
           setCheckoutLoading(false);
@@ -136,8 +144,8 @@ export default function Pay() {
         response = await base44.functions.invoke('createPublicCheckoutSession', {
           paymentLinkId: paymentLink.id
         });
+        setSessionData(response.data);
       }
-      setSessionData(response.data);
       setSessionStarted(true);
     } catch (err) {
       console.error("Checkout error:", err);
