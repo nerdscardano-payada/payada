@@ -73,14 +73,14 @@ export default function WebhookSetupWizard() {
         <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="w-8 h-8 text-green-600" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Webhook aangemaakt!</h2>
-        <p className="text-slate-600 mb-8">Je endpoint <span className="font-mono text-sm bg-slate-100 px-2 py-1 rounded">{formData.url}</span> ontvangt nu events.</p>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Webhook created!</h2>
+        <p className="text-slate-600 mb-8">Your endpoint <span className="font-mono text-sm bg-slate-100 px-2 py-1 rounded">{formData.url}</span> will now receive events.</p>
         <div className="flex gap-3 justify-center">
           <Link to={createPageUrl("Settings")}>
-            <Button variant="outline">Terug naar Webhooks</Button>
+            <Button variant="outline">Back to Webhooks</Button>
           </Link>
           <Button onClick={() => { setDone(false); setStep(1); setFormData({ url: "", name: "", event_types: [] }); }}>
-            Nog een toevoegen
+            Add another
           </Button>
         </div>
       </div>
