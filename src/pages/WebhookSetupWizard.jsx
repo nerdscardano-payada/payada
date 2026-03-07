@@ -23,7 +23,7 @@ const EVENT_TYPES = [
 const STEPS = [
   { id: 1, label: "Endpoint URL", icon: Globe },
   { id: 2, label: "Events", icon: Bell },
-  { id: 3, label: "Bevestigen", icon: Check },
+  { id: 3, label: "Confirm", icon: Check },
 ];
 
 export default function WebhookSetupWizard() {
