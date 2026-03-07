@@ -99,7 +99,15 @@ export default function TerminalForm({ terminal, onBack }) {
             <SelectTrigger><SelectValue placeholder="Select a payment link" /></SelectTrigger>
             <SelectContent>
               {paymentLinks.map((pl) => (
-                <SelectItem key={pl.id} value={pl.slug}>{pl.title} (₳ {pl.amount_ada})</SelectItem>
+                <SelectItem key={pl.id} value={pl.slug}>
+                  {pl.title} ({
+                    pl.amount_mode === "fixed_cnt"
+                      ? `${pl.cnt_amount?.toLocaleString() || "—"} ${pl.cnt_ticker || "CNT"}`
+                      : pl.amount_mode === "fixed_fiat"
+                      ? `${pl.fiat_currency} ${pl.amount_fiat?.toFixed(2) || "—"}`
+                      : `₳ ${pl.amount_ada || "—"}`
+                  })
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
