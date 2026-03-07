@@ -59,13 +59,21 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
-  const totalAda = payments
-    .filter(p => p.status === "confirmed")
-    .reduce((sum, p) => sum + (p.received_amount_ada || p.expected_amount_ada || 0), 0);
+  const confirmedAdaPayments = payments.filter(p => p.status === "confirmed" && (p.payment_type === "ada" || !p.payment_type));
+  const confirmedCntPayments = payments.filter(p => p.status === "confirmed" && p.payment_type === "cnt");
 
-  const totalFees = payments
-    .filter(p => p.status === "confirmed")
-    .reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
+  const totalAda = confirmedAdaPayments.reduce((sum, p) => sum + (p.received_amount_ada || p.expected_amount_ada || 0), 0);
+  const totalFees = confirmedAdaPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
+
+  // CNT summary by token
+  const cntByToken = {};
+  confirmedCntPayments.forEach(p => {
+    const key = `${p.cnt_policy_id}|${p.cnt_ticker || "unknown"}`;
+    if (!cntByToken[key]) {
+      cntByToken[key] = { ticker: p.cnt_ticker, policy_id: p.cnt_policy_id, decimals: p.cnt_decimals || 0, amount: 0 };
+    }
+    cntByToken[key].amount += p.received_amount_cnt || 0;
+  });
 
   const [paymentPeriod, setPaymentPeriod] = useState("all");
 
