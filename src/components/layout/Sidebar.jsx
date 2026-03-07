@@ -21,7 +21,8 @@ import {
   ShieldCheck,
   RefreshCw,
   Bot,
-  Zap
+  Zap,
+  FlaskConical
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
