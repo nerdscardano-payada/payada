@@ -77,11 +77,11 @@ function NewCNTLinkForm({ onSuccess, merchantProfile }) {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
           <Label>Titel</Label>
-          <Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="bv. CNT Ticket Test" required />
+          <Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. CNT Ticket Test" required />
         </div>
         <div className="space-y-1">
           <Label>Slug (URL)</Label>
-          <Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value.toLowerCase().replace(/\s+/g, "-") }))} placeholder="bv. cnt-ticket-test" required />
+          <Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value.toLowerCase().replace(/\s+/g, "-") }))} placeholder="e.g. cnt-ticket-test" required />
         </div>
       </div>
 
