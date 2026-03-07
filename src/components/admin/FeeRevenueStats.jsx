@@ -173,31 +173,69 @@ export default function FeeRevenueStats() {
         )}
       </div>
 
-      {/* Top merchants by fee */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <h3 className="text-sm font-semibold text-slate-700 mb-4">Top Merchants op Fee-inkomsten (ADA)</h3>
-        {topMerchants.length === 0 ? (
-          <p className="text-slate-400 text-sm">Nog geen confirmed betalingen.</p>
-        ) : (
-          <div className="space-y-2">
-            {topMerchants.map(([merchantId, feeAda], idx) => {
-              const merchant = merchants.find(m => m.merchant_id === merchantId);
-              return (
-                <div key={merchantId} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold text-slate-400 w-5">#{idx + 1}</span>
-                    <div>
-                      <p className="text-sm font-medium text-slate-800">{merchant?.business_name || merchantId}</p>
-                      <p className="text-xs text-slate-400">{merchantId}</p>
+      {/* Content based on tab */}
+      {feeTypeTab === "ada" ? (
+        <>
+          {/* Top merchants by ADA fee */}
+          <div className="bg-white rounded-xl border border-slate-200 p-5">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4">Top Merchants op Fee-inkomsten (ADA)</h3>
+            {topMerchants.length === 0 ? (
+              <p className="text-slate-400 text-sm">Nog geen confirmed betalingen.</p>
+            ) : (
+              <div className="space-y-2">
+                {topMerchants.map(([merchantId, feeAda], idx) => {
+                  const merchant = merchants.find(m => m.merchant_id === merchantId);
+                  return (
+                    <div key={merchantId} className="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-slate-400 w-5">#{idx + 1}</span>
+                        <div>
+                          <p className="text-sm font-medium text-slate-800">{merchant?.business_name || merchantId}</p>
+                          <p className="text-xs text-slate-400">{merchantId}</p>
+                        </div>
+                      </div>
+                      <span className="text-sm font-semibold text-green-600">₳{feeAda.toFixed(4)}</span>
                     </div>
-                  </div>
-                  <span className="text-sm font-semibold text-green-600">₳{feeAda.toFixed(4)}</span>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <>
+          {/* CNT Fee Breakdown per Token */}
+          <div className="bg-blue-50 rounded-xl border border-blue-200 p-5">
+            <h3 className="text-sm font-semibold text-blue-900 mb-4">🧪 CNT Fee Inkomsten per Token</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-xs text-blue-700 border-b border-blue-200">
+                    <th className="pb-3 font-semibold">Token</th>
+                    <th className="pb-3 font-semibold">Betalingen</th>
+                    <th className="pb-3 font-semibold text-right">Fee Inkomsten</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(cntFeesByToken)
+                    .sort((a, b) => b[1].totalFees - a[1].totalFees)
+                    .map(([key, data]) => (
+                      <tr key={key} className="border-b border-blue-100 hover:bg-white/50 transition-colors">
+                        <td className="py-3 font-medium text-blue-900">{data.ticker || "Unknown"}</td>
+                        <td className="py-3 text-blue-700">
+                          {confirmedPayments.filter(p => p.cnt_fees?.some(f => f.policy_id === data.policy_id)).length}
+                        </td>
+                        <td className="py-3 text-right font-semibold text-green-600">
+                          {(data.totalFees / Math.pow(10, data.decimals)).toFixed(4)} {data.ticker}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* CNT Fee Breakdown - Admin Only */}
       {Object.entries(cntFeesByToken).length > 0 && (
