@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FlaskConical, Coins, Plus, CheckCircle, Clock, XCircle, AlertTriangle, Trash2 } from "lucide-react";
+import { FlaskConical, Coins, Plus, CheckCircle, Clock, XCircle, AlertTriangle, Trash2, ExternalLink } from "lucide-react";
 
 const KNOWN_CNTS = [
   { ticker: "$Snek", policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3", asset_name: "534e454b", decimals: 0 },
