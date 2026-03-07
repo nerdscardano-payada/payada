@@ -51,6 +51,7 @@ import APIReference from './pages/APIReference';
 import About from './pages/About';
 import Access from './pages/Access';
 import AccessLinks from './pages/AccessLinks';
+import AdminCNTLab from './pages/AdminCNTLab';
 import AdminDashboard from './pages/AdminDashboard';
 import ApiKeys from './pages/ApiKeys';
 import Billing from './pages/Billing';
@@ -84,7 +85,6 @@ import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
 import Webhooks from './pages/Webhooks';
-import AdminCNTLab from './pages/AdminCNTLab';
 import __Layout from './Layout.jsx';
 
 
@@ -93,6 +93,7 @@ export const PAGES = {
     "About": About,
     "Access": Access,
     "AccessLinks": AccessLinks,
+    "AdminCNTLab": AdminCNTLab,
     "AdminDashboard": AdminDashboard,
     "ApiKeys": ApiKeys,
     "Billing": Billing,
@@ -126,7 +127,6 @@ export const PAGES = {
     "Unlock": Unlock,
     "WebhookSetupWizard": WebhookSetupWizard,
     "Webhooks": Webhooks,
-    "AdminCNTLab": AdminCNTLab,
 }
 
 export const pagesConfig = {

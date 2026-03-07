@@ -11,9 +11,18 @@ import { Switch } from "@/components/ui/switch";
 import { FlaskConical, Coins, Plus, CheckCircle, Clock, XCircle, AlertTriangle, Trash2, ExternalLink, Pencil } from "lucide-react";
 
 const KNOWN_CNTS = [
-  { ticker: "$Snek", policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3", asset_name: "534e454b", decimals: 0 },
-  { ticker: "$NIGHT", policy_id: "9b426921a21f54600711da0be1a12b026703a9bd8eb9848d08c9d921", asset_name: "4e49474854", decimals: 0 },
-  { ticker: "$HOSKY", policy_id: "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0", asset_name: "484f534b59", decimals: 0 },
+  // Top traded CNTs on Cardano (verified via Cardanoscan + TapTools)
+  { ticker: "$NIGHT",  policy_id: "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa", asset_name: "4e49474854",                         decimals: 0 },
+  { ticker: "$Snek",   policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3",  asset_name: "534e454b",                           decimals: 0 },
+  { ticker: "$MIN",    policy_id: "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6", asset_name: "4d494e",                             decimals: 6 },
+  { ticker: "$INDY",   policy_id: "533bb94a8850ee3ccbe483106489399112b74c905342cb1792a797a0", asset_name: "494e4459",                           decimals: 6 },
+  { ticker: "$SUNDAE", policy_id: "9a9693a9a37912a5097918f97918d15240c92ab729a0b7c4aa144d77", asset_name: "53554e444145",                       decimals: 6 },
+  { ticker: "$WMTX",   policy_id: "e5a42a1a1d3d1da71b0449663c32798725888d2eb0843c4dabeca05a", asset_name: "576f726c644d6f62696c65546f6b656e58", decimals: 6 },
+  { ticker: "$CSWAP",  policy_id: "c863ceaa796d5429b526c336ab45016abd636859f331758e67204e5c", asset_name: "4353574150",                         decimals: 6 },
+  { ticker: "$IAG",    policy_id: "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114", asset_name: "494147",                             decimals: 6 },
+  { ticker: "$STRIKE", policy_id: "f13ac4d66b3ee19a6aa0f2a22298737bd907cc95121662fc971b5275", asset_name: "535452494b45",                       decimals: 6 },
+  { ticker: "$NMKR",   policy_id: "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489", asset_name: "4e4d4b52",                           decimals: 6 },
+  { ticker: "$HOSKY",  policy_id: "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0", asset_name: "484f534b59",                         decimals: 0 },
 ];
 
 function StatusBadge({ status }) {
