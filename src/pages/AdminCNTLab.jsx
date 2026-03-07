@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
 import { FlaskConical, Coins, Plus, CheckCircle, Clock, XCircle, AlertTriangle, Trash2, ExternalLink } from "lucide-react";
 
 const KNOWN_CNTS = [
@@ -43,6 +44,9 @@ function NewCNTLinkForm({ onSuccess, merchantProfile }) {
     cnt_amount: "",
     receive_address: merchantProfile?.default_receive_address || "",
     confirmations_required: 2,
+    collect_email: false,
+    collect_name: false,
+    collect_shipping: false,
   });
 
   const selectToken = (cnt) => {
@@ -102,6 +106,22 @@ function NewCNTLinkForm({ onSuccess, merchantProfile }) {
         <div className="space-y-1">
           <Label>Ontvangstadres</Label>
           <Input value={form.receive_address} onChange={e => setForm(f => ({ ...f, receive_address: e.target.value }))} placeholder="addr1..." required />
+        </div>
+      </div>
+
+      <div className="space-y-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+        <Label className="text-xs font-semibold text-slate-600">Klantgegevens verzamelen</Label>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-slate-700">E-mailadres</span>
+          <Switch checked={form.collect_email} onCheckedChange={v => setForm(f => ({ ...f, collect_email: v }))} />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-slate-700">Naam</span>
+          <Switch checked={form.collect_name} onCheckedChange={v => setForm(f => ({ ...f, collect_name: v }))} />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-slate-700">Verzendadres</span>
+          <Switch checked={form.collect_shipping} onCheckedChange={v => setForm(f => ({ ...f, collect_shipping: v }))} />
         </div>
       </div>
 
