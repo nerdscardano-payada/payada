@@ -97,7 +97,7 @@ export default function AboutPage() {
             entrepreneurs with decades of combined experience in fintech and cryptocurrency.
           </p>
           <p className="text-slate-600 text-lg max-w-3xl">
-            We're based in Berlin, Germany, with team members across Europe and globally. We're committed 
+            We're based in Belgium, with team members across Europe. We're committed 
             to building a diverse, inclusive, and collaborative team.
           </p>
         </div>
