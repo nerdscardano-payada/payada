@@ -49,15 +49,13 @@ export default function FeeRevenueStats() {
 
   // CNT totals
   const cntByToken = {};
-  let totalCntFeesAda = 0;
   cntPayments.forEach(p => {
     const key = `${p.cnt_policy_id}|${p.cnt_ticker || "unknown"}`;
     if (!cntByToken[key]) {
       cntByToken[key] = { ticker: p.cnt_ticker, policy_id: p.cnt_policy_id, decimals: p.cnt_decimals || 0, amount: 0, fees: 0 };
     }
     cntByToken[key].amount += p.received_amount_cnt || 0;
-    cntByToken[key].fees += p.fee_amount_ada || 0;
-    totalCntFeesAda += p.fee_amount_ada || 0;
+    cntByToken[key].fees += p.fee_amount_cnt || 0;
   });
 
   // Last 30 days
