@@ -139,7 +139,7 @@ function CNTLinkForm({ onSuccess, merchantProfile, existingLink }) {
       </div>
 
       <Button type="submit" disabled={mutation.isPending} className="w-full">
-        {mutation.isPending ? "Creating..." : "Create CNT Test Link"}
+        {mutation.isPending ? (isEditing ? "Saving..." : "Creating...") : (isEditing ? "Save Changes" : "Create CNT Test Link")}
       </Button>
     </form>
   );
@@ -147,6 +147,7 @@ function CNTLinkForm({ onSuccess, merchantProfile, existingLink }) {
 
 export default function AdminCNTLab() {
   const [showForm, setShowForm] = useState(false);
+  const [editingLink, setEditingLink] = useState(null);
 
   const { data: user } = useQuery({
     queryKey: ["current-user"],
@@ -201,23 +202,28 @@ export default function AdminCNTLab() {
             <p className="text-slate-500 text-sm">Test Cardano Native Token payments — not visible to users</p>
           </div>
         </div>
-        <Button onClick={() => setShowForm(!showForm)} className="gap-2">
+        <Button onClick={() => { setShowForm(!showForm); setEditingLink(null); }} className="gap-2">
           <Plus className="w-4 h-4" />
           New CNT Test Link
         </Button>
       </div>
 
-      {/* New link form */}
-      {showForm && (
+      {/* New / Edit link form */}
+      {(showForm || editingLink) && (
         <Card className="border-indigo-200">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Coins className="w-4 h-4 text-indigo-500" />
-              Create New CNT Payment Link
+              {editingLink ? "Edit CNT Payment Link" : "Create New CNT Payment Link"}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <NewCNTLinkForm onSuccess={() => setShowForm(false)} merchantProfile={merchantProfile} />
+            <CNTLinkForm
+              key={editingLink?.id || "new"}
+              existingLink={editingLink}
+              onSuccess={() => { setShowForm(false); setEditingLink(null); }}
+              merchantProfile={merchantProfile}
+            />
           </CardContent>
         </Card>
       )}
@@ -267,6 +273,10 @@ export default function AdminCNTLab() {
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       Test
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                      onClick={() => { setEditingLink(link); setShowForm(false); window.scrollTo(0, 0); }}>
+                      <Pencil className="w-4 h-4" />
                     </Button>
                     <Button variant="ghost" size="icon" className="text-red-400 hover:text-red-600 hover:bg-red-50"
                       onClick={() => deleteLinkMutation.mutate(link.id)}>
