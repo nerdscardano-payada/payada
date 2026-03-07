@@ -6,6 +6,7 @@ import StatCard from "@/components/shared/StatCard";
 import StatusBadge from "@/components/shared/StatusBadge";
 import PaymentVolumeChart from "@/components/dashboard/PaymentVolumeChart";
 import TopCustomers from "@/components/dashboard/TopCustomers";
+import CntRevenueTable from "@/components/dashboard/CntRevenueTable";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
