@@ -102,25 +102,6 @@ export default function AboutPage() {
           </p>
         </div>
 
-        {/* Stats */}
-        <div className="grid md:grid-cols-4 gap-8 mb-20 py-12 border-y border-slate-200">
-          <div className="text-center">
-            <div className="text-4xl font-bold text-indigo-600 mb-2">1M+</div>
-            <p className="text-slate-600">Transactions Processed</p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-indigo-600 mb-2">500K+</div>
-            <p className="text-slate-600">ADA Transacted</p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-indigo-600 mb-2">1000+</div>
-            <p className="text-slate-600">Active Merchants</p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-indigo-600 mb-2">99.9%</div>
-            <p className="text-slate-600">Uptime SLA</p>
-          </div>
-        </div>
 
         {/* Career CTA */}
         <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg p-12 text-center text-white">
