@@ -81,6 +81,7 @@ function CNTLinkForm({ onSuccess, merchantProfile, existingLink }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
           <Label>Titel</Label>
