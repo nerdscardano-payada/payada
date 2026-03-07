@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import PageHeader from "@/components/shared/PageHeader";
@@ -10,7 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 export default function Settings() {
   const [user, setUser] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     base44.auth.me().then(setUser);
   }, []);
 
