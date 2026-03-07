@@ -74,6 +74,7 @@ import PaymentProof from './pages/PaymentProof';
 import Payments from './pages/Payments';
 import Pricing from './pages/Pricing';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Roadmap from './pages/Roadmap';
 import SDKDocumentation from './pages/SDKDocumentation';
 import Security from './pages/Security';
 import Settings from './pages/Settings';
@@ -85,7 +86,6 @@ import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
 import Webhooks from './pages/Webhooks';
-import Roadmap from './pages/Roadmap';
 import __Layout from './Layout.jsx';
 
 
@@ -117,6 +117,7 @@ export const PAGES = {
     "Payments": Payments,
     "Pricing": Pricing,
     "PrivacyPolicy": PrivacyPolicy,
+    "Roadmap": Roadmap,
     "SDKDocumentation": SDKDocumentation,
     "Security": Security,
     "Settings": Settings,
@@ -128,7 +129,6 @@ export const PAGES = {
     "Unlock": Unlock,
     "WebhookSetupWizard": WebhookSetupWizard,
     "Webhooks": Webhooks,
-    "Roadmap": Roadmap,
 }
 
 export const pagesConfig = {

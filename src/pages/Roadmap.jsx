@@ -62,23 +62,9 @@ const upcoming = [
     badgeColor: "bg-purple-100 text-purple-700",
   },
   {
-    icon: Globe,
-    title: "Meer fiatvaluta's",
-    description: "Ondersteuning voor GBP, CHF en andere Europese valuta's naast EUR en USD.",
-    badge: "Gepland",
-    badgeColor: "bg-blue-100 text-blue-700",
-  },
-  {
     icon: ShoppingCart,
     title: "WooCommerce & Shopify plugins",
     description: "Kant-en-klare plugins voor populaire e-commerceplatformen.",
-    badge: "Gepland",
-    badgeColor: "bg-blue-100 text-blue-700",
-  },
-  {
-    icon: Monitor,
-    title: "Mobiele kassaapp",
-    description: "Native mobiele app voor merchants om betalingen te accepteren onderweg.",
     badge: "Gepland",
     badgeColor: "bg-blue-100 text-blue-700",
   },
