@@ -257,8 +257,17 @@ export default function Pay() {
               <p className="text-sm text-slate-400 mt-2">{paymentLink.description}</p>
             )}
             <div className="mt-4 flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-white">₳ {paymentLink.amount_ada?.toFixed(2)}</span>
-              <span className="text-sm text-slate-500">ADA</span>
+              {paymentLink.amount_mode === "fixed_cnt" ? (
+                <>
+                  <span className="text-3xl font-bold text-white">{paymentLink.cnt_amount?.toLocaleString()}</span>
+                  <span className="text-sm text-purple-400 font-semibold">{paymentLink.cnt_ticker}</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-3xl font-bold text-white">₳ {paymentLink.amount_ada?.toFixed(2)}</span>
+                  <span className="text-sm text-slate-500">ADA</span>
+                </>
+              )}
             </div>
           </div>
 
