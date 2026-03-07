@@ -216,8 +216,8 @@ export default function WebhookSetupWizard() {
         {step === 3 && (
           <div className="space-y-5">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900 mb-1">Overzicht</h2>
-              <p className="text-slate-500 text-sm">Controleer je instellingen en klik op Aanmaken.</p>
+              <h2 className="text-lg font-semibold text-slate-900 mb-1">Summary</h2>
+              <p className="text-slate-500 text-sm">Review your settings and click Create.</p>
             </div>
             <div className="bg-slate-50 rounded-lg p-4 space-y-3">
               <div>
