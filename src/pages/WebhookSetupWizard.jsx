@@ -153,7 +153,7 @@ export default function WebhookSetupWizard() {
                 id="url"
                 type="url"
                 className="mt-1 font-mono"
-                placeholder="https://jouwserver.com/webhooks"
+                placeholder="https://yourserver.com/webhooks"
                 value={formData.url}
                 onChange={(e) => setFormData({ ...formData, url: e.target.value })}
               />
