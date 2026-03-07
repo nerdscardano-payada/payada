@@ -86,7 +86,7 @@ export default function HomePage() {
               Accept Cardano payments effortlessly
             </h1>
             <p className="text-xl text-slate-600 mb-8">
-              PayADA.io makes it simple for merchants to accept ADA payments, manage subscriptions, and grow their business with blockchain technology.
+              PayADA.io makes it simple for merchants to accept ADA payments with payment links, a shop generator, pay terminals, and more — no technical knowledge required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 

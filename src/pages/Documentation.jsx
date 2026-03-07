@@ -33,10 +33,9 @@ const SIDEBAR_SECTIONS = [
 
 const ONBOARDING_STEPS = [
   { id: 1, title: "Create your merchant account", description: "Sign up and complete your profile with your business name and Cardano wallet address.", done: false },
-  { id: 2, title: "Generate your first API key", description: "Go to Dashboard → API Keys and create a new key. Keep it secret!", done: false },
-  { id: 3, title: "Create a Payment Link", description: "Dashboard → Payment Links → New Link. Set amount, title, and your receive address.", done: false },
-  { id: 4, title: "Configure a Webhook", description: "Add your HTTPS endpoint under Dashboard → Webhooks to receive real-time payment events.", done: false },
-  { id: 5, title: "Make a test payment", description: "Open your payment link URL, connect a wallet, and make a small test payment.", done: false },
+  { id: 2, title: "Create a Payment Link", description: "Dashboard → Payment Links → New Link. Set amount, title, and your receive address.", done: false },
+  { id: 3, title: "Share your link and receive payments", description: "Copy your payment link URL and share it with customers. They pay directly from their Cardano wallet.", done: false },
+  { id: 4, title: "Make a test payment", description: "Open your payment link URL, connect a wallet, and make a small test payment to verify everything works.", done: false },
 ];
 
 function CodeBlock({ code, language = "bash" }) {
