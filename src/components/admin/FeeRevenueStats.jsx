@@ -126,6 +126,7 @@ export default function FeeRevenueStats() {
     merchantFees[p.merchant_id] += p.fee_amount_ada || 0;
   });
   const topMerchants = Object.entries(merchantFees)
+    .filter(([_, fees]) => fees > 0)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
 
