@@ -192,7 +192,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white">
+      <section className="bg-indigo-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Ready to accept Cardano payments?
