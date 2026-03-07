@@ -267,7 +267,7 @@ export default function DocumentationPage() {
                 The following tokens are currently supported for CNT payments. Contact us to request additional tokens.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                {["$SNEK", "$HOSKY", "$HUNT", "$LENFI", "$WMT", "$MELD", "$MIN", "$INDY", "$COPI", "$NTX", "$AGIX", "$BOOK", "$IAG", "$CLAY", "$USDM", "$USDA", "$DJED", "$TITAN"].map((t) => (
+                {["$NIGHT", "$Snek", "$MIN", "$INDY", "$SUNDAE", "$WMTX", "$CSWAP", "$IAG", "$STRIKE", "$NMKR", "$HOSKY", "$TITAN", "USDM", "USDA", "DJED"].map((t) => (
                   <div key={t} className="px-3 py-2 bg-indigo-50 border border-indigo-100 rounded-lg text-center text-sm font-semibold text-indigo-700">{t}</div>
                 ))}
               </div>
