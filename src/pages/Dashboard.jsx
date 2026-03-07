@@ -77,7 +77,7 @@ export default function Dashboard() {
 
   const [paymentPeriod, setPaymentPeriod] = useState("all");
 
-  const confirmedPayments = payments.filter(p => p.status === "confirmed").length;
+  const confirmedPaymentsCount = confirmedAdaPayments.length;
   const activeLinks = paymentLinks.filter(l => l.status === "active").length;
   const activeSubs = subscriptions.filter(s => s.status === "active" || s.status === "trial").length;
 
