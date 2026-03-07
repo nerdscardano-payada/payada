@@ -204,7 +204,7 @@ export default function HomePage() {
             onClick={handleSignUp}
             className="bg-white text-indigo-600 hover:bg-slate-100 gap-2"
           >
-            Create Free Account <ArrowRight className="w-5 h-5" />
+            Create Account <ArrowRight className="w-5 h-5" />
           </Button>
         </div>
       </section>
