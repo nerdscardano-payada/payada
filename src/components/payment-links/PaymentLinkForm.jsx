@@ -22,7 +22,6 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
   useEffect(() => {
     base44.auth.me().then((u) => {
       setUser(u);
-      // Pre-fill receive_address with merchant default when creating a new link
       if (!isEditing && u?.email) {
         base44.entities.MerchantProfile.filter({ user_id: u.email }).then((profiles) => {
           const defaultAddress = profiles?.[0]?.default_receive_address;
@@ -34,7 +33,6 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     });
   }, []);
 
-  // prefill takes priority over link when creating from template
   const source = link || prefill || {};
   const [form, setForm] = useState({
     title: source.title || "",
@@ -44,6 +42,11 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     amount_ada: source.amount_ada || "",
     amount_fiat: source.amount_fiat || "",
     fiat_currency: source.fiat_currency || "EUR",
+    cnt_policy_id: source.cnt_policy_id || "",
+    cnt_asset_name: source.cnt_asset_name || "",
+    cnt_ticker: source.cnt_ticker || "",
+    cnt_amount: source.cnt_amount || "",
+    cnt_decimals: source.cnt_decimals ?? 0,
     confirmations_required: source.confirmations_required || 2,
     receive_address: link?.receive_address || "",
     success_redirect_url: source.success_redirect_url || "",
@@ -90,7 +93,7 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
 
   const generateSlug = (title) => {
     const base = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    if (isEditing) return base; // don't re-prefix when editing
+    if (isEditing) return base;
     const prefix = generateMerchantPrefix(user?.email);
     return `${prefix}-${base}`;
   };
@@ -98,7 +101,6 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
   const mutation = useMutation({
     mutationFn: (data) => {
       if (isEditing) return base44.entities.PaymentLink.update(link.id, data);
-      // Ensure slug is prefixed with merchant prefix before saving
       const prefix = user?.email?.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "m";
       const slug = data.slug.startsWith(prefix + "-") ? data.slug : `${prefix}-${data.slug}`;
       return base44.entities.PaymentLink.create({ ...data, slug, merchant_id: user?.email });
@@ -116,6 +118,8 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
       ...form,
       amount_ada: form.amount_mode === "fixed_ada" ? parseFloat(form.amount_ada) || 0 : null,
       amount_fiat: form.amount_mode === "fixed_fiat" ? parseFloat(form.amount_fiat) || 0 : null,
+      cnt_amount: form.amount_mode === "fixed_cnt" ? parseFloat(form.cnt_amount) || 0 : null,
+      cnt_decimals: form.amount_mode === "fixed_cnt" ? parseInt(form.cnt_decimals) || 0 : null,
       confirmations_required: parseInt(form.confirmations_required) || 2,
     };
     mutation.mutate(data);
@@ -134,6 +138,7 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
       <PageHeader title={isEditing ? "Edit Payment Link" : "Create Payment Link"} />
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
+        {/* Basic Info */}
         <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-5">
           <h3 className="text-sm font-semibold text-slate-900">Basic Information</h3>
 
@@ -173,21 +178,117 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
           </div>
         </div>
 
+        {/* Pricing */}
         <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-5">
           <h3 className="text-sm font-semibold text-slate-900">Pricing</h3>
 
           <div className="space-y-2">
-            <Label>Amount (ADA)</Label>
-            <Input
-              type="number"
-              step="0.01"
-              value={form.amount_ada}
-              onChange={(e) => update("amount_ada", e.target.value)}
-              placeholder="e.g. 25"
-            />
+            <Label>Amount Mode</Label>
+            <Select value={form.amount_mode} onValueChange={(v) => update("amount_mode", v)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="fixed_ada">Fixed ADA</SelectItem>
+                <SelectItem value="fixed_fiat">Fixed Fiat (EUR/USD)</SelectItem>
+                <SelectItem value="fixed_cnt">Cardano Native Token (CNT)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+
+          {form.amount_mode === "fixed_ada" && (
+            <div className="space-y-2">
+              <Label>Amount (ADA)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                value={form.amount_ada}
+                onChange={(e) => update("amount_ada", e.target.value)}
+                placeholder="e.g. 25"
+              />
+            </div>
+          )}
+
+          {form.amount_mode === "fixed_fiat" && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Currency</Label>
+                <Select value={form.fiat_currency} onValueChange={(v) => update("fiat_currency", v)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="EUR">EUR</SelectItem>
+                    <SelectItem value="USD">USD</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Amount</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={form.amount_fiat}
+                  onChange={(e) => update("amount_fiat", e.target.value)}
+                  placeholder="e.g. 9.99"
+                />
+              </div>
+            </div>
+          )}
+
+          {form.amount_mode === "fixed_cnt" && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Token Amount</Label>
+                  <Input
+                    type="number"
+                    value={form.cnt_amount}
+                    onChange={(e) => update("cnt_amount", e.target.value)}
+                    placeholder="e.g. 1000"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Ticker (e.g. $SNEK)</Label>
+                  <Input
+                    value={form.cnt_ticker}
+                    onChange={(e) => update("cnt_ticker", e.target.value)}
+                    placeholder="$SNEK"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Policy ID</Label>
+                <Input
+                  value={form.cnt_policy_id}
+                  onChange={(e) => update("cnt_policy_id", e.target.value)}
+                  placeholder="279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3"
+                  className="font-mono text-xs"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Asset Name (hex)</Label>
+                  <Input
+                    value={form.cnt_asset_name}
+                    onChange={(e) => update("cnt_asset_name", e.target.value)}
+                    placeholder="534e454b (optional)"
+                    className="font-mono text-xs"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Decimals</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    max={18}
+                    value={form.cnt_decimals}
+                    onChange={(e) => update("cnt_decimals", e.target.value)}
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* Receive Address */}
         <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-5">
           <h3 className="text-sm font-semibold text-slate-900">Receive Address</h3>
           <div className="space-y-2">
@@ -211,9 +312,10 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
           </div>
         </div>
 
+        {/* Options */}
         <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-5">
           <h3 className="text-sm font-semibold text-slate-900">Options</h3>
-          
+
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-slate-700">Collect email</p>
