@@ -84,15 +84,15 @@ export default function FeeRevenueStats() {
     );
   }
 
-  const adaPayments = confirmedPayments.filter(p => p.payment_type === "ada" || !p.payment_type);
-  const cntPayments = confirmedPayments.filter(p => p.payment_type === "cnt");
+  const adaPayments = allPayments.filter(p => p.payment_type === "ada" || !p.payment_type);
+  const cntPayments = allPayments.filter(p => p.payment_type === "cnt");
 
   const totalFeeAda = adaPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
   const totalVolumeAda = adaPayments.reduce((sum, p) => sum + (p.received_amount_ada || 0), 0);
 
   // CNT fee totals - aggregate from cnt_fees array in each payment
   const cntFeesByToken = {};
-  confirmedPayments.forEach(p => {
+  allPayments.forEach(p => {
     if (p.cnt_fees && Array.isArray(p.cnt_fees)) {
       p.cnt_fees.forEach(fee => {
         const key = `${fee.policy_id}|${fee.ticker || "unknown"}`;
