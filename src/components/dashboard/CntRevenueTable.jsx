@@ -60,7 +60,7 @@ export default function CntRevenueTable({ payments }) {
   });
 
   // Sum up merchant amounts from CNT payments
-  payments
+  allPayments
     .filter(p => p.status === "confirmed" && p.payment_type === "cnt")
     .forEach(p => {
       if (cntRevenue[p.cnt_policy_id]) {
