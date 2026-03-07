@@ -389,15 +389,15 @@ export default function Pay() {
                       <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
                         <div className="flex justify-between">
                           <span>Total</span>
-                          <span className="text-white font-semibold">{totalDisplay} {paymentLink.cnt_ticker}</span>
+                          <span className="text-white font-semibold">{total.toLocaleString()} {paymentLink.cnt_ticker}</span>
                         </div>
                         <div className="flex justify-between text-slate-400">
                           <span>Platform fee ({feePercent}%)</span>
-                          <span>{feeDisplay} {paymentLink.cnt_ticker}</span>
+                          <span>{feeAmt.toLocaleString()} {paymentLink.cnt_ticker}</span>
                         </div>
                         <div className="border-t border-slate-700 pt-1.5 flex justify-between">
                           <span>Merchant receives</span>
-                          <span className="text-emerald-400 font-semibold">{merchantDisplay} {paymentLink.cnt_ticker}</span>
+                          <span className="text-emerald-400 font-semibold">{merchantAmt.toLocaleString()} {paymentLink.cnt_ticker}</span>
                         </div>
                       </div>
                     );
