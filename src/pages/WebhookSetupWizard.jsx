@@ -221,7 +221,7 @@ export default function WebhookSetupWizard() {
             </div>
             <div className="bg-slate-50 rounded-lg p-4 space-y-3">
               <div>
-                <p className="text-xs text-slate-500">Naam</p>
+                <p className="text-xs text-slate-500">Name</p>
                 <p className="text-sm font-medium text-slate-900">{formData.name || "—"}</p>
               </div>
               <div>
