@@ -133,17 +133,6 @@ export default function ContactPage() {
 
             <details className="border border-slate-200 rounded-lg p-6 cursor-pointer group">
               <summary className="font-semibold text-slate-900 flex justify-between items-center">
-                Is there technical support available?
-                <span className="group-open:rotate-180 transition">▼</span>
-              </summary>
-              <p className="text-slate-600 mt-4">
-                Yes! All plans include email support. Professional and Business plans get priority support. 
-                Enterprise customers have access to a dedicated account manager and 24/7 phone support.
-              </p>
-            </details>
-
-            <details className="border border-slate-200 rounded-lg p-6 cursor-pointer group">
-              <summary className="font-semibold text-slate-900 flex justify-between items-center">
                 Can I cancel my account anytime?
                 <span className="group-open:rotate-180 transition">▼</span>
               </summary>
