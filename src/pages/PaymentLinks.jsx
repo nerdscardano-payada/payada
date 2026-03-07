@@ -5,7 +5,9 @@ import PageHeader from "@/components/shared/PageHeader";
 import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
 import PaymentLinkForm from "@/components/payment-links/PaymentLinkForm";
-import { Link2, Plus, Copy, ExternalLink, MoreHorizontal, Pencil, Trash2, QrCode } from "lucide-react";
+import { Link2, Plus, Copy, ExternalLink, MoreHorizontal, Pencil, Trash2, QrCode, BookTemplate } from "lucide-react";
+import TemplateSelector from "@/components/payment-links/TemplateSelector";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function PaymentLinks() {
   const [showForm, setShowForm] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
+  const [prefillFromTemplate, setPrefillFromTemplate] = useState(null);
   const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
 
@@ -46,11 +49,19 @@ export default function PaymentLinks() {
     toast.success("Checkout URL copied!");
   };
 
+  const handleSelectTemplate = (tpl) => {
+    setPrefillFromTemplate(tpl);
+    setEditingLink(null);
+    setShowForm(true);
+  };
+
   if (showForm) {
     return (
       <PaymentLinkForm
         link={editingLink}
-        onBack={() => { setShowForm(false); setEditingLink(null); }}
+        prefill={prefillFromTemplate}
+        onBack={() => { setShowForm(false); setEditingLink(null); setPrefillFromTemplate(null); }}
+        merchantId={user?.email}
       />
     );
   }
@@ -65,6 +76,17 @@ export default function PaymentLinks() {
         actionIcon={Plus}
       />
 
+      <Tabs defaultValue="links" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="links" className="gap-2"><Link2 className="w-3.5 h-3.5" />Links</TabsTrigger>
+          <TabsTrigger value="templates" className="gap-2"><BookTemplate className="w-3.5 h-3.5" />Templates</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="templates">
+          <TemplateSelector merchantId={user?.email} onSelect={handleSelectTemplate} />
+        </TabsContent>
+
+        <TabsContent value="links">
       <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
         {isLoading ? (
           <div className="p-5 space-y-3">
@@ -158,6 +180,8 @@ export default function PaymentLinks() {
           </div>
         )}
       </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
