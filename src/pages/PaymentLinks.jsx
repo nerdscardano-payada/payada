@@ -125,6 +125,8 @@ export default function PaymentLinks() {
                       <span className="text-sm font-semibold text-slate-900 tabular-nums">
                         {link.amount_mode === "fixed_ada"
                           ? `₳ ${link.amount_ada?.toFixed(2) || "—"}`
+                          : link.amount_mode === "fixed_cnt"
+                          ? `${link.cnt_amount?.toLocaleString() || "—"} ${link.cnt_ticker || "CNT"}`
                           : `${link.fiat_currency} ${link.amount_fiat?.toFixed(2) || "—"}`
                         }
                       </span>
