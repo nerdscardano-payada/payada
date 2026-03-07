@@ -39,13 +39,7 @@ export default function MerchantProfilePage() {
       if (!user?.email) return null;
       const profiles = await base44.entities.MerchantProfile.filter({ user_id: user.email });
       if (profiles.length > 0) return profiles[0];
-      
-      // Auto-create profile for new merchants
-      const newProfile = await base44.entities.MerchantProfile.create({
-        user_id: user.email,
-        business_name: user.full_name || "New Business",
-      });
-      return newProfile;
+      return null;
     },
     enabled: !!user?.email,
   });
