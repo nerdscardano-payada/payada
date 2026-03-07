@@ -205,9 +205,12 @@ export default function FeeRevenueStats() {
         ) : (
           <>
             <StatCard
-              title="CNT Fee Tokens"
-              value={Object.entries(cntFeesByToken).length}
-              subtitle="Unieke tokens"
+              title="Totale Fee Inkomsten"
+              value={Object.entries(cntFeesByToken).length > 0 
+                ? `${Object.entries(cntFeesByToken).length} tokens` 
+                : "0"
+              }
+              subtitle="CNT fee tokens"
               icon={TrendingUp}
               color="text-green-600"
             />
