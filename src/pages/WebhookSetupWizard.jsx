@@ -253,7 +253,7 @@ export default function WebhookSetupWizard() {
         </Button>
         {step < 3 ? (
           <Button onClick={() => setStep(step + 1)} disabled={!canNext()} className="gap-2">
-            Volgende <ChevronRight className="w-4 h-4" />
+            Next <ChevronRight className="w-4 h-4" />
           </Button>
         ) : (
           <Button
