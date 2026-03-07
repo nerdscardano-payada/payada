@@ -65,6 +65,7 @@ export default function HomePage() {
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Features")} className="text-sm text-slate-600 hover:text-slate-900">Features</Link>
             <Link to={createPageUrl("Pricing")} className="text-sm text-slate-600 hover:text-slate-900">Pricing</Link>
+            <Link to={createPageUrl("Roadmap")} className="text-sm text-slate-600 hover:text-slate-900">Roadmap</Link>
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
           </div>
           <div className="flex gap-3">
@@ -226,6 +227,7 @@ export default function HomePage() {
                 <li><Link to={createPageUrl("Features")} className="hover:text-white transition">Features</Link></li>
                   <li><Link to={createPageUrl("Pricing")} className="hover:text-white transition">Pricing</Link></li>
                   <li><Link to={createPageUrl("Security")} className="hover:text-white transition">Security</Link></li>
+                  <li><Link to={createPageUrl("Roadmap")} className="hover:text-white transition">Roadmap</Link></li>
               </ul>
             </div>
             <div>
