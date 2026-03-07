@@ -371,8 +371,8 @@ export default function Pay() {
 
               {paymentStatus === "pending" && (
                 <>
-                  {/* Fee breakdown */}
-                  {sessionData && (
+                  {/* Fee breakdown — ADA only */}
+                  {sessionData && paymentLink.amount_mode !== "fixed_cnt" && (
                     <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
                       <div className="flex justify-between">
                         <span>Total</span>
