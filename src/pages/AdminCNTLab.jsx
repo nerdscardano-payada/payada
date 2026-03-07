@@ -349,6 +349,15 @@ export default function AdminCNTLab() {
                     </div>
                     <Button
                       size="sm"
+                      className="gap-1.5 bg-emerald-600 hover:bg-emerald-700"
+                      onClick={() => createTestPaymentMutation.mutate(link.id)}
+                      disabled={createTestPaymentMutation.isPending}
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      Add Test Payment
+                    </Button>
+                    <Button
+                      size="sm"
                       className="gap-1.5 bg-indigo-600 hover:bg-indigo-700"
                       onClick={() => window.open(`/Pay?slug=${link.slug}`, "_blank")}
                     >
