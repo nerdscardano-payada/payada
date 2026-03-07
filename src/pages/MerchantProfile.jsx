@@ -213,50 +213,26 @@ export default function MerchantProfilePage() {
           {/* Settings */}
           <div>
             <h3 className="text-lg font-semibold text-slate-900 mb-4">Settings</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="timezone" className="text-sm font-medium text-slate-700">Timezone</Label>
-                {isEditing ? (
-                  <Select value={formData.timezone || "UTC"} onValueChange={(value) => handleInputChange("timezone", value)}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {timezones.map(tz => (
-                        <SelectItem key={tz} value={tz}>{tz}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <Input
-                    disabled
-                    value={formData.timezone || "UTC"}
-                    className="mt-1"
-                  />
-                )}
-              </div>
-
-              <div>
-                <Label htmlFor="default_fiat_currency" className="text-sm font-medium text-slate-700">Default Currency</Label>
-                {isEditing ? (
-                  <Select value={formData.default_fiat_currency || "EUR"} onValueChange={(value) => handleInputChange("default_fiat_currency", value)}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {currencies.map(curr => (
-                        <SelectItem key={curr} value={curr}>{curr}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <Input
-                    disabled
-                    value={formData.default_fiat_currency || "EUR"}
-                    className="mt-1"
-                  />
-                )}
-              </div>
+            <div className="max-w-sm">
+              <Label htmlFor="timezone" className="text-sm font-medium text-slate-700">Timezone</Label>
+              {isEditing ? (
+                <Select value={formData.timezone || "UTC"} onValueChange={(value) => handleInputChange("timezone", value)}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timezones.map(tz => (
+                      <SelectItem key={tz} value={tz}>{tz}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input
+                  disabled
+                  value={formData.timezone || "UTC"}
+                  className="mt-1"
+                />
+              )}
             </div>
           </div>
 

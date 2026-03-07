@@ -75,15 +75,15 @@ import Pricing from './pages/Pricing';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import SDKDocumentation from './pages/SDKDocumentation';
 import Security from './pages/Security';
+import Settings from './pages/Settings';
 import ShoppingPageGenerator from './pages/ShoppingPageGenerator';
 import Store from './pages/Store';
 import SubscriberPortal from './pages/SubscriberPortal';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
-import Webhooks from './pages/Webhooks';
-import Settings from './pages/Settings';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
+import Webhooks from './pages/Webhooks';
 import __Layout from './Layout.jsx';
 
 
@@ -116,15 +116,15 @@ export const PAGES = {
     "PrivacyPolicy": PrivacyPolicy,
     "SDKDocumentation": SDKDocumentation,
     "Security": Security,
+    "Settings": Settings,
     "ShoppingPageGenerator": ShoppingPageGenerator,
     "Store": Store,
     "SubscriberPortal": SubscriberPortal,
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
     "Unlock": Unlock,
-    "Webhooks": Webhooks,
-    "Settings": Settings,
     "WebhookSetupWizard": WebhookSetupWizard,
+    "Webhooks": Webhooks,
 }
 
 export const pagesConfig = {
