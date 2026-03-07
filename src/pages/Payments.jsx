@@ -53,35 +53,47 @@ export default function Payments() {
       />
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-4">
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <Input
-            placeholder="Search by email, name, address or tx hash…"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="All statuses" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="detected">Detected</SelectItem>
-            <SelectItem value="confirmed">Confirmed</SelectItem>
-            <SelectItem value="expired">Expired</SelectItem>
-            <SelectItem value="failed">Failed</SelectItem>
-          </SelectContent>
-        </Select>
-        {hasFilters && (
-          <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 text-slate-500">
-            <X className="w-3.5 h-3.5" /> Clear
-          </Button>
-        )}
-      </div>
+       <div className="flex flex-wrap gap-3 mb-4">
+         <div className="relative flex-1 min-w-[200px]">
+           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+           <Input
+             placeholder="Search by email, name, address or tx hash…"
+             value={search}
+             onChange={e => setSearch(e.target.value)}
+             className="pl-9"
+           />
+         </div>
+         <Select value={statusFilter} onValueChange={setStatusFilter}>
+           <SelectTrigger className="w-40">
+             <SelectValue placeholder="All statuses" />
+           </SelectTrigger>
+           <SelectContent>
+             <SelectItem value="all">All statuses</SelectItem>
+             <SelectItem value="pending">Pending</SelectItem>
+             <SelectItem value="detected">Detected</SelectItem>
+             <SelectItem value="confirmed">Confirmed</SelectItem>
+             <SelectItem value="expired">Expired</SelectItem>
+             <SelectItem value="failed">Failed</SelectItem>
+           </SelectContent>
+         </Select>
+         {hasCntPayments && (
+           <Select value={paymentTypeFilter} onValueChange={setPaymentTypeFilter}>
+             <SelectTrigger className="w-40">
+               <SelectValue placeholder="Payment type" />
+             </SelectTrigger>
+             <SelectContent>
+               <SelectItem value="all">All types</SelectItem>
+               <SelectItem value="ada">ADA</SelectItem>
+               <SelectItem value="cnt">CNT</SelectItem>
+             </SelectContent>
+           </Select>
+         )}
+         {hasFilters && (
+           <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 text-slate-500">
+             <X className="w-3.5 h-3.5" /> Clear
+           </Button>
+         )}
+       </div>
 
       <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
         {isLoading ? (
