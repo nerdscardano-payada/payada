@@ -23,6 +23,7 @@ const KNOWN_CNTS = [
   { ticker: "$STRIKE", policy_id: "f13ac4d66b3ee19a6aa0f2a22298737bd907cc95121662fc971b5275", asset_name: "535452494b45",                       decimals: 6 },
   { ticker: "$NMKR",   policy_id: "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489", asset_name: "4e4d4b52",                           decimals: 6 },
   { ticker: "$HOSKY",  policy_id: "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0", asset_name: "484f534b59",                         decimals: 0 },
+  { ticker: "$TITAN",  policy_id: "8483844875ce4d61c2aa459240f277d32081ee08fe0ad16899a0f581", asset_name: "0014df10544954414e",                   decimals: 6 },
 ];
 
 function StatusBadge({ status }) {
