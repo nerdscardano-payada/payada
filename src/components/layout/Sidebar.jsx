@@ -158,6 +158,22 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
                 )} />
                 {!collapsed && <span className="truncate">Admin Dashboard</span>}
               </Link>
+              <Link
+                to={createPageUrl("AdminCNTLab")}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all group",
+                  currentPage === "AdminCNTLab"
+                    ? "bg-purple-500/15 text-purple-400"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                )}
+              >
+                <FlaskConical className={cn(
+                  "w-[18px] h-[18px] flex-shrink-0",
+                  currentPage === "AdminCNTLab" ? "text-purple-400" : "text-slate-500 group-hover:text-slate-300"
+                )} />
+                {!collapsed && <span className="truncate">CNT Lab <span className="text-[10px] bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded-full ml-1">TEST</span></span>}
+              </Link>
             </>
           )}
         </nav>
