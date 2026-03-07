@@ -176,10 +176,10 @@ export default function WebhookSetupWizard() {
           <div className="space-y-5">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold text-slate-900 mb-1">Kies Events</h2>
-                <p className="text-slate-500 text-sm">Selecteer welke events je wilt ontvangen.</p>
+                <h2 className="text-lg font-semibold text-slate-900 mb-1">Choose Events</h2>
+                <p className="text-slate-500 text-sm">Select which events you want to receive.</p>
               </div>
-              <Button variant="outline" size="sm" onClick={selectAll}>Alles selecteren</Button>
+              <Button variant="outline" size="sm" onClick={selectAll}>Select all</Button>
             </div>
             {["Payment", "Subscription", "Dispute", "System"].map((cat) => {
               const catEvents = EVENT_TYPES.filter((e) => e.category === cat);
