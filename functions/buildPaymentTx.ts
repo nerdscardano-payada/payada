@@ -184,7 +184,12 @@ const MIN_LOVELACE_PER_OUTPUT = 1_000_000n; // 1 ADA
 
 Deno.serve(async (req) => {
   try {
-    const { walletAddress, merchantAddress, merchantLovelace, platformFeeLovelace } = await req.json();
+    const {
+      walletAddress, merchantAddress,
+      merchantLovelace, platformFeeLovelace,
+      // CNT payment fields
+      cntPolicyId, cntAssetName, cntAmount, cntFeeAmount
+    } = await req.json();
 
     if (!walletAddress || !merchantAddress || !merchantLovelace) {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
