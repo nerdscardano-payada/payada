@@ -59,7 +59,7 @@ export default function HomePage() {
           <div className="flex items-center gap-2">
             <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69999e4306b9e4632bd7d454/1b4bc7fb6_be2b2b99e_1000069668.jpg" alt="PayADA Logo" className="w-8 h-8 rounded-lg" />
             <span className="text-lg font-bold text-slate-900">
-              Pay<span className="text-indigo-600">ADA</span>
+             Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
             </span>
           </div>
           <div className="hidden md:flex items-center gap-8">
@@ -72,7 +72,7 @@ export default function HomePage() {
             <Button variant="ghost" onClick={handleLogin}>
               Sign In
             </Button>
-            <Button onClick={handleSignUp} className="bg-indigo-600 hover:bg-indigo-700">
+            <Button onClick={handleSignUp} className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white">
               Get Started
             </Button>
           </div>
@@ -93,7 +93,7 @@ export default function HomePage() {
               <Button 
                 size="lg" 
                 onClick={handleSignUp}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2"
+                className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white gap-2"
               >
                 Get Started <ArrowRight className="w-5 h-5" />
               </Button>
@@ -112,7 +112,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="relative">
-            <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl p-1 shadow-2xl">
+            <div className="bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl p-1 shadow-2xl">
               <div className="bg-slate-950 rounded-xl p-6 md:p-8">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -155,8 +155,8 @@ export default function HomePage() {
             {features.map((feature, i) => {
               const Icon = feature.icon;
               return (
-                <div key={i} className="bg-white rounded-xl p-8 border border-slate-200 hover:border-indigo-300 transition-colors">
-                  <Icon className="w-12 h-12 text-indigo-600 mb-4" />
+                <div key={i} className="bg-white rounded-xl p-8 border border-slate-200 hover:border-cyan-300 transition-colors">
+                   <Icon className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
                   <h3 className="text-xl font-semibold text-slate-900 mb-2">{feature.title}</h3>
                   <p className="text-slate-600">{feature.description}</p>
                 </div>
@@ -175,16 +175,16 @@ export default function HomePage() {
           {steps.map((step, i) => (
             <div key={i} className="relative">
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center border-2 border-indigo-600">
-                  <span className="text-indigo-600 font-bold text-lg">{step.number}</span>
-                </div>
+                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center border-2 border-blue-500">
+                   <span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent font-bold text-lg">{step.number}</span>
+                 </div>
                 <div className="pt-1">
                   <h3 className="text-lg font-semibold text-slate-900">{step.title}</h3>
                   <p className="text-slate-600 mt-2">{step.description}</p>
                 </div>
               </div>
               {i < steps.length - 1 && (
-                <div className="hidden md:block absolute top-12 -right-4 w-8 h-1 bg-indigo-200"></div>
+                <div className="hidden md:block absolute top-12 -right-4 w-8 h-1 bg-gradient-to-r from-blue-200 to-cyan-200"></div>
               )}
             </div>
           ))}
@@ -197,13 +197,13 @@ export default function HomePage() {
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Ready to accept Cardano payments?
           </h2>
-          <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-blue-50 mb-8 max-w-2xl mx-auto">
             Join merchants worldwide who are already using PayADA.io to accept ADA payments safely and securely.
           </p>
           <Button 
             size="lg"
             onClick={handleSignUp}
-            className="bg-white text-indigo-600 hover:bg-slate-100 gap-2"
+            className="bg-white text-blue-600 hover:bg-blue-50 gap-2"
           >
             Create Account <ArrowRight className="w-5 h-5" />
           </Button>
