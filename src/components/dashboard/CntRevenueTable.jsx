@@ -18,7 +18,35 @@ const CNT_TOKENS = [
   { ticker: "DJED", policy_id: "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61", decimals: 0 },
 ];
 
+// Mock data for testing CNT transactions
+const MOCK_CNT_PAYMENTS = [
+  {
+    id: "mock-cnt-1",
+    status: "confirmed",
+    payment_type: "cnt",
+    cnt_policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3",
+    merchant_amount_cnt: 4500
+  },
+  {
+    id: "mock-cnt-2",
+    status: "confirmed",
+    payment_type: "cnt",
+    cnt_policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3",
+    merchant_amount_cnt: 2000
+  },
+  {
+    id: "mock-cnt-3",
+    status: "confirmed",
+    payment_type: "cnt",
+    cnt_policy_id: "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6",
+    merchant_amount_cnt: 3200
+  }
+];
+
+const SIMULATE_CNT = true;
+
 export default function CntRevenueTable({ payments }) {
+  const allPayments = SIMULATE_CNT ? [...payments, ...MOCK_CNT_PAYMENTS] : payments;
   // Calculate net revenue per CNT token
   const cntRevenue = {};
   
