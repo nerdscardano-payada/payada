@@ -288,36 +288,7 @@ export default function DocumentationPage() {
               </ol>
             </Section>
 
-            {/* Subscriptions */}
-            <Section id="subscriptions" title="Subscriptions" icon={Bell}>
-              <p className="text-slate-600 mb-6">
-                PayADA supports recurring ADA payments. Merchants can define plans with custom intervals, grace periods, and trial days.
-                Customers receive a personal payment link for each renewal cycle.
-              </p>
-              <h3 className="font-semibold text-slate-900 mb-3">Creating a Subscription Plan</h3>
-              <ol className="space-y-2 text-sm text-slate-600 mb-6">
-                {[
-                  "Go to Dashboard → Subscriptions → New Plan",
-                  "Set interval (weekly, monthly, yearly, or custom days)",
-                  "Configure grace period (e.g. 5 days) and trial days",
-                  "Share the plan's checkout URL with subscribers",
-                ].map((s, i) => (
-                  <li key={i} className="flex gap-3">
-                    <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                    {s}
-                  </li>
-                ))}
-              </ol>
-              <h3 className="font-semibold text-slate-900 mb-3">Subscription Lifecycle</h3>
-              <div className="flex flex-wrap gap-2 items-center text-sm text-slate-600 mb-4">
-                {["trial", "→", "active", "→", "due", "→", "late", "→", "cancelled"].map((s, i) => (
-                  <span key={i} className={s === "→" ? "text-slate-400" : "px-3 py-1 rounded-full bg-slate-100 font-mono text-xs font-semibold text-slate-700"}>{s}</span>
-                ))}
-              </div>
-              <p className="text-sm text-slate-600">
-                Webhooks fire on <code className="font-mono text-xs bg-slate-100 px-1 py-0.5 rounded">subscription.due</code> events so you can automate reminders or access revocation.
-              </p>
-            </Section>
+
 
             {/* Webhooks */}
             <Section id="webhooks" title="Webhooks" icon={GitBranch}>
