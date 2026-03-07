@@ -80,7 +80,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
         {/* Logo */}
          <div className="flex items-center justify-between px-4 h-16 border-b border-white/5">
            <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition-opacity">
-             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center flex-shrink-0">
+             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0">
                <Hexagon className="w-4.5 h-4.5 text-white" />
              </div>
              {!collapsed && (
@@ -119,16 +119,16 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
                 to={createPageUrl(item.page)}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all group",
-                  isActive
-                    ? "bg-indigo-500/15 text-indigo-400"
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
-                )}
+                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all group",
+                   isActive
+                     ? "bg-blue-500/15 text-blue-400"
+                     : "text-slate-400 hover:text-white hover:bg-white/5"
+                 )}
               >
                 <item.icon className={cn(
-                  "w-[18px] h-[18px] flex-shrink-0",
-                  isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300"
-                )} />
+                   "w-[18px] h-[18px] flex-shrink-0",
+                   isActive ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300"
+                 )} />
                 {!collapsed && <span className="truncate">{item.name}</span>}
               </Link>
             );

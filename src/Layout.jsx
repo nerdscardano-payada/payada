@@ -59,7 +59,7 @@ export default function Layout({ children, currentPageName }) {
             <Menu className="w-5 h-5 text-slate-600" />
           </button>
           <span className="ml-3 font-semibold text-slate-900 text-sm">
-            Pay<span className="text-indigo-500">ADA</span>
+            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </span>
         </header>
 
