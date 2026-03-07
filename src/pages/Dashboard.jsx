@@ -233,13 +233,17 @@ export default function Dashboard() {
                     </p>
                     <p className="text-xs text-slate-400">
                       {format(new Date(payment.created_date), "MMM d, HH:mm")}
+                      {payment.payment_type === "cnt" && ` • ${payment.cnt_ticker || "CNT"}`}
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <StatusBadge status={payment.status} />
                   <span className="text-sm font-semibold text-slate-900 tabular-nums">
-                    ₳ {(payment.received_amount_ada || payment.expected_amount_ada)?.toFixed(2)}
+                    {payment.payment_type === "cnt" 
+                      ? `${((payment.received_amount_cnt || payment.expected_amount_cnt) / Math.pow(10, payment.cnt_decimals || 0))?.toFixed(4)} ${payment.cnt_ticker}`
+                      : `₳ ${(payment.received_amount_ada || payment.expected_amount_ada)?.toFixed(2)}`
+                    }
                   </span>
                 </div>
               </div>
