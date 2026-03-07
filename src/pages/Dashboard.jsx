@@ -82,12 +82,34 @@ export default function Dashboard() {
 
   const isLoading = loadingPayments || loadingLinks || loadingSubs || loadingCustomers;
 
+  const profileIncomplete = user && merchantProfile !== undefined && (
+    !merchantProfile || !merchantProfile.default_receive_address
+  );
+
   return (
     <div>
       <PageHeader
         title="Dashboard"
         subtitle="Overview of your PayADA merchant account"
       />
+
+      {profileIncomplete && (
+        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-start gap-4">
+          <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-amber-900">Profiel nog niet ingevuld</p>
+            <p className="text-xs text-amber-700 mt-0.5">
+              Vul je bedrijfsnaam en Cardano wallet-adres in om betalingen te ontvangen.
+            </p>
+          </div>
+          <Link
+            to={createPageUrl("Onboarding")}
+            className="flex-shrink-0 flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium px-3 py-2 rounded-lg transition-colors"
+          >
+            Profiel instellen <ArrowRight className="w-3 h-3" />
+          </Link>
+        </div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
