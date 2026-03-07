@@ -8,7 +8,7 @@ export default function PrivacyPolicyPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="text-indigo-600">ADA</span>
+            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
@@ -31,7 +31,7 @@ export default function PrivacyPolicyPage() {
             through the PayADA platform ("Service"). For all privacy-related matters, you may contact us at:
           </p>
           <ul className="list-disc list-inside space-y-2 mt-4">
-            <li>Email: <a href="mailto:privacy@payada.io" className="text-indigo-600 hover:underline">privacy@payada.io</a></li>
+            <li>Email: <a href="mailto:privacy@payada.io" className="text-blue-600 hover:underline">privacy@payada.io</a></li>
           </ul>
 
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">2. Data We Collect</h2>
@@ -162,7 +162,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">13. Contact</h2>
           <p>For any privacy-related questions or to exercise your rights:</p>
           <ul className="list-disc list-inside space-y-2">
-            <li>Email: <a href="mailto:privacy@payada.io" className="text-indigo-600 hover:underline">privacy@payada.io</a></li>
+            <li>Email: <a href="mailto:privacy@payada.io" className="text-blue-600 hover:underline">privacy@payada.io</a></li>
           </ul>
         </div>
       </section>

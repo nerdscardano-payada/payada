@@ -85,7 +85,7 @@ export default function WebhooksPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="text-indigo-600">ADA</span>
+            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
@@ -110,7 +110,7 @@ export default function WebhooksPage() {
               <h3 className="font-semibold text-slate-900 mb-3">1. Configure Your Webhook URL</h3>
               <p className="text-slate-600 mb-4">
                 Go to your Dashboard → Webhooks and add your endpoint URL where you want to receive events. You can use our{" "}
-                <Link to={createPageUrl("WebhookSetupWizard")} className="text-indigo-600 hover:underline font-medium">Webhook Setup Wizard</Link>{" "}
+                <Link to={createPageUrl("WebhookSetupWizard")} className="text-blue-600 hover:underline font-medium">Webhook Setup Wizard</Link>{" "}
                 to get started quickly. Your endpoint must:
               </p>
               <ul className="list-disc list-inside text-slate-600 space-y-2">
@@ -203,23 +203,23 @@ const isValid = hash === signature;`}
           <h2 className="text-2xl font-bold text-slate-900 mb-6">Best Practices</h2>
           <ul className="space-y-3">
             <li className="flex gap-3">
-              <span className="font-semibold text-indigo-600">✓</span>
+              <span className="font-semibold text-blue-600">✓</span>
               <span className="text-slate-600">Always verify webhook signatures before processing</span>
             </li>
             <li className="flex gap-3">
-              <span className="font-semibold text-indigo-600">✓</span>
+              <span className="font-semibold text-blue-600">✓</span>
               <span className="text-slate-600">Use idempotency keys to prevent duplicate processing</span>
             </li>
             <li className="flex gap-3">
-              <span className="font-semibold text-indigo-600">✓</span>
+              <span className="font-semibold text-blue-600">✓</span>
               <span className="text-slate-600">Respond immediately with 200 status, process asynchronously</span>
             </li>
             <li className="flex gap-3">
-              <span className="font-semibold text-indigo-600">✓</span>
+              <span className="font-semibold text-blue-600">✓</span>
               <span className="text-slate-600">Log all webhook events for debugging</span>
             </li>
             <li className="flex gap-3">
-              <span className="font-semibold text-indigo-600">✓</span>
+              <span className="font-semibold text-blue-600">✓</span>
               <span className="text-slate-600">Keep webhook endpoint timeout under 30 seconds</span>
             </li>
           </ul>
