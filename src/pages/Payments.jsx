@@ -36,9 +36,10 @@ export default function Payments() {
         p.payer_address?.toLowerCase().includes(q) ||
         p.tx_hash?.toLowerCase().includes(q);
       const matchesStatus = statusFilter === "all" || p.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      const matchesType = paymentTypeFilter === "all" || (p.payment_type || "ada") === paymentTypeFilter || (paymentTypeFilter === "ada" && !p.payment_type);
+      return matchesSearch && matchesStatus && matchesType;
     });
-  }, [payments, search, statusFilter]);
+  }, [payments, search, statusFilter, paymentTypeFilter]);
 
   const clearFilters = () => { setSearch(""); setStatusFilter("all"); };
   const hasFilters = search || statusFilter !== "all";
