@@ -86,7 +86,7 @@ function NewCNTLinkForm({ onSuccess, merchantProfile }) {
       </div>
 
       <div className="space-y-2">
-        <Label>Token selecteren</Label>
+        <Label>Select Token</Label>
         <div className="flex gap-2 flex-wrap">
           {KNOWN_CNTS.map(cnt => (
             <button type="button" key={cnt.ticker}
@@ -100,38 +100,38 @@ function NewCNTLinkForm({ onSuccess, merchantProfile }) {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
-          <Label>Bedrag ({form.cnt_ticker})</Label>
-          <Input type="number" value={form.cnt_amount} onChange={e => setForm(f => ({ ...f, cnt_amount: e.target.value }))} placeholder="bv. 10000" required />
+          <Label>Amount ({form.cnt_ticker})</Label>
+          <Input type="number" value={form.cnt_amount} onChange={e => setForm(f => ({ ...f, cnt_amount: e.target.value }))} placeholder="e.g. 10000" required />
         </div>
         <div className="space-y-1">
-          <Label>Ontvangstadres</Label>
+          <Label>Receive Address</Label>
           <Input value={form.receive_address} onChange={e => setForm(f => ({ ...f, receive_address: e.target.value }))} placeholder="addr1..." required />
         </div>
       </div>
 
       <div className="space-y-3 p-4 bg-slate-50 border border-slate-200 rounded-lg">
-        <Label className="text-xs font-semibold text-slate-600">Klantgegevens verzamelen</Label>
+        <Label className="text-xs font-semibold text-slate-600">Collect Customer Info</Label>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-slate-700">E-mailadres</span>
+          <span className="text-sm text-slate-700">Email address</span>
           <Switch checked={form.collect_email} onCheckedChange={v => setForm(f => ({ ...f, collect_email: v }))} />
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-slate-700">Naam</span>
+          <span className="text-sm text-slate-700">Name</span>
           <Switch checked={form.collect_name} onCheckedChange={v => setForm(f => ({ ...f, collect_name: v }))} />
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-slate-700">Verzendadres</span>
+          <span className="text-sm text-slate-700">Shipping address</span>
           <Switch checked={form.collect_shipping} onCheckedChange={v => setForm(f => ({ ...f, collect_shipping: v }))} />
         </div>
       </div>
 
       <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex gap-2 text-sm text-amber-800">
         <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-        <span>Dit is een admin-only testlink. Niet zichtbaar voor gewone merchants.</span>
+        <span>This is an admin-only test link. Not visible to regular merchants.</span>
       </div>
 
       <Button type="submit" disabled={mutation.isPending} className="w-full">
-        {mutation.isPending ? "Aanmaken..." : "CNT Testlink aanmaken"}
+        {mutation.isPending ? "Creating..." : "Create CNT Test Link"}
       </Button>
     </form>
   );
