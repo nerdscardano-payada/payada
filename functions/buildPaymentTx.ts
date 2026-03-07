@@ -219,6 +219,143 @@ Deno.serve(async (req) => {
     const MIN_OUTPUT = 1_000_000n;       // 1 ADA minimum per output (Cardano dust protection)
     const FEE_BUFFER = 400_000n;         // 0.4 ADA buffer on top of estimate (covered in estimateFee)
 
+    // --- CNT payment mode ---
+    const isCntPayment = !!(cntPolicyId && cntAssetName && cntAmount);
+
+    if (isCntPayment) {
+      // For CNT payments: send CNT tokens to merchant and fee wallet
+      // Payer needs enough ADA for minUTxO on each output + tx fee
+      const cntTotal = BigInt(cntAmount);          // total CNT
+      const cntFee = cntFeeAmount ? BigInt(cntFeeAmount) : 0n;  // CNT fee amount
+      const cntMerchant = cntTotal - cntFee;       // CNT to merchant
+
+      // Build token maps
+      const merchantTokens = new Map([[cntPolicyId, new Map([[cntAssetName, cntMerchant]])]]);
+      const feeTokens = cntFee > 0n ? new Map([[cntPolicyId, new Map([[cntAssetName, cntFee]])]]) : null;
+
+      // Each output with native tokens needs minUTxO ADA
+      const MIN_CNT_OUTPUT_LOVELACE = 2_000_000n; // 2 ADA per token output (safety margin)
+
+      // Select UTxOs: need enough ADA for minUTxO outputs + fee, plus must have the CNT
+      const pureAdaUtxos = utxos
+        .filter(u => u.amount.length === 1 && u.amount[0].unit === 'lovelace')
+        .sort((a, b) => Number(BigInt(b.amount[0].quantity) - BigInt(a.amount[0].quantity)));
+      const cntUnit = cntPolicyId + cntAssetName;
+      const cntUtxos = utxos.filter(u => u.amount.some(a => a.unit === cntUnit));
+
+      if (cntUtxos.length === 0) {
+        return Response.json({ error: `No UTxOs found with ${cntUnit}. Ensure your wallet has the token.` }, { status: 400 });
+      }
+
+      // Select CNT UTxOs to cover total CNT needed
+      let selectedCntLovelace = 0n;
+      let selectedCntTokens = 0n;
+      const selectedUtxos = [];
+      for (const utxo of cntUtxos) {
+        selectedUtxos.push(utxo);
+        for (const a of utxo.amount) {
+          if (a.unit === 'lovelace') selectedCntLovelace += BigInt(a.quantity);
+          if (a.unit === cntUnit) selectedCntTokens += BigInt(a.quantity);
+        }
+        if (selectedCntTokens >= cntTotal) break;
+      }
+
+      if (selectedCntTokens < cntTotal) {
+        return Response.json({ error: `Insufficient ${cntAssetName} tokens. Need ${cntTotal}, have ${selectedCntTokens}.` }, { status: 400 });
+      }
+
+      // Number of outputs: merchant CNT + (fee CNT if any) + change
+      const numOutputs = 1 + (cntFee > 0n ? 1 : 0) + 1;
+      const txFee = estimateFee(selectedUtxos.length, numOutputs, true) + FEE_BUFFER;
+
+      // Total ADA needed: minUTxO for each token output + tx fee
+      const numTokenOutputs = 1 + (cntFee > 0n ? 1 : 0);
+      const adaForTokenOutputs = MIN_CNT_OUTPUT_LOVELACE * BigInt(numTokenOutputs);
+      const adaNeeded = adaForTokenOutputs + txFee;
+
+      // If CNT UTxOs don't have enough ADA, supplement with pure ADA UTxOs
+      if (selectedCntLovelace < adaNeeded + MIN_OUTPUT) {
+        for (const utxo of pureAdaUtxos) {
+          selectedUtxos.push(utxo);
+          const lov = utxo.amount.find(a => a.unit === 'lovelace');
+          if (lov) selectedCntLovelace += BigInt(lov.quantity);
+          if (selectedCntLovelace >= adaNeeded + MIN_OUTPUT) break;
+        }
+      }
+
+      const adaChange = selectedCntLovelace - adaForTokenOutputs - txFee;
+      const cntChange = selectedCntTokens - cntTotal;
+
+      if (adaChange < 0n) {
+        return Response.json({ error: `Insufficient ADA for token outputs. Need ₳${Number(adaNeeded) / 1_000_000} for minUTxO + fees.` }, { status: 400 });
+      }
+
+      // Build inputs
+      const inputs = selectedUtxos.map(u => [hexToBytes(u.tx_hash), u.tx_index]);
+      const sortedInputs = [...inputs].sort((a, b) => {
+        const hexA = bytesToHex(a[0]) + a[1].toString().padStart(8, '0');
+        const hexB = bytesToHex(b[0]) + b[1].toString().padStart(8, '0');
+        return hexA < hexB ? -1 : 1;
+      });
+
+      const outputsData = [];
+
+      // Merchant CNT output
+      outputsData.push({ addrBytes: merchantAddrBytes, lovelace: MIN_CNT_OUTPUT_LOVELACE, assets: merchantTokens });
+
+      // Fee CNT output
+      if (cntFee > 0n && PAYADA_FEE_WALLET) {
+        const feeAddrBytes = getAddrBytes(PAYADA_FEE_WALLET);
+        outputsData.push({ addrBytes: feeAddrBytes, lovelace: MIN_CNT_OUTPUT_LOVELACE, assets: feeTokens });
+      }
+
+      // Change output (ADA + remaining CNT if any)
+      const changeAssets = cntChange > 0n ? new Map([[cntPolicyId, new Map([[cntAssetName, cntChange]])]]) : new Map();
+      outputsData.push({ addrBytes: walletAddrBytes, lovelace: adaChange, assets: changeAssets });
+
+      // Encode transaction body
+      const cborBytes = [];
+      cborBytes.push(...encodeCborMapHeader(4));
+
+      cborBytes.push(...encodeCborUint(0));
+      cborBytes.push(...encodeCborArrayHeader(sortedInputs.length));
+      for (const [txHashBytes, txIndex] of sortedInputs) {
+        cborBytes.push(0x82);
+        cborBytes.push(...encodeCborBytes(Array.from(txHashBytes)));
+        cborBytes.push(...encodeCborUint(txIndex));
+      }
+
+      cborBytes.push(...encodeCborUint(1));
+      cborBytes.push(...encodeCborArrayHeader(outputsData.length));
+      for (const { addrBytes, lovelace, assets } of outputsData) {
+        cborBytes.push(...encodeTxOut(addrBytes, lovelace, assets));
+      }
+
+      cborBytes.push(...encodeCborUint(2));
+      cborBytes.push(...encodeCborUint(txFee));
+
+      cborBytes.push(...encodeCborUint(3));
+      cborBytes.push(...encodeCborUint(latestBlock.slot + 7200));
+
+      const fullTx = [0x84, ...cborBytes, 0xa0, 0xf5, 0xf6];
+      const txCbor = bytesToHex(new Uint8Array(fullTx));
+
+      return Response.json({
+        success: true,
+        txCbor,
+        debug: {
+          inputs: selectedUtxos.length,
+          outputs: outputsData.length,
+          fee: Number(txFee) / 1_000_000,
+          cntMerchant: cntMerchant.toString(),
+          cntFee: cntFee.toString(),
+          adaChange: Number(adaChange) / 1_000_000
+        }
+      });
+    }
+
+    // --- ADA payment mode (existing logic) ---
+
     // Enforce minimum merchant output (dust protection: must be >= 1 ADA)
     const merchantLov = BigInt(merchantLovelace) < MIN_OUTPUT ? MIN_OUTPUT : BigInt(merchantLovelace);
 
