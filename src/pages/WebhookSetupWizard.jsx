@@ -162,11 +162,11 @@ export default function WebhookSetupWizard() {
               )}
             </div>
             <div className="bg-slate-50 rounded-lg p-4 text-sm text-slate-600">
-              <strong className="block mb-1">Vereisten voor je endpoint:</strong>
+              <strong className="block mb-1">Endpoint requirements:</strong>
               <ul className="space-y-1 list-disc list-inside">
-                <li>Accepteert POST-verzoeken</li>
-                <li>Reageert met HTTP 200</li>
-                <li>Reageert binnen 30 seconden</li>
+                <li>Accepts POST requests</li>
+                <li>Returns HTTP 200</li>
+                <li>Responds within 30 seconds</li>
               </ul>
             </div>
           </div>
