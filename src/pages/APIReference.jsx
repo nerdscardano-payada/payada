@@ -76,7 +76,7 @@ export default function APIReferencePage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="text-indigo-600">ADA</span>
+            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
@@ -93,9 +93,9 @@ export default function APIReferencePage() {
         </div>
 
         {/* Pricing Notice */}
-        <div className="mb-20 border border-indigo-200 rounded-lg p-8 bg-indigo-50">
+        <div className="mb-20 border border-blue-200 rounded-lg p-8 bg-blue-50">
           <h2 className="text-xl font-bold text-slate-900 mb-4">Transparent Fee Structure</h2>
-          <p className="text-slate-700 mb-3">All payments processed through the API incur a <span className="font-semibold text-indigo-600">flat 1.75% platform fee</span>.</p>
+          <p className="text-slate-700 mb-3">All payments processed through the API incur a <span className="font-semibold text-blue-600">flat 1.75% platform fee</span>.</p>
           <p className="text-slate-600 text-sm"><span className="font-semibold">Example:</span> A ₳100 payment results in ₳98.25 received (fee: ₳1.75). Fee amounts are included in payment response objects.</p>
         </div>
 

@@ -62,8 +62,8 @@ function Section({ id, title, icon: Icon, children }) {
   return (
     <div id={id} className="scroll-mt-24 mb-16 pb-16 border-b border-slate-200 last:border-0">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
-          <Icon className="w-5 h-5 text-indigo-600" />
+        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+           <Icon className="w-5 h-5 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent" />
         </div>
         <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
       </div>
@@ -88,7 +88,7 @@ export default function DocumentationPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="text-indigo-600">ADA</span>
+            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-6">
             <Link to={createPageUrl("APIReference")} className="text-sm text-slate-600 hover:text-slate-900 flex items-center gap-1">
@@ -122,8 +122,8 @@ export default function DocumentationPage() {
                   onClick={() => setActiveSection(id)}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     activeSection === id
-                      ? "bg-indigo-50 text-indigo-700"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                      ? "bg-blue-50 text-blue-700"
+                           : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                   }`}
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
@@ -132,10 +132,10 @@ export default function DocumentationPage() {
               ))}
               <div className="pt-4 border-t border-slate-200 mt-4">
                 <p className="text-xs text-slate-400 px-3 mb-2 font-semibold uppercase tracking-wide">More</p>
-                <Link to={createPageUrl("APIReference")} className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-indigo-600 rounded-lg hover:bg-slate-50">
-                  <Code className="w-4 h-4" /> Full API Ref
-                </Link>
-                <Link to={createPageUrl("Webhooks")} className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-indigo-600 rounded-lg hover:bg-slate-50">
+                <Link to={createPageUrl("APIReference")} className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-blue-600 rounded-lg hover:bg-slate-50">
+                   <Code className="w-4 h-4" /> Full API Ref
+                 </Link>
+                 <Link to={createPageUrl("Webhooks")} className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-blue-600 rounded-lg hover:bg-slate-50">
                   <GitBranch className="w-4 h-4" /> Webhook Guide
                 </Link>
               </div>
@@ -146,20 +146,20 @@ export default function DocumentationPage() {
           <main className="flex-1 min-w-0">
 
             {/* Onboarding Checklist */}
-            <div className="mb-16 bg-gradient-to-br from-indigo-50 to-indigo-100 border border-indigo-200 rounded-2xl p-8">
+            <div className="mb-16 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-8">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-xl font-bold text-slate-900">🚀 Getting Started Checklist</h2>
                   <p className="text-slate-600 text-sm mt-1">Complete these steps to accept your first payment</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-indigo-600">{completedCount}/{ONBOARDING_STEPS.length}</div>
+                  <div className="text-2xl font-bold text-blue-600">{completedCount}/{ONBOARDING_STEPS.length}</div>
                   <div className="text-xs text-slate-500">completed</div>
                 </div>
               </div>
-              <div className="w-full bg-indigo-200 rounded-full h-2 mb-6">
+              <div className="w-full bg-blue-200 rounded-full h-2 mb-6">
                 <div
-                  className="bg-indigo-600 h-2 rounded-full transition-all duration-500"
+                  className="bg-gradient-to-r from-blue-500 to-cyan-400 h-2 rounded-full transition-all duration-500"
                   style={{ width: `${(completedCount / ONBOARDING_STEPS.length) * 100}%` }}
                 />
               </div>
@@ -227,7 +227,7 @@ export default function DocumentationPage() {
                   "Copy the generated link and share it with customers",
                 ].map((step, i) => (
                   <li key={i} className="flex gap-3">
-                    <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                    <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                     <span className="text-slate-600 text-sm">{step}</span>
                   </li>
                 ))}
@@ -243,13 +243,13 @@ export default function DocumentationPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    <tr><td className="px-4 py-3 font-mono text-xs text-indigo-600">fixed_ada</td><td className="px-4 py-3 text-slate-600">Fixed amount in ADA</td><td className="px-4 py-3 text-slate-600">Products and services priced in ADA</td></tr>
-                    <tr><td className="px-4 py-3 font-mono text-xs text-indigo-600">fixed_cnt</td><td className="px-4 py-3 text-slate-600">Fixed amount in a Cardano Native Token</td><td className="px-4 py-3 text-slate-500 italic">Coming soon — Token-gated content, NFT communities</td></tr>
+                    <tr><td className="px-4 py-3 font-mono text-xs text-blue-600">fixed_ada</td><td className="px-4 py-3 text-slate-600">Fixed amount in ADA</td><td className="px-4 py-3 text-slate-600">Products and services priced in ADA</td></tr>
+                    <tr><td className="px-4 py-3 font-mono text-xs text-blue-600">fixed_cnt</td><td className="px-4 py-3 text-slate-600">Fixed amount in a Cardano Native Token</td><td className="px-4 py-3 text-slate-500 italic">Coming soon — Token-gated content, NFT communities</td></tr>
                   </tbody>
                 </table>
               </div>
               <div className="mt-6 bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-600">
-                <strong>Slug:</strong> Each payment link gets a unique URL slug (e.g. <code className="font-mono text-indigo-600">/pay/your-product</code>). Slugs are auto-generated but can be customized.
+                <strong>Slug:</strong> Each payment link gets a unique URL slug (e.g. <code className="font-mono text-blue-600">/pay/your-product</code>). Slugs are auto-generated but can be customized.
               </div>
             </Section>
 
@@ -267,7 +267,7 @@ export default function DocumentationPage() {
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 {["$NIGHT", "$Snek", "$MIN", "$INDY", "$SUNDAE", "$WMTX", "$CSWAP", "$IAG", "$STRIKE", "$NMKR", "$HOSKY", "$TITAN", "USDM", "USDA", "DJED"].map((t) => (
-                  <div key={t} className="px-3 py-2 bg-indigo-50 border border-indigo-100 rounded-lg text-center text-sm font-semibold text-indigo-700">{t}</div>
+                  <div key={t} className="px-3 py-2 bg-blue-50 border border-blue-100 rounded-lg text-center text-sm font-semibold text-blue-700">{t}</div>
                 ))}
               </div>
               <h3 className="font-semibold text-slate-900 mb-3">How CNT Payments Work</h3>
@@ -303,7 +303,7 @@ export default function DocumentationPage() {
                   { event: "subscription.due", desc: "Subscription renewal payment is due" },
                 ].map((e, i) => (
                   <div key={i} className="flex items-start gap-3 p-3 border border-slate-100 rounded-lg bg-slate-50">
-                    <code className="text-xs font-mono text-indigo-600 bg-indigo-50 px-2 py-1 rounded flex-shrink-0">{e.event}</code>
+                    <code className="text-xs font-mono text-blue-600 bg-blue-50 px-2 py-1 rounded flex-shrink-0">{e.event}</code>
                     <span className="text-sm text-slate-600">{e.desc}</span>
                   </div>
                 ))}
@@ -324,7 +324,7 @@ if (hash !== signature) {
 
 // Safe to process the event
 res.status(200).send('OK');`} />
-              <Link to={createPageUrl("Webhooks")} className="inline-flex items-center gap-2 text-indigo-600 text-sm font-medium hover:underline mt-2">
+              <Link to={createPageUrl("Webhooks")} className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline mt-2">
                 Full Webhook Guide <ArrowRight className="w-4 h-4" />
               </Link>
             </Section>
@@ -364,14 +364,14 @@ res.status(200).send('OK');`} />
                         <td className="px-4 py-2.5">
                           <span className={`px-2 py-0.5 rounded text-xs font-bold text-white ${method === "GET" ? "bg-blue-500" : "bg-green-500"}`}>{method}</span>
                         </td>
-                        <td className="px-4 py-2.5 font-mono text-xs text-indigo-600">{path}</td>
+                        <td className="px-4 py-2.5 font-mono text-xs text-blue-600">{path}</td>
                         <td className="px-4 py-2.5 text-slate-600">{desc}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <Link to={createPageUrl("APIReference")} className="inline-flex items-center gap-2 text-indigo-600 text-sm font-medium hover:underline mt-4">
+              <Link to={createPageUrl("APIReference")} className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline mt-4">
                 Full API Reference with examples <ArrowRight className="w-4 h-4" />
               </Link>
             </Section>
@@ -401,7 +401,7 @@ res.status(200).send('OK');`} />
                       "Copy the generated HTML snippet and paste it anywhere on your site",
                     ].map((s, i) => (
                       <li key={i} className="flex gap-2">
-                        <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                        <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                         {s}
                       </li>
                     ))}
@@ -431,7 +431,7 @@ res.status(200).send('OK');`} />
                       "Each product has its own PayADA checkout — payments go directly to your wallet",
                     ].map((s, i) => (
                       <li key={i} className="flex gap-2">
-                        <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                        <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
                         {s}
                       </li>
                     ))}
@@ -525,7 +525,7 @@ res.status(200).send('OK');`} />
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {SUPPORTED_WALLETS.map((w) => (
                   <a key={w.name} href={w.url} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm font-medium hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 transition-colors">
+                    className="flex items-center gap-2.5 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm font-medium hover:border-cyan-300 hover:bg-blue-50 hover:text-blue-700 transition-colors">
                     <Wallet className="w-4 h-4 flex-shrink-0" />
                     {w.name}
                   </a>
@@ -555,7 +555,7 @@ res.status(200).send('OK');`} />
                   </div>
                 ))}
               </div>
-              <Link to={createPageUrl("Security")} className="inline-flex items-center gap-2 text-indigo-600 text-sm font-medium hover:underline">
+              <Link to={createPageUrl("Security")} className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline">
                 Full Security & Compliance page <ArrowRight className="w-4 h-4" />
               </Link>
             </Section>

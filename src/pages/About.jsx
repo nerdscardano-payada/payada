@@ -10,7 +10,7 @@ export default function AboutPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="text-indigo-600">ADA</span>
+            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">Security</Link>
@@ -52,8 +52,8 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Our Values</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div className="border border-slate-200 rounded-lg p-8">
-              <Target className="w-12 h-12 text-indigo-600 mb-4" />
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Simplicity</h3>
+              <Target className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
+               <h3 className="text-xl font-semibold text-slate-900 mb-3">Simplicity</h3>
               <p className="text-slate-600">
                 We believe cryptocurrency should be easy. Our platform removes complexity and puts 
                 the power of blockchain payments in your hands.
@@ -61,8 +61,8 @@ export default function AboutPage() {
             </div>
 
             <div className="border border-slate-200 rounded-lg p-8">
-              <Zap className="w-12 h-12 text-indigo-600 mb-4" />
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Reliability</h3>
+              <Zap className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
+               <h3 className="text-xl font-semibold text-slate-900 mb-3">Reliability</h3>
               <p className="text-slate-600">
                 Your business depends on our platform. We maintain 99.9% uptime, use secure infrastructure, 
                 and provide 24/7 support.
@@ -70,8 +70,8 @@ export default function AboutPage() {
             </div>
 
             <div className="border border-slate-200 rounded-lg p-8">
-              <Globe className="w-12 h-12 text-indigo-600 mb-4" />
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Global Reach</h3>
+              <Globe className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
+               <h3 className="text-xl font-semibold text-slate-900 mb-3">Global Reach</h3>
               <p className="text-slate-600">
                 PayADA enables global commerce. Accept payments from anywhere in the world without 
                 currency conversion delays or high fees.
@@ -79,8 +79,8 @@ export default function AboutPage() {
             </div>
 
             <div className="border border-slate-200 rounded-lg p-8">
-              <Users className="w-12 h-12 text-indigo-600 mb-4" />
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Customer-First</h3>
+              <Users className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
+               <h3 className="text-xl font-semibold text-slate-900 mb-3">Customer-First</h3>
               <p className="text-slate-600">
                 Your success is our success. We listen to feedback, continuously improve our product, 
                 and provide exceptional support.
