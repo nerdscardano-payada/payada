@@ -21,6 +21,8 @@ function StatCard({ title, value, subtitle, icon: Icon, color }) {
 }
 
 export default function FeeRevenueStats() {
+  const [feeTypeTab, setFeeTypeTab] = useState("ada");
+
   const { data: confirmedPayments = [], isLoading } = useQuery({
     queryKey: ["admin-fee-stats"],
     queryFn: () => base44.entities.Payment.filter({ status: "confirmed" }, "-confirmed_at", 500),
