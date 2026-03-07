@@ -121,6 +121,32 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Tabs for ADA/CNT */}
+      <div className="mb-8 flex gap-2 border-b border-slate-200">
+        <button
+          onClick={() => setPaymentTypeTab("ada")}
+          className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+            paymentTypeTab === "ada"
+              ? "text-indigo-600 border-indigo-600"
+              : "text-slate-600 border-transparent hover:text-slate-900"
+          }`}
+        >
+          ADA Payments
+        </button>
+        {confirmedCntPayments.length > 0 && (
+          <button
+            onClick={() => setPaymentTypeTab("cnt")}
+            className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
+              paymentTypeTab === "cnt"
+                ? "text-indigo-600 border-indigo-600"
+                : "text-slate-600 border-transparent hover:text-slate-900"
+            }`}
+          >
+            CNT Payments
+          </button>
+        )}
+      </div>
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {isLoading ? (
@@ -130,24 +156,15 @@ export default function Dashboard() {
               <Skeleton className="h-8 w-28" />
             </div>
           ))
-        ) : (
+        ) : paymentTypeTab === "ada" ? (
           <>
             <StatCard
                title="Net Revenue"
                value={`₳ ${(totalAda - totalFees).toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`}
-               subtitle={`${confirmedPaymentsCount} confirmed ADA payments`}
+               subtitle={`${confirmedPaymentsCount} confirmed payments`}
                icon={TrendingUp}
                accentColor="green"
              />
-             {confirmedCntPayments.length > 0 && (
-               <StatCard
-                 title="CNT Payments"
-                 value={confirmedCntPayments.length}
-                 subtitle="Cardano Native Tokens"
-                 icon={CreditCard}
-                 accentColor="indigo"
-               />
-             )}
             <StatCard
               title="Payment Links"
               value={activeLinks}
@@ -173,6 +190,36 @@ export default function Dashboard() {
               }
               icon={RefreshCw}
               accentColor="cyan"
+            />
+            <StatCard
+              title="Customers"
+              value={customers.length}
+              icon={Users}
+              accentColor="purple"
+            />
+          </>
+        ) : (
+          <>
+            <StatCard
+              title="CNT Payments"
+              value={confirmedCntPayments.length}
+              subtitle="Total transactions"
+              icon={CreditCard}
+              accentColor="indigo"
+            />
+            <StatCard
+              title="Unique Tokens"
+              value={Object.keys(cntByToken).length}
+              subtitle="Active tokens"
+              icon={TrendingUp}
+              accentColor="green"
+            />
+            <StatCard
+              title="Payment Links"
+              value={activeLinks}
+              subtitle={`${paymentLinks.length} total`}
+              icon={Link2}
+              accentColor="indigo"
             />
             <StatCard
               title="Customers"
