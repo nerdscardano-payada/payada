@@ -20,6 +20,44 @@ function StatCard({ title, value, subtitle, icon: Icon, color }) {
   );
 }
 
+// Mock data for testing CNT fees
+const MOCK_CNT_PAYMENTS = [
+  {
+    id: "mock-1",
+    merchant_id: "test-merchant",
+    status: "confirmed",
+    payment_type: "cnt",
+    cnt_ticker: "$Snek",
+    cnt_policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3",
+    cnt_decimals: 0,
+    received_amount_cnt: 5000,
+    confirmed_at: new Date().toISOString(),
+    tx_hash: "0a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t",
+    cnt_fees: [
+      { ticker: "$Snek", policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3", decimals: 0, amount: 50 },
+      { ticker: "$NIGHT", policy_id: "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa", decimals: 0, amount: 75 }
+    ]
+  },
+  {
+    id: "mock-2",
+    merchant_id: "test-merchant",
+    status: "confirmed",
+    payment_type: "cnt",
+    cnt_ticker: "$MIN",
+    cnt_policy_id: "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6",
+    cnt_decimals: 0,
+    received_amount_cnt: 3000,
+    confirmed_at: new Date(Date.now() - 86400000).toISOString(),
+    tx_hash: "1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0",
+    cnt_fees: [
+      { ticker: "$MIN", policy_id: "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6", decimals: 0, amount: 30 },
+      { ticker: "$Snek", policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3", decimals: 0, amount: 25 }
+    ]
+  }
+];
+
+const SIMULATE_CNT = true; // Toggle to enable/disable mock data
+
 export default function FeeRevenueStats() {
   const [feeTypeTab, setFeeTypeTab] = useState("ada");
 
@@ -32,6 +70,9 @@ export default function FeeRevenueStats() {
     queryKey: ["admin-merchants"],
     queryFn: () => base44.entities.MerchantProfile.list("-created_date", 200),
   });
+
+  // Combine real data with mock data if simulation is enabled
+  const allPayments = SIMULATE_CNT ? [...confirmedPayments, ...MOCK_CNT_PAYMENTS] : confirmedPayments;
 
   if (isLoading) {
     return (
