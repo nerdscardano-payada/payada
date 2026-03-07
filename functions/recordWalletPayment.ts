@@ -159,15 +159,39 @@ Deno.serve(async (req) => {
     // Calculate amounts from outputs
     let merchantLovelace = 0;
     let feeLovelace = 0;
+    let cntPolicyId = null;
+    let cntAssetName = null;
+    let cntMerchantAmount = 0;
+    let cntFeeAmount = 0;
+    let cntDecimals = 0;
+    let cntTicker = null;
+
     outputs.forEach(output => {
       if (receiveAddress && output.address === receiveAddress) {
         output.amount.forEach(a => {
           if (a.unit === 'lovelace') merchantLovelace += parseInt(a.quantity);
+          else {
+            // CNT payment detected
+            const policyId = a.unit.slice(0, 56);
+            const assetName = a.unit.slice(56);
+            cntPolicyId = policyId;
+            cntAssetName = assetName;
+            cntMerchantAmount += parseInt(a.quantity);
+          }
         });
       }
       if (PAYADA_FEE_WALLET && output.address === PAYADA_FEE_WALLET) {
         output.amount.forEach(a => {
           if (a.unit === 'lovelace') feeLovelace += parseInt(a.quantity);
+          else {
+            const policyId = a.unit.slice(0, 56);
+            const assetName = a.unit.slice(56);
+            if (!cntPolicyId) {
+              cntPolicyId = policyId;
+              cntAssetName = assetName;
+            }
+            cntFeeAmount += parseInt(a.quantity);
+          }
         });
       }
     });
@@ -178,6 +202,13 @@ Deno.serve(async (req) => {
         if (!PAYADA_FEE_WALLET || output.address !== PAYADA_FEE_WALLET) {
           output.amount.forEach(a => {
             if (a.unit === 'lovelace') merchantLovelace += parseInt(a.quantity);
+            else {
+              const policyId = a.unit.slice(0, 56);
+              const assetName = a.unit.slice(56);
+              cntPolicyId = policyId;
+              cntAssetName = assetName;
+              cntMerchantAmount += parseInt(a.quantity);
+            }
           });
         }
       });
