@@ -41,8 +41,9 @@ export default function Payments() {
     });
   }, [payments, search, statusFilter, paymentTypeFilter]);
 
-  const clearFilters = () => { setSearch(""); setStatusFilter("all"); };
-  const hasFilters = search || statusFilter !== "all";
+  const clearFilters = () => { setSearch(""); setStatusFilter("all"); setPaymentTypeFilter("all"); };
+  const hasFilters = search || statusFilter !== "all" || paymentTypeFilter !== "all";
+  const hasCntPayments = payments.some(p => p.payment_type === "cnt");
 
   return (
     <div>
