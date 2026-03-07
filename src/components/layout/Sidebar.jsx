@@ -50,6 +50,7 @@ const navItems = [
 
   { type: "header", name: "Developers" },
   { name: "Webhooks", icon: Webhook, page: "Webhooks" },
+  { name: "Webhook Setup", icon: RefreshCw, page: "WebhookSetupWizard" },
   { name: "API Keys", icon: Key, page: "ApiKeys" },
 ];
 
