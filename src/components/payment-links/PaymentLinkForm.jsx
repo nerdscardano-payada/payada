@@ -11,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Save, BookTemplate } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { useQueryClient, useMutation as useMut } from "@tanstack/react-query";
 
 export default function PaymentLinkForm({ link, prefill, onBack, merchantId: merchantIdProp }) {
   const isEditing = !!link;
