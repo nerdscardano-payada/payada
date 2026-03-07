@@ -83,6 +83,7 @@ import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import Webhooks from './pages/Webhooks';
 import Settings from './pages/Settings';
+import WebhookSetupWizard from './pages/WebhookSetupWizard';
 import __Layout from './Layout.jsx';
 
 
@@ -123,6 +124,7 @@ export const PAGES = {
     "Unlock": Unlock,
     "Webhooks": Webhooks,
     "Settings": Settings,
+    "WebhookSetupWizard": WebhookSetupWizard,
 }
 
 export const pagesConfig = {
