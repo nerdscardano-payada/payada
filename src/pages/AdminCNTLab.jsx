@@ -24,6 +24,10 @@ const KNOWN_CNTS = [
   { ticker: "$NMKR",   policy_id: "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489", asset_name: "4e4d4b52",                           decimals: 6 },
   { ticker: "$HOSKY",  policy_id: "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0", asset_name: "484f534b59",                         decimals: 0 },
   { ticker: "$TITAN",  policy_id: "8483844875ce4d61c2aa459240f277d32081ee08fe0ad16899a0f581", asset_name: "0014df10544954414e",                   decimals: 6 },
+  // Stablecoins
+  { ticker: "USDM",   policy_id: "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad", asset_name: "0014df105553444d",                       decimals: 6 },
+  { ticker: "USDA",   policy_id: "fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456", asset_name: "55534441",                               decimals: 6 },
+  { ticker: "DJED",   policy_id: "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61", asset_name: "446a65644d6963726f555344",               decimals: 6 },
 ];
 
 function StatusBadge({ status }) {
