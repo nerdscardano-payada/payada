@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
-import { QRCodeSVG } from "qrcode.react";
+import QRCode from "qrcode.react";
 import { createPageUrl } from "@/utils";
 import {
   Hexagon, CheckCircle2, Clock, Loader2,
@@ -181,7 +181,7 @@ export default function POS() {
               {paymentStatus !== "confirmed" && (
                 <div className="flex justify-center">
                   <div className="bg-white p-4 rounded-xl">
-                    <QRCodeSVG
+                    <QRCode
                       value={qrUrl}
                       size={200}
                       level="H"

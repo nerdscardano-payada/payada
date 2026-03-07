@@ -65,6 +65,7 @@ import DiscordPlugin from './pages/DiscordPlugin';
 import Documentation from './pages/Documentation';
 import Features from './pages/Features';
 import Home from './pages/Home';
+import Litepaper from './pages/Litepaper';
 import MerchantAgreement from './pages/MerchantAgreement';
 import MerchantProfile from './pages/MerchantProfile';
 import Onboarding from './pages/Onboarding';
@@ -89,7 +90,6 @@ import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
 import Webhooks from './pages/Webhooks';
-import Litepaper from './pages/Litepaper';
 import __Layout from './Layout.jsx';
 
 
@@ -112,6 +112,7 @@ export const PAGES = {
     "Documentation": Documentation,
     "Features": Features,
     "Home": Home,
+    "Litepaper": Litepaper,
     "MerchantAgreement": MerchantAgreement,
     "MerchantProfile": MerchantProfile,
     "Onboarding": Onboarding,
@@ -136,7 +137,6 @@ export const PAGES = {
     "Unlock": Unlock,
     "WebhookSetupWizard": WebhookSetupWizard,
     "Webhooks": Webhooks,
-    "Litepaper": Litepaper,
 }
 
 export const pagesConfig = {
