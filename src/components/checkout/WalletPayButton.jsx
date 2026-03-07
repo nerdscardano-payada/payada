@@ -32,9 +32,11 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
 
     if (isCnt) {
       // CNT payment: split tokens between merchant and fee wallet
-      const cntTotal = paymentLink.cnt_amount || 0;
+      const decimals = paymentLink.cnt_decimals || 0;
+      const divisor = Math.pow(10, decimals);
+      const cntTotal = Math.round((paymentLink.cnt_amount || 0) * divisor);
       const feePercent = sessionData.platform_fee_percent || 1.75;
-      const cntFeeAmount = Math.floor(cntTotal * (feePercent / 100));
+      const cntFeeAmount = Math.round(cntTotal * (feePercent / 100));
       buildParams = {
         walletAddress,
         merchantAddress,
