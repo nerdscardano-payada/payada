@@ -246,6 +246,13 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
+              <h4 className="text-white font-semibold mb-4">Resources</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to={createPageUrl("Litepaper")} className="hover:text-white transition">Litepaper</Link></li>
+                <li><Link to={createPageUrl("Documentation")} className="hover:text-white transition">Documentation</Link></li>
+              </ul>
+            </div>
+            <div>
               <h4 className="text-white font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-sm">
                 <li><Link to={createPageUrl("TermsOfService")} className="hover:text-white transition">Terms</Link></li>
