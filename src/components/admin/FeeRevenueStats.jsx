@@ -102,7 +102,7 @@ export default function FeeRevenueStats() {
         >
           ADA Fees
         </button>
-        {Object.entries(cntFeesByToken).length > 0 && (
+        {cntPayments.length > 0 && (
           <button
             onClick={() => setFeeTypeTab("cnt")}
             className={`px-4 py-2 font-medium text-sm transition-colors border-b-2 ${
