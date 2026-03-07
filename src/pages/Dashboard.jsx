@@ -231,20 +231,30 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Chart + Top Customers */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-6">
-        {isLoading ? (
-          <>
-            <div className="bg-white rounded-xl border border-slate-200/60 p-5"><Skeleton className="h-48 w-full" /></div>
-            <div className="bg-white rounded-xl border border-slate-200/60 p-5"><Skeleton className="h-48 w-full" /></div>
-          </>
-        ) : (
-          <>
-            <PaymentVolumeChart payments={payments} />
-            <TopCustomers customers={customers} />
-          </>
-        )}
-      </div>
+      {/* Chart + Top Customers (ADA) / CNT Revenue (CNT) */}
+      {paymentTypeTab === "ada" ? (
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-6">
+          {isLoading ? (
+            <>
+              <div className="bg-white rounded-xl border border-slate-200/60 p-5"><Skeleton className="h-48 w-full" /></div>
+              <div className="bg-white rounded-xl border border-slate-200/60 p-5"><Skeleton className="h-48 w-full" /></div>
+            </>
+          ) : (
+            <>
+              <PaymentVolumeChart payments={payments} />
+              <TopCustomers customers={customers} />
+            </>
+          )}
+        </div>
+      ) : (
+        <div className="mb-6">
+          {isLoading ? (
+            <div className="bg-white rounded-xl border border-slate-200/60 p-5"><Skeleton className="h-96 w-full" /></div>
+          ) : (
+            <CntRevenueTable payments={payments} />
+          )}
+        </div>
+      )}
 
       {/* Recent Payments */}
       <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
