@@ -32,21 +32,23 @@ function StatusBadge({ status }) {
   );
 }
 
-function NewCNTLinkForm({ onSuccess, merchantProfile }) {
+function CNTLinkForm({ onSuccess, merchantProfile, existingLink }) {
+  const isEditing = !!existingLink;
   const queryClient = useQueryClient();
+  const defaultToken = KNOWN_CNTS[0];
   const [form, setForm] = useState({
-    title: "",
-    slug: "",
-    cnt_ticker: "$Snek",
-    cnt_policy_id: KNOWN_CNTS[0].policy_id,
-    cnt_asset_name: KNOWN_CNTS[0].asset_name,
-    cnt_decimals: 0,
-    cnt_amount: "",
-    receive_address: merchantProfile?.default_receive_address || "",
-    confirmations_required: 2,
-    collect_email: false,
-    collect_name: false,
-    collect_shipping: false,
+    title: existingLink?.title || "",
+    slug: existingLink?.slug || "",
+    cnt_ticker: existingLink?.cnt_ticker || defaultToken.ticker,
+    cnt_policy_id: existingLink?.cnt_policy_id || defaultToken.policy_id,
+    cnt_asset_name: existingLink?.cnt_asset_name || defaultToken.asset_name,
+    cnt_decimals: existingLink?.cnt_decimals ?? 0,
+    cnt_amount: existingLink?.cnt_amount || "",
+    receive_address: existingLink?.receive_address || merchantProfile?.default_receive_address || "",
+    confirmations_required: existingLink?.confirmations_required || 2,
+    collect_email: existingLink?.collect_email || false,
+    collect_name: existingLink?.collect_name || false,
+    collect_shipping: existingLink?.collect_shipping || false,
   });
 
   const selectToken = (cnt) => {
@@ -54,22 +56,27 @@ function NewCNTLinkForm({ onSuccess, merchantProfile }) {
   };
 
   const mutation = useMutation({
-    mutationFn: (data) => base44.entities.PaymentLink.create(data),
+    mutationFn: (data) => isEditing
+      ? base44.entities.PaymentLink.update(existingLink.id, data)
+      : base44.entities.PaymentLink.create(data),
     onSuccess: () => { queryClient.invalidateQueries(["cnt-links"]); onSuccess(); },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutation.mutate({
+    const data = {
       ...form,
       cnt_amount: parseFloat(form.cnt_amount),
       amount_mode: "fixed_cnt",
       is_cnt_test: true,
       status: "active",
-      payment_count: 0,
-      total_received_cnt: 0,
-      merchant_id: merchantProfile?.user_id,
-    });
+    };
+    if (!isEditing) {
+      data.payment_count = 0;
+      data.total_received_cnt = 0;
+      data.merchant_id = merchantProfile?.user_id;
+    }
+    mutation.mutate(data);
   };
 
   return (
