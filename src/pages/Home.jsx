@@ -94,7 +94,7 @@ export default function HomePage() {
                 onClick={handleSignUp}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2"
               >
-                Start Free <ArrowRight className="w-5 h-5" />
+                Get Started <ArrowRight className="w-5 h-5" />
               </Button>
               <Link to={createPageUrl("Documentation")}>
                 <Button 
