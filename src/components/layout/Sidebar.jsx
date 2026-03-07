@@ -49,7 +49,7 @@ const navItems = [
   { name: "Discord Gate", icon: Bot, page: "DiscordPlugin" },
 
   { type: "header", name: "Developers" },
-  { name: "Settings", icon: Webhook, page: "Settings" },
+  { name: "Webhooks", icon: Webhook, page: "Webhooks" },
   { name: "API Keys", icon: Key, page: "ApiKeys" },
 ];
 
