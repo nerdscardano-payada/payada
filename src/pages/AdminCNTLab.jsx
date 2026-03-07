@@ -173,8 +173,8 @@ export default function AdminCNTLab() {
     return (
       <div className="p-8">
         <div className="rounded-lg border border-red-200 bg-red-50 p-6">
-          <h2 className="text-lg font-semibold text-red-900">Toegang geweigerd</h2>
-          <p className="text-red-800 mt-2">Je hebt adminrechten nodig voor deze pagina.</p>
+          <h2 className="text-lg font-semibold text-red-900">Access Denied</h2>
+          <p className="text-red-800 mt-2">You need admin rights to view this page.</p>
         </div>
       </div>
     );
@@ -190,12 +190,12 @@ export default function AdminCNTLab() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-slate-900">CNT Lab <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold ml-2">ADMIN ONLY</span></h1>
-            <p className="text-slate-500 text-sm">Test Cardano Native Token betalingen — niet zichtbaar voor gebruikers</p>
+            <p className="text-slate-500 text-sm">Test Cardano Native Token payments — not visible to users</p>
           </div>
         </div>
         <Button onClick={() => setShowForm(!showForm)} className="gap-2">
           <Plus className="w-4 h-4" />
-          Nieuwe CNT Testlink
+          New CNT Test Link
         </Button>
       </div>
 
@@ -205,7 +205,7 @@ export default function AdminCNTLab() {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Coins className="w-4 h-4 text-indigo-500" />
-              Nieuwe CNT Betaallink aanmaken
+              Create New CNT Payment Link
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -216,8 +216,8 @@ export default function AdminCNTLab() {
 
       <Tabs defaultValue="links">
         <TabsList>
-          <TabsTrigger value="links">CNT Testlinks ({cntLinks.length})</TabsTrigger>
-          <TabsTrigger value="payments">CNT Betalingen ({cntPayments.length})</TabsTrigger>
+          <TabsTrigger value="links">CNT Test Links ({cntLinks.length})</TabsTrigger>
+          <TabsTrigger value="payments">CNT Payments ({cntPayments.length})</TabsTrigger>
           <TabsTrigger value="tokens">Token Whitelist</TabsTrigger>
         </TabsList>
 
@@ -229,7 +229,7 @@ export default function AdminCNTLab() {
             <Card className="border-dashed">
               <CardContent className="py-10 text-center text-slate-400">
                 <FlaskConical className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                <p>Nog geen CNT testlinks aangemaakt.</p>
+                <p>No CNT test links created yet.</p>
               </CardContent>
             </Card>
           ) : (
@@ -249,8 +249,8 @@ export default function AdminCNTLab() {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right text-sm">
-                      <p className="text-slate-500">{link.payment_count || 0} betalingen</p>
-                      <p className="text-slate-400">{link.total_received_cnt || 0} {link.cnt_ticker} ontvangen</p>
+                      <p className="text-slate-500">{link.payment_count || 0} payments</p>
+                      <p className="text-slate-400">{link.total_received_cnt || 0} {link.cnt_ticker} received</p>
                     </div>
                     <Button
                       size="sm"
@@ -258,7 +258,7 @@ export default function AdminCNTLab() {
                       onClick={() => window.open(`/Pay?slug=${link.slug}`, "_blank")}
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
-                      Testen
+                      Test
                     </Button>
                     <Button variant="ghost" size="icon" className="text-red-400 hover:text-red-600 hover:bg-red-50"
                       onClick={() => deleteLinkMutation.mutate(link.id)}>
@@ -279,7 +279,7 @@ export default function AdminCNTLab() {
             <Card className="border-dashed">
               <CardContent className="py-10 text-center text-slate-400">
                 <Coins className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                <p>Nog geen CNT testbetalingen ontvangen.</p>
+                <p>No CNT test payments received yet.</p>
               </CardContent>
             </Card>
           ) : (
@@ -303,7 +303,7 @@ export default function AdminCNTLab() {
                     )}
                   </div>
                   <div className="text-right text-sm text-slate-500">
-                    <p>{payment.confirmations || 0} bevestigingen</p>
+                    <p>{payment.confirmations || 0} confirmations</p>
                     {payment.payer_address && <p className="font-mono text-xs text-slate-400">{payment.payer_address.slice(0, 16)}...</p>}
                   </div>
                 </CardContent>
@@ -316,7 +316,7 @@ export default function AdminCNTLab() {
         <TabsContent value="tokens" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Gekende CNT Tokens</CardTitle>
+              <CardTitle className="text-base">Known CNT Tokens</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -327,11 +327,11 @@ export default function AdminCNTLab() {
                       <p className="text-xs text-slate-500 font-mono mt-0.5">{cnt.policy_id}</p>
                       <p className="text-xs text-slate-400 font-mono">Asset: {cnt.asset_name}</p>
                     </div>
-                    <Badge className="bg-green-100 text-green-700">Actief</Badge>
+                    <Badge className="bg-green-100 text-green-700">Active</Badge>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-slate-400 mt-4">Meer tokens kunnen worden toegevoegd na testfase.</p>
+              <p className="text-xs text-slate-400 mt-4">More tokens can be added after the testing phase.</p>
             </CardContent>
           </Card>
         </TabsContent>
