@@ -41,12 +41,26 @@ export default function FeeRevenueStats() {
     );
   }
 
-  const totalFeeAda = confirmedPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
-  const totalVolumeAda = confirmedPayments.reduce((sum, p) => sum + (p.received_amount_ada || 0), 0);
+  const adaPayments = confirmedPayments.filter(p => p.payment_type === "ada" || !p.payment_type);
+  const cntPayments = confirmedPayments.filter(p => p.payment_type === "cnt");
+
+  const totalFeeAda = adaPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
+  const totalVolumeAda = adaPayments.reduce((sum, p) => sum + (p.received_amount_ada || 0), 0);
+
+  // CNT totals
+  const cntByToken = {};
+  cntPayments.forEach(p => {
+    const key = `${p.cnt_policy_id}|${p.cnt_ticker || "unknown"}`;
+    if (!cntByToken[key]) {
+      cntByToken[key] = { ticker: p.cnt_ticker, policy_id: p.cnt_policy_id, decimals: p.cnt_decimals || 0, amount: 0, fees: 0 };
+    }
+    cntByToken[key].amount += p.received_amount_cnt || 0;
+    cntByToken[key].fees += p.fee_amount_ada || 0;
+  });
 
   // Last 30 days
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  const recentPayments = confirmedPayments.filter(p => p.confirmed_at && new Date(p.confirmed_at) >= thirtyDaysAgo);
+  const recentPayments = adaPayments.filter(p => p.confirmed_at && new Date(p.confirmed_at) >= thirtyDaysAgo);
   const recentFeeAda = recentPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
 
   // Per merchant breakdown
