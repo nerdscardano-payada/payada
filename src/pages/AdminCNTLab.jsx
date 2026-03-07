@@ -32,10 +32,17 @@ function StatusBadge({ status }) {
   );
 }
 
+const generateSlug = (title) => {
+  const base = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const suffix = Math.random().toString(36).slice(2, 6);
+  return `cnt-${base}-${suffix}`;
+};
+
 function CNTLinkForm({ onSuccess, merchantProfile, existingLink }) {
   const isEditing = !!existingLink;
   const queryClient = useQueryClient();
   const defaultToken = KNOWN_CNTS[0];
+  const [slugLocked, setSlugLocked] = useState(true);
   const [form, setForm] = useState({
     title: existingLink?.title || "",
     slug: existingLink?.slug || "",
@@ -50,6 +57,16 @@ function CNTLinkForm({ onSuccess, merchantProfile, existingLink }) {
     collect_name: existingLink?.collect_name || false,
     collect_shipping: existingLink?.collect_shipping || false,
   });
+
+  const handleTitleChange = (e) => {
+    const title = e.target.value;
+    setForm(f => ({
+      ...f,
+      title,
+      // Auto-generate slug from title when creating (not editing) and slug is still locked
+      ...(!isEditing && slugLocked && title ? { slug: generateSlug(title) } : {}),
+    }));
+  };
 
   const selectToken = (cnt) => {
     setForm(f => ({ ...f, cnt_ticker: cnt.ticker, cnt_policy_id: cnt.policy_id, cnt_asset_name: cnt.asset_name, cnt_decimals: cnt.decimals }));
