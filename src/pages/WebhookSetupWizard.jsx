@@ -261,7 +261,7 @@ export default function WebhookSetupWizard() {
             disabled={createMutation.isPending}
             className="gap-2 bg-indigo-600 hover:bg-indigo-700"
           >
-            {createMutation.isPending ? "Aanmaken..." : "Endpoint aanmaken"}
+            {createMutation.isPending ? "Creating..." : "Create Endpoint"}
             <CheckCircle className="w-4 h-4" />
           </Button>
         )}
