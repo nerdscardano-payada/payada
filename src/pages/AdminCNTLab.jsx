@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { FlaskConical, Coins, Plus, CheckCircle, Clock, XCircle, AlertTriangle, Trash2, ExternalLink } from "lucide-react";
+import { FlaskConical, Coins, Plus, CheckCircle, Clock, XCircle, AlertTriangle, Trash2, ExternalLink, Pencil } from "lucide-react";
 
 const KNOWN_CNTS = [
   { ticker: "$Snek", policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3", asset_name: "534e454b", decimals: 0 },
@@ -292,8 +292,8 @@ export default function AdminCNTLab() {
                       <Badge className="bg-purple-100 text-purple-700 text-xs">{payment.cnt_ticker}</Badge>
                     </div>
                     <p className="text-sm text-slate-700">
-                      Verwacht: <strong>{payment.expected_amount_cnt?.toLocaleString()}</strong> ·
-                      Ontvangen: <strong>{payment.received_amount_cnt?.toLocaleString() || "—"}</strong>
+                      Expected: <strong>{payment.expected_amount_cnt?.toLocaleString()}</strong> ·
+                      Received: <strong>{payment.received_amount_cnt?.toLocaleString() || "—"}</strong>
                     </p>
                     {payment.tx_hash && (
                       <a href={`https://cardanoscan.io/transaction/${payment.tx_hash}`} target="_blank" rel="noopener noreferrer"
