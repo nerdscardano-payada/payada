@@ -17,39 +17,53 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     return () => window.removeEventListener("pageshow", onPageShow);
   }, []);
 
+  const isCnt = paymentLink?.amount_mode === "fixed_cnt";
+
   const handlePay = async () => {
     if (!connectedWallet || !sessionData) return;
 
     const { walletId, address: walletAddress } = connectedWallet;
     const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
-    // Use lovelace directly, fallback to ada conversion
-    const merchantLovelace = String(
-      sessionData.merchant_amount_lovelace > 0
-        ? sessionData.merchant_amount_lovelace
-        : Math.floor((sessionData.merchant_amount_ada || 0) * 1_000_000)
-    );
-    const platformFeeLovelace = String(
-      sessionData.platform_fee_lovelace > 0
-        ? sessionData.platform_fee_lovelace
-        : Math.floor((sessionData.platform_fee_ada || 0) * 1_000_000)
-    );
 
-    console.log("[PayButton] merchantLovelace:", merchantLovelace, "feeLovelace:", platformFeeLovelace, "totalAda:", sessionData?.amount_total_ada);
     setTxLoading(true);
     setTxStatus('building');
+
+    let buildParams;
+
+    if (isCnt) {
+      // CNT payment: split tokens between merchant and fee wallet
+      const cntTotal = paymentLink.cnt_amount || 0;
+      const feePercent = sessionData.platform_fee_percent || 1.75;
+      const cntFeeAmount = Math.floor(cntTotal * (feePercent / 100));
+      buildParams = {
+        walletAddress,
+        merchantAddress,
+        merchantLovelace: "0", // not used for CNT
+        platformFeeLovelace: "0",
+        cntPolicyId: paymentLink.cnt_policy_id,
+        cntAssetName: paymentLink.cnt_asset_name,
+        cntAmount: String(cntTotal),
+        cntFeeAmount: String(cntFeeAmount),
+      };
+    } else {
+      const merchantLovelace = String(
+        sessionData.merchant_amount_lovelace > 0
+          ? sessionData.merchant_amount_lovelace
+          : Math.floor((sessionData.merchant_amount_ada || 0) * 1_000_000)
+      );
+      const platformFeeLovelace = String(
+        sessionData.platform_fee_lovelace > 0
+          ? sessionData.platform_fee_lovelace
+          : Math.floor((sessionData.platform_fee_ada || 0) * 1_000_000)
+      );
+      console.log("[PayButton] merchantLovelace:", merchantLovelace, "feeLovelace:", platformFeeLovelace);
+      buildParams = { walletAddress, merchantAddress, merchantLovelace, platformFeeLovelace };
+    }
 
     let txCbor;
     try {
       // Step 1: Build tx via backend BEFORE re-enabling wallet
-      const buildRes = await base44.functions.invoke('buildPaymentTx', {
-        walletAddress,
-        merchantAddress,
-        merchantLovelace,
-        platformFeeLovelace,
-        payerEmail: payerEmail || null,
-        payerName: payerName || null,
-        payerDiscordUsername: payerDiscordUsername || null,
-      });
+      const buildRes = await base44.functions.invoke('buildPaymentTx', buildParams);
       if (!buildRes?.data?.txCbor) {
         throw new Error(buildRes?.data?.error || "Failed to build transaction CBOR");
       }
