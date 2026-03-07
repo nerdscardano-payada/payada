@@ -281,7 +281,7 @@ export default function FeeRevenueStats() {
                           {allPayments.filter(p => p.cnt_fees?.some(f => f.policy_id === data.policy_id)).length}
                         </td>
                         <td className="py-3 text-right font-semibold text-green-600">
-                          {(data.totalFees / Math.pow(10, data.decimals)).toFixed(4)} {data.ticker}
+                          {(data.totalFees / Math.pow(10, data.decimals)).toFixed(2)} {data.ticker}
                         </td>
                       </tr>
                     ))}
@@ -344,14 +344,14 @@ export default function FeeRevenueStats() {
                   </p>
                 </div>
                 <p className="text-sm text-blue-900 mb-2">
-                  Ontvangen: {((p.received_amount_cnt || 0) / Math.pow(10, p.cnt_decimals || 0)).toFixed(4)} {p.cnt_ticker}
+                  Ontvangen: {((p.received_amount_cnt || 0) / Math.pow(10, p.cnt_decimals || 0)).toFixed(2)} {p.cnt_ticker}
                 </p>
                 {p.cnt_fees && p.cnt_fees.length > 0 && (
                   <div className="text-xs space-y-1 pt-2 border-t border-blue-100">
                     <p className="font-medium text-green-700">Fees Earned:</p>
                     {p.cnt_fees.map((fee, idx) => (
                       <p key={idx} className="text-green-600">
-                        {(fee.amount / Math.pow(10, fee.decimals || 0)).toFixed(4)} {fee.ticker}
+                        {(fee.amount / Math.pow(10, fee.decimals || 0)).toFixed(2)} {fee.ticker}
                       </p>
                     ))}
                   </div>
