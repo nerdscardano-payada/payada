@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
   Zap, BookOpen, Code, GitBranch, Wallet, CheckCircle2,
-  ChevronRight, Copy, Check, Shield, CreditCard, Bell,
+  Copy, Check, Shield, CreditCard,
   Users, ArrowRight, ExternalLink, Terminal, Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
