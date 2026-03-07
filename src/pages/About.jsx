@@ -103,16 +103,6 @@ export default function AboutPage() {
         </div>
 
 
-        {/* Career CTA */}
-        <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg p-12 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Join Our Team</h2>
-          <p className="text-lg mb-8 opacity-90">We're hiring! Check out our open positions.</p>
-          <Link to={createPageUrl("Contact")}>
-            <button className="bg-white text-indigo-600 hover:bg-slate-100 px-8 py-3 rounded-lg font-semibold">
-              View Careers
-            </button>
-          </Link>
-        </div>
       </section>
     </div>
   );
