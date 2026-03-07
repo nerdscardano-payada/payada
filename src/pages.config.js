@@ -86,6 +86,9 @@ import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
 import Webhooks from './pages/Webhooks';
+import AcceptableUsePolicy from './pages/AcceptableUsePolicy';
+import MerchantAgreement from './pages/MerchantAgreement';
+import Disclaimer from './pages/Disclaimer';
 import __Layout from './Layout.jsx';
 
 
@@ -129,6 +132,9 @@ export const PAGES = {
     "Unlock": Unlock,
     "WebhookSetupWizard": WebhookSetupWizard,
     "Webhooks": Webhooks,
+    "AcceptableUsePolicy": AcceptableUsePolicy,
+    "MerchantAgreement": MerchantAgreement,
+    "Disclaimer": Disclaimer,
 }
 
 export const pagesConfig = {
