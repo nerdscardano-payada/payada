@@ -96,7 +96,7 @@ export default function WebhookSetupWizard() {
           <span className="text-sm font-medium text-indigo-600">Developers</span>
         </div>
         <h1 className="text-2xl font-bold text-slate-900">Webhook Setup Wizard</h1>
-        <p className="text-slate-500 text-sm mt-1">Configureer een nieuw webhook endpoint in 3 stappen.</p>
+        <p className="text-slate-500 text-sm mt-1">Configure a new webhook endpoint in 3 steps.</p>
       </div>
 
       {/* Step indicator */}
