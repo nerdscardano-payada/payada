@@ -41,11 +41,7 @@ const launched = [
     title: "Access Links",
     description: "Sales tool for community access via Discord, Telegram, or other platforms.",
   },
-  {
-    icon: RefreshCw,
-    title: "Subscriptions",
-    description: "Recurring payments with configurable intervals (weekly, monthly, yearly).",
-  },
+
   {
     icon: Lock,
     title: "Webhooks & API",
