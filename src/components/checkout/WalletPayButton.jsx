@@ -193,6 +193,8 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       >
         {txLoading ? (
           <><Loader2 className="w-4 h-4 animate-spin" /> {statusLabel[txStatus] || "Processing…"}</>
+        ) : isCnt ? (
+          <>Pay {paymentLink?.cnt_amount?.toLocaleString()} {paymentLink?.cnt_ticker} with Wallet</>
         ) : (
           <>Pay ₳ {sessionData?.amount_total_ada?.toFixed(2)} with Wallet</>
         )}
