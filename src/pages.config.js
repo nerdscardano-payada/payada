@@ -49,6 +49,7 @@
  */
 import APIReference from './pages/APIReference';
 import About from './pages/About';
+import AcceptableUsePolicy from './pages/AcceptableUsePolicy';
 import Access from './pages/Access';
 import AccessLinks from './pages/AccessLinks';
 import AdminCNTLab from './pages/AdminCNTLab';
@@ -59,10 +60,12 @@ import ButtonGenerator from './pages/ButtonGenerator';
 import Contact from './pages/Contact';
 import Customers from './pages/Customers';
 import Dashboard from './pages/Dashboard';
+import Disclaimer from './pages/Disclaimer';
 import DiscordPlugin from './pages/DiscordPlugin';
 import Documentation from './pages/Documentation';
 import Features from './pages/Features';
 import Home from './pages/Home';
+import MerchantAgreement from './pages/MerchantAgreement';
 import MerchantProfile from './pages/MerchantProfile';
 import Onboarding from './pages/Onboarding';
 import POS from './pages/POS';
@@ -86,15 +89,13 @@ import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
 import Webhooks from './pages/Webhooks';
-import AcceptableUsePolicy from './pages/AcceptableUsePolicy';
-import MerchantAgreement from './pages/MerchantAgreement';
-import Disclaimer from './pages/Disclaimer';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "APIReference": APIReference,
     "About": About,
+    "AcceptableUsePolicy": AcceptableUsePolicy,
     "Access": Access,
     "AccessLinks": AccessLinks,
     "AdminCNTLab": AdminCNTLab,
@@ -105,10 +106,12 @@ export const PAGES = {
     "Contact": Contact,
     "Customers": Customers,
     "Dashboard": Dashboard,
+    "Disclaimer": Disclaimer,
     "DiscordPlugin": DiscordPlugin,
     "Documentation": Documentation,
     "Features": Features,
     "Home": Home,
+    "MerchantAgreement": MerchantAgreement,
     "MerchantProfile": MerchantProfile,
     "Onboarding": Onboarding,
     "POS": POS,
@@ -132,9 +135,6 @@ export const PAGES = {
     "Unlock": Unlock,
     "WebhookSetupWizard": WebhookSetupWizard,
     "Webhooks": Webhooks,
-    "AcceptableUsePolicy": AcceptableUsePolicy,
-    "MerchantAgreement": MerchantAgreement,
-    "Disclaimer": Disclaimer,
 }
 
 export const pagesConfig = {
