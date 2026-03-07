@@ -151,7 +151,7 @@ export default function OnboardingPage() {
                 <div className="space-y-3">
                   <Button
                     size="lg"
-                    onClick={() => window.location.href = "/dashboard"}
+                    onClick={() => window.location.href = createPageUrl("Dashboard")}
                     className="w-full gap-2"
                   >
                     Go to Dashboard
