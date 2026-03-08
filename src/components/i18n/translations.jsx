@@ -921,6 +921,7 @@ export const translations = {
       contact: "Contacto",
       sign_in: "Iniciar sesión",
       get_started: "Comenzar",
+      about: "Sobre nosotros",
     },
     home: {
       hero_title: "Acepta pagos Cardano sin esfuerzo",
