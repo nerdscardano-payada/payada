@@ -77,9 +77,14 @@ export default function SEOHead({
 
     return () => {
       // Cleanup on unmount so stale tags don't persist
-      const toRemove = ["og:title", "og:description", "og:type", "og:image", "og:url", "og:site_name"];
-      toRemove.forEach((p) => {
+      const ogToRemove = ["og:title", "og:description", "og:type", "og:image", "og:url", "og:site_name"];
+      ogToRemove.forEach((p) => {
         const el = document.querySelector(`meta[property="${p}"]`);
+        if (el) el.remove();
+      });
+      const nameToRemove = ["description", "robots", "twitter:card", "twitter:title", "twitter:description", "twitter:image"];
+      nameToRemove.forEach((n) => {
+        const el = document.querySelector(`meta[name="${n}"]`);
         if (el) el.remove();
       });
     };
