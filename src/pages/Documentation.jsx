@@ -245,34 +245,24 @@ export default function DocumentationPage() {
             </Section>
 
             {/* CNT Tokens */}
-            <Section id="cnt-tokens" title="Cardano Native Token Payments — Coming Soon" icon={Package}>
+            <Section id="cnt-tokens" title={t("docs.cnt_title")} icon={Package}>
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm text-amber-800">
-                🚧 This feature is currently in development and not yet operational. Stay tuned for the launch announcement.
+                {t("docs.cnt_wip")}
               </div>
-              <p className="text-slate-600 mb-4">
-                PayADA will support accepting any whitelisted Cardano Native Token (CNT) as payment. Merchants will be able to create payment links priced in tokens like $Snek, $HOSKY, $MIN, stablecoins (DJED, USDM, USDA), and more.
-              </p>
-              <h3 className="font-semibold text-slate-900 mb-3">Whitelisted Tokens</h3>
-              <p className="text-slate-600 text-sm mb-4">
-                The following tokens are currently supported for CNT payments. Contact us to request additional tokens.
-              </p>
+              <p className="text-slate-600 mb-4">{t("docs.cnt_sub")}</p>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("docs.cnt_whitelist_title")}</h3>
+              <p className="text-slate-600 text-sm mb-4">{t("docs.cnt_whitelist_sub")}</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
                 {["$NIGHT", "$Snek", "$MIN", "$INDY", "$SUNDAE", "$WMTX", "$CSWAP", "$IAG", "$STRIKE", "$NMKR", "$HOSKY", "$TITAN", "USDM", "USDA", "DJED"].map((t) => (
                   <div key={t} className="px-3 py-2 bg-blue-50 border border-blue-100 rounded-lg text-center text-sm font-semibold text-blue-700">{t}</div>
                 ))}
               </div>
-              <h3 className="font-semibold text-slate-900 mb-3">How CNT Payments Work</h3>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("docs.cnt_how_title")}</h3>
               <ol className="space-y-2 text-sm text-slate-600">
-                {[
-                  "Merchant creates a payment link with mode = fixed_cnt and selects the token from the whitelist",
-                  "Customer visits the checkout and connects their Cardano wallet",
-                  "The wallet signs a transaction sending the exact token amount to the merchant's address",
-                  "PayADA monitors the blockchain and confirms the CNT amount received",
-                  "Webhook fires with payment.confirmed event",
-                ].map((s, i) => (
-                  <li key={i} className="flex gap-3">
+                {["cnt_s1","cnt_s2","cnt_s3","cnt_s4","cnt_s5"].map((key, i) => (
+                  <li key={key} className="flex gap-3">
                     <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                    {s}
+                    {t(`docs.${key}`)}
                   </li>
                 ))}
               </ol>
@@ -281,26 +271,24 @@ export default function DocumentationPage() {
 
 
             {/* Webhooks */}
-            <Section id="webhooks" title="Webhooks" icon={GitBranch}>
-              <p className="text-slate-600 mb-4">
-                Webhooks deliver real-time payment events to your server. Configure them in Dashboard → Webhooks.
-              </p>
-              <h3 className="font-semibold text-slate-900 mb-3">Available Events</h3>
+            <Section id="webhooks" title={t("docs.webhooks_sidebar")} icon={GitBranch}>
+              <p className="text-slate-600 mb-4">{t("docs.webhooks_sub")}</p>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("docs.webhooks_events_title")}</h3>
               <div className="space-y-2 mb-6">
                 {[
-                  { event: "payment.detected", desc: "Payment seen on blockchain, not yet confirmed" },
-                  { event: "payment.confirmed", desc: "Payment confirmed with required confirmations" },
-                  { event: "payment.failed", desc: "Payment validation failed (wrong amount, wrong address)" },
-                  { event: "subscription.due", desc: "Subscription renewal payment is due" },
-                ].map((e, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 border border-slate-100 rounded-lg bg-slate-50">
+                  { event: "payment.detected", descKey: "wh_ev1" },
+                  { event: "payment.confirmed", descKey: "wh_ev2" },
+                  { event: "payment.failed", descKey: "wh_ev3" },
+                  { event: "subscription.due", descKey: "wh_ev4" },
+                ].map((e) => (
+                  <div key={e.event} className="flex items-start gap-3 p-3 border border-slate-100 rounded-lg bg-slate-50">
                     <code className="text-xs font-mono text-blue-600 bg-blue-50 px-2 py-1 rounded flex-shrink-0">{e.event}</code>
-                    <span className="text-sm text-slate-600">{e.desc}</span>
+                    <span className="text-sm text-slate-600">{t(`docs.${e.descKey}`)}</span>
                   </div>
                 ))}
               </div>
-              <h3 className="font-semibold text-slate-900 mb-3">Verifying Webhook Signatures</h3>
-              <p className="text-sm text-slate-600 mb-2">All webhook requests include a <code className="font-mono text-xs bg-slate-100 px-1">X-PayADA-Signature</code> header (HMAC-SHA256):</p>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("docs.webhooks_sig_title")}</h3>
+              <p className="text-sm text-slate-600 mb-2">{t("docs.webhooks_sig_sub")}</p>
               <CodeBlock code={`const crypto = require('crypto');
 
 const signature = req.headers['x-payada-signature'];
@@ -316,23 +304,21 @@ if (hash !== signature) {
 // Safe to process the event
 res.status(200).send('OK');`} />
               <Link to={createPageUrl("Webhooks")} className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline mt-2">
-                Full Webhook Guide <ArrowRight className="w-4 h-4" />
+                {t("docs.webhook_guide")} <ArrowRight className="w-4 h-4" />
               </Link>
             </Section>
 
             {/* REST API */}
-            <Section id="api" title="REST API" icon={Code}>
-              <p className="text-slate-600 mb-4">
-                Integrate PayADA programmatically with our REST API. All requests require your API key in the Authorization header.
-              </p>
+            <Section id="api" title={t("docs.api_sidebar")} icon={Code}>
+              <p className="text-slate-600 mb-4">{t("docs.api_sub")}</p>
               <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-6">
-                <p className="text-xs text-slate-500 uppercase font-semibold mb-1">Base URL</p>
+                <p className="text-xs text-slate-500 uppercase font-semibold mb-1">{t("api.base_url_title")}</p>
                 <code className="font-mono text-slate-900 text-sm">https://api.payada.io/v1</code>
               </div>
-              <h3 className="font-semibold text-slate-900 mb-3">Authentication</h3>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("api.auth_title")}</h3>
               <CodeBlock code={`curl https://api.payada.io/v1/payments \\
   -H "Authorization: Bearer YOUR_API_KEY"`} />
-              <h3 className="font-semibold text-slate-900 mb-3 mt-6">Quick Reference</h3>
+              <h3 className="font-semibold text-slate-900 mb-3 mt-6">{t("docs.api_quick_ref")}</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
                   <thead className="bg-slate-50">
@@ -363,7 +349,7 @@ res.status(200).send('OK');`} />
                 </table>
               </div>
               <Link to={createPageUrl("APIReference")} className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline mt-4">
-                Full API Reference with examples <ArrowRight className="w-4 h-4" />
+                {t("docs.full_api_ref")} <ArrowRight className="w-4 h-4" />
               </Link>
             </Section>
 
