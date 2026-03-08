@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Users, Target, Zap, Globe } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 
 export default function AboutPage() {
   return (

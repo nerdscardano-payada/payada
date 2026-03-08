@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Zap, Lock, TrendingUp, Globe } from "lucide-react";
 import { createPageUrl } from "@/utils";
+import SEOHead from "@/components/SEOHead";
 
 const features = [
   {

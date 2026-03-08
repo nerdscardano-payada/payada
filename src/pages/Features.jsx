@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { CheckCircle, Zap, Shield, Globe, ArrowRight, MessageSquare, Wallet, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SEOHead from "@/components/SEOHead";
 
 const SUPPORTED_WALLETS = [
   { name: "Nami", url: "https://namiwallet.io" },

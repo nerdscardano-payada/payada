@@ -4,6 +4,7 @@ import { createPageUrl } from "@/utils";
 import { CheckCircle2, Clock, Rocket, Zap, Link2, ShoppingCart, Monitor, Bot, Coins, RefreshCw, Code2, Globe, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
+import SEOHead from "@/components/SEOHead";
 
 const launched = [
   {

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Shield, Lock, Eye, CheckCircle, AlertTriangle, Key } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 
 const securityFeatures = [
   {
