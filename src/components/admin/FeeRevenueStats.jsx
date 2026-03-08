@@ -3,6 +3,31 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { TrendingUp, DollarSign, Users, Activity } from "lucide-react";
 
+const KNOWN_TOKENS = {
+  "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114": { ticker: "$IAG", decimals: 6 },
+  "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3": { ticker: "$Snek", decimals: 0 },
+  "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6": { ticker: "$MIN", decimals: 6 },
+  "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa": { ticker: "$NIGHT", decimals: 0 },
+  "533bb94a8850ee3ccbe483106489399112b74c905342cb1792a797a0": { ticker: "$INDY", decimals: 0 },
+  "9a9693a9a37912a5097918f97918d15240c92ab729a0b7c4aa144d77": { ticker: "$SUNDAE", decimals: 0 },
+  "f13ac4d66b3ee19a6aa0f2a22298737bd907cc95121662fc971b5275": { ticker: "$STRIKE", decimals: 0 },
+  "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489": { ticker: "$NMKR", decimals: 6 },
+  "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0": { ticker: "$HOSKY", decimals: 0 },
+  "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad": { ticker: "USDM", decimals: 6 },
+  "fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456": { ticker: "USDA", decimals: 6 },
+  "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61": { ticker: "DJED", decimals: 6 },
+};
+
+function resolveTicker(policyId, storedTicker) {
+  if (storedTicker && storedTicker !== "unknown") return storedTicker;
+  return KNOWN_TOKENS[policyId]?.ticker || storedTicker || "Unknown";
+}
+
+function resolveDecimals(policyId, storedDecimals) {
+  if (storedDecimals && storedDecimals > 0) return storedDecimals;
+  return KNOWN_TOKENS[policyId]?.decimals ?? storedDecimals ?? 0;
+}
+
 function StatCard({ title, value, subtitle, icon: Icon, color }) {
   return (
     <div className="bg-white rounded-xl border border-slate-200 p-5">
