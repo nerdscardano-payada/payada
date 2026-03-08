@@ -20,10 +20,11 @@ export default function MerchantAgreementPage() {
             Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
-            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">Contact</Link>
-            <Link to={createPageUrl("TermsOfService")} className="text-sm text-slate-600 hover:text-slate-900">Terms</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.contact")}</Link>
+            <Link to={createPageUrl("TermsOfService")} className="text-sm text-slate-600 hover:text-slate-900">{t("roadmap.footer_terms")}</Link>
           </div>
+          <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
       </header>
 
