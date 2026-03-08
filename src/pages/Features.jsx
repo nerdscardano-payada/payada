@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { CheckCircle, Zap, Shield, Globe, ArrowRight, MessageSquare, Wallet, Users } from "lucide-react";
+import { ArrowRight, Wallet, Zap, Shield, Globe, MessageSquare, CheckCircle, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
+import { useTranslation } from "@/components/i18n/useTranslation";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const SUPPORTED_WALLETS = [
   { name: "Nami", url: "https://namiwallet.io" },
@@ -14,40 +16,17 @@ const SUPPORTED_WALLETS = [
   { name: "Yoroi", url: "https://yoroi-wallet.com" },
 ];
 
-const features = [
-  {
-    icon: Zap,
-    title: "Instant Settlements",
-    description: "Receive payments directly to your wallet with blockchain confirmation. No intermediaries, no delays."
-  },
-  {
-    icon: Shield,
-    title: "Bank-Grade Security",
-    description: "Military-grade encryption, secure API keys, and comprehensive audit logs protect your transactions."
-  },
-  {
-    icon: Globe,
-    title: "Global Reach",
-    description: "Accept payments from anyone, anywhere in the world using the Cardano blockchain."
-  },
-  {
-    icon: MessageSquare,
-    title: "Webhooks & Integration",
-    description: "Real-time event notifications and REST APIs for seamless integration with your systems."
-  },
-  {
-    icon: CheckCircle,
-    title: "Payment Links",
-    description: "Generate shareable payment links in seconds. No technical knowledge required."
-  },
-  {
-    icon: Users,
-    title: "Discord Plugin",
-    description: "Automatically grant Discord roles after payment. Gate your community and give access instantly."
-  }
-];
+const featureIcons = [Zap, Shield, Globe, MessageSquare, CheckCircle, Users];
 
 export default function FeaturesPage() {
+  const { t, lang, setLang } = useTranslation();
+
+  const featureKeys = ["f1", "f2", "f3", "f4", "f5", "f6"];
+  const features = featureKeys.map((k) => ({
+    title: t(`features_page.${k}_title`),
+    desc: t(`features_page.${k}_desc`),
+  }));
+
   return (
     <div className="min-h-screen bg-white">
       <SEOHead
@@ -55,64 +34,63 @@ export default function FeaturesPage() {
         description="PayADA offers instant ADA settlements, bank-grade security, Discord community gating, REST API with webhooks, and compatibility with Nami, Eternl, Lace, Typhon, GeroWallet and Yoroi wallets."
         canonical="https://payada.io/features"
       />
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
             Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Pricing")} className="text-sm text-slate-600 hover:text-slate-900">Pricing</Link>
-            <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">Security</Link>
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
-            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">Contact</Link>
+            <Link to={createPageUrl("Pricing")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.pricing")}</Link>
+            <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.security")}</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.contact")}</Link>
           </div>
+          <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
       </header>
 
-      {/* Hero */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-20">
-          <h1 className="text-5xl font-bold text-slate-900 mb-6">Powerful Features for Modern Payments</h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">Everything you need to accept Cardano payments with confidence and ease.</p>
+          <h1 className="text-5xl font-bold text-slate-900 mb-6">{t("features_page.hero_title")}</h1>
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto">{t("features_page.hero_sub")}</p>
         </div>
 
-        {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
-          {features.map((feature, idx) => (
-            <div key={idx} className="border border-slate-200 rounded-lg p-6 hover:border-cyan-300 hover:shadow-lg transition">
-               <feature.icon className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">{feature.title}</h3>
-              <p className="text-slate-600">{feature.description}</p>
-            </div>
-          ))}
+          {features.map((feature, idx) => {
+            const Icon = featureIcons[idx];
+            return (
+              <div key={idx} className="border border-slate-200 rounded-lg p-6 hover:border-cyan-300 hover:shadow-lg transition">
+                <Icon className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">{feature.title}</h3>
+                <p className="text-slate-600">{feature.desc}</p>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Supported Wallets */}
         <div className="mb-20">
           <div className="text-center mb-10">
             <Wallet className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mx-auto mb-3" />
-            <h2 className="text-3xl font-bold text-slate-900 mb-3">Compatible Wallets</h2>
-            <p className="text-slate-600">PayADA works seamlessly with all major Cardano wallets. Your customers can pay in one click.</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-3">{t("features_page.wallets_title")}</h2>
+            <p className="text-slate-600">{t("features_page.wallets_sub")}</p>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             {SUPPORTED_WALLETS.map((w) => (
               <a key={w.name} href={w.url} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-2 px-5 py-3 border border-slate-200 rounded-full hover:border-cyan-400 hover:shadow-md transition bg-white text-slate-700 font-medium text-sm">
-                  <Wallet className="w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent" />
+                <Wallet className="w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent" />
                 {w.name}
               </a>
             ))}
           </div>
         </div>
 
-        {/* CTA */}
         <div className="bg-gradient-to-r from-blue-500 to-cyan-400 rounded-lg p-12 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-          <p className="text-lg mb-8 opacity-90">Start accepting Cardano payments today. Free to sign up, no credit card required.</p>
+          <h2 className="text-3xl font-bold mb-4">{t("features_page.cta_title")}</h2>
+          <p className="text-lg mb-8 opacity-90">{t("features_page.cta_sub")}</p>
           <Link to={createPageUrl("Home")}>
             <Button className="bg-white text-blue-600 hover:bg-blue-50">
-              Create Account <ArrowRight className="ml-2 w-4 h-4" />
+              {t("features_page.cta_button")} <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </Link>
         </div>

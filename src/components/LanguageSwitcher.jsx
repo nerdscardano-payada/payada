@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { SUPPORTED_LANGUAGES } from "@/lib/useTranslation";
+import { SUPPORTED_LANGUAGES } from "@/components/i18n/useTranslation";
 import { ChevronDown } from "lucide-react";
 
 export default function LanguageSwitcher({ lang, setLang }) {
