@@ -123,7 +123,11 @@ export default function FeeRevenueStats() {
   }
 
   const adaPayments = allPayments.filter(p => p.payment_type === "ada" || !p.payment_type);
-  const cntPayments = allPayments.filter(p => p.payment_type === "cnt");
+  // Deduplicate CNT payments by tx_hash to avoid double recording
+  const cntPaymentsRaw = allPayments.filter(p => p.payment_type === "cnt");
+  const cntPayments = cntPaymentsRaw.filter((p, idx, arr) =>
+    !p.tx_hash || arr.findIndex(x => x.tx_hash === p.tx_hash) === idx
+  );
 
   const totalFeeAda = adaPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
   const totalVolumeAda = adaPayments.reduce((sum, p) => sum + (p.received_amount_ada || 0), 0);
