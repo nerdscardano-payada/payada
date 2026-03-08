@@ -217,6 +217,7 @@ const isValid = hash === signature;`}
                 <span className="text-slate-600">{t(`webhooks.${k}`)}</span>
               </li>
             ))}
+          </ul>
         </div>
       </section>
     </div>
