@@ -35,6 +35,12 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Contact PayADA — Get in Touch"
+        description="Contact the PayADA support team. Get help with Cardano payment setup, API integration, billing, or any other questions about our platform."
+        canonical="https://payada.io/contact"
+        structuredData={structuredData}
+      />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
