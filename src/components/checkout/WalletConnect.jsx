@@ -10,6 +10,7 @@ const KNOWN_WALLETS = [
   { id: "typhon", name: "Typhon" },
   { id: "gerowallet", name: "GeroWallet" },
   { id: "yoroi", name: "Yoroi" },
+  { id: "vespr", name: "Vespr" },
 ];
 
 export default function WalletConnect({ onConnected, onDisconnected }) {
