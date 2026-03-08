@@ -219,7 +219,7 @@ export default function AdminCNTLab() {
 
   const { data: cntPayments = [], isLoading: loadingPayments } = useQuery({
     queryKey: ["cnt-payments"],
-    queryFn: () => base44.entities.Payment.filter({ is_cnt_test: true }),
+    queryFn: () => base44.entities.Payment.filter({ payment_type: "cnt" }),
   });
 
   const queryClient = useQueryClient();
