@@ -98,30 +98,30 @@ export default function APIReferencePage() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="mb-16">
-          <h1 className="text-5xl font-bold text-slate-900 mb-4">API Reference</h1>
-          <p className="text-xl text-slate-600">Complete API documentation for PayADA integration.</p>
+          <h1 className="text-5xl font-bold text-slate-900 mb-4">{t("api.hero_title")}</h1>
+          <p className="text-xl text-slate-600">{t("api.hero_sub")}</p>
         </div>
 
         {/* Pricing Notice */}
         <div className="mb-20 border border-blue-200 rounded-lg p-8 bg-blue-50">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Transparent Fee Structure</h2>
-          <p className="text-slate-700 mb-3">All payments processed through the API incur a <span className="font-semibold text-blue-600">flat 1.75% platform fee</span>.</p>
-          <p className="text-slate-600 text-sm"><span className="font-semibold">Example:</span> A ₳100 payment results in ₳98.25 received (fee: ₳1.75). Fee amounts are included in payment response objects.</p>
+          <h2 className="text-xl font-bold text-slate-900 mb-4">{t("api.fee_title")}</h2>
+          <p className="text-slate-700 mb-3">{t("api.fee_sub")}</p>
+          <p className="text-slate-600 text-sm">{t("api.fee_example")}</p>
         </div>
 
         {/* Authentication */}
         <div className="mb-20 border border-slate-200 rounded-lg p-8 bg-slate-50">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Authentication</h2>
-          <p className="text-slate-600 mb-4">All API requests require authentication using your API key.</p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">{t("api.auth_title")}</h2>
+          <p className="text-slate-600 mb-4">{t("api.auth_sub")}</p>
           <div className="bg-slate-900 text-slate-100 p-4 rounded font-mono text-sm mb-4">
             Authorization: Bearer YOUR_API_KEY
           </div>
-          <p className="text-slate-600 text-sm">Find your API key in the Dashboard under API Keys. Keep it secret!</p>
+          <p className="text-slate-600 text-sm">{t("api.auth_note")}</p>
         </div>
 
         {/* Base URL */}
         <div className="mb-20 border border-slate-200 rounded-lg p-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Base URL</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">{t("api.base_url_title")}</h2>
           <div className="bg-slate-100 p-4 rounded font-mono text-sm text-slate-900">
             https://api.payada.io/v1
           </div>
@@ -129,7 +129,7 @@ export default function APIReferencePage() {
 
         {/* Endpoints */}
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-8">Endpoints</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-8">{t("api.endpoints_title")}</h2>
           <div className="space-y-8">
             {endpoints.map((endpoint, idx) => (
               <div key={idx} className="border border-slate-200 rounded-lg p-8">
@@ -147,13 +147,13 @@ export default function APIReferencePage() {
 
                 {endpoint.params && (
                   <div className="mb-6">
-                    <h4 className="font-semibold text-slate-900 mb-2">Parameters:</h4>
+                    <h4 className="font-semibold text-slate-900 mb-2">{t("api.params_label")}</h4>
                     <p className="text-slate-600 text-sm">{endpoint.params}</p>
                   </div>
                 )}
 
                 <div className="mb-4">
-                  <h4 className="font-semibold text-slate-900 mb-2">Example Request:</h4>
+                  <h4 className="font-semibold text-slate-900 mb-2">{t("api.example_label")}</h4>
                   <div className="relative">
                     <pre className="bg-slate-900 text-slate-100 p-4 rounded font-mono text-sm overflow-x-auto">
                       {endpoint.example}
@@ -175,7 +175,7 @@ export default function APIReferencePage() {
 
         {/* Status Codes */}
         <div className="mt-20 border border-slate-200 rounded-lg p-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Status Codes</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">{t("api.status_title")}</h2>
           <div className="space-y-4">
             <div className="flex gap-4">
               <span className="font-mono font-semibold text-green-600">200</span>
