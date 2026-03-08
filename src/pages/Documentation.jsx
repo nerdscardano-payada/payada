@@ -18,6 +18,7 @@ const SUPPORTED_WALLETS = [
   { name: "Typhon", url: "https://typhonwallet.io" },
   { name: "GeroWallet", url: "https://gerowallet.io" },
   { name: "Yoroi", url: "https://yoroi-wallet.com" },
+  { name: "Vespr", url: "https://vespr.xyz" },
 ];
 
 const SIDEBAR_SECTION_IDS = [
