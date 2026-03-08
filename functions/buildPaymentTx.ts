@@ -267,7 +267,7 @@ Deno.serve(async (req) => {
 
       // Number of outputs: merchant CNT + (fee CNT if any) + change
       const numOutputs = 1 + (cntFee > 0n ? 1 : 0) + 1;
-      const txFee = estimateFee(selectedUtxos.length, numOutputs, true) + FEE_BUFFER;
+      const txFee = estimateFee(selectedUtxos.length, numOutputs, true); // buffer already included in estimateFee
 
       // Total ADA needed: minUTxO for each token output + tx fee
       const numTokenOutputs = 1 + (cntFee > 0n ? 1 : 0);
