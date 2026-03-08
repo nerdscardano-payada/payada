@@ -132,9 +132,9 @@ export default function FeeRevenueStats() {
   const totalFeeAda = adaPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
   const totalVolumeAda = adaPayments.reduce((sum, p) => sum + (p.received_amount_ada || 0), 0);
 
-  // CNT fee totals - aggregate from cnt_fees array in each payment
+  // CNT fee totals - aggregate from cnt_fees array in each payment (deduplicated)
   const cntFeesByToken = {};
-  allPayments.forEach(p => {
+  cntPayments.forEach(p => {
     if (p.cnt_fees && Array.isArray(p.cnt_fees)) {
       p.cnt_fees.forEach(fee => {
         const ticker = resolveTicker(fee.policy_id, fee.ticker);
