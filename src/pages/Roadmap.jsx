@@ -90,7 +90,7 @@ export default function RoadmapPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Roadmap — PayADA Cardano Payment Platform"
-        description="See what PayADA has launched and what's coming next: CNT token payments, WooCommerce plugins, automatic fiat conversion, Telegram Gate and more."
+        description="PayADA is live with payment links, pay terminals, shop generator, Discord Gate, POS, button generator, access links, webhooks and REST API. Coming soon: CNT token payments, WooCommerce/Shopify plugins, fiat auto-conversion, and Telegram Gate."
         canonical="https://payada.io/roadmap"
       />
       {/* Navigation */}

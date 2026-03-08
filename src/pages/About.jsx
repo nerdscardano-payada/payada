@@ -19,7 +19,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="About PayADA — Cardano Payment Processor"
-        description="Learn about PayADA: our mission, story, and team. We're building the future of payments on the Cardano blockchain, serving merchants across Europe and beyond."
+        description="PayADA was founded to make Cardano payments accessible to everyone. Built by a team of blockchain developers and fintech specialists, based in Belgium, serving merchants worldwide with simplicity, reliability, and a customer-first approach."
         canonical="https://payada.io/about"
         structuredData={structuredData}
       />

@@ -42,7 +42,7 @@ export default function SecurityPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Security & Compliance — PayADA"
-        description="PayADA is built with security-first engineering: TLS 1.3, AES-256 encryption, GDPR compliant, MiCA compliant, HMAC-SHA256 webhook signatures, and full Cardano blockchain validation."
+        description="PayADA uses TLS 1.3, AES-256 encryption, bcrypt API key hashing, HMAC-SHA256 webhook signatures, and on-chain Cardano validation. Fully compliant with GDPR, MiCA, AMLD5/6, and the FATF Travel Rule."
         canonical="https://payada.io/security"
       />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">

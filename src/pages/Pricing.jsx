@@ -58,7 +58,7 @@ export default function PricingPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Pricing — 1.75% Flat Fee | PayADA"
-        description="PayADA charges a simple flat 1.75% fee per ADA transaction. No setup fees, no monthly minimums, no hidden costs. Start accepting Cardano payments for free."
+        description="One simple fee: 1.75% per transaction. PayADA includes unlimited payment links, unlimited API keys, webhooks, subscription management, and advanced analytics — with no setup fees and no monthly minimums."
         canonical="https://payada.io/pricing"
         structuredData={structuredData}
       />

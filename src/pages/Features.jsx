@@ -52,7 +52,7 @@ export default function FeaturesPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Features — PayADA Cardano Payment Gateway"
-        description="Explore all PayADA features: instant ADA payment links, payment terminals, shop generator, Discord Gate, webhooks, REST API, subscription management and more."
+        description="PayADA offers instant ADA settlements, bank-grade security, Discord community gating, REST API with webhooks, and compatibility with Nami, Eternl, Lace, Typhon, GeroWallet and Yoroi wallets."
         canonical="https://payada.io/features"
       />
       {/* Header */}

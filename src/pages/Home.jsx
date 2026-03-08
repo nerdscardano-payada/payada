@@ -69,7 +69,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="PayADA — Accept Cardano (ADA) Payments Easily"
-        description="PayADA.io makes it simple for merchants to accept ADA payments with payment links, a shop generator, pay terminals, subscriptions and more — no technical knowledge required."
+        description="Accept Cardano (ADA) payments effortlessly with PayADA. Instant blockchain settlement, advanced analytics, global reach, and 1.75% flat fee. Set up in under 5 minutes — no credit card required."
         canonical="https://payada.io/"
         structuredData={structuredData}
       />

@@ -189,7 +189,7 @@ For more information: www.payada.io
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
       <SEOHead
         title="Litepaper — PayADA Decentralized Cardano Payment Platform"
-        description="Read the PayADA Litepaper: technology architecture, fee model, use cases, roadmap, and competitive advantages of the leading Cardano payment processing platform."
+        description="The PayADA Litepaper covers our decentralized Cardano payment architecture, 1.75% fee model, CNT native token support, self-custodial design, use cases for e-commerce, digital content, community access and fundraising, plus the development roadmap."
         canonical="https://payada.io/litepaper"
       />
       {/* Header */}
