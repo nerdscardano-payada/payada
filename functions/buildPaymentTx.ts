@@ -237,10 +237,6 @@ Deno.serve(async (req) => {
       // Cardano protocol minimum for token UTxOs is ~1.2-1.4 ADA depending on token complexity
       const MIN_CNT_OUTPUT_LOVELACE = 1_300_000n; // 1.3 ADA per token output (above Cardano minimum)
 
-      // Use actual merchant/fee amounts if provided, otherwise use minimum
-      const merchantAdaAmount = merchantLovelace ? BigInt(merchantLovelace) : MIN_CNT_OUTPUT_LOVELACE;
-      const feeAdaAmount = platformFeeLovelace && PAYADA_FEE_WALLET ? BigInt(platformFeeLovelace) : 0n;
-
       // Select UTxOs: need enough ADA for minUTxO outputs + fee, plus must have the CNT
       const pureAdaUtxos = utxos
         .filter(u => u.amount.length === 1 && u.amount[0].unit === 'lovelace')
