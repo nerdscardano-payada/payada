@@ -155,7 +155,7 @@ const isValid = hash === signature;`}
         <div className="mb-20">
           <h2 className="text-2xl font-bold text-slate-900 mb-8">{t("webhooks.events_title")}</h2>
           <div className="space-y-6">
-            {events.map((event, idx) => (
+            {EVENTS.map((event, idx) => (
               <div key={idx} className="border border-slate-200 rounded-lg">
                 <button
                   onClick={() => setExpandedEvent(expandedEvent === idx ? -1 : idx)}
@@ -164,7 +164,7 @@ const isValid = hash === signature;`}
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-semibold text-slate-900 text-lg mb-1">{event.name}</h3>
-                      <p className="text-slate-600">{event.description}</p>
+                      <p className="text-slate-600">{t(`webhooks.${event.descKey}`)}</p>
                     </div>
                     <span className={`text-slate-400 transition-transform ${expandedEvent === idx ? 'rotate-180' : ''}`}>
                       ▼
