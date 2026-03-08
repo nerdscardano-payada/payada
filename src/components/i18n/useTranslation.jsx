@@ -1,5 +1,14 @@
 import { useState, useCallback } from "react";
-import { translations } from "./translations";
+import { translations as baseTranslations } from "./translations";
+import { extraTranslations } from "./translationsExtra";
+
+// Merge extra translations into base
+const translations = Object.fromEntries(
+  Object.keys(baseTranslations).map((lang) => [
+    lang,
+    { ...baseTranslations[lang], ...(extraTranslations[lang] || {}) },
+  ])
+);
 
 const STORAGE_KEY = "payada_lang";
 
