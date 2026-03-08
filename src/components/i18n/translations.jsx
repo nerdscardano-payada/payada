@@ -1377,6 +1377,7 @@ export const translations = {
       contact: "İletişim",
       sign_in: "Giriş Yap",
       get_started: "Başla",
+      about: "Hakkımızda",
     },
     home: {
       hero_title: "Cardano ödemelerini zahmetsizce kabul edin",
