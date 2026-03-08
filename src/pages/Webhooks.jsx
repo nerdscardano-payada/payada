@@ -10,65 +10,22 @@ const EVENTS = [
   {
     name: "payment.detected",
     descKey: "ev_detected",
-    payload: `{
-  "event": "payment.detected",
-  "id": "evt_abc123",
-  "timestamp": "2024-03-01T10:30:00Z",
-  "data": {
-    "payment_id": "pay_abc123",
-    "amount_ada": 50,
-    "status": "detected",
-    "tx_hash": "abc123..."
-  }
-}`,
+    payload: '{\n  "event": "payment.detected",\n  "id": "evt_abc123",\n  "timestamp": "2024-03-01T10:30:00Z",\n  "data": {\n    "payment_id": "pay_abc123",\n    "amount_ada": 50,\n    "status": "detected",\n    "tx_hash": "abc123..."\n  }\n}',
   },
   {
     name: "payment.confirmed",
     descKey: "ev_confirmed",
-    payload: `{
-  "event": "payment.confirmed",
-  "id": "evt_def456",
-  "timestamp": "2024-03-01T10:35:00Z",
-  "data": {
-    "payment_id": "pay_abc123",
-    "amount_ada": 50,
-    "status": "confirmed",
-    "confirmations": 3,
-    "tx_hash": "abc123...",
-    "payer_email": "customer@example.com"
-  }
-}`,
+    payload: '{\n  "event": "payment.confirmed",\n  "id": "evt_def456",\n  "timestamp": "2024-03-01T10:35:00Z",\n  "data": {\n    "payment_id": "pay_abc123",\n    "amount_ada": 50,\n    "status": "confirmed",\n    "confirmations": 3,\n    "tx_hash": "abc123...",\n    "payer_email": "customer@example.com"\n  }\n}',
   },
   {
     name: "payment.failed",
     descKey: "ev_failed",
-    payload: `{
-  "event": "payment.failed",
-  "id": "evt_ghi789",
-  "timestamp": "2024-03-01T10:40:00Z",
-  "data": {
-    "payment_id": "pay_abc123",
-    "status": "failed",
-    "reason": "Insufficient amount received",
-    "tx_hash": "abc123..."
-  }
-}`,
+    payload: '{\n  "event": "payment.failed",\n  "id": "evt_ghi789",\n  "timestamp": "2024-03-01T10:40:00Z",\n  "data": {\n    "payment_id": "pay_abc123",\n    "status": "failed",\n    "reason": "Insufficient amount received",\n    "tx_hash": "abc123..."\n  }\n}',
   },
   {
     name: "subscription.due",
     descKey: "ev_due",
-    payload: `{
-  "event": "subscription.due",
-  "id": "evt_jkl012",
-  "timestamp": "2024-03-01T11:00:00Z",
-  "data": {
-    "subscription_id": "sub_xyz123",
-    "customer_email": "customer@example.com",
-    "amount_ada": 100,
-    "due_date": "2024-03-01",
-    "plan_name": "Pro Plan"
-  }
-}`,
+    payload: '{\n  "event": "subscription.due",\n  "id": "evt_jkl012",\n  "timestamp": "2024-03-01T11:00:00Z",\n  "data": {\n    "subscription_id": "sub_xyz123",\n    "customer_email": "customer@example.com",\n    "amount_ada": 100,\n    "due_date": "2024-03-01",\n    "plan_name": "Pro Plan"\n  }\n}',
   },
 ];
 
