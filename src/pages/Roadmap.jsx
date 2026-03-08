@@ -71,8 +71,8 @@ export default function RoadmapPage() {
           <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">LIVE</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {launched.map((item, i) => {
-            const Icon = item.icon;
+          {Array.isArray(launched) && launched.map((item, i) => {
+            const Icon = launchedIcons[i] || Link2;
             return (
               <div key={i} className="bg-white border border-slate-200 rounded-xl p-6 hover:border-green-300 hover:shadow-sm transition-all">
                 <div className="flex items-start gap-4">
