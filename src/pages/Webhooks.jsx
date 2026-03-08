@@ -6,11 +6,11 @@ import SEOHead from "@/components/SEOHead";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-const EVENT_KEYS = ["ev_detected", "ev_confirmed", "ev_failed", "ev_due"];
-
-const EVENT_NAMES = ["payment.detected", "payment.confirmed", "payment.failed", "subscription.due"];
-
-const EVENT_PAYLOADS = [`{
+const EVENTS = [
+  {
+    name: "payment.detected",
+    descKey: "ev_detected",
+    payload: `{
   "event": "payment.detected",
   "id": "evt_abc123",
   "timestamp": "2024-03-01T10:30:00Z",
@@ -20,11 +20,11 @@ const EVENT_PAYLOADS = [`{
     "status": "detected",
     "tx_hash": "abc123..."
   }
-}`
+}`,
   },
   {
     name: "payment.confirmed",
-    description: "Triggered when a payment is confirmed with the required confirmations",
+    descKey: "ev_confirmed",
     payload: `{
   "event": "payment.confirmed",
   "id": "evt_def456",
@@ -37,11 +37,11 @@ const EVENT_PAYLOADS = [`{
     "tx_hash": "abc123...",
     "payer_email": "customer@example.com"
   }
-}`
+}`,
   },
   {
     name: "payment.failed",
-    description: "Triggered when a payment validation fails",
+    descKey: "ev_failed",
     payload: `{
   "event": "payment.failed",
   "id": "evt_ghi789",
@@ -52,11 +52,11 @@ const EVENT_PAYLOADS = [`{
     "reason": "Insufficient amount received",
     "tx_hash": "abc123..."
   }
-}`
+}`,
   },
   {
     name: "subscription.due",
-    description: "Triggered when a subscription payment is due",
+    descKey: "ev_due",
     payload: `{
   "event": "subscription.due",
   "id": "evt_jkl012",
@@ -68,8 +68,8 @@ const EVENT_PAYLOADS = [`{
     "due_date": "2024-03-01",
     "plan_name": "Pro Plan"
   }
-}`
-  }
+}`,
+  },
 ];
 
 export default function WebhooksPage() {
