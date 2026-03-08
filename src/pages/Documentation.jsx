@@ -355,9 +355,7 @@ res.status(200).send('OK');`} />
 
             {/* Payment Tools */}
             <Section id="checkout-embed" title={t("docs.tools_title")} icon={Terminal}>
-              <p className="text-slate-600 mb-8">
-                PayADA offers a full suite of no-code and low-code tools to accept payments in every context — online, in a store, or embedded on your website.
-              </p>
+              <p className="text-slate-600 mb-8">{t("docs.tools_sub")}</p>
 
               <div className="space-y-8">
 
@@ -365,21 +363,14 @@ res.status(200).send('OK');`} />
                 <div className="border border-slate-200 rounded-xl p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-2xl">🔘</span>
-                    <h3 className="text-lg font-semibold text-slate-900">Payment Button Generator</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">{t("docs.btn_gen_title")}</h3>
                   </div>
-                  <p className="text-slate-600 text-sm mb-4">
-                    Generate a branded "Pay with ADA" button that you can embed on any website, landing page, or blog — no backend needed.
-                    The button opens a hosted PayADA checkout in a popup modal.
-                  </p>
+                  <p className="text-slate-600 text-sm mb-4">{t("docs.btn_gen_sub")}</p>
                   <ol className="space-y-1 text-sm text-slate-600 mb-4">
-                    {[
-                      "Go to Dashboard → Button Generator",
-                      "Choose your payment link, button label, and color",
-                      "Copy the generated HTML snippet and paste it anywhere on your site",
-                    ].map((s, i) => (
-                      <li key={i} className="flex gap-2">
+                    {["btn_s1","btn_s2","btn_s3"].map((key, i) => (
+                      <li key={key} className="flex gap-2">
                         <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                        {s}
+                        {t(`docs.${key}`)}
                       </li>
                     ))}
                   </ol>
@@ -394,22 +385,14 @@ res.status(200).send('OK');`} />
                 <div className="border border-slate-200 rounded-xl p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-2xl">🛍️</span>
-                    <h3 className="text-lg font-semibold text-slate-900">Shop Generator</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">{t("docs.shop_gen_title")}</h3>
                   </div>
-                  <p className="text-slate-600 text-sm mb-4">
-                    Create a hosted storefront with multiple products — each with its own payment link — in minutes.
-                    No website, no hosting, no code required. Share one URL and let customers browse and buy.
-                  </p>
+                  <p className="text-slate-600 text-sm mb-4">{t("docs.shop_gen_sub")}</p>
                   <ol className="space-y-1 text-sm text-slate-600">
-                    {[
-                      "Go to Dashboard → Shop Generator",
-                      "Add products with names, descriptions, images, and ADA prices",
-                      "Publish your shop and share the link",
-                      "Each product has its own PayADA checkout — payments go directly to your wallet",
-                    ].map((s, i) => (
-                      <li key={i} className="flex gap-2">
+                    {["shop_s1","shop_s2","shop_s3","shop_s4"].map((key, i) => (
+                      <li key={key} className="flex gap-2">
                         <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                        {s}
+                        {t(`docs.${key}`)}
                       </li>
                     ))}
                   </ol>
@@ -419,22 +402,19 @@ res.status(200).send('OK');`} />
                 <div className="border border-slate-200 rounded-xl p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-2xl">🔐</span>
-                    <h3 className="text-lg font-semibold text-slate-900">Access Links (Community Gate)</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">{t("docs.access_title")}</h3>
                   </div>
-                  <p className="text-slate-600 text-sm mb-4">
-                    Sell access to exclusive communities or content — Discord servers, Telegram groups, or private websites.
-                    After payment is confirmed, the customer automatically receives an invite link or Discord role.
-                  </p>
+                  <p className="text-slate-600 text-sm mb-4">{t("docs.access_sub")}</p>
                   <div className="grid sm:grid-cols-2 gap-3 text-sm">
                     {[
-                      { platform: "Discord", desc: "Auto-assign a Discord role via bot after payment" },
-                      { platform: "Telegram / WhatsApp", desc: "Show a static invite link after payment confirmation" },
-                      { platform: "Website", desc: "Redirect to any private URL after confirmed payment" },
-                      { platform: "Custom", desc: "Display a custom welcome message with access instructions" },
+                      { platformKey: "access_p1", descKey: "access_d1" },
+                      { platformKey: "access_p2", descKey: "access_d2" },
+                      { platformKey: "access_p3", descKey: "access_d3" },
+                      { platformKey: "access_p4", descKey: "access_d4" },
                     ].map((item, i) => (
                       <div key={i} className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                        <p className="font-semibold text-slate-900 text-xs mb-1">{item.platform}</p>
-                        <p className="text-slate-600 text-xs">{item.desc}</p>
+                        <p className="font-semibold text-slate-900 text-xs mb-1">{t(`docs.${item.platformKey}`)}</p>
+                        <p className="text-slate-600 text-xs">{t(`docs.${item.descKey}`)}</p>
                       </div>
                     ))}
                   </div>
@@ -444,22 +424,14 @@ res.status(200).send('OK');`} />
                 <div className="border border-slate-200 rounded-xl p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-2xl">🖥️</span>
-                    <h3 className="text-lg font-semibold text-slate-900">Pay Terminal</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">{t("docs.terminal_title")}</h3>
                   </div>
-                  <p className="text-slate-600 text-sm mb-4">
-                    A customisable hosted checkout page — ideal for embedding in your own website or sharing as a branded payment page.
-                    Configure colors, logo, button label, and which payment link to use.
-                  </p>
+                  <p className="text-slate-600 text-sm mb-4">{t("docs.terminal_sub")}</p>
                   <ul className="space-y-2 text-sm text-slate-600">
-                    {[
-                      "Custom accent color and branding",
-                      "Collect name and email at checkout",
-                      "Supports one-time payment links",
-                      "Embeddable via iframe on any website",
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-center gap-2">
+                    {["terminal_f1","terminal_f2","terminal_f3","terminal_f4"].map((key) => (
+                      <li key={key} className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        {item}
+                        {t(`docs.${key}`)}
                       </li>
                     ))}
                   </ul>
@@ -469,23 +441,14 @@ res.status(200).send('OK');`} />
                 <div className="border border-slate-200 rounded-xl p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-2xl">🏪</span>
-                    <h3 className="text-lg font-semibold text-slate-900">POS Terminal (Point of Sale)</h3>
+                    <h3 className="text-lg font-semibold text-slate-900">{t("docs.pos_title")}</h3>
                   </div>
-                  <p className="text-slate-600 text-sm mb-4">
-                    A full-screen point-of-sale interface designed for physical stores, markets, and events.
-                    Enter an amount, generate a QR code, and the customer scans it to pay from their Cardano wallet — no card machine needed.
-                  </p>
+                  <p className="text-slate-600 text-sm mb-4">{t("docs.pos_sub")}</p>
                   <ul className="space-y-2 text-sm text-slate-600">
-                    {[
-                      "Enter any ADA amount on the spot — no pre-configured link needed",
-                      "QR code displayed for customer to scan with their mobile wallet",
-                      "Live payment confirmation display — you see the ✓ the moment it's confirmed",
-                      "Full transaction history per terminal session",
-                      "Works on tablet, laptop, or any screen",
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-center gap-2">
+                    {["pos_f1","pos_f2","pos_f3","pos_f4","pos_f5"].map((key) => (
+                      <li key={key} className="flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        {item}
+                        {t(`docs.${key}`)}
                       </li>
                     ))}
                   </ul>
@@ -496,9 +459,7 @@ res.status(200).send('OK');`} />
 
             {/* Supported Wallets */}
             <Section id="wallets" title={t("docs.wallets_title")} icon={Wallet}>
-              <p className="text-slate-600 mb-6">
-                PayADA auto-detects installed Cardano browser wallets via the CIP-30 standard. Customers can pay with one click using any of the following:
-              </p>
+              <p className="text-slate-600 mb-6">{t("docs.wallets_sub")}</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {SUPPORTED_WALLETS.map((w) => (
                   <a key={w.name} href={w.url} target="_blank" rel="noopener noreferrer"
@@ -508,58 +469,49 @@ res.status(200).send('OK');`} />
                   </a>
                 ))}
               </div>
-              <p className="text-sm text-slate-500 mt-4">Any CIP-30 compatible wallet is supported, even if not listed above.</p>
+              <p className="text-sm text-slate-500 mt-4">{t("docs.wallets_any")}</p>
             </Section>
 
             {/* Security */}
             <Section id="security" title={t("docs.security_title")} icon={Shield}>
-              <p className="text-slate-600 mb-6">PayADA is built with security-first principles.</p>
+              <p className="text-slate-600 mb-6">{t("docs.security_sub")}</p>
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 {[
-                  { title: "TLS 1.3", desc: "All traffic encrypted in transit" },
-                  { title: "HMAC-SHA256", desc: "Signed webhooks prevent spoofing" },
-                  { title: "Hashed API Keys", desc: "Keys stored as bcrypt hashes, never in plaintext" },
-                  { title: "GDPR & MiCA", desc: "EU crypto-asset regulation compliant" },
-                  { title: "AML Controls", desc: "Anti-money laundering monitoring" },
-                  { title: "Audit Logs", desc: "Every sensitive action is logged with timestamps" },
+                  { title: "TLS 1.3", descKey: "sec_f1" },
+                  { title: "HMAC-SHA256", descKey: "sec_f2" },
+                  { title: "Hashed API Keys", descKey: "sec_f3" },
+                  { title: "GDPR & MiCA", descKey: "sec_f4" },
+                  { title: "AML Controls", descKey: "sec_f5" },
+                  { title: "Audit Logs", descKey: "sec_f6" },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3 p-4 border border-slate-200 rounded-lg">
                     <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-slate-900 text-sm">{item.title}</p>
-                      <p className="text-xs text-slate-600">{item.desc}</p>
+                      <p className="text-xs text-slate-600">{t(`docs.${item.descKey}`)}</p>
                     </div>
                   </div>
                 ))}
               </div>
               <Link to={createPageUrl("Security")} className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline">
-                Full Security & Compliance page <ArrowRight className="w-4 h-4" />
+                {t("docs.security_link")} <ArrowRight className="w-4 h-4" />
               </Link>
             </Section>
 
             {/* Discord Gate */}
             <Section id="discord-gate" title={t("docs.discord_title")} icon={Users}>
-              <p className="text-slate-600 mb-4">
-                The Discord Gate plugin automatically grants a Discord role to customers after a confirmed payment.
-                Perfect for token-gated communities, premium channels, and membership groups.
-              </p>
-              <h3 className="font-semibold text-slate-900 mb-3">Setup Steps</h3>
+              <p className="text-slate-600 mb-4">{t("docs.discord_sub")}</p>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("docs.discord_setup_title")}</h3>
               <ol className="space-y-3 text-sm text-slate-600 mb-6">
-                {[
-                  "Create a Discord Bot and get your bot token from the Discord Developer Portal",
-                  "Invite the bot to your server with the 'Manage Roles' permission",
-                  "Go to Dashboard → Plugins → Discord Gate and paste your bot token, Guild ID, and Role ID",
-                  "Link the plugin to one or more Payment Links",
-                  "After payment confirmation, the bot automatically assigns the role to the payer",
-                ].map((s, i) => (
-                  <li key={i} className="flex gap-3">
+                {["discord_step1","discord_step2","discord_step3","discord_step4","discord_step5"].map((key, i) => (
+                  <li key={key} className="flex gap-3">
                     <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                    {s}
+                    {t(`docs.${key}`)}
                   </li>
                 ))}
               </ol>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-                <strong>Note:</strong> The payer must enter their Discord username at checkout for role assignment to work.
+                {t("docs.discord_note")}
               </div>
             </Section>
 
