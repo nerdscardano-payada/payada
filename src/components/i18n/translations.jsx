@@ -160,8 +160,6 @@ export const translations = {
   },
 
   nl: {
-
-  nl: {
     nav: {
       features: "Functies",
       pricing: "Prijzen",
