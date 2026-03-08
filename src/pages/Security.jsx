@@ -95,20 +95,14 @@ export default function SecurityPage() {
             <p className="text-slate-600 mb-6">{t("security.compliance_sub")}</p>
             <div className="space-y-6">
               {[
-                { title: "MiCA — Markets in Crypto-Assets Regulation (EU 2023/1114)", text: "PayADA aligns with MiCA requirements governing crypto-asset service providers in the EU. This includes disclosure obligations, consumer protection standards, and anti-market-abuse provisions." },
-                { title: "GDPR — General Data Protection Regulation (EU 2016/679)", text: null },
-                { title: "AML/CFT — Anti-Money Laundering & Counter-Terrorism Financing (AMLD5/AMLD6)", text: "PayADA enforces AML controls including suspicious transaction monitoring, KYC procedures where required, and mandatory reporting obligations to competent authorities." },
-                { title: "FATF Travel Rule", text: "Where applicable, PayADA complies with FATF Recommendation 16 requiring transmission of originator and beneficiary information for qualifying crypto-asset transfers." },
+                { titleKey: "security.compliance_mica_title", textKey: "security.compliance_mica_text" },
+                { titleKey: "security.compliance_gdpr_title", textKey: "security.compliance_gdpr_text" },
+                { titleKey: "security.compliance_aml_title", textKey: "security.compliance_aml_text" },
+                { titleKey: "security.compliance_fatf_title", textKey: "security.compliance_fatf_text" },
               ].map((item, i) => (
                 <div key={i} className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                  <h3 className="font-bold text-slate-900 mb-2">{item.title}</h3>
-                  {item.text ? (
-                    <p className="text-slate-600 text-sm">{item.text}</p>
-                  ) : (
-                    <p className="text-slate-600 text-sm">
-                      Full compliance with GDPR including lawful bases for processing, data subject rights, breach notification within 72 hours, data minimisation, and privacy by design. See our <Link to={createPageUrl("PrivacyPolicy")} className="text-indigo-600 hover:underline">Privacy Policy</Link> for details.
-                    </p>
-                  )}
+                  <h3 className="font-bold text-slate-900 mb-2">{t(item.titleKey)}</h3>
+                  <p className="text-slate-600 text-sm">{t(item.textKey)}</p>
                 </div>
               ))}
             </div>
