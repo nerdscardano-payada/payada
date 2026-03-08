@@ -115,10 +115,8 @@ export default function DocumentationPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Hero */}
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-3">Documentation</h1>
-          <p className="text-xl text-slate-600 max-w-3xl">
-            Everything you need to integrate PayADA into your application — from no-code payment links to full REST API and webhook automation.
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-3">{t("docs.hero_title")}</h1>
+          <p className="text-xl text-slate-600 max-w-3xl">{t("docs.hero_sub")}</p>
         </div>
 
         <div className="flex gap-10">
@@ -143,10 +141,10 @@ export default function DocumentationPage() {
               <div className="pt-4 border-t border-slate-200 mt-4">
                 <p className="text-xs text-slate-400 px-3 mb-2 font-semibold uppercase tracking-wide">More</p>
                 <Link to={createPageUrl("APIReference")} className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-blue-600 rounded-lg hover:bg-slate-50">
-                   <Code className="w-4 h-4" /> Full API Ref
+                   <Code className="w-4 h-4" /> {t("docs.full_api_ref")}
                  </Link>
                  <Link to={createPageUrl("Webhooks")} className="flex items-center gap-2 px-3 py-2 text-sm text-slate-500 hover:text-blue-600 rounded-lg hover:bg-slate-50">
-                  <GitBranch className="w-4 h-4" /> Webhook Guide
+                  <GitBranch className="w-4 h-4" /> {t("docs.webhook_guide")}
                 </Link>
               </div>
             </div>
@@ -159,12 +157,12 @@ export default function DocumentationPage() {
             <div className="mb-16 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-8">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900">🚀 Getting Started Checklist</h2>
-                  <p className="text-slate-600 text-sm mt-1">Complete these steps to accept your first payment</p>
+                  <h2 className="text-xl font-bold text-slate-900">{t("docs.checklist_title")}</h2>
+                  <p className="text-slate-600 text-sm mt-1">{t("docs.checklist_sub")}</p>
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-blue-600">{completedCount}/{ONBOARDING_STEPS.length}</div>
-                  <div className="text-xs text-slate-500">completed</div>
+                  <div className="text-xs text-slate-500">{t("docs.checklist_completed")}</div>
                 </div>
               </div>
               <div className="w-full bg-blue-200 rounded-full h-2 mb-6">
@@ -199,7 +197,7 @@ export default function DocumentationPage() {
             </div>
 
             {/* Quick Start */}
-            <Section id="quickstart" title="Quick Start" icon={Zap}>
+            <Section id="quickstart" title={t("docs.qs_title")} icon={Zap}>
               <p className="text-slate-600 mb-6">
                 PayADA lets you accept Cardano (ADA) payments and Cardano Native Tokens (CNTs) with zero blockchain knowledge.
                 You can go from sign-up to receiving payments in under 5 minutes.
@@ -224,7 +222,7 @@ export default function DocumentationPage() {
             </Section>
 
             {/* Payment Links */}
-            <Section id="payment-links" title="Payment Links" icon={CreditCard}>
+            <Section id="payment-links" title={t("docs.pl_title")} icon={CreditCard}>
               <p className="text-slate-600 mb-4">
                 Payment Links are shareable URLs that display a hosted checkout page. No code required.
               </p>
@@ -387,7 +385,7 @@ res.status(200).send('OK');`} />
             </Section>
 
             {/* Payment Tools */}
-            <Section id="checkout-embed" title="Payment Tools" icon={Terminal}>
+            <Section id="checkout-embed" title={t("docs.tools_title")} icon={Terminal}>
               <p className="text-slate-600 mb-8">
                 PayADA offers a full suite of no-code and low-code tools to accept payments in every context — online, in a store, or embedded on your website.
               </p>
@@ -528,7 +526,7 @@ res.status(200).send('OK');`} />
             </Section>
 
             {/* Supported Wallets */}
-            <Section id="wallets" title="Supported Wallets" icon={Wallet}>
+            <Section id="wallets" title={t("docs.wallets_title")} icon={Wallet}>
               <p className="text-slate-600 mb-6">
                 PayADA auto-detects installed Cardano browser wallets via the CIP-30 standard. Customers can pay with one click using any of the following:
               </p>
@@ -545,7 +543,7 @@ res.status(200).send('OK');`} />
             </Section>
 
             {/* Security */}
-            <Section id="security" title="Security" icon={Shield}>
+            <Section id="security" title={t("docs.security_title")} icon={Shield}>
               <p className="text-slate-600 mb-6">PayADA is built with security-first principles.</p>
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 {[
@@ -571,7 +569,7 @@ res.status(200).send('OK');`} />
             </Section>
 
             {/* Discord Gate */}
-            <Section id="discord-gate" title="Discord Gate Plugin" icon={Users}>
+            <Section id="discord-gate" title={t("docs.discord_title")} icon={Users}>
               <p className="text-slate-600 mb-4">
                 The Discord Gate plugin automatically grants a Discord role to customers after a confirmed payment.
                 Perfect for token-gated communities, premium channels, and membership groups.
