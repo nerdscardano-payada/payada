@@ -20,27 +20,8 @@ export default function SecurityPage() {
     { titleKey: "security.f6_title", descKey: "security.f6_desc" },
   ];
 
-  const techItems = [
-    "TLS 1.3 encryption for all data in transit",
-    "AES-256 encryption for sensitive data at rest",
-    "API keys stored as bcrypt hashes — never in plaintext",
-    "HMAC-SHA256 signatures for all webhook deliveries",
-    "Rate limiting and brute-force protection on all endpoints",
-    "Role-based access control (RBAC) and least-privilege architecture",
-    "Comprehensive audit logs for all sensitive operations",
-    "No storage of private keys or seed phrases — ever",
-    "Idempotency controls to prevent duplicate transaction processing",
-    "Automatic session expiration and token invalidation",
-  ];
-
-  const blockchainItems = [
-    "Immutable, cryptographically signed transaction records on-chain",
-    "Proof-of-Stake (Ouroboros) consensus — no mining, no 51% attack vector",
-    "Decentralized validation across thousands of stake pool operators",
-    "Transaction confirmations verified via Blockfrost Cardano API",
-    "Native multi-asset support with on-chain policy enforcement",
-    "No custody of funds — direct wallet-to-wallet peer transfers",
-  ];
+  const techItems = t("security.tech_items");
+  const blockchainItems = t("security.blockchain_items");
 
   return (
     <div className="min-h-screen bg-white">
