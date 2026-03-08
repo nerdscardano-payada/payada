@@ -237,6 +237,7 @@ export const translations = {
       contact: "Contact",
       sign_in: "Inloggen",
       get_started: "Aan de slag",
+      about: "Over ons",
     },
     home: {
       hero_title: "Accepteer Cardano-betalingen moeiteloos",
