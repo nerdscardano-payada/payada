@@ -6,6 +6,19 @@ import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
 
 export default function ContactPage() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact PayADA",
+    "url": "https://payada.io/contact",
+    "description": "Get in touch with the PayADA team. We're here to help with questions about Cardano payments, integrations, and support.",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "support@payada.io",
+      "contactType": "customer support"
+    }
+  };
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",

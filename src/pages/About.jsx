@@ -5,8 +5,24 @@ import { Users, Target, Zap, Globe } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
 
 export default function AboutPage() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "PayADA",
+    "url": "https://payada.io",
+    "description": "PayADA is the leading Cardano payment processor, serving merchants from startups to established businesses across Europe and beyond.",
+    "foundingLocation": "Belgium",
+    "areaServed": "Worldwide"
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="About PayADA — Cardano Payment Processor"
+        description="Learn about PayADA: our mission, story, and team. We're building the future of payments on the Cardano blockchain, serving merchants across Europe and beyond."
+        canonical="https://payada.io/about"
+        structuredData={structuredData}
+      />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

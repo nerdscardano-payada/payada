@@ -45,8 +45,23 @@ const faqs = [
 ];
 
 export default function PricingPage() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "PriceSpecification",
+    "name": "PayADA Transaction Fee",
+    "description": "Flat 1.75% fee per Cardano (ADA) transaction. No setup fees, no monthly minimums.",
+    "price": "1.75",
+    "priceCurrency": "PERCENT"
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Pricing — 1.75% Flat Fee | PayADA"
+        description="PayADA charges a simple flat 1.75% fee per ADA transaction. No setup fees, no monthly minimums, no hidden costs. Start accepting Cardano payments for free."
+        canonical="https://payada.io/pricing"
+        structuredData={structuredData}
+      />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

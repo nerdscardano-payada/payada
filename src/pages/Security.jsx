@@ -40,6 +40,11 @@ const securityFeatures = [
 export default function SecurityPage() {
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Security & Compliance — PayADA"
+        description="PayADA is built with security-first engineering: TLS 1.3, AES-256 encryption, GDPR compliant, MiCA compliant, HMAC-SHA256 webhook signatures, and full Cardano blockchain validation."
+        canonical="https://payada.io/security"
+      />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">

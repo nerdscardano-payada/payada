@@ -50,6 +50,11 @@ const features = [
 export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Features — PayADA Cardano Payment Gateway"
+        description="Explore all PayADA features: instant ADA payment links, payment terminals, shop generator, Discord Gate, webhooks, REST API, subscription management and more."
+        canonical="https://payada.io/features"
+      />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

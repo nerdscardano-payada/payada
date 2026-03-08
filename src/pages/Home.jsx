@@ -52,8 +52,27 @@ export default function HomePage() {
     base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PayADA",
+    "url": "https://payada.io",
+    "description": "The easiest way for merchants to accept Cardano (ADA) payments.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://payada.io/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="PayADA — Accept Cardano (ADA) Payments Easily"
+        description="PayADA.io makes it simple for merchants to accept ADA payments with payment links, a shop generator, pay terminals, subscriptions and more — no technical knowledge required."
+        canonical="https://payada.io/"
+        structuredData={structuredData}
+      />
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
