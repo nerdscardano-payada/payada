@@ -54,6 +54,10 @@ export default function SEOHead({
     setMeta("twitter:description", description);
     setMeta("twitter:image", ogImage);
 
+    // Favicon
+    setLink("icon", "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69999e4306b9e4632bd7d454/1b4bc7fb6_be2b2b99e_1000069668.jpg");
+    setLink("apple-touch-icon", "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69999e4306b9e4632bd7d454/1b4bc7fb6_be2b2b99e_1000069668.jpg");
+
     // Canonical
     if (canonical) setLink("canonical", canonical);
 
