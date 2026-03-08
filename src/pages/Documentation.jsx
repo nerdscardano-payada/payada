@@ -7,6 +7,7 @@ import {
   Users, ArrowRight, ExternalLink, Terminal, Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SEOHead from "@/components/SEOHead";
 
 const SUPPORTED_WALLETS = [
   { name: "Nami", url: "https://namiwallet.io" },

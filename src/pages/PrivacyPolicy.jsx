@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import SEOHead from "@/components/SEOHead";
 
 export default function PrivacyPolicyPage() {
   return (

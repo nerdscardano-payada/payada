@@ -3,6 +3,7 @@ import { Download, FileText, Zap, Lock, TrendingUp, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import SEOHead from "@/components/SEOHead";
 
 export default function Litepaper() {
   const downloadPDF = () => {

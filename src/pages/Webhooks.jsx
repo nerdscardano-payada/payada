@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Copy } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 
 const events = [
   {
