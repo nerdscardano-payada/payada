@@ -364,11 +364,14 @@ export default function FeeRevenueStats() {
         <div className="bg-blue-50 rounded-xl border border-blue-200 p-5">
           <h3 className="text-sm font-semibold text-blue-900 mb-4">🧪 Recente CNT Betalingen</h3>
           <div className="space-y-4">
-            {cntPayments.slice(0, 10).map(p => (
+            {cntPayments.slice(0, 10).map(p => {
+              const ticker = resolveTicker(p.cnt_policy_id, p.cnt_ticker);
+              const decimals = resolveDecimals(p.cnt_policy_id, p.cnt_decimals);
+              return (
               <div key={p.id} className="p-3 bg-white rounded-lg border border-blue-100">
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <p className="text-sm font-medium text-blue-900">{p.cnt_ticker || "Unknown"}</p>
+                    <p className="text-sm font-medium text-blue-900">{ticker}</p>
                     <p className="text-xs text-blue-600 font-mono">{p.tx_hash ? `${p.tx_hash.slice(0, 20)}...` : "—"}</p>
                   </div>
                   <p className="text-xs text-slate-500">
@@ -376,20 +379,25 @@ export default function FeeRevenueStats() {
                   </p>
                 </div>
                 <p className="text-sm text-blue-900 mb-2">
-                  Ontvangen: {((p.received_amount_cnt || 0) / Math.pow(10, p.cnt_decimals || 0)).toFixed(2)} {p.cnt_ticker}
+                  Ontvangen: {((p.received_amount_cnt || 0) / Math.pow(10, decimals)).toFixed(decimals > 0 ? 3 : 0)} {ticker}
                 </p>
                 {p.cnt_fees && p.cnt_fees.length > 0 && (
                   <div className="text-xs space-y-1 pt-2 border-t border-blue-100">
                     <p className="font-medium text-green-700">Fees Earned:</p>
-                    {p.cnt_fees.map((fee, idx) => (
-                      <p key={idx} className="text-green-600">
-                        {(fee.amount / Math.pow(10, fee.decimals || 0)).toFixed(2)} {fee.ticker}
-                      </p>
-                    ))}
+                    {p.cnt_fees.map((fee, idx) => {
+                      const feeTicker = resolveTicker(fee.policy_id, fee.ticker);
+                      const feeDecimals = resolveDecimals(fee.policy_id, fee.decimals);
+                      return (
+                        <p key={idx} className="text-green-600">
+                          {(fee.amount / Math.pow(10, feeDecimals)).toFixed(feeDecimals > 0 ? 3 : 0)} {feeTicker}
+                        </p>
+                      );
+                    })}
                   </div>
                 )}
               </div>
-            ))}
+            );})}
+
           </div>
         </div>
       )}
