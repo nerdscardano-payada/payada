@@ -94,7 +94,7 @@ const MOCK_CNT_PAYMENTS = [
   }
 ];
 
-const SIMULATE_CNT = true; // Toggle to enable/disable mock data
+const SIMULATE_CNT = false; // Toggle to enable/disable mock data
 
 export default function FeeRevenueStats() {
   const [feeTypeTab, setFeeTypeTab] = useState("ada");
