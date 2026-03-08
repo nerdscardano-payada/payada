@@ -8,7 +8,7 @@ export default function TermsOfServicePage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Terms of Service — PayADA"
-        description="PayADA Terms of Service: your rights and obligations when using the Cardano payment platform, including MiCA, GDPR, and AML compliance requirements."
+        description="PayADA Terms of Service (updated March 2026): eligibility requirements, nature of the non-custodial service, crypto-asset risk disclosures, prohibited uses, 1.75% fee structure, liability limitations, and EU governing law."
         canonical="https://payada.io/terms-of-service"
       />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
