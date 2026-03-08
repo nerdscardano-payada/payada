@@ -6,6 +6,11 @@ import SEOHead from "@/components/SEOHead";
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Privacy Policy — PayADA"
+        description="PayADA Privacy Policy: how we collect, use, and protect your personal data in compliance with GDPR, MiCA, and EU anti-money laundering regulations."
+        canonical="https://payada.io/privacy-policy"
+      />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">

@@ -6,6 +6,11 @@ import SEOHead from "@/components/SEOHead";
 export default function TermsOfServicePage() {
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Terms of Service — PayADA"
+        description="PayADA Terms of Service: your rights and obligations when using the Cardano payment platform, including MiCA, GDPR, and AML compliance requirements."
+        canonical="https://payada.io/terms-of-service"
+      />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">

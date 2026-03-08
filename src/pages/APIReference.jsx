@@ -73,6 +73,11 @@ export default function APIReferencePage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="API Reference — PayADA REST API for Cardano Payments"
+        description="Complete PayADA API reference: authentication, endpoints for payments, subscriptions, webhooks. Integrate Cardano ADA payments into your app with our REST API."
+        canonical="https://payada.io/api-reference"
+      />
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
