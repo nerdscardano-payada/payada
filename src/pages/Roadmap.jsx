@@ -106,8 +106,8 @@ export default function RoadmapPage() {
           <span className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">ROADMAP</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {upcoming.map((item, i) => {
-            const Icon = item.icon;
+          {Array.isArray(upcoming) && upcoming.map((item, i) => {
+            const Icon = upcomingIcons[i] || Coins;
             return (
               <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl p-6 hover:border-cyan-300 hover:shadow-sm transition-all">
                 <div className="flex items-start gap-4">
@@ -117,7 +117,7 @@ export default function RoadmapPage() {
                   <div>
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <h3 className="font-semibold text-slate-900">{item.title}</h3>
-                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${item.badgeColor}`}>{item.badge}</span>
+                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${upcomingBadgeColors[i] || "bg-slate-100 text-slate-700"}`}>{item.badge}</span>
                     </div>
                     <p className="text-sm text-slate-600">{item.description}</p>
                   </div>
