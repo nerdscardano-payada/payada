@@ -465,6 +465,7 @@ export const translations = {
       contact: "Kontakt",
       sign_in: "Anmelden",
       get_started: "Loslegen",
+      about: "Über uns",
     },
     home: {
       hero_title: "Cardano-Zahlungen mühelos akzeptieren",
