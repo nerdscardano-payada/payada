@@ -252,16 +252,18 @@ Deno.serve(async (req) => {
     };
 
     if (isCntPayment) {
+     const divisor = Math.pow(10, cntDecimals);
      paymentData.cnt_policy_id = cntPolicyId;
      paymentData.cnt_asset_name = cntAssetName;
+     paymentData.cnt_ticker = cntTicker;
      paymentData.cnt_decimals = cntDecimals;
-     paymentData.received_amount_cnt = cntMerchantAmount;
+     paymentData.received_amount_cnt = cntMerchantAmount / divisor;
      paymentData.cnt_fees = cntFeeAmount > 0 ? [{
        policy_id: cntPolicyId,
        asset_name: cntAssetName,
        ticker: cntTicker,
        decimals: cntDecimals,
-       amount: cntFeeAmount
+       amount: cntFeeAmount / divisor
      }] : null;
     }
 
