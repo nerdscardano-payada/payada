@@ -133,9 +133,11 @@ export default function FeeRevenueStats() {
   allPayments.forEach(p => {
     if (p.cnt_fees && Array.isArray(p.cnt_fees)) {
       p.cnt_fees.forEach(fee => {
-        const key = `${fee.policy_id}|${fee.ticker || "unknown"}`;
+        const ticker = resolveTicker(fee.policy_id, fee.ticker);
+        const decimals = resolveDecimals(fee.policy_id, fee.decimals);
+        const key = fee.policy_id;
         if (!cntFeesByToken[key]) {
-          cntFeesByToken[key] = { ticker: fee.ticker, policy_id: fee.policy_id, decimals: fee.decimals || 0, totalFees: 0 };
+          cntFeesByToken[key] = { ticker, policy_id: fee.policy_id, decimals, totalFees: 0 };
         }
         cntFeesByToken[key].totalFees += fee.amount || 0;
       });
@@ -145,9 +147,11 @@ export default function FeeRevenueStats() {
   // CNT payment volume totals
   const cntByToken = {};
   cntPayments.forEach(p => {
-    const key = `${p.cnt_policy_id}|${p.cnt_ticker || "unknown"}`;
+    const ticker = resolveTicker(p.cnt_policy_id, p.cnt_ticker);
+    const decimals = resolveDecimals(p.cnt_policy_id, p.cnt_decimals);
+    const key = p.cnt_policy_id;
     if (!cntByToken[key]) {
-      cntByToken[key] = { ticker: p.cnt_ticker, policy_id: p.cnt_policy_id, decimals: p.cnt_decimals || 0, amount: 0 };
+      cntByToken[key] = { ticker, policy_id: p.cnt_policy_id, decimals, amount: 0 };
     }
     cntByToken[key].amount += p.received_amount_cnt || 0;
   });
