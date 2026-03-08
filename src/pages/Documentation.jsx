@@ -156,14 +156,14 @@ export default function DocumentationPage() {
                   <p className="text-slate-600 text-sm mt-1">{t("docs.checklist_sub")}</p>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-blue-600">{completedCount}/{ONBOARDING_STEPS.length}</div>
+                  <div className="text-2xl font-bold text-blue-600">{completedCount}/{ONBOARDING_STEP_KEYS.length}</div>
                   <div className="text-xs text-slate-500">{t("docs.checklist_completed")}</div>
                 </div>
               </div>
               <div className="w-full bg-blue-200 rounded-full h-2 mb-6">
                 <div
                   className="bg-gradient-to-r from-blue-500 to-cyan-400 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${(completedCount / ONBOARDING_STEPS.length) * 100}%` }}
+                  style={{ width: `${(completedCount / ONBOARDING_STEP_KEYS.length) * 100}%` }}
                 />
               </div>
               <div className="space-y-3">
