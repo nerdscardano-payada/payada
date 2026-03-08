@@ -132,6 +132,8 @@ Deno.serve(async (req) => {
         if (paymentLink) {
           receiveAddress = paymentLink.receive_address;
           expectedAmountAda = paymentLink.amount_ada || 0;
+          cntDecimals = paymentLink.cnt_decimals || 0;
+          cntTicker = paymentLink.cnt_ticker || null;
         }
       } catch { /* not found */ }
     }
