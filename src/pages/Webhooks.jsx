@@ -107,38 +107,37 @@ export default function WebhooksPage() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="mb-16">
-          <h1 className="text-5xl font-bold text-slate-900 mb-4">Webhooks</h1>
-          <p className="text-xl text-slate-600">Receive real-time payment notifications directly to your server.</p>
+          <h1 className="text-5xl font-bold text-slate-900 mb-4">{t("webhooks.hero_title")}</h1>
+          <p className="text-xl text-slate-600">{t("webhooks.hero_sub")}</p>
         </div>
 
         {/* Setup Instructions */}
         <div className="mb-20 border border-slate-200 rounded-lg p-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Getting Started</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">{t("webhooks.setup_title")}</h2>
           
           <div className="space-y-8">
             <div>
-              <h3 className="font-semibold text-slate-900 mb-3">1. Configure Your Webhook URL</h3>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("webhooks.setup_step1_title")}</h3>
               <p className="text-slate-600 mb-4">
-                Go to your Dashboard → Webhooks and add your endpoint URL where you want to receive events. You can use our{" "}
-                <Link to={createPageUrl("WebhookSetupWizard")} className="text-blue-600 hover:underline font-medium">Webhook Setup Wizard</Link>{" "}
-                to get started quickly. Your endpoint must:
+                {t("webhooks.setup_step1_sub")}{" "}
+                <Link to={createPageUrl("WebhookSetupWizard")} className="text-blue-600 hover:underline font-medium">Webhook Setup Wizard</Link>
               </p>
               <ul className="list-disc list-inside text-slate-600 space-y-2">
-                <li>Be a valid HTTPS URL</li>
-                <li>Accept POST requests</li>
-                <li>Return a 200 status code to confirm receipt</li>
-                <li>Respond within 30 seconds</li>
+                <li>{t("webhooks.setup_step1_b1")}</li>
+                <li>{t("webhooks.setup_step1_b2")}</li>
+                <li>{t("webhooks.setup_step1_b3")}</li>
+                <li>{t("webhooks.setup_step1_b4")}</li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-slate-900 mb-3">2. Select Event Types</h3>
-              <p className="text-slate-600">Choose which events you want to receive: payment.detected, payment.confirmed, payment.failed, subscription.due</p>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("webhooks.setup_step2_title")}</h3>
+              <p className="text-slate-600">{t("webhooks.setup_step2_sub")}</p>
             </div>
 
             <div>
-              <h3 className="font-semibold text-slate-900 mb-3">3. Verify Webhook Signature</h3>
-              <p className="text-slate-600 mb-3">All webhooks are signed with HMAC-SHA256. Verify the signature in the X-PayADA-Signature header:</p>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("webhooks.setup_step3_title")}</h3>
+              <p className="text-slate-600 mb-3">{t("webhooks.setup_step3_sub")}</p>
               <div className="bg-slate-900 text-slate-100 p-4 rounded font-mono text-sm overflow-x-auto">
                 {`const crypto = require('crypto');
 const signature = req.headers['x-payada-signature'];
@@ -154,7 +153,7 @@ const isValid = hash === signature;`}
 
         {/* Events */}
         <div className="mb-20">
-          <h2 className="text-2xl font-bold text-slate-900 mb-8">Webhook Events</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-8">{t("webhooks.events_title")}</h2>
           <div className="space-y-6">
             {events.map((event, idx) => (
               <div key={idx} className="border border-slate-200 rounded-lg">
@@ -175,13 +174,13 @@ const isValid = hash === signature;`}
                 {expandedEvent === idx && (
                   <div className="border-t border-slate-200 p-6 bg-slate-50">
                     <div className="flex justify-between items-center mb-4">
-                      <p className="font-semibold text-slate-900">Example Payload:</p>
+                      <p className="font-semibold text-slate-900">{t("webhooks.payload_label")}</p>
                       <button
                         onClick={() => handleCopy(event.payload)}
                         className="text-slate-600 hover:text-slate-900 flex items-center gap-2"
                       >
                         <Copy className="w-4 h-4" />
-                        {copied ? 'Copied' : 'Copy'}
+                        {copied ? t("webhooks.copied") : t("webhooks.copy")}
                       </button>
                     </div>
                     <pre className="bg-slate-900 text-slate-100 p-4 rounded font-mono text-sm overflow-x-auto">
@@ -196,43 +195,28 @@ const isValid = hash === signature;`}
 
         {/* Retries */}
         <div className="border border-slate-200 rounded-lg p-8 mb-20">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Retry Logic</h2>
-          <p className="text-slate-600 mb-4">If your endpoint doesn't respond with a 200 status code, we'll retry with exponential backoff:</p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">{t("webhooks.retry_title")}</h2>
+          <p className="text-slate-600 mb-4">{t("webhooks.retry_sub")}</p>
           <ul className="list-disc list-inside text-slate-600 space-y-2">
-            <li>1st attempt: Immediately</li>
-            <li>2nd attempt: 1 minute later</li>
-            <li>3rd attempt: 5 minutes later</li>
-            <li>4th attempt: 30 minutes later</li>
-            <li>5th attempt: 2 hours later</li>
+            <li>{t("webhooks.retry_1")}</li>
+            <li>{t("webhooks.retry_2")}</li>
+            <li>{t("webhooks.retry_3")}</li>
+            <li>{t("webhooks.retry_4")}</li>
+            <li>{t("webhooks.retry_5")}</li>
           </ul>
-          <p className="text-slate-600 mt-4">After 5 failed attempts, the event is marked as failed and logged for review.</p>
+          <p className="text-slate-600 mt-4">{t("webhooks.retry_note")}</p>
         </div>
 
         {/* Best Practices */}
         <div className="border border-slate-200 rounded-lg p-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Best Practices</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">{t("webhooks.best_title")}</h2>
           <ul className="space-y-3">
-            <li className="flex gap-3">
-              <span className="font-semibold text-blue-600">✓</span>
-              <span className="text-slate-600">Always verify webhook signatures before processing</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="font-semibold text-blue-600">✓</span>
-              <span className="text-slate-600">Use idempotency keys to prevent duplicate processing</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="font-semibold text-blue-600">✓</span>
-              <span className="text-slate-600">Respond immediately with 200 status, process asynchronously</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="font-semibold text-blue-600">✓</span>
-              <span className="text-slate-600">Log all webhook events for debugging</span>
-            </li>
-            <li className="flex gap-3">
-              <span className="font-semibold text-blue-600">✓</span>
-              <span className="text-slate-600">Keep webhook endpoint timeout under 30 seconds</span>
-            </li>
-          </ul>
+            {["best_1","best_2","best_3","best_4","best_5"].map((k) => (
+              <li key={k} className="flex gap-3">
+                <span className="font-semibold text-blue-600">✓</span>
+                <span className="text-slate-600">{t(`webhooks.${k}`)}</span>
+              </li>
+            ))}
         </div>
       </section>
     </div>
