@@ -400,8 +400,8 @@ export default function AdminCNTLab() {
                       <Badge className="bg-purple-100 text-purple-700 text-xs">{payment.cnt_ticker}</Badge>
                     </div>
                     <p className="text-sm text-slate-700">
-                      Expected: <strong>{payment.expected_amount_cnt?.toLocaleString()}</strong> ·
-                      Received: <strong>{payment.received_amount_cnt?.toLocaleString() || "—"}</strong>
+                      Expected: <strong>{(payment.expected_amount_cnt / Math.pow(10, payment.cnt_decimals || 0))?.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: payment.cnt_decimals || 0 })}</strong> ·
+                      Received: <strong>{(payment.received_amount_cnt / Math.pow(10, payment.cnt_decimals || 0))?.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: payment.cnt_decimals || 0 }) || "—"}</strong>
                     </p>
                     {payment.tx_hash && (
                       <a href={`https://cardanoscan.io/transaction/${payment.tx_hash}`} target="_blank" rel="noopener noreferrer"
