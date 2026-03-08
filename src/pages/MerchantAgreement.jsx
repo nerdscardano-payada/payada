@@ -1,10 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import SEOHead from "@/components/SEOHead";
 
 export default function MerchantAgreementPage() {
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Merchant Agreement — PayADA"
+        description="PayADA Merchant Agreement: grant of services, merchant obligations for compliance, customer communication and data security, 1.75% fee settlement, termination conditions, and dispute resolution for Cardano payment processing."
+        canonical="https://payada.io/merchant-agreement"
+      />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">

@@ -1,10 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import SEOHead from "@/components/SEOHead";
 
 export default function AcceptableUsePolicyPage() {
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Acceptable Use Policy — PayADA"
+        description="PayADA Acceptable Use Policy: prohibited activities including illegal transactions, money laundering, AML violations, fraud, technical abuse, and geographic restrictions for sanctioned countries."
+        canonical="https://payada.io/acceptable-use-policy"
+      />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">

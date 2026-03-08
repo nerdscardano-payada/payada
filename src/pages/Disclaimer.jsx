@@ -1,10 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import SEOHead from "@/components/SEOHead";
 
 export default function DisclaimerPage() {
   return (
     <div className="min-h-screen bg-white">
+      <SEOHead
+        title="Disclaimer — PayADA"
+        description="PayADA Disclaimer: no financial or investment advice, crypto-asset volatility warnings, irreversibility of Cardano blockchain transactions, no custody of funds, technology risks, and limitations of liability."
+        canonical="https://payada.io/disclaimer"
+      />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
