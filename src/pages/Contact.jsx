@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
+import { useTranslation } from "@/components/i18n/useTranslation";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function ContactPage() {
+  const { t, lang, setLang } = useTranslation();
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     "name": "Contact PayADA",
     "url": "https://payada.io/contact",
-    "description": "Get in touch with the PayADA team. We're here to help with questions about Cardano payments, integrations, and support.",
+    "description": "Get in touch with the PayADA team.",
     "contactPoint": {
       "@type": "ContactPoint",
       "email": "support@payada.io",
@@ -19,16 +22,10 @@ export default function ContactPage() {
     }
   };
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: ""
-  });
+  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
     console.log("Form submitted:", formData);
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
@@ -37,11 +34,10 @@ export default function ContactPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Contact PayADA — Get in Touch"
-        description="Have questions about PayADA? Send us a message or browse our FAQ — we help with setup, API integration, fees, and account questions. Most merchants are up and running in under 5 minutes."
+        description="Have questions about PayADA? Send us a message or browse our FAQ."
         canonical="https://payada.io/contact"
         structuredData={structuredData}
       />
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
@@ -49,118 +45,69 @@ export default function ContactPage() {
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("About")} className="text-sm text-slate-600 hover:text-slate-900">About</Link>
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
           </div>
+          <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
       </header>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Hero */}
         <div className="text-center mb-20">
-          <h1 className="text-5xl font-bold text-slate-900 mb-4">Get in Touch</h1>
-          <p className="text-xl text-slate-600">We're here to help. Reach out with any questions or feedback.</p>
+          <h1 className="text-5xl font-bold text-slate-900 mb-4">{t("contact.hero_title")}</h1>
+          <p className="text-xl text-slate-600">{t("contact.hero_sub")}</p>
         </div>
 
-
-
-        {/* Contact Form */}
-         <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto mb-16">
           <div className="border border-slate-200 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">Send us a Message</h2>
-            
+            <h2 className="text-2xl font-bold text-slate-900 mb-6">{t("contact.form_title")}</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">Name</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_name")}</label>
+                <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  placeholder="Your name"
-                  required
-                />
+                  placeholder={t("contact.placeholder_name")} required />
               </div>
-
               <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">Email</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_email")}</label>
+                <input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  placeholder="your@email.com"
-                  required
-                />
+                  placeholder="your@email.com" required />
               </div>
-
               <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">Subject</label>
-                <input
-                  type="text"
-                  value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_subject")}</label>
+                <input type="text" value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  placeholder="How can we help?"
-                  required
-                />
+                  placeholder={t("contact.placeholder_subject")} required />
               </div>
-
               <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">Message</label>
-                <textarea
-                  value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
-                  rows="6"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  placeholder="Tell us more..."
-                  required
-                />
+                <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_message")}</label>
+                <textarea value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  rows="6" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  placeholder={t("contact.placeholder_message")} required />
               </div>
-
               <Button className="w-full bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white">
-                Send Message
+                {t("contact.send_button")}
               </Button>
             </form>
           </div>
         </div>
 
-        {/* FAQ */}
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">Frequently Asked Questions</h2>
-          
+          <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">{t("contact.faq_title")}</h2>
           <div className="space-y-4">
-            <details className="border border-slate-200 rounded-lg p-6 cursor-pointer group">
-              <summary className="font-semibold text-slate-900 flex justify-between items-center">
-                How long does it take to set up PayADA?
-                <span className="group-open:rotate-180 transition">▼</span>
-              </summary>
-              <p className="text-slate-600 mt-4">
-                Most merchants are up and running in less than 5 minutes. Just sign up, verify your email, 
-                configure your webhook endpoints, and you're ready to start accepting payments.
-              </p>
-            </details>
-
-            <details className="border border-slate-200 rounded-lg p-6 cursor-pointer group">
-              <summary className="font-semibold text-slate-900 flex justify-between items-center">
-                What are your fees?
+            {[
+              { q: t("contact.faq1_q"), a: t("contact.faq1_a") },
+              { q: t("contact.faq2_q"), a: t("contact.faq2_a") },
+              { q: t("contact.faq3_q"), a: t("contact.faq3_a") },
+            ].map((faq, i) => (
+              <details key={i} className="border border-slate-200 rounded-lg p-6 cursor-pointer group">
+                <summary className="font-semibold text-slate-900 flex justify-between items-center">
+                  {faq.q}
                   <span className="group-open:rotate-180 transition">▼</span>
                 </summary>
-                <p className="text-slate-600 mt-4">
-                  We charge a simple flat 1.75% fee per transaction, no matter your payment volume. 
-                  No hidden fees, no setup costs, no monthly minimums. You only pay when you process a payment.
-                </p>
-            </details>
-
-            <details className="border border-slate-200 rounded-lg p-6 cursor-pointer group">
-              <summary className="font-semibold text-slate-900 flex justify-between items-center">
-                Can I cancel my account anytime?
-                <span className="group-open:rotate-180 transition">▼</span>
-              </summary>
-              <p className="text-slate-600 mt-4">
-                Yes, absolutely! No long-term contracts. You can cancel your subscription at any time. 
-                Your data is retained for 30 days after cancellation.
-              </p>
-            </details>
+                <p className="text-slate-600 mt-4">{faq.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
