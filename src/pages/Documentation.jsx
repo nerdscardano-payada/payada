@@ -167,24 +167,24 @@ export default function DocumentationPage() {
                 />
               </div>
               <div className="space-y-3">
-                {ONBOARDING_STEPS.map((step) => (
+                {ONBOARDING_STEP_KEYS.map((id) => (
                   <div
-                    key={step.id}
-                    onClick={() => toggleStep(step.id)}
+                    key={id}
+                    onClick={() => toggleStep(id)}
                     className={`flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all ${
-                      checkedSteps[step.id] ? "bg-white/60 opacity-60" : "bg-white hover:shadow-sm"
+                      checkedSteps[id] ? "bg-white/60 opacity-60" : "bg-white hover:shadow-sm"
                     }`}
                   >
                     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition-colors ${
-                      checkedSteps[step.id] ? "bg-green-500 border-green-500" : "border-slate-300"
+                      checkedSteps[id] ? "bg-green-500 border-green-500" : "border-slate-300"
                     }`}>
-                      {checkedSteps[step.id] && <Check className="w-3.5 h-3.5 text-white" />}
+                      {checkedSteps[id] && <Check className="w-3.5 h-3.5 text-white" />}
                     </div>
                     <div>
-                      <p className={`font-semibold text-sm ${checkedSteps[step.id] ? "line-through text-slate-400" : "text-slate-900"}`}>
-                        Step {step.id}: {step.title}
+                      <p className={`font-semibold text-sm ${checkedSteps[id] ? "line-through text-slate-400" : "text-slate-900"}`}>
+                        {t(`docs.step${id}_title`)}
                       </p>
-                      <p className="text-xs text-slate-500 mt-0.5">{step.description}</p>
+                      <p className="text-xs text-slate-500 mt-0.5">{t(`docs.step${id}_desc`)}</p>
                     </div>
                   </div>
                 ))}
@@ -193,49 +193,37 @@ export default function DocumentationPage() {
 
             {/* Quick Start */}
             <Section id="quickstart" title={t("docs.qs_title")} icon={Zap}>
-              <p className="text-slate-600 mb-6">
-                PayADA lets you accept Cardano (ADA) payments and Cardano Native Tokens (CNTs) with zero blockchain knowledge.
-                You can go from sign-up to receiving payments in under 5 minutes.
-              </p>
               <div className="grid md:grid-cols-3 gap-4 mb-8">
                 {[
-                  { icon: "🔗", title: "No-Code", desc: "Create a payment link and share the URL. No code needed." },
-                  { icon: "🔌", title: "REST API", desc: "Integrate programmatically via our API with your API key." },
-                  { icon: "📦", title: "Embed", desc: "Drop the Pay Button into any HTML page in one line." },
+                  { icon: "🔗", titleKey: "qs_nocode", descKey: "qs_nocode_desc" },
+                  { icon: "🔌", titleKey: "qs_api", descKey: "qs_api_desc" },
+                  { icon: "📦", titleKey: "qs_embed", descKey: "qs_embed_desc" },
                 ].map((item, i) => (
                   <div key={i} className="border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition-colors">
                     <div className="text-2xl mb-2">{item.icon}</div>
-                    <h3 className="font-semibold text-slate-900 mb-1">{item.title}</h3>
-                    <p className="text-sm text-slate-600">{item.desc}</p>
+                    <h3 className="font-semibold text-slate-900 mb-1">{t(`docs.${item.titleKey}`)}</h3>
+                    <p className="text-sm text-slate-600">{t(`docs.${item.descKey}`)}</p>
                   </div>
                 ))}
               </div>
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
-                <strong>Fee:</strong> A flat <strong>1.75% platform fee</strong> is automatically deducted from each confirmed payment.
-                No subscription, no hidden costs. Example: ₳100 received → ₳98.25 to you + ₳1.75 fee.
+                {t("docs.qs_fee_note")}
               </div>
             </Section>
 
             {/* Payment Links */}
             <Section id="payment-links" title={t("docs.pl_title")} icon={CreditCard}>
-              <p className="text-slate-600 mb-4">
-                Payment Links are shareable URLs that display a hosted checkout page. No code required.
-              </p>
-              <h3 className="font-semibold text-slate-900 mb-3">Creating a Payment Link</h3>
+              <p className="text-slate-600 mb-4">{t("docs.pl_sub")}</p>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("docs.pl_create_title")}</h3>
               <ol className="space-y-3 mb-6">
-                {[
-                  "Navigate to Dashboard → Payment Links → New Link",
-                  "Set a title, amount mode (fixed ADA, fiat-pegged, or CNT), and your Cardano receive address",
-                  "Optionally enable data collection: email, name, shipping address",
-                  "Copy the generated link and share it with customers",
-                ].map((step, i) => (
-                  <li key={i} className="flex gap-3">
+                {["pl_step1","pl_step2","pl_step3","pl_step4"].map((key, i) => (
+                  <li key={key} className="flex gap-3">
                     <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
-                    <span className="text-slate-600 text-sm">{step}</span>
+                    <span className="text-slate-600 text-sm">{t(`docs.${key}`)}</span>
                   </li>
                 ))}
               </ol>
-              <h3 className="font-semibold text-slate-900 mb-3">Amount Modes</h3>
+              <h3 className="font-semibold text-slate-900 mb-3">{t("docs.pl_modes_title")}</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
                   <thead className="bg-slate-50">
