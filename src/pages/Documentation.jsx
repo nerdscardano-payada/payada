@@ -118,7 +118,7 @@ export default function DocumentationPage() {
           {/* Sidebar */}
           <aside className="hidden lg:block w-56 flex-shrink-0">
             <div className="sticky top-24 space-y-1">
-              {SIDEBAR_SECTIONS.map(({ id, label, icon: Icon }) => (
+              {SIDEBAR_SECTION_IDS.map(({ id, key, icon: Icon }) => (
                 <a
                   key={id}
                   href={`#${id}`}
@@ -130,7 +130,7 @@ export default function DocumentationPage() {
                   }`}
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
-                  {label}
+                  {t(`docs.${key}`)}
                 </a>
               ))}
               <div className="pt-4 border-t border-slate-200 mt-4">
