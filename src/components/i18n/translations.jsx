@@ -9,6 +9,7 @@ export const translations = {
       contact: "Contact",
       sign_in: "Sign In",
       get_started: "Get Started",
+      about: "About",
     },
     home: {
       hero_title: "Accept Cardano payments effortlessly",
