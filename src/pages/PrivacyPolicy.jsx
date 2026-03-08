@@ -8,7 +8,7 @@ export default function PrivacyPolicyPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Privacy Policy — PayADA"
-        description="PayADA Privacy Policy: how we collect, use, and protect your personal data in compliance with GDPR, MiCA, and EU anti-money laundering regulations."
+        description="PayADA Privacy Policy (updated March 2026): what data we collect, how we use it, legal basis under GDPR, data retention for AML compliance (5 years), your rights to access, rectify or erase data, and how to contact privacy@payada.io."
         canonical="https://payada.io/privacy-policy"
       />
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">

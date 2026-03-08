@@ -84,7 +84,7 @@ export default function WebhooksPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Webhooks — Real-Time Payment Events | PayADA"
-        description="Receive real-time Cardano payment notifications with PayADA webhooks. HMAC-SHA256 signed events for payment.detected, payment.confirmed, payment.failed and more."
+        description="Set up PayADA webhooks to receive real-time payment events on your server. HMAC-SHA256 signed payloads, exponential backoff retry logic (up to 5 attempts), and full event reference for payment.detected, payment.confirmed, payment.failed and subscription.due."
         canonical="https://payada.io/webhooks"
       />
       {/* Header */}

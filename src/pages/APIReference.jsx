@@ -75,7 +75,7 @@ export default function APIReferencePage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="API Reference — PayADA REST API for Cardano Payments"
-        description="Complete PayADA API reference: authentication, endpoints for payments, subscriptions, webhooks. Integrate Cardano ADA payments into your app with our REST API."
+        description="PayADA REST API reference: base URL, Bearer token authentication, endpoints to create and list payments, manage subscriptions, register webhook endpoints, and handle status codes — with cURL examples for every call."
         canonical="https://payada.io/api-reference"
       />
       {/* Header */}

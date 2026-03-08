@@ -87,7 +87,7 @@ export default function DocumentationPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Documentation — PayADA Cardano Payment Integration"
-        description="Full PayADA developer documentation: quick start guide, payment links, webhooks, REST API, CNT token payments, Discord Gate plugin, POS terminal and supported wallets."
+        description="Get started with PayADA in under 5 minutes: create a payment link, make a test payment, set up webhooks, and explore the REST API. Includes guides for CNT tokens, Discord Gate, POS terminal, shop generator and button embedding."
         canonical="https://payada.io/documentation"
       />
       {/* Header */}
