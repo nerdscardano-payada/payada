@@ -20,6 +20,8 @@ const upcomingBadgeColors = [
 export default function RoadmapPage() {
   const { t, lang, setLang } = useTranslation();
   const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
+  const launched = t("roadmap.launched");
+  const upcoming = t("roadmap.upcoming");
 
   return (
     <div className="min-h-screen bg-white">
