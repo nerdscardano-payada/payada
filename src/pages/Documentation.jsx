@@ -106,8 +106,9 @@ export default function DocumentationPage() {
             <Link to={createPageUrl("Webhooks")} className="text-sm text-slate-600 hover:text-slate-900 flex items-center gap-1">
               Webhooks <ExternalLink className="w-3 h-3" />
             </Link>
-            <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">Security</Link>
+            <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.security")}</Link>
           </div>
+          <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
       </header>
 

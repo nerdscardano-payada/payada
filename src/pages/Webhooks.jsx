@@ -97,10 +97,11 @@ export default function WebhooksPage() {
             Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Docs</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
             <Link to={createPageUrl("APIReference")} className="text-sm text-slate-600 hover:text-slate-900">API</Link>
-            <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">Security</Link>
+            <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.security")}</Link>
           </div>
+          <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
       </header>
 
