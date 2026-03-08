@@ -20,24 +20,19 @@ const SUPPORTED_WALLETS = [
   { name: "Yoroi", url: "https://yoroi-wallet.com" },
 ];
 
-const SIDEBAR_SECTIONS = [
-  { id: "quickstart", label: "Quick Start", icon: Zap },
-  { id: "payment-links", label: "Payment Links", icon: CreditCard },
-  { id: "cnt-tokens", label: "Native Token Payments", icon: Package },
-  { id: "webhooks", label: "Webhooks", icon: GitBranch },
-  { id: "api", label: "REST API", icon: Code },
-  { id: "checkout-embed", label: "Payment Tools", icon: Terminal },
-  { id: "wallets", label: "Supported Wallets", icon: Wallet },
-  { id: "security", label: "Security", icon: Shield },
-  { id: "discord-gate", label: "Discord Gate Plugin", icon: Users },
+const SIDEBAR_SECTION_IDS = [
+  { id: "quickstart", key: "qs_title", icon: Zap },
+  { id: "payment-links", key: "pl_title", icon: CreditCard },
+  { id: "cnt-tokens", key: "cnt_sidebar", icon: Package },
+  { id: "webhooks", key: "webhooks_sidebar", icon: GitBranch },
+  { id: "api", key: "api_sidebar", icon: Code },
+  { id: "checkout-embed", key: "tools_title", icon: Terminal },
+  { id: "wallets", key: "wallets_title", icon: Wallet },
+  { id: "security", key: "security_title", icon: Shield },
+  { id: "discord-gate", key: "discord_title", icon: Users },
 ];
 
-const ONBOARDING_STEPS = [
-  { id: 1, title: "Create your merchant account", description: "Sign up and complete your profile with your business name and Cardano wallet address.", done: false },
-  { id: 2, title: "Create a Payment Link", description: "Dashboard → Payment Links → New Link. Set amount, title, and your receive address.", done: false },
-  { id: 3, title: "Share your link and receive payments", description: "Copy your payment link URL and share it with customers. They pay directly from their Cardano wallet.", done: false },
-  { id: 4, title: "Make a test payment", description: "Open your payment link URL, connect a wallet, and make a small test payment to verify everything works.", done: false },
-];
+const ONBOARDING_STEP_KEYS = [1, 2, 3, 4];
 
 function CodeBlock({ code, language = "bash" }) {
   const [copied, setCopied] = useState(false);
