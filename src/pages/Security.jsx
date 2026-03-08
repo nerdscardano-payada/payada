@@ -115,16 +115,16 @@ export default function SecurityPage() {
               <table className="w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
                 <thead className="bg-slate-50">
                   <tr>
-                    <th className="text-left px-4 py-3 font-semibold text-slate-900 border-b border-slate-200">Category</th>
-                    <th className="text-left px-4 py-3 font-semibold text-slate-900 border-b border-slate-200">Purpose</th>
-                    <th className="text-left px-4 py-3 font-semibold text-slate-900 border-b border-slate-200">Consent Required</th>
+                    <th className="text-left px-4 py-3 font-semibold text-slate-900 border-b border-slate-200">{t("security.cookie_col_category")}</th>
+                    <th className="text-left px-4 py-3 font-semibold text-slate-900 border-b border-slate-200">{t("security.cookie_col_purpose")}</th>
+                    <th className="text-left px-4 py-3 font-semibold text-slate-900 border-b border-slate-200">{t("security.cookie_col_consent")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-slate-100"><td className="px-4 py-3 font-medium text-slate-900">Strictly Necessary</td><td className="px-4 py-3 text-slate-600">Authentication, session management, security tokens</td><td className="px-4 py-3"><span className="text-red-600 font-medium">No — required for operation</span></td></tr>
-                  <tr className="border-b border-slate-100"><td className="px-4 py-3 font-medium text-slate-900">Functional</td><td className="px-4 py-3 text-slate-600">User preferences, language settings</td><td className="px-4 py-3"><span className="text-amber-600 font-medium">Yes — opt-in required</span></td></tr>
-                  <tr className="border-b border-slate-100"><td className="px-4 py-3 font-medium text-slate-900">Analytics</td><td className="px-4 py-3 text-slate-600">Anonymised usage statistics to improve the platform</td><td className="px-4 py-3"><span className="text-amber-600 font-medium">Yes — opt-in required</span></td></tr>
-                  <tr><td className="px-4 py-3 font-medium text-slate-900">Advertising / Tracking</td><td className="px-4 py-3 text-slate-600">Third-party advertising</td><td className="px-4 py-3"><span className="text-green-700 font-medium">Not used</span></td></tr>
+                  <tr className="border-b border-slate-100"><td className="px-4 py-3 font-medium text-slate-900">{t("security.cookie_cat_necessary")}</td><td className="px-4 py-3 text-slate-600">{t("security.cookie_cat_necessary_desc")}</td><td className="px-4 py-3"><span className="text-red-600 font-medium">{t("security.cookie_cat_necessary_consent")}</span></td></tr>
+                  <tr className="border-b border-slate-100"><td className="px-4 py-3 font-medium text-slate-900">{t("security.cookie_cat_functional")}</td><td className="px-4 py-3 text-slate-600">{t("security.cookie_cat_functional_desc")}</td><td className="px-4 py-3"><span className="text-amber-600 font-medium">{t("security.cookie_cat_functional_consent")}</span></td></tr>
+                  <tr className="border-b border-slate-100"><td className="px-4 py-3 font-medium text-slate-900">{t("security.cookie_cat_analytics")}</td><td className="px-4 py-3 text-slate-600">{t("security.cookie_cat_analytics_desc")}</td><td className="px-4 py-3"><span className="text-amber-600 font-medium">{t("security.cookie_cat_analytics_consent")}</span></td></tr>
+                  <tr><td className="px-4 py-3 font-medium text-slate-900">{t("security.cookie_cat_ads")}</td><td className="px-4 py-3 text-slate-600">{t("security.cookie_cat_ads_desc")}</td><td className="px-4 py-3"><span className="text-green-700 font-medium">{t("security.cookie_cat_ads_consent")}</span></td></tr>
                 </tbody>
               </table>
             </div>
