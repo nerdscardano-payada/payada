@@ -8,22 +8,13 @@ import SEOHead from "@/components/SEOHead";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-const launched = [
-  { icon: Link2, title: "Payment Links", description: "Create payment links and share them with customers. Perfect for one-time payments in ADA or fiat-based amounts." },
-  { icon: Monitor, title: "Pay Terminals", description: "Embeddable payment terminals for your website or webshop, fully customizable." },
-  { icon: ShoppingCart, title: "Shop Generator", description: "Automatically generate a simple webshop that accepts Cardano payments." },
-  { icon: Zap, title: "POS Terminal", description: "Point-of-sale interface for in-person payments in ADA." },
-  { icon: Code2, title: "Button Generator", description: "Embeddable payment button for any website, generated with one click." },
-  { icon: Bot, title: "Discord Gate", description: "Give customers access to a Discord server or role after successful payment." },
-  { icon: Globe, title: "Access Links", description: "Sales tool for community access via Discord, Telegram, or other platforms." },
-  { icon: Lock, title: "Webhooks & API", description: "Full REST API + webhook notifications for payment events, including HMAC signing." },
-];
-
-const upcoming = [
-  { icon: Coins, title: "CNT Payments (Cardano Native Tokens)", description: "Accept payments in Cardano Native Tokens like $SNEK, $MIN, $AGIX and more — alongside ADA.", badge: "In Development", badgeColor: "bg-purple-100 text-purple-700" },
-  { icon: ShoppingCart, title: "WooCommerce & Shopify plugins", description: "Ready-to-use plugins for popular e-commerce platforms.", badge: "Research", badgeColor: "bg-amber-100 text-amber-700" },
-  { icon: RefreshCw, title: "Automatic fiat conversion", description: "Receive ADA and automatically convert it to EUR through an integrated DEX.", badge: "Research", badgeColor: "bg-amber-100 text-amber-700" },
-  { icon: Bot, title: "Telegram Gate", description: "Give customers access to a Telegram group or channel after payment — similar to Discord Gate.", badge: "Planned", badgeColor: "bg-blue-100 text-blue-700" },
+const launchedIcons = [Link2, Monitor, ShoppingCart, Zap, Code2, Bot, Globe, Lock];
+const upcomingIcons = [Coins, ShoppingCart, RefreshCw, Bot];
+const upcomingBadgeColors = [
+  "bg-purple-100 text-purple-700",
+  "bg-amber-100 text-amber-700",
+  "bg-amber-100 text-amber-700",
+  "bg-blue-100 text-blue-700",
 ];
 
 export default function RoadmapPage() {
