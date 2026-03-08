@@ -209,7 +209,7 @@ export default function Pay() {
       } catch {}
       if (attempts >= 30) clearInterval(interval);
     }, 10000);
-  }, [paymentLink, payerEmail, payerName]);
+  }, [paymentLink, payerEmail, payerName, connectedWallet, shippingStreet, shippingCity, shippingPostalCode, shippingCountry]);
 
   if (!slug && cartItems.length === 0) {
     return (
