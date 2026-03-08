@@ -65,6 +65,7 @@ const endpoints = [
 ];
 
 export default function APIReferencePage() {
+  const { t, lang, setLang } = useTranslation();
   const [copied, setCopied] = useState(null);
 
   const handleCopy = (text, idx) => {

@@ -73,6 +73,7 @@ const events = [
 ];
 
 export default function WebhooksPage() {
+  const { t, lang, setLang } = useTranslation();
   const [expandedEvent, setExpandedEvent] = useState(0);
   const [copied, setCopied] = useState(null);
 

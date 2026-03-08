@@ -76,6 +76,7 @@ function Section({ id, title, icon: Icon, children }) {
 }
 
 export default function DocumentationPage() {
+  const { t, lang, setLang } = useTranslation();
   const [activeSection, setActiveSection] = useState("quickstart");
   const [checkedSteps, setCheckedSteps] = useState({});
 
