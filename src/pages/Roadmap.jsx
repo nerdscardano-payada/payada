@@ -143,8 +143,8 @@ export default function RoadmapPage() {
           <div className="flex flex-col sm:flex-row justify-between items-center text-sm">
             <p>{t("roadmap.footer_copyright")}</p>
             <div className="flex gap-6 mt-4 sm:mt-0">
-              <Link to={createPageUrl("PrivacyPolicy")} className="hover:text-white transition">Privacy Policy</Link>
-              <Link to={createPageUrl("TermsOfService")} className="hover:text-white transition">Terms of Service</Link>
+              <Link to={createPageUrl("PrivacyPolicy")} className="hover:text-white transition">{t("roadmap.footer_privacy")}</Link>
+              <Link to={createPageUrl("TermsOfService")} className="hover:text-white transition">{t("roadmap.footer_terms")}</Link>
               <Link to={createPageUrl("Contact")} className="hover:text-white transition">{t("nav.contact")}</Link>
             </div>
           </div>
