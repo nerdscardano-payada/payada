@@ -62,13 +62,11 @@ export default function HomePage() {
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
           </div>
           <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-2">
-              <Button variant="ghost" onClick={handleLogin}>{t("nav.sign_in")}</Button>
-              <Button onClick={handleSignUp} className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white">
-                {t("nav.get_started")}
-              </Button>
-            </div>
             <LanguageSwitcher lang={lang} setLang={setLang} />
+            <Button variant="ghost" size="sm" onClick={handleLogin}>{t("nav.sign_in")}</Button>
+            <Button onClick={handleSignUp} className="hidden sm:inline-flex bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white">
+              {t("nav.get_started")}
+            </Button>
           </div>
         </div>
       </nav>
