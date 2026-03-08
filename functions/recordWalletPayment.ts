@@ -276,7 +276,8 @@ Deno.serve(async (req) => {
         payment_count: (paymentLink.payment_count || 0) + 1
       };
       if (isCntPayment) {
-        update.total_received_cnt = (paymentLink.total_received_cnt || 0) + cntMerchantAmount;
+        const divisor = Math.pow(10, cntDecimals);
+        update.total_received_cnt = (paymentLink.total_received_cnt || 0) + (cntMerchantAmount / divisor);
       } else {
         update.total_received_ada = (paymentLink.total_received_ada || 0) + receivedAmountAda;
       }
