@@ -307,12 +307,12 @@ Deno.serve(async (req) => {
       const outputsData = [];
 
       // Merchant CNT output
-      outputsData.push({ addrBytes: merchantAddrBytes, lovelace: MIN_CNT_OUTPUT_LOVELACE, assets: merchantTokens });
+      outputsData.push({ addrBytes: merchantAddrBytes, lovelace: actualMerchantAda, assets: merchantTokens });
 
       // Fee CNT output
       if (cntFee > 0n && PAYADA_FEE_WALLET) {
         const feeAddrBytes = getAddrBytes(PAYADA_FEE_WALLET);
-        outputsData.push({ addrBytes: feeAddrBytes, lovelace: MIN_CNT_OUTPUT_LOVELACE, assets: feeTokens });
+        outputsData.push({ addrBytes: feeAddrBytes, lovelace: actualFeeAda, assets: feeTokens });
       }
 
       // Change output (ADA + remaining CNT if any)
