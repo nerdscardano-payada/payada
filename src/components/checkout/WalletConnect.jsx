@@ -31,17 +31,29 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   }, []);
 
   const detectWallets = () => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !window.cardano) return;
     const found = [];
+    const knownIds = new Set(KNOWN_WALLETS.map(w => w.id));
+
+    // First add known wallets in order
     KNOWN_WALLETS.forEach(({ id, name }) => {
       if (window.cardano?.[id]) {
+        found.push({ id, name, icon: window.cardano[id].icon || null });
+      }
+    });
+
+    // Then add any unknown wallets injected by extensions
+    Object.keys(window.cardano).forEach(key => {
+      if (!knownIds.has(key) && window.cardano[key]?.enable) {
+        const w = window.cardano[key];
         found.push({
-          id,
-          name,
-          icon: window.cardano[id].icon || null,
+          id: key,
+          name: w.name || (key.charAt(0).toUpperCase() + key.slice(1)),
+          icon: w.icon || null,
         });
       }
     });
+
     setInstalledWallets(found);
   };
 
