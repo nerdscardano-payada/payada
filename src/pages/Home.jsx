@@ -263,6 +263,12 @@ export default function HomePage() {
               <ul className="space-y-2 text-sm">
                 <li><Link to={createPageUrl("About")} className="hover:text-white transition">About</Link></li>
                 <li><Link to={createPageUrl("Contact")} className="hover:text-white transition">Contact</Link></li>
+                <li>
+                  <a href="https://x.com/PayAdaIO/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.73-8.835L1.254 2.25H8.08l4.259 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    X (Twitter)
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
