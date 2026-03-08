@@ -693,6 +693,7 @@ export const translations = {
       contact: "Contact",
       sign_in: "Se connecter",
       get_started: "Commencer",
+      about: "À propos",
     },
     home: {
       hero_title: "Acceptez les paiements Cardano sans effort",
