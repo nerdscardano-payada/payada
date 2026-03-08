@@ -44,7 +44,7 @@ export default function ContactPage() {
             Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("About")} className="text-sm text-slate-600 hover:text-slate-900">About</Link>
+            <Link to={createPageUrl("About")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.about") || "About"}</Link>
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
           </div>
           <LanguageSwitcher lang={lang} setLang={setLang} />
