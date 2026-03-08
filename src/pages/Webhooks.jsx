@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Copy } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
+import { useTranslation } from "@/components/i18n/useTranslation";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const events = [
   {

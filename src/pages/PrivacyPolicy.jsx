@@ -2,8 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
+import { useTranslation } from "@/components/i18n/useTranslation";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function PrivacyPolicyPage() {
+  const { t, lang, setLang } = useTranslation();
   return (
     <div className="min-h-screen bg-white">
       <SEOHead

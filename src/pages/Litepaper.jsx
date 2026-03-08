@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
+import { useTranslation } from "@/components/i18n/useTranslation";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Litepaper() {
+  const { t, lang, setLang } = useTranslation();
   const downloadPDF = () => {
     // Create PDF content as string
     const content = `
