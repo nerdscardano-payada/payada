@@ -6,11 +6,11 @@ import SEOHead from "@/components/SEOHead";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-const events = [
-  {
-    name: "payment.detected",
-    description: "Triggered when a payment is detected on the blockchain but not yet confirmed",
-    payload: `{
+const EVENT_KEYS = ["ev_detected", "ev_confirmed", "ev_failed", "ev_due"];
+
+const EVENT_NAMES = ["payment.detected", "payment.confirmed", "payment.failed", "subscription.due"];
+
+const EVENT_PAYLOADS = [`{
   "event": "payment.detected",
   "id": "evt_abc123",
   "timestamp": "2024-03-01T10:30:00Z",
