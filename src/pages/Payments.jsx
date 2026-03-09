@@ -174,7 +174,7 @@ export default function Payments() {
                           {p.payment_type === "cnt" ? (
                             <>
                               <span className="text-sm font-semibold text-slate-900 tabular-nums">
-                                {((p.received_amount_cnt || p.expected_amount_cnt) / Math.pow(10, p.cnt_decimals || 0))?.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: p.cnt_decimals || 0 })} {p.cnt_ticker}
+                                {(() => { const dec = getCntDecimals(p.cnt_policy_id, p.cnt_decimals); return ((p.received_amount_cnt || p.expected_amount_cnt) / Math.pow(10, dec)).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: dec }); })()} {p.cnt_ticker}
                               </span>
                               {p.fiat_value_snapshot && (
                                 <p className="text-xs text-slate-400">{p.fiat_currency} {p.fiat_value_snapshot.toFixed(2)}</p>
