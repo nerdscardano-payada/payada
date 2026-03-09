@@ -108,7 +108,7 @@ async function processConfirmations(base44) {
       triggerWebhook(sr, updatedPayment, payment.merchant_id)
         .catch(err => console.error(`Webhook failed: ${err.message}`));
 
-      base44.functions.invoke('logAuditEvent', {
+      base44.asServiceRole.functions.invoke('logAuditEvent', {
         merchantId: payment.merchant_id,
         eventType: 'payment_confirmed',
         resourceType: 'payment',
@@ -118,7 +118,7 @@ async function processConfirmations(base44) {
         metadata: { block_height: latestBlock, amount_ada: payment.received_amount_ada }
       }).catch(err => console.error(`Audit log failed: ${err.message}`));
 
-      base44.functions.invoke('sendMerchantNotification', {
+      base44.asServiceRole.functions.invoke('sendMerchantNotification', {
         merchantId: payment.merchant_id,
         notificationType: 'payment_confirmed',
         title: '✅ Payment Confirmed',
