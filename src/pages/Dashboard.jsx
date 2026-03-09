@@ -87,8 +87,9 @@ export default function Dashboard() {
   const confirmedAdaPayments = payments.filter(p => p.status === "confirmed" && (p.payment_type === "ada" || !p.payment_type));
   const confirmedCntPayments = payments.filter(p => p.status === "confirmed" && p.payment_type === "cnt");
 
-  const totalAda = confirmedAdaPayments.reduce((sum, p) => sum + (p.received_amount_ada || p.expected_amount_ada || 0), 0);
-  const totalFees = confirmedAdaPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
+  const allConfirmedPayments = payments.filter(p => p.status === "confirmed");
+  const totalAda = allConfirmedPayments.reduce((sum, p) => sum + (p.received_amount_ada || p.expected_amount_ada || 0), 0);
+  const totalFees = allConfirmedPayments.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
 
   // CNT summary by token
   const cntByToken = {};
