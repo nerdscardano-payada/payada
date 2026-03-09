@@ -11,6 +11,20 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
+const KNOWN_DECIMALS = {
+  "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114": 6, // $IAG
+  "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6": 6, // $MIN
+  "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489": 6, // $NMKR
+  "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad": 6, // USDM
+  "fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456": 6, // USDA
+  "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61": 6, // DJED
+};
+
+function getCntDecimals(policyId, storedDecimals) {
+  if (storedDecimals && storedDecimals > 0) return storedDecimals;
+  return KNOWN_DECIMALS[policyId] ?? 0;
+}
+
 export default function Payments() {
   const [user, setUser] = React.useState(null);
   const [search, setSearch] = useState("");
