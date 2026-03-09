@@ -322,8 +322,8 @@ export default function Dashboard() {
                 <div className="flex items-center gap-3">
                   <StatusBadge status={payment.status} />
                   <span className="text-sm font-semibold text-slate-900 tabular-nums">
-                    {payment.payment_type === "cnt" 
-                      ? `${((payment.received_amount_cnt || payment.expected_amount_cnt) / Math.pow(10, payment.cnt_decimals || 0))?.toFixed(4)} ${payment.cnt_ticker}`
+                    {payment.payment_type === "cnt"
+                      ? (() => { const dec = getCntDecimals(payment.cnt_policy_id, payment.cnt_decimals); return `${((payment.received_amount_cnt || payment.expected_amount_cnt) / Math.pow(10, dec)).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: dec })} ${getCntTicker(payment)}`; })()
                       : `₳ ${(payment.received_amount_ada || payment.expected_amount_ada)?.toFixed(2)}`
                     }
                   </span>
