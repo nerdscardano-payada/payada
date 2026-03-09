@@ -132,7 +132,7 @@ async function processConfirmations(base44) {
 
       // Discord Gate: grant role if Discord username is present
       if (payment.payer_discord_username) {
-        base44.functions.invoke('grantDiscordAccess', { paymentId: payment.id })
+        base44.asServiceRole.functions.invoke('grantDiscordAccess', { paymentId: payment.id })
           .catch(err => console.error(`Discord grant failed: ${err.message}`));
       }
     })
