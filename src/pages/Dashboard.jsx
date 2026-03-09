@@ -61,6 +61,29 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
+  const KNOWN_DECIMALS = {
+    "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114": 6, // $IAG
+    "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6": 6, // $MIN
+    "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489": 6, // $NMKR
+    "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad": 6, // USDM
+    "fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456": 6, // USDA
+    "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61": 6, // DJED
+  };
+  const KNOWN_TICKERS = {
+    "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114": "$IAG",
+    "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6": "$MIN",
+    "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3": "$Snek",
+    "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489": "$NMKR",
+    "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad": "USDM",
+    "fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456": "USDA",
+    "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61": "DJED",
+    "533bb94a8850ee3ccbe483106489399112b74c905342cb1792a797a0": "$INDY",
+    "9a9693a9a37912a5097918f97918d15240c92ab729a0b7c4aa144d77": "$SUNDAE",
+    "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0": "$HOSKY",
+  };
+  const getCntDecimals = (policyId, stored) => (stored && stored > 0) ? stored : (KNOWN_DECIMALS[policyId] ?? 0);
+  const getCntTicker = (p) => p.cnt_ticker || KNOWN_TICKERS[p.cnt_policy_id] || p.cnt_policy_id?.slice(0, 8) + "..." || "CNT";
+
   const confirmedAdaPayments = payments.filter(p => p.status === "confirmed" && (p.payment_type === "ada" || !p.payment_type));
   const confirmedCntPayments = payments.filter(p => p.status === "confirmed" && p.payment_type === "cnt");
 
