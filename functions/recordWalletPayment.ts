@@ -229,6 +229,7 @@ Deno.serve(async (req) => {
     const paymentData = {
     merchant_id: merchantId,
     payment_link_id: paymentLinkId || null,
+    access_link_id: accessLinkId || null,
     status: 'detected',
     payment_type: isCntPayment ? 'cnt' : 'ada',
     expected_amount_ada: expectedAmountAda,

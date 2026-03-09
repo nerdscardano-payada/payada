@@ -90,7 +90,9 @@ export default function Access() {
       grantRes = { invite_link: accessLink.invite_link };
     }
 
-    setInviteLink(grantRes?.invite_link || accessLink.invite_link);
+    const rawLink = grantRes?.invite_link || accessLink.invite_link;
+    const fixedLink = rawLink && !rawLink.startsWith('http') ? `https://${rawLink}` : rawLink;
+    setInviteLink(fixedLink);
     setPaymentConfirmed(true);
     setAccessGranted(true);
     setGrantingAccess(false);
