@@ -185,7 +185,7 @@ export default function DisclaimerPage() {
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">13. Contact</h2>
           <p>For questions about this Disclaimer:</p>
           <ul className="list-disc list-inside space-y-2">
-            <li>Email: <a href="mailto:legal@payada.io" className="text-blue-600 hover:underline">legal@payada.io</a></li>
+            <li><Link to={createPageUrl("Contact")} className="text-blue-600 hover:underline">Contact form</Link></li>
           </ul>
         </div>
       </section>
