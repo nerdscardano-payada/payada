@@ -362,7 +362,7 @@ export default function ButtonGenerator() {
             </h2>
             <div className="bg-slate-50 rounded-lg flex flex-col items-center justify-center py-12 gap-3">
               <button
-                onClick={() => selectedLink ? window.open(`${baseUrl}/Pay?slug=${selectedLink.slug}`, '_blank') : toast.info("Select a payment link first")}
+                onClick={() => selectedLink ? (window.location.href = `${baseUrl}/Pay?slug=${selectedLink.slug}`) : toast.info("Select a payment link first")}
                 title={selectedLink ? "Click to test checkout" : "Select a payment link to test"}
                 style={{
                   background: bgColor,
