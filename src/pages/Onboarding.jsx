@@ -7,12 +7,10 @@ import { Card } from "@/components/ui/card";
 import { ArrowRight, ArrowLeft, CheckCircle } from "lucide-react";
 import OnboardingProgress from "@/components/onboarding/OnboardingProgress";
 import ProfileSetupStep from "@/components/onboarding/ProfileSetupStep";
-import WebhookSetupStep from "@/components/onboarding/WebhookSetupStep";
 import PaymentIntegrationStep from "@/components/onboarding/PaymentIntegrationStep";
 
 const STEPS = [
   { id: "profile", title: "Profile Setup" },
-  { id: "webhooks", title: "Webhook Config" },
   { id: "integration", title: "Integration" },
   { id: "complete", title: "Complete" },
 ];
