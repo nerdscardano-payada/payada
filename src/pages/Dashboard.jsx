@@ -131,16 +131,16 @@ export default function Dashboard() {
         <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-start gap-4">
           <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-amber-900">Profiel nog niet ingevuld</p>
+            <p className="text-sm font-semibold text-amber-900">Profile not yet set up</p>
             <p className="text-xs text-amber-700 mt-0.5">
-              Vul je bedrijfsnaam en Cardano wallet-adres in om betalingen te ontvangen.
+              Enter your business name and Cardano wallet address to start receiving payments.
             </p>
           </div>
           <Link
             to={createPageUrl("Onboarding")}
             className="flex-shrink-0 flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium px-3 py-2 rounded-lg transition-colors"
           >
-            Profiel instellen <ArrowRight className="w-3 h-3" />
+            Set up profile <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
       )}
