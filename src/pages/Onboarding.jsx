@@ -61,14 +61,16 @@ export default function OnboardingPage() {
         timezone: formData.timezone,
         default_receive_address: formData.default_receive_address,
       });
-    } else if (currentStep === 1) {
-      // Mark onboarding as complete by saving a flag to user profile
-      await base44.auth.updateMe({ onboarding_completed: true });
     }
 
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
     }
+  };
+
+  const handleComplete = async () => {
+    await base44.auth.updateMe({ onboarding_completed: true });
+    window.location.href = createPageUrl("Dashboard");
   };
 
   const handleBack = () => {
@@ -124,22 +126,14 @@ export default function OnboardingPage() {
                 <p className="text-slate-600 mb-6">
                   Your PayADA account is ready to accept payments
                 </p>
-                <div className="space-y-3">
-                  <Button
-                    size="lg"
-                    onClick={() => window.location.href = createPageUrl("Dashboard")}
-                    className="w-full gap-2"
-                  >
-                    Go to Dashboard
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                  <a
-                    href="/payment-links"
-                    className="block text-sm text-indigo-600 hover:underline"
-                  >
-                    Create your first payment link →
-                  </a>
-                </div>
+                <Button
+                  size="lg"
+                  onClick={handleComplete}
+                  className="w-full gap-2"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
               </div>
             )}
           </div>

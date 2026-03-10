@@ -112,28 +112,13 @@ export default function PaymentIntegrationStep({ merchantId }) {
                     </ul>
                   </div>
 
-                  <Link to={integration.link} className="block pt-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                      Get Started →
-                    </Button>
-                  </Link>
+
                 </div>
               );
             })}
           </div>
 
-          {/* Info Box */}
-          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-2">
-            <p className="font-medium text-slate-900">Want to build custom integrations?</p>
-            <p className="text-sm text-slate-600">For advanced use cases, check out our API documentation and webhooks guide.</p>
-            <div className="pt-2">
-              <Link to={createPageUrl("APIReference")}>
-                <Button variant="link" size="sm" className="p-0 h-auto">
-                  View Developer Documentation →
-                </Button>
-              </Link>
-            </div>
-          </div>
+
         </CardContent>
       </Card>
     </div>
