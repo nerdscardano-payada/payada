@@ -143,7 +143,7 @@ export default function AcceptableUsePolicyPage() {
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">7. Contact</h2>
           <p>For questions about this Acceptable Use Policy:</p>
           <ul className="list-disc list-inside space-y-2">
-            <li>Email: <a href="mailto:compliance@payada.io" className="text-blue-600 hover:underline">compliance@payada.io</a></li>
+            <li><Link to={createPageUrl("Contact")} className="text-blue-600 hover:underline">Contact form</Link></li>
           </ul>
         </div>
       </section>
