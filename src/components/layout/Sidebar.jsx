@@ -38,7 +38,6 @@ const navItems = [
   { name: "Access Links", icon: Users, page: "AccessLinks" },
   { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
   { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
-  { name: "My Stores", icon: Store, page: "MyStores" },
   { name: "Shop Generator", icon: ShoppingCart, page: "ShoppingPageGenerator" },
   { name: "POS Terminal", icon: Zap, page: "POS" },
 
