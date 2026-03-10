@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function StepBasic({ form, update, isEditing }) {
+export default function StepBasic({ form, update, isEditing, isAdmin }) {
   const generateSlug = (title, email) => {
     const base = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     if (isEditing) return base;
@@ -58,8 +58,7 @@ export default function StepBasic({ form, update, isEditing }) {
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="fixed_ada">Vast bedrag in ADA</SelectItem>
-              <SelectItem value="fixed_fiat">Vast bedrag in Fiat (EUR/USD)</SelectItem>
-              <SelectItem value="fixed_cnt">Cardano Native Token (CNT)</SelectItem>
+              {isAdmin && <SelectItem value="fixed_cnt">Cardano Native Token (CNT)</SelectItem>}
             </SelectContent>
           </Select>
         </div>
