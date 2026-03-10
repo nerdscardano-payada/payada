@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { base44 } from "@/api/base44Client";
+import { toast } from "sonner";
 
 export default function ContactPage() {
   const { t, lang, setLang } = useTranslation();
