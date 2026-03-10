@@ -23,7 +23,6 @@ export default function OnboardingPage() {
     default_fiat_currency: "EUR",
     timezone: "UTC",
     default_receive_address: "",
-    webhook_endpoints: [],
   });
 
   const { data: user } = useQuery({
