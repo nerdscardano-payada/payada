@@ -55,28 +55,6 @@ export default function ProfileSetupStep({ data, onChange }) {
             />
           </div>
 
-          {/* Default Currency */}
-          <div className="space-y-2">
-            <Label htmlFor="currency">Preferred Fiat Currency *</Label>
-            <Select
-              value={data.default_fiat_currency || "EUR"}
-              onValueChange={(value) =>
-                handleInputChange("default_fiat_currency", value)
-              }
-            >
-              <SelectTrigger id="currency">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="EUR">EUR - Euro</SelectItem>
-                <SelectItem value="USD">USD - US Dollar</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-slate-500">
-              We'll convert ADA payments to this currency for reporting
-            </p>
-          </div>
-
           {/* Timezone */}
           <div className="space-y-2">
             <Label htmlFor="timezone">Timezone</Label>
