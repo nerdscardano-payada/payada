@@ -86,6 +86,7 @@ Deno.serve(async (req) => {
     // Send welcome email
     await base44.integrations.Core.SendEmail({
       to: user.email,
+      from_name: 'PayADA',
       subject: 'Welcome to PayADA - Get Started with Cardano Payments',
       body: htmlBody
     });
