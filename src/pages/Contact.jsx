@@ -85,9 +85,18 @@ export default function ContactPage() {
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_subject")}</label>
-                <input type="text" value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  placeholder={t("contact.placeholder_subject")} required />
+                <select value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
+                  required>
+                  <option value="">Select a subject…</option>
+                  <option value="General question">General question</option>
+                  <option value="Payment issue">Payment issue</option>
+                  <option value="Account & billing">Account &amp; billing</option>
+                  <option value="Integration / API help">Integration / API help</option>
+                  <option value="Report abuse">Report abuse</option>
+                  <option value="Legal / compliance">Legal / compliance</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_message")}</label>
