@@ -12,6 +12,12 @@ const THEMES = [
   { label: "Ocean", bg: "#030c14", accent: "#38bdf8", text: "#f0f9ff", card: "#0a1929", cardBorder: "rgba(56,189,248,0.12)" },
   { label: "Sunset", bg: "#0f0500", accent: "#fb923c", text: "#fff7ed", card: "#1a0a00", cardBorder: "rgba(251,146,60,0.12)" },
   { label: "Rose", bg: "#0f000a", accent: "#f472b6", text: "#fdf2f8", card: "#1a0010", cardBorder: "rgba(244,114,182,0.12)" },
+  { label: "Noir", bg: "#0a0a0a", accent: "#e5e5e5", text: "#f5f5f5", card: "#141414", cardBorder: "rgba(229,229,229,0.08)" },
+  { label: "Crimson", bg: "#0d0004", accent: "#ef4444", text: "#fff1f2", card: "#1a0008", cardBorder: "rgba(239,68,68,0.12)" },
+  { label: "Gold", bg: "#0a0700", accent: "#f59e0b", text: "#fffbeb", card: "#1a1000", cardBorder: "rgba(245,158,11,0.12)" },
+  { label: "Teal", bg: "#00100f", accent: "#14b8a6", text: "#f0fdfa", card: "#001a18", cardBorder: "rgba(20,184,166,0.12)" },
+  { label: "Lavender", bg: "#07040f", accent: "#a855f7", text: "#faf5ff", card: "#100820", cardBorder: "rgba(168,85,247,0.12)" },
+  { label: "Zinc", bg: "#111113", accent: "#71717a", text: "#fafafa", card: "#1c1c1e", cardBorder: "rgba(113,113,122,0.15)" },
 ];
 
 const FONTS = [
@@ -19,6 +25,10 @@ const FONTS = [
   { label: "Georgia (Elegant)", value: "Georgia, serif" },
   { label: "Mono (Technical)", value: "'Courier New', monospace" },
   { label: "System Default", value: "system-ui, sans-serif" },
+  { label: "Playfair (Luxury)", value: "'Playfair Display', Georgia, serif" },
+  { label: "Trebuchet (Friendly)", value: "'Trebuchet MS', sans-serif" },
+  { label: "Garamond (Classic)", value: "Garamond, 'Times New Roman', serif" },
+  { label: "Verdana (Readable)", value: "Verdana, Geneva, sans-serif" },
 ];
 
 export { THEMES, FONTS };
@@ -31,40 +41,40 @@ export default function StepShopInfo({ config, onChange, onNext }) {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-slate-900">Winkelinfo & Design</h2>
-        <p className="text-slate-500 mt-1">Stel je winkel in en kies een thema</p>
+        <h2 className="text-2xl font-bold text-slate-900">Store Info & Design</h2>
+        <p className="text-slate-500 mt-1">Configure your store and pick a theme</p>
       </div>
 
       {/* Store Info */}
       <div className="space-y-4">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Winkelgegevens</p>
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Store Details</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label className="text-xs text-slate-500">Logo / Winkelnaam</Label>
+            <Label className="text-xs text-slate-500">Logo / Store Name</Label>
             <Input value={logoText} onChange={(e) => set("logoText", e.target.value)} placeholder="🛒 MyShop" />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-slate-500">Paginatitel</Label>
+            <Label className="text-xs text-slate-500">Page Title</Label>
             <Input value={shopTitle} onChange={(e) => set("shopTitle", e.target.value)} placeholder="My ADA Shop" />
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs text-slate-500">Hero Ondertitel</Label>
+          <Label className="text-xs text-slate-500">Hero Subtitle</Label>
           <Input value={shopSubtitle} onChange={(e) => set("shopSubtitle", e.target.value)} />
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs text-slate-500">Footer Tekst</Label>
+          <Label className="text-xs text-slate-500">Footer Text</Label>
           <Input value={footerText} onChange={(e) => set("footerText", e.target.value)} />
         </div>
       </div>
 
       {/* Features */}
       <div className="space-y-3">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Functies</p>
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Features</p>
         {[
-          { label: "Winkelwagen & Bulk Checkout", key: "enableCart" },
-          { label: "Categorie Filters", key: "enableCategories" },
-          { label: "Product Zoeken", key: "enableSearch" },
+          { label: "Shopping Cart & Bulk Checkout", key: "enableCart" },
+          { label: "Category Filters", key: "enableCategories" },
+          { label: "Product Search", key: "enableSearch" },
         ].map(({ label, key }) => (
           <div key={key} className="flex items-center justify-between py-1">
             <Label className="text-sm text-slate-600">{label}</Label>
@@ -77,7 +87,7 @@ export default function StepShopInfo({ config, onChange, onNext }) {
       <div className="space-y-4">
         <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Design</p>
         <div className="space-y-2">
-          <Label className="text-xs text-slate-500">Kleurthema</Label>
+          <Label className="text-xs text-slate-500">Color Theme</Label>
           <div className="grid grid-cols-6 gap-2">
             {THEMES.map((t) => (
               <button
@@ -91,11 +101,11 @@ export default function StepShopInfo({ config, onChange, onNext }) {
               </button>
             ))}
           </div>
-          <p className="text-xs text-slate-400">Geselecteerd: <span className="font-medium text-slate-600">{theme.label}</span></p>
+          <p className="text-xs text-slate-400">Selected: <span className="font-medium text-slate-600">{theme.label}</span></p>
         </div>
 
         <div className="flex items-center justify-between">
-          <Label className="text-sm text-slate-600">Aangepaste accentkleur</Label>
+          <Label className="text-sm text-slate-600">Custom accent color</Label>
           <Switch checked={useCustomAccent} onCheckedChange={(v) => set("useCustomAccent", v)} />
         </div>
         {useCustomAccent && (
@@ -106,7 +116,7 @@ export default function StepShopInfo({ config, onChange, onNext }) {
         )}
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-slate-500">Lettertype</Label>
+          <Label className="text-xs text-slate-500">Font</Label>
           <Select value={font} onValueChange={(v) => set("font", v)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
@@ -116,7 +126,7 @@ export default function StepShopInfo({ config, onChange, onNext }) {
         </div>
 
         <div className="flex items-center justify-between">
-          <Label className="text-sm text-slate-600">Toon "Powered by PayADA"</Label>
+          <Label className="text-sm text-slate-600">Show "Powered by PayADA"</Label>
           <Switch checked={showPoweredBy} onCheckedChange={(v) => set("showPoweredBy", v)} />
         </div>
       </div>
@@ -126,7 +136,7 @@ export default function StepShopInfo({ config, onChange, onNext }) {
         onClick={onNext}
         className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold text-sm shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition-all hover:brightness-110"
       >
-        Doorgaan naar producten →
+        Continue to products →
       </motion.button>
     </div>
   );
