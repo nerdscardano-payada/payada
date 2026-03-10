@@ -138,7 +138,7 @@ export default function PrivacyPolicyPage() {
             <li><strong>Right to withdraw consent:</strong> Where processing is based on consent, you may withdraw it at any time.</li>
           </ul>
           <p className="mt-4">
-            To exercise any of these rights, contact us at <a href="mailto:privacy@payada.io" className="text-indigo-600 hover:underline">privacy@payada.io</a>. 
+            To exercise any of these rights, use our <Link to={createPageUrl("Contact")} className="text-indigo-600 hover:underline">contact form</Link>. 
             We will respond within 30 days. You also have the right to lodge a complaint with your national data protection authority.
           </p>
 
