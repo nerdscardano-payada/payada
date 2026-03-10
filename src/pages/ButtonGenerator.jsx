@@ -143,10 +143,15 @@ export default function ButtonGenerator() {
 
   const borderRadii = { none: "0px", sm: "4px", md: "8px", lg: "12px", full: "9999px" };
 
-  const previewLabel = [
-    buttonText || "Pay with ADA",
-    showAmount && selectedLink ? ` — ₳ ${selectedLink.amount_ada?.toFixed(2)}` : "",
-  ].join("");
+  const amountSuffix = showAmount && selectedLink
+    ? selectedLink.amount_mode === "fixed_cnt"
+      ? ` — ${selectedLink.cnt_amount?.toLocaleString() || "—"} ${selectedLink.cnt_ticker || "CNT"}`
+      : selectedLink.amount_mode === "fixed_fiat"
+      ? ` — ${selectedLink.fiat_currency} ${selectedLink.amount_fiat?.toFixed(2) || "—"}`
+      : ` — ₳ ${selectedLink.amount_ada?.toFixed(2) || "—"}`
+    : "";
+
+  const previewLabel = (buttonText || "Pay with ADA") + amountSuffix;
 
   // ---- Embed code generators ----
   const shadowStyle = shadow ? "0 4px 14px rgba(0,0,0,0.25)" : "none";
