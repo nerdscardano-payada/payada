@@ -31,6 +31,8 @@ export default function OnboardingPage() {
 
   const createProfileMutation = useMutation({
     mutationFn: async (profileData) => {
+      if (!user?.id) throw new Error("User not loaded");
+      
       const existing = await base44.entities.MerchantProfile.filter({
         user_id: user.id,
       });
@@ -55,12 +57,21 @@ export default function OnboardingPage() {
         alert("Please fill in all required fields");
         return;
       }
-      await createProfileMutation.mutateAsync({
-        business_name: formData.business_name,
-        website_url: formData.website_url,
-        timezone: formData.timezone,
-        default_receive_address: formData.default_receive_address,
-      });
+      if (!user?.id) {
+        alert("Loading user data, please try again");
+        return;
+      }
+      try {
+        await createProfileMutation.mutateAsync({
+          business_name: formData.business_name,
+          website_url: formData.website_url,
+          timezone: formData.timezone,
+          default_receive_address: formData.default_receive_address,
+        });
+      } catch (error) {
+        alert("Failed to save profile: " + error.message);
+        return;
+      }
     }
 
     if (currentStep < STEPS.length - 1) {
