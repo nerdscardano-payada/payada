@@ -59,7 +59,7 @@ export default function TermsOfServicePage() {
           </ul>
           <p className="mt-4">
             You are solely responsible for all activity occurring under your account. You must notify PayADA immediately at
-            <a href="mailto:legal@payada.io" className="text-indigo-600 hover:underline ml-1">legal@payada.io</a> upon becoming aware of any unauthorized access.
+            <a href="mailto:support@payada.io" className="text-indigo-600 hover:underline ml-1">support@payada.io</a> upon becoming aware of any unauthorized access.
           </p>
 
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">3. Nature of the Service</h2>

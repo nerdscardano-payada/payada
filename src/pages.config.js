@@ -68,6 +68,7 @@ import Home from './pages/Home';
 import Litepaper from './pages/Litepaper';
 import MerchantAgreement from './pages/MerchantAgreement';
 import MerchantProfile from './pages/MerchantProfile';
+import MyStores from './pages/MyStores';
 import Onboarding from './pages/Onboarding';
 import POS from './pages/POS';
 import Pay from './pages/Pay';
@@ -90,7 +91,6 @@ import TermsOfService from './pages/TermsOfService';
 import Unlock from './pages/Unlock';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
 import Webhooks from './pages/Webhooks';
-import MyStores from './pages/MyStores';
 import __Layout from './Layout.jsx';
 
 
@@ -116,6 +116,7 @@ export const PAGES = {
     "Litepaper": Litepaper,
     "MerchantAgreement": MerchantAgreement,
     "MerchantProfile": MerchantProfile,
+    "MyStores": MyStores,
     "Onboarding": Onboarding,
     "POS": POS,
     "Pay": Pay,
@@ -138,7 +139,6 @@ export const PAGES = {
     "Unlock": Unlock,
     "WebhookSetupWizard": WebhookSetupWizard,
     "Webhooks": Webhooks,
-    "MyStores": MyStores,
 }
 
 export const pagesConfig = {
