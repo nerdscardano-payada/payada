@@ -3,10 +3,21 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
+    const payload = await req.json();
+    
+    // When called from automation, use the created_by field from the event
+    const userEmail = payload?.event?.created_by || payload?.created_by;
+    
+    if (!userEmail) {
+      return Response.json({ error: 'No user email found' }, { status: 400 });
+    }
+
+    // Fetch the user to get their full name
+    const users = await base44.asServiceRole.entities.User.filter({ email: userEmail });
+    const user = users[0];
 
     if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      return Response.json({ error: 'User not found' }, { status: 404 });
     }
 
     // Build welcome email HTML
