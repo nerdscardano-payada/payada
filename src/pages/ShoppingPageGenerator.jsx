@@ -69,10 +69,23 @@ export default function ShoppingPageGenerator() {
     const name = storeName || config.shopTitle || "My Store";
     setSaving(true);
     try {
+      let saveConfig = { ...config };
+
+      // If logoImageUrl is a base64 string, upload it first
+      if (saveConfig.logoImageUrl && saveConfig.logoImageUrl.startsWith("data:")) {
+        const res = await fetch(saveConfig.logoImageUrl);
+        const blob = await res.blob();
+        const file = new File([blob], "logo.png", { type: blob.type });
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        saveConfig = { ...saveConfig, logoImageUrl: file_url };
+        // Also update local config so future saves use the URL
+        setConfig((prev) => ({ ...prev, logoImageUrl: file_url }));
+      }
+
       if (storeId) {
-        await base44.entities.Store.update(storeId, { name, config, products, status: "active" });
+        await base44.entities.Store.update(storeId, { name, config: saveConfig, products, status: "active" });
       } else {
-        const created = await base44.entities.Store.create({ merchant_id: user.email, name, config, products, status: "active" });
+        const created = await base44.entities.Store.create({ merchant_id: user.email, name, config: saveConfig, products, status: "active" });
         setStoreId(created.id);
         window.history.replaceState({}, "", `${window.location.pathname}?storeId=${created.id}`);
       }
