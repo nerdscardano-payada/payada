@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { ImagePlus, X } from "lucide-react";
 
 const THEMES = [
   { label: "Midnight", bg: "#080c14", accent: "#818cf8", text: "#f1f5f9", card: "#0f172a", cardBorder: "rgba(129,140,248,0.12)" },
@@ -43,7 +44,7 @@ const FONTS = [
 export { THEMES, FONTS };
 
 export default function StepShopInfo({ config, onChange, onNext }) {
-  const { shopTitle, shopSubtitle, logoText, footerText, theme, customAccent, useCustomAccent, font, showPoweredBy, enableCart, enableCategories, enableSearch } = config;
+  const { shopTitle, shopSubtitle, logoText, logoImageUrl, footerText, theme, customAccent, useCustomAccent, font, showPoweredBy, enableCart, enableCategories, enableSearch } = config;
 
   const set = (key, val) => onChange({ ...config, [key]: val });
 
@@ -60,7 +61,39 @@ export default function StepShopInfo({ config, onChange, onNext }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label className="text-xs text-slate-500">Logo / Store Name</Label>
-            <Input value={logoText} onChange={(e) => set("logoText", e.target.value)} placeholder="🛒 MyShop" />
+            <div className="flex items-center gap-2">
+              <label className="cursor-pointer shrink-0">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) => set("logoImageUrl", ev.target.result);
+                    reader.readAsDataURL(file);
+                  }}
+                />
+                {logoImageUrl ? (
+                  <div className="relative w-10 h-10">
+                    <img src={logoImageUrl} alt="logo" className="w-10 h-10 rounded-lg object-cover border border-slate-200" />
+                    <button
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); set("logoImageUrl", ""); }}
+                      className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center"
+                    >
+                      <X className="w-2.5 h-2.5 text-white" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-lg border-2 border-dashed border-slate-200 flex items-center justify-center hover:border-indigo-400 hover:bg-indigo-50 transition-colors">
+                    <ImagePlus className="w-4 h-4 text-slate-400" />
+                  </div>
+                )}
+              </label>
+              <Input value={logoText} onChange={(e) => set("logoText", e.target.value)} placeholder="🛒 MyShop" />
+            </div>
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs text-slate-500">Page Title</Label>
