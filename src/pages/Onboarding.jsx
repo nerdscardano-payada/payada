@@ -20,7 +20,6 @@ export default function OnboardingPage() {
   const [formData, setFormData] = useState({
     business_name: "",
     website_url: "",
-    default_fiat_currency: "EUR",
     timezone: "UTC",
     default_receive_address: "",
   });
