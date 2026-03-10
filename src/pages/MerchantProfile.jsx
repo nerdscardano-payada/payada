@@ -74,6 +74,11 @@ export default function MerchantProfilePage() {
   };
 
   const handleSave = async () => {
+    if (!formData.default_receive_address || formData.default_receive_address.trim() === "") {
+      alert("Default Cardano Receive Address is required. Please enter a valid Cardano wallet address.");
+      return;
+    }
+    
     let data = { ...formData };
     if (logoMode === "upload" && logoFile) {
       setLogoUploading(true);
