@@ -109,14 +109,10 @@ export default function OnboardingPage() {
             )}
 
             {currentStep === 1 && (
-              <WebhookSetupStep data={formData} onChange={setFormData} />
-            )}
-
-            {currentStep === 2 && (
               <PaymentIntegrationStep merchantId={user?.id} />
             )}
 
-            {currentStep === 3 && (
+            {currentStep === 2 && (
               <div className="text-center py-12">
                 <div className="flex justify-center mb-4">
                   <CheckCircle className="w-16 h-16 text-green-600" />
