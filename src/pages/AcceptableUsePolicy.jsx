@@ -129,8 +129,8 @@ export default function AcceptableUsePolicyPage() {
 
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">5. Reporting & Compliance</h2>
           <p>
-            If you believe another user is violating this AUP or engaging in illegal activity, please report it immediately to{" "}
-            <a href="mailto:abuse@payada.io" className="text-blue-600 hover:underline">abuse@payada.io</a>. 
+            If you believe another user is violating this AUP or engaging in illegal activity, please report it immediately via our{" "}
+            <Link to={createPageUrl("Contact")} className="text-blue-600 hover:underline">contact form</Link>. 
             All reports are investigated thoroughly and treated confidentially.
           </p>
 
