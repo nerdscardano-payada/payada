@@ -18,6 +18,15 @@ const THEMES = [
   { label: "Teal", bg: "#00100f", accent: "#14b8a6", text: "#f0fdfa", card: "#001a18", cardBorder: "rgba(20,184,166,0.12)" },
   { label: "Lavender", bg: "#07040f", accent: "#a855f7", text: "#faf5ff", card: "#100820", cardBorder: "rgba(168,85,247,0.12)" },
   { label: "Zinc", bg: "#111113", accent: "#71717a", text: "#fafafa", card: "#1c1c1e", cardBorder: "rgba(113,113,122,0.15)" },
+  // Light themes
+  { label: "Clean White", bg: "#f8fafc", accent: "#1e293b", text: "#0f172a", card: "#ffffff", cardBorder: "rgba(15,23,42,0.08)" },
+  { label: "Dark Purple", bg: "#faf5ff", accent: "#581c87", text: "#3b0764", card: "#ffffff", cardBorder: "rgba(88,28,135,0.1)" },
+  { label: "Dark Green", bg: "#f0fdf4", accent: "#14532d", text: "#052e16", card: "#ffffff", cardBorder: "rgba(20,83,45,0.1)" },
+  { label: "Dark Red", bg: "#fff1f2", accent: "#9f1239", text: "#4c0519", card: "#ffffff", cardBorder: "rgba(159,18,57,0.1)" },
+  { label: "Warm Sand", bg: "#fefce8", accent: "#713f12", text: "#3f2200", card: "#ffffff", cardBorder: "rgba(113,63,18,0.1)" },
+  { label: "Slate Blue", bg: "#f0f4ff", accent: "#1e3a8a", text: "#172554", card: "#ffffff", cardBorder: "rgba(30,58,138,0.1)" },
+  { label: "Charcoal", bg: "#f1f5f9", accent: "#1e293b", text: "#0f172a", card: "#ffffff", cardBorder: "rgba(30,41,59,0.1)" },
+  { label: "Dusty Rose", bg: "#fff7f7", accent: "#7f1d1d", text: "#450a0a", card: "#ffffff", cardBorder: "rgba(127,29,29,0.1)" },
 ];
 
 const FONTS = [
