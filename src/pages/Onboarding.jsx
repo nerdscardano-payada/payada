@@ -58,7 +58,6 @@ export default function OnboardingPage() {
       await createProfileMutation.mutateAsync({
         business_name: formData.business_name,
         website_url: formData.website_url,
-        default_fiat_currency: formData.default_fiat_currency,
         timezone: formData.timezone,
         default_receive_address: formData.default_receive_address,
       });
