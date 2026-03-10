@@ -95,8 +95,8 @@ export default function ContactPage() {
                   rows="6" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder={t("contact.placeholder_message")} required />
               </div>
-              <Button className="w-full bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white">
-                {t("contact.send_button")}
+              <Button disabled={sending} className="w-full bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white">
+                {sending ? "Sending…" : t("contact.send_button")}
               </Button>
             </form>
           </div>
