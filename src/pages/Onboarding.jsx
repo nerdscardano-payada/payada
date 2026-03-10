@@ -63,11 +63,6 @@ export default function OnboardingPage() {
         timezone: formData.timezone,
         default_receive_address: formData.default_receive_address,
       });
-    } else if (currentStep === 1) {
-      // Save webhooks if any
-      if (formData.webhook_endpoints.length > 0) {
-        await createWebhooksMutation.mutateAsync(formData.webhook_endpoints);
-      }
     }
 
     if (currentStep < STEPS.length - 1) {
