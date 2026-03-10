@@ -1,37 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useMutation, useMutation as useMut, useQueryClient } from "@tanstack/react-query";
-import PageHeader from "@/components/shared/PageHeader";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Save, BookTemplate } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, BookTemplate, Check } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import StepBasic from "./wizard/StepBasic";
+import StepOptions from "./wizard/StepOptions";
+import StepSummary from "./wizard/StepSummary";
+
+const STEPS = [
+  { id: 1, label: "Basisgegevens" },
+  { id: 2, label: "Opties" },
+  { id: 3, label: "Samenvatting" },
+];
 
 export default function PaymentLinkForm({ link, prefill, onBack, merchantId: merchantIdProp }) {
   const isEditing = !!link;
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
+  const [step, setStep] = useState(1);
   const [showSaveTemplate, setShowSaveTemplate] = useState(false);
   const [templateName, setTemplateName] = useState("");
-
-  useEffect(() => {
-    base44.auth.me().then((u) => {
-      setUser(u);
-      if (!isEditing && u?.email) {
-        base44.entities.MerchantProfile.filter({ user_id: u.email }).then((profiles) => {
-          const defaultAddress = profiles?.[0]?.default_receive_address;
-          if (defaultAddress) {
-            setForm((prev) => ({ ...prev, receive_address: prev.receive_address || defaultAddress }));
-          }
-        });
-      }
-    });
-  }, []);
 
   const source = link || prefill || {};
   const [form, setForm] = useState({
@@ -54,18 +46,80 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     collect_email: source.collect_email || false,
     collect_name: source.collect_name || false,
     collect_shipping: source.collect_shipping || false,
+    expires_at: link?.expires_at || "",
     status: link?.status || "active",
+    _userEmail: "",
   });
 
-  const saveTemplateMutation = useMut({
+  useEffect(() => {
+    base44.auth.me().then((u) => {
+      setUser(u);
+      setForm((prev) => ({ ...prev, _userEmail: u?.email || "" }));
+      if (!isEditing && u?.email) {
+        base44.entities.MerchantProfile.filter({ user_id: u.email }).then((profiles) => {
+          const defaultAddress = profiles?.[0]?.default_receive_address;
+          if (defaultAddress) {
+            setForm((prev) => ({ ...prev, receive_address: prev.receive_address || defaultAddress }));
+          }
+        });
+      }
+    });
+  }, []);
+
+  const update = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
+
+  const saveTemplateMutation = useMutation({
     mutationFn: (data) => base44.entities.PaymentLinkTemplate.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["paymentLinkTemplates"] });
-      toast.success("Template saved!");
+      toast.success("Template opgeslagen!");
       setShowSaveTemplate(false);
       setTemplateName("");
     },
   });
+
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      if (isEditing) return base44.entities.PaymentLink.update(link.id, data);
+      const prefix = user?.email?.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "m";
+      const slug = data.slug.startsWith(prefix + "-") ? data.slug : `${prefix}-${data.slug}`;
+      return base44.entities.PaymentLink.create({ ...data, slug, merchant_id: user?.email });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["paymentLinks"] });
+      toast.success(isEditing ? "Betaallink bijgewerkt" : "Betaallink aangemaakt");
+      onBack();
+    },
+  });
+
+  const validateStep1 = () => {
+    if (!form.title.trim()) { toast.error("Voer een titel in"); return false; }
+    if (!form.slug.trim()) { toast.error("Voer een slug in"); return false; }
+    if (form.amount_mode === "fixed_ada" && !form.amount_ada) { toast.error("Voer een bedrag in ADA in"); return false; }
+    if (form.amount_mode === "fixed_fiat" && !form.amount_fiat) { toast.error("Voer een bedrag in"); return false; }
+    if (form.amount_mode === "fixed_cnt" && !form.cnt_amount) { toast.error("Voer een token hoeveelheid in"); return false; }
+    if (!form.receive_address.trim()) { toast.error("Voer een Cardano adres in"); return false; }
+    return true;
+  };
+
+  const handleNext = () => {
+    if (step === 1 && !validateStep1()) return;
+    setStep((s) => s + 1);
+  };
+
+  const handleSubmit = () => {
+    const { _userEmail, ...rest } = form;
+    const data = {
+      ...rest,
+      amount_ada: form.amount_mode === "fixed_ada" ? parseFloat(form.amount_ada) || 0 : null,
+      amount_fiat: form.amount_mode === "fixed_fiat" ? parseFloat(form.amount_fiat) || 0 : null,
+      cnt_amount: form.amount_mode === "fixed_cnt" ? parseFloat(form.cnt_amount) || 0 : null,
+      cnt_decimals: form.amount_mode === "fixed_cnt" ? parseInt(form.cnt_decimals) || 0 : null,
+      confirmations_required: parseInt(form.confirmations_required) || 2,
+      expires_at: form.expires_at || null,
+    };
+    mutation.mutate(data);
+  };
 
   const handleSaveTemplate = () => {
     const mid = user?.email || merchantIdProp;
@@ -86,305 +140,98 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     });
   };
 
-  const generateMerchantPrefix = (email) => {
-    if (!email) return "m";
-    return email.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8);
-  };
-
-  const generateSlug = (title) => {
-    const base = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    if (isEditing) return base;
-    const prefix = generateMerchantPrefix(user?.email);
-    return `${prefix}-${base}`;
-  };
-
-  const mutation = useMutation({
-    mutationFn: (data) => {
-      if (isEditing) return base44.entities.PaymentLink.update(link.id, data);
-      const prefix = user?.email?.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "m";
-      const slug = data.slug.startsWith(prefix + "-") ? data.slug : `${prefix}-${data.slug}`;
-      return base44.entities.PaymentLink.create({ ...data, slug, merchant_id: user?.email });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["paymentLinks"] });
-      toast.success(isEditing ? "Payment link updated" : "Payment link created");
-      onBack();
-    },
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const data = {
-      ...form,
-      amount_ada: form.amount_mode === "fixed_ada" ? parseFloat(form.amount_ada) || 0 : null,
-      amount_fiat: form.amount_mode === "fixed_fiat" ? parseFloat(form.amount_fiat) || 0 : null,
-      cnt_amount: form.amount_mode === "fixed_cnt" ? parseFloat(form.cnt_amount) || 0 : null,
-      cnt_decimals: form.amount_mode === "fixed_cnt" ? parseInt(form.cnt_decimals) || 0 : null,
-      confirmations_required: parseInt(form.confirmations_required) || 2,
-    };
-    mutation.mutate(data);
-  };
-
-  const update = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
-
   return (
-    <div>
-      <div className="mb-6">
-        <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Back to Payment Links
-        </button>
+    <div className="max-w-2xl">
+      {/* Back */}
+      <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors mb-6">
+        <ArrowLeft className="w-4 h-4" /> Terug naar betaallinks
+      </button>
+
+      <h1 className="text-xl font-bold text-slate-900 mb-6">
+        {isEditing ? "Betaallink bewerken" : "Nieuwe betaallink"}
+      </h1>
+
+      {/* Step indicators */}
+      <div className="flex items-center gap-0 mb-8">
+        {STEPS.map((s, i) => (
+          <React.Fragment key={s.id}>
+            <div className="flex items-center gap-2">
+              <div className={cn(
+                "w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-colors",
+                step > s.id ? "bg-indigo-600 text-white" :
+                step === s.id ? "bg-indigo-600 text-white" :
+                "bg-slate-100 text-slate-400"
+              )}>
+                {step > s.id ? <Check className="w-3.5 h-3.5" /> : s.id}
+              </div>
+              <span className={cn(
+                "text-sm font-medium hidden sm:block",
+                step === s.id ? "text-slate-900" : "text-slate-400"
+              )}>{s.label}</span>
+            </div>
+            {i < STEPS.length - 1 && (
+              <div className={cn("flex-1 h-px mx-3", step > s.id ? "bg-indigo-600" : "bg-slate-200")} />
+            )}
+          </React.Fragment>
+        ))}
       </div>
 
-      <PageHeader title={isEditing ? "Edit Payment Link" : "Create Payment Link"} />
+      {/* Step content */}
+      <div className="bg-white rounded-xl border border-slate-200/60 p-6 mb-6">
+        {step === 1 && <StepBasic form={form} update={update} isEditing={isEditing} />}
+        {step === 2 && <StepOptions form={form} update={update} />}
+        {step === 3 && <StepSummary form={form} />}
+      </div>
 
-      <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
-        {/* Basic Info */}
-        <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-5">
-          <h3 className="text-sm font-semibold text-slate-900">Basic Information</h3>
-
-          <div className="space-y-2">
-            <Label>Title *</Label>
-            <Input
-              value={form.title}
-              onChange={(e) => {
-                update("title", e.target.value);
-                if (!isEditing) update("slug", generateSlug(e.target.value));
-              }}
-              placeholder="e.g. Support our project"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>URL Slug *</Label>
-            <div className="flex items-center gap-0">
-              <span className="text-xs text-slate-400 bg-slate-50 border border-r-0 border-slate-200 px-3 py-2.5 rounded-l-md">/pay/</span>
-              <Input
-                value={form.slug}
-                onChange={(e) => update("slug", e.target.value)}
-                className="rounded-l-none"
-                placeholder="my-payment"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Description</Label>
-            <Textarea
-              value={form.description}
-              onChange={(e) => update("description", e.target.value)}
-              placeholder="Optional description shown to payer"
-              rows={3}
-            />
-          </div>
-        </div>
-
-        {/* Pricing */}
-        <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-5">
-          <h3 className="text-sm font-semibold text-slate-900">Pricing</h3>
-
-          <div className="space-y-2">
-            <Label>Amount Mode</Label>
-            <Select value={form.amount_mode} onValueChange={(v) => update("amount_mode", v)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="fixed_ada">Fixed ADA</SelectItem>
-                <SelectItem value="fixed_fiat">Fixed Fiat (EUR/USD)</SelectItem>
-                <SelectItem value="fixed_cnt">Cardano Native Token (CNT)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {form.amount_mode === "fixed_ada" && (
-            <div className="space-y-2">
-              <Label>Amount (ADA)</Label>
-              <Input
-                type="number"
-                step="0.01"
-                value={form.amount_ada}
-                onChange={(e) => update("amount_ada", e.target.value)}
-                placeholder="e.g. 25"
-              />
-            </div>
-          )}
-
-          {form.amount_mode === "fixed_fiat" && (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Currency</Label>
-                <Select value={form.fiat_currency} onValueChange={(v) => update("fiat_currency", v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="USD">USD</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Amount</Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  value={form.amount_fiat}
-                  onChange={(e) => update("amount_fiat", e.target.value)}
-                  placeholder="e.g. 9.99"
-                />
-              </div>
-            </div>
-          )}
-
-          {form.amount_mode === "fixed_cnt" && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Token Amount</Label>
-                  <Input
-                    type="number"
-                    value={form.cnt_amount}
-                    onChange={(e) => update("cnt_amount", e.target.value)}
-                    placeholder="e.g. 1000"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Ticker (e.g. $SNEK)</Label>
-                  <Input
-                    value={form.cnt_ticker}
-                    onChange={(e) => update("cnt_ticker", e.target.value)}
-                    placeholder="$SNEK"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Policy ID</Label>
-                <Input
-                  value={form.cnt_policy_id}
-                  onChange={(e) => update("cnt_policy_id", e.target.value)}
-                  placeholder="279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3"
-                  className="font-mono text-xs"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Asset Name (hex)</Label>
-                  <Input
-                    value={form.cnt_asset_name}
-                    onChange={(e) => update("cnt_asset_name", e.target.value)}
-                    placeholder="534e454b (optional)"
-                    className="font-mono text-xs"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Decimals</Label>
-                  <Input
-                    type="number"
-                    min={0}
-                    max={18}
-                    value={form.cnt_decimals}
-                    onChange={(e) => update("cnt_decimals", e.target.value)}
-                    placeholder="0"
-                  />
-                </div>
-              </div>
-            </div>
+      {/* Navigation */}
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          {step === 3 && (
+            <Button type="button" variant="outline" className="gap-2" onClick={() => { setTemplateName(form.title || ""); setShowSaveTemplate(true); }}>
+              <BookTemplate className="w-4 h-4" />
+              Opslaan als template
+            </Button>
           )}
         </div>
-
-        {/* Receive Address */}
-        <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-5">
-          <h3 className="text-sm font-semibold text-slate-900">Receive Address</h3>
-          <div className="space-y-2">
-            <Label>Cardano Address *</Label>
-            <Input
-              value={form.receive_address}
-              onChange={(e) => update("receive_address", e.target.value)}
-              placeholder="addr1q9..."
-              className="font-mono text-xs"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Confirmations Required</Label>
-            <Input
-              type="number"
-              value={form.confirmations_required}
-              onChange={(e) => update("confirmations_required", e.target.value)}
-              min={1}
-              max={30}
-            />
-          </div>
+        <div className="flex items-center gap-3">
+          {step > 1 && (
+            <Button type="button" variant="outline" onClick={() => setStep((s) => s - 1)}>
+              <ArrowLeft className="w-4 h-4 mr-1" /> Vorige
+            </Button>
+          )}
+          {step < 3 ? (
+            <Button type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2" onClick={handleNext}>
+              Volgende <ArrowRight className="w-4 h-4" />
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2"
+              disabled={mutation.isPending}
+              onClick={handleSubmit}
+            >
+              <Save className="w-4 h-4" />
+              {isEditing ? "Bijwerken" : "Publiceren"}
+            </Button>
+          )}
         </div>
-
-        {/* Options */}
-        <div className="bg-white rounded-xl border border-slate-200/60 p-6 space-y-5">
-          <h3 className="text-sm font-semibold text-slate-900">Options</h3>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-700">Collect email</p>
-              <p className="text-xs text-slate-400">Ask payer for their email address</p>
-            </div>
-            <Switch checked={form.collect_email} onCheckedChange={(v) => update("collect_email", v)} />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-700">Collect name</p>
-              <p className="text-xs text-slate-400">Ask payer for their name</p>
-            </div>
-            <Switch checked={form.collect_name} onCheckedChange={(v) => update("collect_name", v)} />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-700">Collect shipping address</p>
-              <p className="text-xs text-slate-400">Ask payer for street, city, postal code & country</p>
-            </div>
-            <Switch checked={form.collect_shipping} onCheckedChange={(v) => update("collect_shipping", v)} />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Redirect URL after success</Label>
-            <Input
-              value={form.success_redirect_url}
-              onChange={(e) => update("success_redirect_url", e.target.value)}
-              placeholder="https://yoursite.com/thank-you"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3 pt-2">
-          <Button type="submit" disabled={mutation.isPending} className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2">
-            <Save className="w-4 h-4" />
-            {isEditing ? "Update" : "Create"} Payment Link
-          </Button>
-          <Button type="button" variant="outline" className="gap-2" onClick={() => { setTemplateName(form.title || ""); setShowSaveTemplate(true); }}>
-            <BookTemplate className="w-4 h-4" />
-            Save as Template
-          </Button>
-          <Button type="button" variant="ghost" onClick={onBack}>
-            Cancel
-          </Button>
-        </div>
-      </form>
+      </div>
 
       <Dialog open={showSaveTemplate} onOpenChange={setShowSaveTemplate}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save as Template</DialogTitle>
+            <DialogTitle>Opslaan als template</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-slate-500">Give this template a name so you can reuse it later with one click.</p>
-          <Input
-            value={templateName}
-            onChange={(e) => setTemplateName(e.target.value)}
-            placeholder="e.g. Monthly Membership"
-            autoFocus
-          />
+          <p className="text-sm text-slate-500">Geef dit template een naam om het later met één klik te hergebruiken.</p>
+          <Input value={templateName} onChange={(e) => setTemplateName(e.target.value)} placeholder="bijv. Maandlidmaatschap" autoFocus />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowSaveTemplate(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setShowSaveTemplate(false)}>Annuleren</Button>
             <Button
               className="bg-indigo-600 hover:bg-indigo-700 text-white"
               disabled={!templateName.trim() || saveTemplateMutation.isPending}
               onClick={handleSaveTemplate}
             >
-              Save Template
+              Template opslaan
             </Button>
           </DialogFooter>
         </DialogContent>
