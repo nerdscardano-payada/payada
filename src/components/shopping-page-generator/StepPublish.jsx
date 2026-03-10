@@ -36,8 +36,8 @@ export default function StepPublish({ generatePage, shopTitle, theme, font, logo
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-slate-900">Je winkel is klaar 🎉</h2>
-        <p className="text-slate-500 mt-1">Preview, download of embed je winkelpagina</p>
+        <h2 className="text-2xl font-bold text-slate-900">Your store is ready 🎉</h2>
+        <p className="text-slate-500 mt-1">Preview, download or embed your shop page</p>
       </div>
 
       {/* Mini Preview */}
@@ -50,7 +50,7 @@ export default function StepPublish({ generatePage, shopTitle, theme, font, logo
             onClick={openPreview}
             className="flex items-center gap-1.5 text-xs text-indigo-500 hover:text-indigo-700 font-semibold"
           >
-            <Eye className="w-3 h-3" /> Volledig openen
+            <Eye className="w-3 h-3" /> Open full preview
           </button>
         </div>
 
@@ -91,11 +91,11 @@ export default function StepPublish({ generatePage, shopTitle, theme, font, logo
       {/* Code Export */}
       <div className="bg-white rounded-2xl border border-slate-200 p-5">
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-4">
-          <Code2 className="w-4 h-4 text-slate-400" /> Exporteer code
+          <Code2 className="w-4 h-4 text-slate-400" /> Export Code
         </div>
         <Tabs defaultValue="page">
           <TabsList className="mb-4 bg-slate-100 p-1 rounded-xl">
-            <TabsTrigger value="page" className="rounded-lg">Volledige HTML</TabsTrigger>
+            <TabsTrigger value="page" className="rounded-lg">Full HTML Page</TabsTrigger>
             <TabsTrigger value="iframe" className="rounded-lg">iFrame Embed</TabsTrigger>
           </TabsList>
 
@@ -107,12 +107,12 @@ export default function StepPublish({ generatePage, shopTitle, theme, font, logo
               <button
                 className="absolute top-2.5 right-2.5 bg-white/10 hover:bg-white/20 text-white text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-all"
                 onClick={() => copy(generatePage(), "page")}
-              >
+                >
                 {copied === "page" ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                {copied === "page" ? "Gekopieerd!" : "Kopieer"}
-              </button>
-            </div>
-            <p className="text-xs text-slate-400 mt-3">Sla op als <code className="bg-slate-100 px-1 rounded">.html</code> en host ergens, of download direct hieronder.</p>
+                {copied === "page" ? "Copied!" : "Copy"}
+                </button>
+                </div>
+                <p className="text-xs text-slate-400 mt-3">Save as <code className="bg-slate-100 px-1 rounded">.html</code> and host anywhere, or download below.</p>
           </TabsContent>
 
           <TabsContent value="iframe">
@@ -123,12 +123,12 @@ export default function StepPublish({ generatePage, shopTitle, theme, font, logo
               <button
                 className="absolute top-2.5 right-2.5 bg-white/10 hover:bg-white/20 text-white text-xs px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-all"
                 onClick={() => copy(iframeCode, "iframe")}
-              >
+                >
                 {copied === "iframe" ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                {copied === "iframe" ? "Gekopieerd!" : "Kopieer"}
-              </button>
-            </div>
-            <p className="text-xs text-slate-400 mt-3">Embed de winkel op je bestaande website via een iframe.</p>
+                {copied === "iframe" ? "Copied!" : "Copy"}
+                </button>
+                </div>
+                <p className="text-xs text-slate-400 mt-3">Embed your shop on any existing website via iframe.</p>
           </TabsContent>
         </Tabs>
 
@@ -137,7 +137,7 @@ export default function StepPublish({ generatePage, shopTitle, theme, font, logo
           onClick={download}
         >
           <Download className="w-4 h-4" />
-          HTML Bestand downloaden
+          Download HTML File
         </Button>
       </div>
 
@@ -145,7 +145,7 @@ export default function StepPublish({ generatePage, shopTitle, theme, font, logo
         onClick={onBack}
         className="w-full py-3 rounded-2xl border-2 border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-all"
       >
-        ← Producten bewerken
+        ← Edit products
       </button>
     </div>
   );

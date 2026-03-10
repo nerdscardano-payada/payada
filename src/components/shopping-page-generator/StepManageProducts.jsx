@@ -38,14 +38,14 @@ export default function StepManageProducts({ products, setProducts, links, onBac
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-slate-900">Producten beheren</h2>
-        <p className="text-slate-500 mt-1">Voeg je producten toe en koppel betaallinks</p>
+        <h2 className="text-2xl font-bold text-slate-900">Manage Products</h2>
+        <p className="text-slate-500 mt-1">Add your products and link payment links</p>
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-slate-600">{products.length} product{products.length !== 1 ? "en" : ""}</span>
+        <span className="text-sm font-medium text-slate-600">{products.length} product{products.length !== 1 ? "s" : ""}</span>
         <Button size="sm" variant="outline" onClick={add} className="gap-1.5 text-xs">
-          <Plus className="w-3.5 h-3.5" /> Product toevoegen
+          <Plus className="w-3.5 h-3.5" /> Add Product
         </Button>
       </div>
 
@@ -62,7 +62,7 @@ export default function StepManageProducts({ products, setProducts, links, onBac
                   : <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0"><ShoppingCart className="w-3.5 h-3.5 text-slate-400" /></div>
                 }
                 <div>
-                  <p className="text-sm font-semibold text-slate-800">{p.name || "Naamloos product"}</p>
+                  <p className="text-sm font-semibold text-slate-800">{p.name || "Unnamed product"}</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     {p.price && <span className="text-xs bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-medium">₳ {p.price}</span>}
                     {p.category && <span className="text-xs bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded capitalize">{p.category}</span>}
@@ -81,23 +81,23 @@ export default function StepManageProducts({ products, setProducts, links, onBac
               <div className="p-4 border-t border-slate-100 bg-slate-50/50 space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Productnaam</Label>
-                    <Input value={p.name} onChange={(e) => update(p.id, "name", e.target.value)} placeholder="Mijn Product" />
+                    <Label className="text-xs text-slate-500">Product Name</Label>
+                    <Input value={p.name} onChange={(e) => update(p.id, "name", e.target.value)} placeholder="My Product" />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Prijs (ADA)</Label>
+                    <Label className="text-xs text-slate-500">Price (ADA)</Label>
                     <Input value={p.price} onChange={(e) => update(p.id, "price", e.target.value)} placeholder="10" type="number" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Categorie</Label>
-                    <Input value={p.category} onChange={(e) => update(p.id, "category", e.target.value.toLowerCase())} placeholder="digital, fysiek, ..." />
+                    <Label className="text-xs text-slate-500">Category</Label>
+                    <Input value={p.category} onChange={(e) => update(p.id, "category", e.target.value.toLowerCase())} placeholder="digital, physical, ..." />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Betaallink</Label>
+                    <Label className="text-xs text-slate-500">Payment Link</Label>
                     <Select value={p.linkId} onValueChange={(v) => update(p.id, "linkId", v)}>
-                      <SelectTrigger><SelectValue placeholder="Kies link…" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Select link…" /></SelectTrigger>
                       <SelectContent>
                         {links.map((l) => (
                           <SelectItem key={l.id} value={l.id}>
@@ -115,11 +115,11 @@ export default function StepManageProducts({ products, setProducts, links, onBac
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500">Beschrijving</Label>
-                  <Textarea value={p.description} onChange={(e) => update(p.id, "description", e.target.value)} placeholder="Beschrijf je product…" rows={2} />
+                  <Label className="text-xs text-slate-500">Description</Label>
+                  <Textarea value={p.description} onChange={(e) => update(p.id, "description", e.target.value)} placeholder="Describe your product…" rows={2} />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500">Productafbeelding</Label>
+                  <Label className="text-xs text-slate-500">Product Image</Label>
                   <div className="flex items-center gap-2">
                     <label className="flex-1 cursor-pointer">
                       <input
@@ -136,7 +136,7 @@ export default function StepManageProducts({ products, setProducts, links, onBac
                       />
                       <div className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-xs text-slate-500 hover:bg-slate-100 transition-colors">
                         <Image className="w-3.5 h-3.5" />
-                        {p.imageUrl ? "Afbeelding wijzigen" : "Afbeelding uploaden"}
+                        {p.imageUrl ? "Change image" : "Upload image"}
                       </div>
                     </label>
                     {p.imageUrl && <img src={p.imageUrl} alt="" className="w-10 h-10 rounded-lg object-cover border border-slate-200" />}
@@ -144,13 +144,13 @@ export default function StepManageProducts({ products, setProducts, links, onBac
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Badge (bijv. Best Seller)</Label>
+                    <Label className="text-xs text-slate-500">Badge (e.g. Best Seller)</Label>
                     <Input value={p.badge} onChange={(e) => update(p.id, "badge", e.target.value)} placeholder="Best Seller" />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500">Voordelen (één per regel)</Label>
-                  <Textarea value={p.features} onChange={(e) => update(p.id, "features", e.target.value)} placeholder={"Snelle levering\nVeilig betalen\n30 dagen garantie"} rows={3} />
+                  <Label className="text-xs text-slate-500">Feature Bullets (one per line)</Label>
+                  <Textarea value={p.features} onChange={(e) => update(p.id, "features", e.target.value)} placeholder={"Fast delivery\nSecure checkout\n30-day guarantee"} rows={3} />
                 </div>
               </div>
             )}
@@ -160,21 +160,21 @@ export default function StepManageProducts({ products, setProducts, links, onBac
         {products.length === 0 && (
           <div className="text-center py-10 text-slate-400 border-2 border-dashed border-slate-200 rounded-2xl">
             <ShoppingCart className="w-8 h-8 mx-auto mb-2 opacity-40" />
-            <p className="text-sm">Nog geen producten. Klik op "Product toevoegen".</p>
+            <p className="text-sm">No products yet. Click "Add Product" to get started.</p>
           </div>
         )}
       </div>
 
       <div className="flex gap-3">
         <button onClick={onBack} className="flex-1 py-3 rounded-2xl border-2 border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-all">
-          ← Terug
+          ← Back
         </button>
         <motion.button
           whileTap={{ scale: 0.98 }}
           onClick={onNext}
           className="flex-[2] py-3.5 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold text-sm shadow-lg shadow-indigo-200 hover:brightness-110 transition-all"
         >
-          Doorgaan naar export →
+          Continue to export →
         </motion.button>
       </div>
     </div>
