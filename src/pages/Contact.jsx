@@ -25,10 +25,18 @@ export default function ContactPage() {
   };
 
   const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    setSending(true);
+    await base44.integrations.Core.SendEmail({
+      to: "support@payada.io",
+      subject: `[Contact] ${formData.subject} — from ${formData.name}`,
+      body: `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`,
+    });
+    setSending(false);
+    toast.success("Message sent! We'll get back to you soon.");
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
 
