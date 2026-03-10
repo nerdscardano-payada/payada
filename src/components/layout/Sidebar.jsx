@@ -16,6 +16,7 @@ import {
   Building2,
   Code2,
   ShoppingCart,
+  Store,
   Monitor,
   LogOut,
   ShieldCheck,
