@@ -41,10 +41,47 @@ export default function ShoppingPageGenerator() {
     { ...emptyProduct(), id: 2, name: "Basic Physical Item", description: "Quality product with fast shipping", price: "15", category: "physical" },
   ]);
   const [user, setUser] = useState(null);
+  const [storeId, setStoreId] = useState(null);
+  const [storeName, setStoreName] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     base44.auth.me().then(setUser);
+    // Check if editing an existing store
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("storeId");
+    if (id) {
+      setStoreId(id);
+      base44.entities.Store.filter({ id }).then((results) => {
+        const store = results[0];
+        if (store) {
+          setStoreName(store.name);
+          if (store.config) setConfig({ ...DEFAULT_CONFIG, ...store.config });
+          if (store.products?.length) setProducts(store.products);
+        }
+      });
+    }
   }, []);
+
+  const handleSave = async () => {
+    if (!user) return;
+    const name = storeName || config.shopTitle || "My Store";
+    setSaving(true);
+    try {
+      if (storeId) {
+        await base44.entities.Store.update(storeId, { name, config, products, status: "active" });
+      } else {
+        const created = await base44.entities.Store.create({ merchant_id: user.email, name, config, products, status: "active" });
+        setStoreId(created.id);
+        window.history.replaceState({}, "", `${window.location.pathname}?storeId=${created.id}`);
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2500);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const { data: links = [] } = useQuery({
     queryKey: ["paymentLinks", user?.email],
