@@ -19,6 +19,26 @@ export default function HomePage() {
     base44.auth.isAuthenticated().then((loggedIn) => {
       if (loggedIn) window.location.href = createPageUrl("Dashboard");
     });
+
+    // Launch celebration on homepage
+    const hasSeenLaunchCelebration = localStorage.getItem("payada_launch_2026");
+    if (!hasSeenLaunchCelebration) {
+      // Show confetti
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      // Show welcome toast
+      toast.success("Welcome to PayADA! 🎉", {
+        description: "The easiest way to accept Cardano payments is now live.",
+        duration: 5000
+      });
+
+      // Mark as seen
+      localStorage.setItem("payada_launch_2026", "true");
+    }
   }, []);
 
   const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
