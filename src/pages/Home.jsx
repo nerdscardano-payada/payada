@@ -63,6 +63,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Toaster position="top-right" />
       <SEOHead
         title="PayADA — Accept Cardano (ADA) Payments Easily"
         description="Accept Cardano (ADA) payments effortlessly with PayADA. Instant blockchain settlement, advanced analytics, global reach, and 1.75% flat fee. Set up in under 5 minutes — no credit card required."
