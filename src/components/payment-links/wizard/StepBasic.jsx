@@ -91,30 +91,43 @@ export default function StepBasic({ form, update, isEditing, isAdmin }) {
         )}
 
         {form.amount_mode === "fixed_cnt" && (
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Token aantal</Label>
-                <Input type="number" value={form.cnt_amount} onChange={(e) => update("cnt_amount", e.target.value)} placeholder="bijv. 1000" />
-              </div>
-              <div className="space-y-2">
-                <Label>Ticker (bijv. $SNEK)</Label>
-                <Input value={form.cnt_ticker} onChange={(e) => update("cnt_ticker", e.target.value)} placeholder="$SNEK" />
-              </div>
-            </div>
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Policy ID</Label>
-              <Input value={form.cnt_policy_id} onChange={(e) => update("cnt_policy_id", e.target.value)} placeholder="279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3" className="font-mono text-xs" />
+              <Label>Selecteer token</Label>
+              <div className="flex flex-wrap gap-2">
+                {KNOWN_CNTS.map((cnt) => (
+                  <button
+                    key={cnt.ticker}
+                    type="button"
+                    onClick={() => {
+                      update("cnt_ticker", cnt.ticker);
+                      update("cnt_policy_id", cnt.policy_id);
+                      update("cnt_asset_name", cnt.asset_name);
+                      update("cnt_decimals", cnt.decimals);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${
+                      form.cnt_ticker === cnt.ticker
+                        ? "bg-indigo-600 text-white border-indigo-600"
+                        : "bg-white text-slate-700 border-slate-200 hover:border-indigo-400"
+                    }`}
+                  >
+                    {cnt.ticker}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Asset Name (hex)</Label>
-                <Input value={form.cnt_asset_name} onChange={(e) => update("cnt_asset_name", e.target.value)} placeholder="534e454b" className="font-mono text-xs" />
+
+            {form.cnt_ticker && (
+              <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-1 text-xs font-mono text-slate-500">
+                <p><span className="text-slate-400">Policy ID: </span>{form.cnt_policy_id}</p>
+                <p><span className="text-slate-400">Asset Name: </span>{form.cnt_asset_name}</p>
+                <p><span className="text-slate-400">Decimalen: </span>{form.cnt_decimals}</p>
               </div>
-              <div className="space-y-2">
-                <Label>Decimalen</Label>
-                <Input type="number" min={0} max={18} value={form.cnt_decimals} onChange={(e) => update("cnt_decimals", e.target.value)} placeholder="0" />
-              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label>Hoeveelheid ({form.cnt_ticker || "tokens"})</Label>
+              <Input type="number" value={form.cnt_amount} onChange={(e) => update("cnt_amount", e.target.value)} placeholder="bijv. 1000" />
             </div>
           </div>
         )}
