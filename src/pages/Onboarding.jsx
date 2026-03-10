@@ -47,19 +47,7 @@ export default function OnboardingPage() {
     },
   });
 
-  const createWebhooksMutation = useMutation({
-    mutationFn: async (endpoints) => {
-      const results = [];
-      for (const endpoint of endpoints) {
-        const result = await base44.entities.WebhookEndpoint.create({
-          merchant_id: user.id,
-          ...endpoint,
-        });
-        results.push(result);
-      }
-      return results;
-    },
-  });
+
 
   const handleNext = async () => {
     if (currentStep === 0) {
