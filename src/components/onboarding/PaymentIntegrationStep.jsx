@@ -1,138 +1,138 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle, Copy, Code } from "lucide-react";
+import { CheckCircle, Link2, Zap, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { createPageUrl } from "@/utils";
+import { Link } from "react-router-dom";
 
 export default function PaymentIntegrationStep({ merchantId }) {
-  const [copied, setCopied] = useState(false);
+  const integrations = [
+    {
+      icon: Link2,
+      color: "green",
+      title: "Payment Links",
+      description: "Create shareable payment links from your dashboard. Perfect for invoices, fundraising, and simple checkouts. No coding required.",
+      details: [
+        "Generate links with custom amounts",
+        "Track payment status in real-time",
+        "Collect customer information",
+        "Share via email, SMS, or social media"
+      ],
+      link: createPageUrl("PaymentLinks")
+    },
+    {
+      icon: Zap,
+      color: "orange",
+      title: "POS Terminal",
+      description: "Accept payments at physical locations with our embedded POS terminal. Great for stores, restaurants, and service businesses.",
+      details: [
+        "QR code payment requests",
+        "Customer-facing display",
+        "Receipt printing support",
+        "Offline transaction support"
+      ],
+      link: createPageUrl("PayTerminals")
+    },
+    {
+      icon: Smartphone,
+      color: "purple",
+      title: "Payment Button",
+      description: "Embed a payment button on your website with just a few lines of HTML. Get started in seconds.",
+      details: [
+        "One-click payment buttons",
+        "Customizable styling",
+        "Automatic webhook notifications",
+        "Mobile-friendly checkout"
+      ],
+      link: createPageUrl("ButtonGenerator")
+    },
+    {
+      icon: Zap,
+      color: "blue",
+      title: "Discord Integration",
+      description: "Gate access to Discord communities and grant roles automatically after payment. Perfect for exclusive servers and memberships.",
+      details: [
+        "Automatic role assignment",
+        "Member verification",
+        "Revenue tracking",
+        "Easy integration setup"
+      ],
+      link: createPageUrl("DiscordPlugin")
+    }
+  ];
 
-  const apiKey = `pk_${merchantId.substring(0, 8)}_demo`;
-  const paymentLinkExample = `https://payada.io/checkout/${merchantId}/payment-link-slug`;
-
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const colorClasses = {
+    green: "text-green-600",
+    orange: "text-orange-600",
+    purple: "text-purple-600",
+    blue: "text-blue-600"
   };
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Step 3: Payment Integration</CardTitle>
+          <CardTitle>Integrated Payment Tools</CardTitle>
           <CardDescription>
-            Integrate PayADA into your application to start accepting ADA
+            Choose a payment method and start accepting ADA today
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <Alert>
             <CheckCircle className="h-4 w-4 text-green-600" />
             <AlertDescription>
-              Your profile and webhook endpoints have been configured. Now integrate
-              payment processing into your application.
+              Your profile is set up. Choose from our ready-to-use payment tools below.
             </AlertDescription>
           </Alert>
 
-          {/* API Key */}
-          <div className="space-y-3">
-            <h3 className="font-medium text-slate-900">Your API Key</h3>
-            <div className="flex items-center gap-2">
-              <code className="flex-1 px-3 py-2 bg-slate-100 rounded text-sm font-mono text-slate-900">
-                {apiKey}
-              </code>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => copyToClipboard(apiKey)}
-              >
-                <Copy className="w-4 h-4" />
-              </Button>
-            </div>
-            <p className="text-xs text-slate-500">
-              Keep this key secure. Never expose it publicly.
-            </p>
+          {/* Integration Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {integrations.map((integration, idx) => {
+              const Icon = integration.icon;
+              return (
+                <div key={idx} className="border border-slate-200 rounded-lg p-4 space-y-3 hover:border-slate-300 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <Icon className={`w-5 h-5 ${colorClasses[integration.color]} flex-shrink-0 mt-0.5`} />
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-slate-900">{integration.title}</h3>
+                      <p className="text-xs text-slate-600 mt-1">{integration.description}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2 ml-8">
+                    <p className="text-xs font-medium text-slate-700">Key features:</p>
+                    <ul className="space-y-1">
+                      {integration.details.map((detail, i) => (
+                        <li key={i} className="text-xs text-slate-600 flex items-start gap-2">
+                          <span className="text-green-600 mt-0.5">✓</span>
+                          <span>{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Link to={integration.link} className="block pt-2">
+                    <Button variant="outline" size="sm" className="w-full">
+                      Get Started →
+                    </Button>
+                  </Link>
+                </div>
+              );
+            })}
           </div>
 
-          {/* Integration Methods */}
-          <div className="space-y-4">
-            <h3 className="font-medium text-slate-900">Integration Options</h3>
-
-            {/* Payment Links */}
-            <div className="border border-slate-200 rounded-lg p-4 space-y-3">
-              <div className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-medium text-slate-900">Payment Links</p>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Generate shareable payment links from the dashboard. No code
-                    required.
-                  </p>
-                </div>
-              </div>
-              <div className="ml-7">
-                <p className="text-xs text-slate-500 mb-2">Example:</p>
-                <code className="block text-xs bg-slate-100 p-2 rounded font-mono text-slate-900 truncate">
-                  {paymentLinkExample}
-                </code>
-              </div>
+          {/* Info Box */}
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-2">
+            <p className="font-medium text-slate-900">Want to build custom integrations?</p>
+            <p className="text-sm text-slate-600">For advanced use cases, check out our API documentation and webhooks guide.</p>
+            <div className="pt-2">
+              <Link to={createPageUrl("APIReference")}>
+                <Button variant="link" size="sm" className="p-0 h-auto">
+                  View Developer Documentation →
+                </Button>
+              </Link>
             </div>
-
-            {/* REST API */}
-            <div className="border border-slate-200 rounded-lg p-4 space-y-3">
-              <div className="flex items-start gap-2">
-                <Code className="w-5 h-5 text-blue-600 mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-medium text-slate-900">REST API</p>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Programmatically create payments and manage subscriptions.
-                  </p>
-                </div>
-              </div>
-              <div className="ml-7 space-y-2">
-                <p className="text-xs text-slate-500">Example Request:</p>
-                <pre className="text-xs bg-slate-100 p-3 rounded font-mono text-slate-900 overflow-x-auto">
-{`curl -X POST https://api.payada.io/v1/payments \\
-  -H "Authorization: Bearer ${apiKey}" \\
-  -d amount_ada=50 \\
-  -d description="Order #123"`}
-                </pre>
-              </div>
-            </div>
-
-            {/* SDKs */}
-            <div className="border border-slate-200 rounded-lg p-4 space-y-3">
-              <div className="flex items-start gap-2">
-                <Code className="w-5 h-5 text-purple-600 mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-medium text-slate-900">Official SDKs</p>
-                  <p className="text-sm text-slate-600 mt-1">
-                    Use our JavaScript or Python SDKs for seamless integration.
-                  </p>
-                </div>
-              </div>
-              <div className="ml-7 space-y-2">
-                <p className="text-xs text-slate-500">JavaScript:</p>
-                <pre className="text-xs bg-slate-100 p-2 rounded font-mono text-slate-900 overflow-x-auto">
-{`npm install @payada/sdk`}
-                </pre>
-                <p className="text-xs text-slate-500 mt-3">Python:</p>
-                <pre className="text-xs bg-slate-100 p-2 rounded font-mono text-slate-900 overflow-x-auto">
-{`pip install payada`}
-                </pre>
-              </div>
-            </div>
-          </div>
-
-          {/* Next Steps */}
-          <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 space-y-2">
-            <p className="font-medium text-indigo-900">Next Steps</p>
-            <ul className="text-sm text-indigo-800 space-y-1 ml-4 list-disc">
-              <li>Create your first payment link</li>
-              <li>Review the API documentation</li>
-              <li>Test payment processing in sandbox mode</li>
-              <li>Set up production webhook endpoints</li>
-            </ul>
           </div>
         </CardContent>
       </Card>
