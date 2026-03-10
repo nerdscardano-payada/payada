@@ -7,6 +7,8 @@ import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import confetti from "canvas-confetti";
+import { toast } from "sonner";
 
 const featureIcons = [Zap, Lock, TrendingUp, Globe];
 
