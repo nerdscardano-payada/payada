@@ -183,7 +183,7 @@ export default function ShoppingPageGenerator() {
     document.querySelectorAll('.category-filter').forEach(btn => btn.addEventListener('click', () => {
       document.querySelectorAll('.category-filter').forEach(b => { b.style.background = b === btn ? accent : 'transparent'; b.style.color = b === btn ? '#fff' : '${config.theme.text}'; b.style.borderColor = b === btn ? accent : accent + '40'; });
       const cat = btn.dataset.category;
-      document.querySelectorAll('.product-card').forEach(c => c.classList.toggle('hidden', cat !== 'all' && c.dataset.category !== cat));
+      document.querySelectorAll('.product-card').forEach(c => { c.style.display = (cat === 'all' || c.dataset.category === cat) ? 'flex' : 'none'; });
     }));
     document.querySelector('.search-input')?.addEventListener('input', e => {
       const q = e.target.value.toLowerCase();
