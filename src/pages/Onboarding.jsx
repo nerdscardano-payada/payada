@@ -61,6 +61,9 @@ export default function OnboardingPage() {
         timezone: formData.timezone,
         default_receive_address: formData.default_receive_address,
       });
+    } else if (currentStep === 1) {
+      // Mark onboarding as complete by saving a flag to user profile
+      await base44.auth.updateMe({ onboarding_completed: true });
     }
 
     if (currentStep < STEPS.length - 1) {
