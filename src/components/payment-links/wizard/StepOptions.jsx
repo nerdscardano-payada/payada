@@ -68,10 +68,7 @@ export default function StepOptions({ form, update }) {
           <Label>URL na geslaagde betaling</Label>
           <Input value={form.success_redirect_url} onChange={(e) => update("success_redirect_url", e.target.value)} placeholder="https://jousite.com/bedankt" />
         </div>
-        <div className="space-y-2">
-          <Label>URL bij annulering</Label>
-          <Input value={form.cancel_redirect_url} onChange={(e) => update("cancel_redirect_url", e.target.value)} placeholder="https://jousite.com/annulering" />
-        </div>
+
       </div>
     </div>
   );
