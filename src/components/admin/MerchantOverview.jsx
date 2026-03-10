@@ -9,10 +9,15 @@ export default function MerchantOverview() {
   const [resetting, setResetting] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
 
-  const { data: merchants = [], isLoading: loadingMerchants } = useQuery({
+  const { data: merchants = [], isLoading: loadingMerchants, refetch } = useQuery({
     queryKey: ["admin-merchants-overview"],
     queryFn: () => base44.entities.MerchantProfile.list("-created_date", 100),
   });
+
+  // Refetch when component mounts to always get fresh data
+  React.useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const { data: payments = [], isLoading: loadingPayments } = useQuery({
     queryKey: ["admin-all-payments"],
