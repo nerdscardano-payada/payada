@@ -240,6 +240,29 @@ export default function ShoppingPageGenerator() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
       <div className="max-w-2xl mx-auto px-4 py-10">
         {/* Header */}
+        <div className="flex items-center justify-between mb-2">
+          <Link to={createPageUrl("MyStores")} className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-indigo-600 transition-colors">
+            <LayoutGrid className="w-4 h-4" />
+            My Stores
+          </Link>
+          <div className="flex items-center gap-2">
+            <input
+              value={storeName || config.shopTitle}
+              onChange={(e) => setStoreName(e.target.value)}
+              placeholder="Store name..."
+              className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 w-44 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            />
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              size="sm"
+              className={cn("gap-1.5 transition-all", saved ? "bg-green-500 hover:bg-green-500" : "bg-indigo-600 hover:bg-indigo-700")}
+            >
+              {saved ? <CheckCircle className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+              {saved ? "Saved!" : saving ? "Saving..." : "Save Store"}
+            </Button>
+          </div>
+        </div>
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 text-xs font-semibold px-3 py-1.5 rounded-full mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
