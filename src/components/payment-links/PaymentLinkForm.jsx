@@ -12,9 +12,9 @@ import StepOptions from "./wizard/StepOptions";
 import StepSummary from "./wizard/StepSummary";
 
 const STEPS = [
-  { id: 1, label: "Basisgegevens" },
-  { id: 2, label: "Opties" },
-  { id: 3, label: "Samenvatting" },
+  { id: 1, label: "Basic info" },
+  { id: 2, label: "Options" },
+  { id: 3, label: "Summary" },
 ];
 
 export default function PaymentLinkForm({ link, prefill, onBack, merchantId: merchantIdProp }) {

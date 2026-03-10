@@ -16,14 +16,14 @@ export default function StepBasic({ form, update, isEditing, isAdmin }) {
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <Label>Titel *</Label>
+        <Label>Title *</Label>
         <Input
           value={form.title}
           onChange={(e) => {
             update("title", e.target.value);
             if (!isEditing) update("slug", generateSlug(e.target.value, form._userEmail));
           }}
-          placeholder="bijv. Support ons project"
+          placeholder="e.g. Support our project"
         />
       </div>
 
@@ -35,30 +35,30 @@ export default function StepBasic({ form, update, isEditing, isAdmin }) {
             value={form.slug}
             onChange={(e) => update("slug", e.target.value)}
             className="rounded-l-none"
-            placeholder="mijn-betaling"
+            placeholder="my-payment"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label>Beschrijving</Label>
+        <Label>Description</Label>
         <Textarea
           value={form.description}
           onChange={(e) => update("description", e.target.value)}
-          placeholder="Optionele beschrijving voor de betaler"
+          placeholder="Optional description for the payer"
           rows={2}
         />
       </div>
 
       <div className="border-t border-slate-100 pt-5 space-y-4">
-        <h4 className="text-sm font-medium text-slate-700">Bedrag</h4>
+        <h4 className="text-sm font-medium text-slate-700">Amount</h4>
 
         <div className="space-y-2">
-          <Label>Betaaltype</Label>
+          <Label>Payment type</Label>
           <Select value={form.amount_mode} onValueChange={(v) => update("amount_mode", v)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="fixed_ada">Vast bedrag in ADA</SelectItem>
+              <SelectItem value="fixed_ada">Fixed amount in ADA</SelectItem>
               {isAdmin && <SelectItem value="fixed_cnt">Cardano Native Token (CNT)</SelectItem>}
             </SelectContent>
           </Select>
@@ -66,15 +66,15 @@ export default function StepBasic({ form, update, isEditing, isAdmin }) {
 
         {form.amount_mode === "fixed_ada" && (
           <div className="space-y-2">
-            <Label>Bedrag (ADA)</Label>
-            <Input type="number" step="0.01" value={form.amount_ada} onChange={(e) => update("amount_ada", e.target.value)} placeholder="bijv. 25" />
+            <Label>Amount (ADA)</Label>
+            <Input type="number" step="0.01" value={form.amount_ada} onChange={(e) => update("amount_ada", e.target.value)} placeholder="e.g. 25" />
           </div>
         )}
 
         {form.amount_mode === "fixed_fiat" && (
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Valuta</Label>
+              <Label>Currency</Label>
               <Select value={form.fiat_currency} onValueChange={(v) => update("fiat_currency", v)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -84,8 +84,8 @@ export default function StepBasic({ form, update, isEditing, isAdmin }) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Bedrag</Label>
-              <Input type="number" step="0.01" value={form.amount_fiat} onChange={(e) => update("amount_fiat", e.target.value)} placeholder="bijv. 9.99" />
+              <Label>Amount</Label>
+              <Input type="number" step="0.01" value={form.amount_fiat} onChange={(e) => update("amount_fiat", e.target.value)} placeholder="e.g. 9.99" />
             </div>
           </div>
         )}
@@ -93,7 +93,7 @@ export default function StepBasic({ form, update, isEditing, isAdmin }) {
         {form.amount_mode === "fixed_cnt" && (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Selecteer token</Label>
+              <Label>Select token</Label>
               <div className="flex flex-wrap gap-2">
                 {KNOWN_CNTS.map((cnt) => (
                   <button
@@ -121,22 +121,22 @@ export default function StepBasic({ form, update, isEditing, isAdmin }) {
               <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-1 text-xs font-mono text-slate-500">
                 <p><span className="text-slate-400">Policy ID: </span>{form.cnt_policy_id}</p>
                 <p><span className="text-slate-400">Asset Name: </span>{form.cnt_asset_name}</p>
-                <p><span className="text-slate-400">Decimalen: </span>{form.cnt_decimals}</p>
+                <p><span className="text-slate-400">Decimals: </span>{form.cnt_decimals}</p>
               </div>
             )}
 
             <div className="space-y-2">
-              <Label>Hoeveelheid ({form.cnt_ticker || "tokens"})</Label>
-              <Input type="number" value={form.cnt_amount} onChange={(e) => update("cnt_amount", e.target.value)} placeholder="bijv. 1000" />
+              <Label>Amount ({form.cnt_ticker || "tokens"})</Label>
+              <Input type="number" value={form.cnt_amount} onChange={(e) => update("cnt_amount", e.target.value)} placeholder="e.g. 1000" />
             </div>
           </div>
         )}
       </div>
 
       <div className="border-t border-slate-100 pt-5 space-y-3">
-        <h4 className="text-sm font-medium text-slate-700">Ontvangstadres</h4>
+        <h4 className="text-sm font-medium text-slate-700">Receive address</h4>
         <div className="space-y-2">
-          <Label>Cardano adres *</Label>
+          <Label>Cardano address *</Label>
           <Input value={form.receive_address} onChange={(e) => update("receive_address", e.target.value)} placeholder="addr1q9..." className="font-mono text-xs" />
         </div>
       </div>
