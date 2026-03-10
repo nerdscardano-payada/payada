@@ -17,6 +17,7 @@ const DEFAULT_CONFIG = {
   shopTitle: "My ADA Shop",
   shopSubtitle: "Accept payments in Cardano ADA",
   logoText: "🛒 MyShop",
+  logoImageUrl: "",
   footerText: "© 2025 MyShop. Powered by PayADA.",
   theme: THEMES[0],
   customAccent: "#6366f1",
@@ -52,7 +53,10 @@ export default function ShoppingPageGenerator() {
   const baseUrl = window.location.origin;
 
   const generatePage = () => {
-    const { theme, font, shopTitle, shopSubtitle, logoText, footerText, showPoweredBy, enableCart, enableCategories, enableSearch } = config;
+    const { theme, font, shopTitle, shopSubtitle, logoText, logoImageUrl, footerText, showPoweredBy, enableCart, enableCategories, enableSearch } = config;
+    const logoHtml = logoImageUrl
+      ? `<img src="${logoImageUrl}" alt="${logoText}" style="height:36px;width:auto;object-fit:contain;border-radius:6px;" />`
+      : `<span style="font-size:18px;font-weight:800;">${logoText}</span>`;
     const fontImport = font.includes("Inter")
       ? `<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">`
       : "";
@@ -132,7 +136,7 @@ export default function ShoppingPageGenerator() {
 <body>
   <header style="background:${theme.card}cc;border-bottom:1px solid ${cardBorder};padding:16px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(24px);">
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:18px;font-weight:800;">${logoText}</span>
+      ${logoHtml}
       ${enableCart ? `<button id="cart-toggle" style="position:relative;background:none;border:none;cursor:pointer;font-size:24px;">🛒 <span id="cart-count" style="position:absolute;top:-8px;right:-8px;background:${accent};color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;">0</span></button>` : ""}
       <span style="font-size:12px;background:${accent}15;color:${accent};border:1px solid ${accent}30;padding:5px 12px;border-radius:999px;font-weight:600;">✦ Cardano ADA</span>
     </div>
