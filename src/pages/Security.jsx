@@ -134,7 +134,7 @@ export default function SecurityPage() {
             <h2 className="text-3xl font-bold text-slate-900 mb-4">{t("security.disclosure_title")}</h2>
             <p className="text-slate-600">
               {t("security.disclosure_text")}{" "}
-              <a href="mailto:security@payada.io" className="text-blue-600 hover:underline">security@payada.io</a>.
+              <Link to={createPageUrl("Contact")} className="text-blue-600 hover:underline">contact form</Link>.
             </p>
           </div>
         </div>
