@@ -199,7 +199,7 @@ export default function TermsOfServicePage() {
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">13. Dispute Resolution</h2>
           <p>
             In the event of a dispute arising from these Terms or your use of the Service, you agree to first attempt resolution
-            by contacting us at <a href="mailto:legal@payada.io" className="text-indigo-600 hover:underline">legal@payada.io</a> and allowing 30 days for good-faith resolution.
+            by contacting us via our <Link to={createPageUrl("Contact")} className="text-indigo-600 hover:underline">contact form</Link> and allowing 30 days for good-faith resolution.
           </p>
           <p className="mt-4">
             If the dispute cannot be resolved amicably, it shall be submitted to binding arbitration under the rules of a mutually
