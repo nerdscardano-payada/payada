@@ -41,7 +41,7 @@ export default function PrivacyPolicyPage() {
             through the PayADA platform ("Service"). For all privacy-related matters, you may contact us at:
           </p>
           <ul className="list-disc list-inside space-y-2 mt-4">
-            <li>Email: <a href="mailto:privacy@payada.io" className="text-blue-600 hover:underline">privacy@payada.io</a></li>
+            <li>Email: <a href="mailto:support@payada.io" className="text-blue-600 hover:underline">support@payada.io</a></li>
           </ul>
 
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">2. Data We Collect</h2>
@@ -172,7 +172,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">13. Contact</h2>
           <p>For any privacy-related questions or to exercise your rights:</p>
           <ul className="list-disc list-inside space-y-2">
-            <li>Email: <a href="mailto:privacy@payada.io" className="text-blue-600 hover:underline">privacy@payada.io</a></li>
+            <li>Email: <a href="mailto:support@payada.io" className="text-blue-600 hover:underline">support@payada.io</a></li>
           </ul>
         </div>
       </section>
