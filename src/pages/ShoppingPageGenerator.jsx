@@ -201,10 +201,10 @@ export default function ShoppingPageGenerator() {
             Shopping Page Generator
           </div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
-            Bouw je ADA winkel
+            Build your ADA store
           </h1>
           <p className="text-slate-500 mt-2 text-base">
-            Een complete e-commerce pagina in 3 stappen
+            A complete e-commerce page in 3 easy steps
           </p>
         </div>
 

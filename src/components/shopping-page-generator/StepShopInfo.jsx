@@ -88,7 +88,7 @@ export default function StepShopInfo({ config, onChange, onNext }) {
         <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Design</p>
         <div className="space-y-2">
           <Label className="text-xs text-slate-500">Color Theme</Label>
-          <div className="grid grid-cols-6 gap-2">
+          <div className="grid grid-cols-6 sm:grid-cols-12 gap-2">
             {THEMES.map((t) => (
               <button
                 key={t.label}
