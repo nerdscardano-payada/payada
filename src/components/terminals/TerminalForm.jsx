@@ -124,6 +124,10 @@ export default function TerminalForm({ terminal, onBack }) {
             <Switch checked={form.collect_name} onCheckedChange={(v) => setForm({ ...form, collect_name: v })} />
             <span className="text-sm text-slate-700">Name</span>
           </div>
+          <div className="flex items-center gap-3">
+            <Switch checked={form.collect_shipping} onCheckedChange={(v) => setForm({ ...form, collect_shipping: v })} />
+            <span className="text-sm text-slate-700">Shipping Address</span>
+          </div>
         </div>
 
         {/* Branding */}
