@@ -46,8 +46,12 @@ export default function MerchantProfilePage() {
   React.useEffect(() => {
     if (profile) {
       setFormData(profile);
+      setIsEditing(false);
+    } else if (user?.email && !profileLoading) {
+      // No profile yet, start in edit mode
+      setIsEditing(true);
     }
-  }, [profile]);
+  }, [profile, user?.email, profileLoading]);
 
   const updateMutation = useMutation({
     mutationFn: async (data) => {
