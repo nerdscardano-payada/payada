@@ -72,7 +72,7 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     mutationFn: (data) => base44.entities.PaymentLinkTemplate.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["paymentLinkTemplates"] });
-      toast.success("Template opgeslagen!");
+      toast.success("Template saved!");
       setShowSaveTemplate(false);
       setTemplateName("");
     },
@@ -87,18 +87,18 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["paymentLinks"] });
-      toast.success(isEditing ? "Betaallink bijgewerkt" : "Betaallink aangemaakt");
+      toast.success(isEditing ? "Payment link updated" : "Payment link created");
       onBack();
     },
   });
 
   const validateStep1 = () => {
-    if (!form.title.trim()) { toast.error("Voer een titel in"); return false; }
-    if (!form.slug.trim()) { toast.error("Voer een slug in"); return false; }
-    if (form.amount_mode === "fixed_ada" && !form.amount_ada) { toast.error("Voer een bedrag in ADA in"); return false; }
-    if (form.amount_mode === "fixed_fiat" && !form.amount_fiat) { toast.error("Voer een bedrag in"); return false; }
-    if (form.amount_mode === "fixed_cnt" && !form.cnt_amount) { toast.error("Voer een token hoeveelheid in"); return false; }
-    if (!form.receive_address.trim()) { toast.error("Voer een Cardano adres in"); return false; }
+    if (!form.title.trim()) { toast.error("Please enter a title"); return false; }
+    if (!form.slug.trim()) { toast.error("Please enter a slug"); return false; }
+    if (form.amount_mode === "fixed_ada" && !form.amount_ada) { toast.error("Please enter an amount in ADA"); return false; }
+    if (form.amount_mode === "fixed_fiat" && !form.amount_fiat) { toast.error("Please enter an amount"); return false; }
+    if (form.amount_mode === "fixed_cnt" && !form.cnt_amount) { toast.error("Please enter a token amount"); return false; }
+    if (!form.receive_address.trim()) { toast.error("Please enter a Cardano address"); return false; }
     return true;
   };
 
@@ -144,11 +144,11 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     <div className="max-w-2xl">
       {/* Back */}
       <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors mb-6">
-        <ArrowLeft className="w-4 h-4" /> Terug naar betaallinks
+        <ArrowLeft className="w-4 h-4" /> Back to payment links
       </button>
 
       <h1 className="text-xl font-bold text-slate-900 mb-6">
-        {isEditing ? "Betaallink bewerken" : "Nieuwe betaallink"}
+        {isEditing ? "Edit payment link" : "New payment link"}
       </h1>
 
       {/* Step indicators */}
@@ -189,19 +189,19 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
           {step === 3 && (
             <Button type="button" variant="outline" className="gap-2" onClick={() => { setTemplateName(form.title || ""); setShowSaveTemplate(true); }}>
               <BookTemplate className="w-4 h-4" />
-              Opslaan als template
+              Save as template
             </Button>
           )}
         </div>
         <div className="flex items-center gap-3">
           {step > 1 && (
             <Button type="button" variant="outline" onClick={() => setStep((s) => s - 1)}>
-              <ArrowLeft className="w-4 h-4 mr-1" /> Vorige
+              <ArrowLeft className="w-4 h-4 mr-1" /> Previous
             </Button>
           )}
           {step < 3 ? (
             <Button type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2" onClick={handleNext}>
-              Volgende <ArrowRight className="w-4 h-4" />
+              Next <ArrowRight className="w-4 h-4" />
             </Button>
           ) : (
             <Button
@@ -211,7 +211,7 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
               onClick={handleSubmit}
             >
               <Save className="w-4 h-4" />
-              {isEditing ? "Bijwerken" : "Publiceren"}
+              {isEditing ? "Update" : "Publish"}
             </Button>
           )}
         </div>
@@ -220,18 +220,18 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
       <Dialog open={showSaveTemplate} onOpenChange={setShowSaveTemplate}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Opslaan als template</DialogTitle>
+            <DialogTitle>Save as template</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-slate-500">Geef dit template een naam om het later met één klik te hergebruiken.</p>
-          <Input value={templateName} onChange={(e) => setTemplateName(e.target.value)} placeholder="bijv. Maandlidmaatschap" autoFocus />
+          <p className="text-sm text-slate-500">Give this template a name to reuse it later with one click.</p>
+          <Input value={templateName} onChange={(e) => setTemplateName(e.target.value)} placeholder="e.g. Monthly membership" autoFocus />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowSaveTemplate(false)}>Annuleren</Button>
+            <Button variant="outline" onClick={() => setShowSaveTemplate(false)}>Cancel</Button>
             <Button
               className="bg-indigo-600 hover:bg-indigo-700 text-white"
               disabled={!templateName.trim() || saveTemplateMutation.isPending}
               onClick={handleSaveTemplate}
             >
-              Template opslaan
+              Save template
             </Button>
           </DialogFooter>
         </DialogContent>
