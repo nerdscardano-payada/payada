@@ -186,7 +186,7 @@ export default function Dashboard() {
             <StatCard
                title="Total Volume"
                value={`₳ ${totalAda.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`}
-               subtitle={`${confirmedPaymentsCount} confirmed payments`}
+               subtitle={`${confirmedPaymentsCount} confirmed payment${confirmedPaymentsCount !== 1 ? "s" : ""} (${paymentPeriod === "all" ? "all time" : paymentPeriod})`}
                icon={TrendingUp}
                accentColor="green"
              />
