@@ -312,13 +312,16 @@ export default function Dashboard() {
                     <CreditCard className="w-4 h-4 text-slate-500" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-slate-900 truncate">
-                      {payment.payer_email || payment.tx_hash?.slice(0, 16) + "..." || "Anonymous"}
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      {format(new Date(payment.created_date), "MMM d, HH:mm")}
-                      {payment.payment_type === "cnt" && ` • ${payment.cnt_ticker || "CNT"}`}
-                    </p>
+                   <p className="text-sm font-medium text-slate-900 truncate">
+                     {payment.payer_email || payment.tx_hash?.slice(0, 16) + "..." || "Anonymous"}
+                   </p>
+                   <p className="text-xs text-slate-400">
+                     {format(new Date(payment.created_date), "MMM d, HH:mm")}
+                     {payment.payment_type === "cnt" && ` • ${payment.cnt_ticker || "CNT"}`}
+                     {paymentLinkMap[payment.payment_link_id] && (
+                       <span className="text-indigo-500 font-medium"> • {paymentLinkMap[payment.payment_link_id]}</span>
+                     )}
+                   </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
