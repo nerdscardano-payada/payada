@@ -44,6 +44,7 @@ export default function Payments() {
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
+    const now = new Date();
     return payments.filter(p => {
       const matchesSearch = !q ||
         p.payer_email?.toLowerCase().includes(q) ||
@@ -52,12 +53,18 @@ export default function Payments() {
         p.tx_hash?.toLowerCase().includes(q);
       const matchesStatus = statusFilter === "all" || p.status === statusFilter;
       const matchesType = paymentTypeFilter === "all" || (p.payment_type || "ada") === paymentTypeFilter || (paymentTypeFilter === "ada" && !p.payment_type);
-      return matchesSearch && matchesStatus && matchesType;
+      const date = new Date(p.created_date);
+      const matchesPeriod =
+        periodFilter === "all" ? true :
+        periodFilter === "7d" ? date >= subDays(now, 7) :
+        periodFilter === "30d" ? date >= subDays(now, 30) :
+        date >= startOfMonth(now);
+      return matchesSearch && matchesStatus && matchesType && matchesPeriod;
     });
-  }, [payments, search, statusFilter, paymentTypeFilter]);
+  }, [payments, search, statusFilter, paymentTypeFilter, periodFilter]);
 
-  const clearFilters = () => { setSearch(""); setStatusFilter("all"); setPaymentTypeFilter("all"); };
-  const hasFilters = search || statusFilter !== "all" || paymentTypeFilter !== "all";
+  const clearFilters = () => { setSearch(""); setStatusFilter("all"); setPaymentTypeFilter("all"); setPeriodFilter("all"); };
+  const hasFilters = search || statusFilter !== "all" || paymentTypeFilter !== "all" || periodFilter !== "all";
   const hasCntPayments = payments.some(p => p.payment_type === "cnt");
 
   return (
