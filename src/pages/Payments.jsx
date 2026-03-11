@@ -74,7 +74,29 @@ export default function Payments() {
         subtitle="Track all incoming ADA payments"
       />
 
-      {/* Filters */}
+      {/* Period filter */}
+      <div className="flex gap-2 mb-4">
+        {[
+          { key: "all", label: "All" },
+          { key: "7d", label: "7d" },
+          { key: "30d", label: "30d" },
+          { key: "month", label: "This month" },
+        ].map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setPeriodFilter(key)}
+            className={`text-sm px-3 py-1.5 rounded-lg font-medium transition-colors border ${
+              periodFilter === key
+                ? "bg-indigo-600 text-white border-indigo-600"
+                : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+       {/* Filters */}
        <div className="flex flex-wrap gap-3 mb-4">
          <div className="relative flex-1 min-w-[200px]">
            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
