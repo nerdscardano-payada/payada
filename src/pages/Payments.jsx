@@ -30,6 +30,7 @@ export default function Payments() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [paymentTypeFilter, setPaymentTypeFilter] = useState("all");
+  const [periodFilter, setPeriodFilter] = useState("all");
 
   React.useEffect(() => {
     base44.auth.me().then(setUser);
