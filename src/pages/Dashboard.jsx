@@ -182,8 +182,8 @@ export default function Dashboard() {
         ) : paymentTypeTab === "ada" ? (
           <>
             <StatCard
-               title="Net Revenue"
-               value={`₳ ${(totalAda - totalFees).toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`}
+               title="Total Volume"
+               value={`₳ ${totalAda.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}`}
                subtitle={`${confirmedPaymentsCount} confirmed payments`}
                icon={TrendingUp}
                accentColor="green"
