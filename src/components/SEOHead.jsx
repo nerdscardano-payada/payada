@@ -48,11 +48,10 @@ export default function SEOHead({
     setMeta("og:site_name", "PayADA", "property");
     if (canonical) setMeta("og:url", canonical, "property");
 
-    // Twitter Card
-    setMeta("twitter:card", "summary_large_image");
+    // Twitter Card — use "summary" (no large image preview on X/Twitter)
+    setMeta("twitter:card", "summary");
     setMeta("twitter:title", title);
     setMeta("twitter:description", description);
-    setMeta("twitter:image", ogImage);
 
     // Favicon
     setLink("icon", "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69999e4306b9e4632bd7d454/1b4bc7fb6_be2b2b99e_1000069668.jpg");
