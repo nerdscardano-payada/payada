@@ -81,6 +81,10 @@ export default function Dashboard() {
     "9a9693a9a37912a5097918f97918d15240c92ab729a0b7c4aa144d77": "$SUNDAE",
     "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0": "$HOSKY",
   };
+  const paymentLinkMap = React.useMemo(() => {
+    return paymentLinks.reduce((map, link) => { map[link.id] = link.title; return map; }, {});
+  }, [paymentLinks]);
+
   const getCntDecimals = (policyId, stored) => (stored && stored > 0) ? stored : (KNOWN_DECIMALS[policyId] ?? 0);
   const getCntTicker = (p) => p.cnt_ticker || KNOWN_TICKERS[p.cnt_policy_id] || p.cnt_policy_id?.slice(0, 8) + "..." || "CNT";
 
