@@ -5,8 +5,8 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const payload = await req.json();
     
-    // When called from automation, use the created_by field from the event
-    const userEmail = payload?.event?.created_by || payload?.created_by;
+    // Support entity automation payload (data.merchant_id) and direct calls
+    const userEmail = payload?.data?.merchant_id || payload?.data?.created_by || payload?.event?.created_by || payload?.userEmail;
     
     if (!userEmail) {
       return Response.json({ error: 'No user email found' }, { status: 400 });
