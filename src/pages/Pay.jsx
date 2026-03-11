@@ -264,6 +264,23 @@ export default function Pay() {
             {paymentLink.description && (
               <p className="text-sm text-slate-400 mt-2">{paymentLink.description}</p>
             )}
+            {cartItems.length > 0 && (
+              <div className="mt-3 space-y-1.5">
+                {cartItems.map((item, i) => {
+                  const qty = item.qty || item.quantity || 1;
+                  const itemTotal = (parseFloat(item.price) || 0) * qty;
+                  return (
+                    <div key={i} className="flex items-center justify-between text-sm">
+                      <span className="text-slate-300">
+                        {item.name || item.title}
+                        {qty > 1 && <span className="text-slate-500 ml-1">× {qty}</span>}
+                      </span>
+                      <span className="text-slate-400 tabular-nums">₳ {itemTotal.toFixed(2)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             <div className="mt-4 flex items-baseline gap-2">
               {paymentLink.amount_mode === "fixed_cnt" ? (
                 <>
