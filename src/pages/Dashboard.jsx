@@ -101,19 +101,19 @@ export default function Dashboard() {
 
   const [paymentPeriod, setPaymentPeriod] = useState("all");
 
-  const filteredConfirmedAda = filteredPayments.filter(p => p.status === "confirmed" && (p.payment_type === "ada" || !p.payment_type));
-  const totalAda = filteredConfirmedAda.reduce((sum, p) => sum + (p.received_amount_ada || p.expected_amount_ada || 0), 0);
-
-  const confirmedPaymentsCount = filteredConfirmedAda.length;
-  const activeLinks = paymentLinks.filter(l => l.status === "active").length;
-  const activeSubs = subscriptions.filter(s => s.status === "active" || s.status === "trial").length;
-
   const now = new Date();
   const filteredPayments = payments.filter(p => {
     if (paymentPeriod === "7d") return new Date(p.created_date) >= subDays(now, 7);
     if (paymentPeriod === "30d") return new Date(p.created_date) >= subDays(now, 30);
     return true;
   });
+
+  const filteredConfirmedAda = filteredPayments.filter(p => p.status === "confirmed" && (p.payment_type === "ada" || !p.payment_type));
+  const totalAda = filteredConfirmedAda.reduce((sum, p) => sum + (p.received_amount_ada || p.expected_amount_ada || 0), 0);
+
+  const confirmedPaymentsCount = filteredConfirmedAda.length;
+  const activeLinks = paymentLinks.filter(l => l.status === "active").length;
+  const activeSubs = subscriptions.filter(s => s.status === "active" || s.status === "trial").length;
 
   const isLoading = loadingPayments || loadingLinks || loadingSubs || loadingCustomers;
 
