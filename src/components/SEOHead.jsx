@@ -81,7 +81,7 @@ export default function SEOHead({
         const el = document.querySelector(`meta[property="${p}"]`);
         if (el) el.remove();
       });
-      const nameToRemove = ["description", "robots", "twitter:card", "twitter:title", "twitter:description", "twitter:image"];
+      const nameToRemove = ["description", "robots", "twitter:card", "twitter:title", "twitter:description"];
       nameToRemove.forEach((n) => {
         const el = document.querySelector(`meta[name="${n}"]`);
         if (el) el.remove();
