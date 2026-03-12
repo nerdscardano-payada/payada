@@ -74,7 +74,7 @@ export default function Payments() {
     const q = search.toLowerCase().trim();
     const now = new Date();
     return payments.filter(p => {
-      const linkTitle = paymentLinkMap[p.payment_link_id] || "";
+      const linkTitle = paymentLinkMap[p.payment_link_id] || accessLinkMap[p.access_link_id] || "";
       const matchesSearch = !q ||
         p.payer_email?.toLowerCase().includes(q) ||
         p.payer_name?.toLowerCase().includes(q) ||
