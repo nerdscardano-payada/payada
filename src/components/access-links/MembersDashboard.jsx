@@ -166,10 +166,11 @@ export default function MembersDashboard({ links, user }) {
     queryFn: async () => {
       if (!linkIds.length) return [];
       // Get all confirmed payments for this merchant
-      const all = await base44.entities.Payment.filter({
-        merchant_id: user.email,
-        status: "confirmed"
-      }, "-confirmed_at", 500);
+      const [confirmed, detected] = await Promise.all([
+        base44.entities.Payment.filter({ merchant_id: user.email, status: "confirmed" }, "-confirmed_at", 500),
+        base44.entities.Payment.filter({ merchant_id: user.email, status: "detected" }, "-created_date", 100),
+      ]);
+      const all = [...confirmed, ...detected];
       // Filter to only those linked to our access links
       return all.filter(p => {
         return linkIds.includes(p.access_link_id) || (p.payment_link_id && linkIds.includes(p.payment_link_id));

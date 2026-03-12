@@ -170,7 +170,10 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
         payerEmail: payerEmail || null,
         payerName: payerName || null,
         payerDiscordUsername: payerDiscordUsername || null,
-      }).catch(() => {});
+      }).catch((err) => {
+        console.error("[WalletPayButton] recordWalletPayment failed:", err?.message || err);
+        toast.error("Payment submitted but could not be recorded. Please contact support with tx: " + txHash);
+      });
       onSuccess?.(txHash);
     } catch (err) {
       toast.error(err?.message || "Failed to submit transaction.");
