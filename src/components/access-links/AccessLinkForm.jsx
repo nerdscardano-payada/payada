@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Users } from "lucide-react";
 import { toast } from "sonner";
 
@@ -25,6 +26,7 @@ export default function AccessLinkForm({ link, onBack, user }) {
     description: "",
     price_ada: "",
     platform: "discord",
+    fee_model: "merchant_pays",
     invite_link: "",
     discord_guild_id: "",
     discord_role_id: "",
@@ -102,6 +104,23 @@ export default function AccessLinkForm({ link, onBack, user }) {
           <div className="space-y-1.5">
             <Label>Receive Address (ADA Wallet)</Label>
             <Input value={form.receive_address} onChange={e => set("receive_address", e.target.value)} placeholder="addr1..." />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>Fee model</Label>
+            <Select value={form.fee_model || "merchant_pays"} onValueChange={v => set("fee_model", v)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="merchant_pays">Merchant pays fee (default)</SelectItem>
+                <SelectItem value="customer_pays">Customer pays fee</SelectItem>
+                <SelectItem value="split">Split fee 50/50</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-slate-400">
+              {(form.fee_model || "merchant_pays") === "merchant_pays" && "Fee is deducted from the amount you receive."}
+              {form.fee_model === "customer_pays" && "Customer pays the base amount + fee on top. You receive the full amount."}
+              {form.fee_model === "split" && "Customer pays half the fee on top, you absorb the other half."}
+            </p>
           </div>
         </div>
 

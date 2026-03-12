@@ -9,6 +9,26 @@ export default function StepOptions({ form, update }) {
     <div className="space-y-6">
       <p className="text-sm text-slate-500">All options below are optional.</p>
 
+      {/* Fee model */}
+      <div className="space-y-2">
+        <Label>Fee model</Label>
+        <Select value={form.fee_model || "merchant_pays"} onValueChange={(v) => update("fee_model", v)}>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="merchant_pays">Merchant pays fee (default)</SelectItem>
+            <SelectItem value="customer_pays">Customer pays fee</SelectItem>
+            <SelectItem value="split">Split fee 50/50</SelectItem>
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-slate-400">
+          {(form.fee_model || "merchant_pays") === "merchant_pays" && "Fee is deducted from the amount you receive."}
+          {form.fee_model === "customer_pays" && "Customer pays the base amount + fee on top. You receive the full amount."}
+          {form.fee_model === "split" && "Customer pays half the fee on top, you absorb the other half."}
+        </p>
+      </div>
+
       {/* Expiry */}
       <div className="space-y-2">
         <Label>Expiry Date</Label>
