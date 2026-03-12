@@ -196,7 +196,7 @@ export default function Payments() {
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {filtered.map((p) => {
-                  const linkTitle = paymentLinkMap[p.payment_link_id];
+                  const linkTitle = paymentLinkMap[p.payment_link_id] || accessLinkMap[p.access_link_id];
                   return (
                     <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="px-5 py-3.5">
