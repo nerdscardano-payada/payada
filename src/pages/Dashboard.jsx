@@ -85,6 +85,16 @@ export default function Dashboard() {
     return paymentLinks.reduce((map, link) => { map[link.id] = link.title; return map; }, {});
   }, [paymentLinks]);
 
+  const { data: accessLinks = [] } = useQuery({
+    queryKey: ["accessLinks-dash", user?.email],
+    queryFn: () => base44.entities.CommunityAccessLink.filter({ merchant_id: user.email }),
+    enabled: !!user,
+  });
+
+  const accessLinkMap = React.useMemo(() => {
+    return accessLinks.reduce((map, link) => { map[link.id] = link.title; return map; }, {});
+  }, [accessLinks]);
+
   const getCntDecimals = (policyId, stored) => (stored && stored > 0) ? stored : (KNOWN_DECIMALS[policyId] ?? 0);
   const getCntTicker = (p) => p.cnt_ticker || KNOWN_TICKERS[p.cnt_policy_id] || p.cnt_policy_id?.slice(0, 8) + "..." || "CNT";
 
