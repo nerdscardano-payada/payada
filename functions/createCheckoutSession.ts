@@ -48,9 +48,25 @@ Deno.serve(async (req) => {
       amountLovelace = Math.floor(adaAmount * 1000000);
     }
 
-    // Calculate fee split
-    const platformFeeLovelace = Math.floor(amountLovelace * feePercent);
-    const merchantAmountLovelace = amountLovelace - platformFeeLovelace;
+    // Calculate fee split based on fee_model
+    const feeModel = paymentLink.fee_model || 'merchant_pays';
+    const baseLovelace = amountLovelace;
+    const fullFeeLovelace = Math.floor(baseLovelace * feePercent);
+    let platformFeeLovelace, merchantAmountLovelace;
+
+    if (feeModel === 'customer_pays') {
+      platformFeeLovelace = fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace;
+      amountLovelace = baseLovelace + fullFeeLovelace;
+    } else if (feeModel === 'split') {
+      const halfFee = Math.floor(fullFeeLovelace / 2);
+      platformFeeLovelace = fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace - halfFee;
+      amountLovelace = baseLovelace + halfFee;
+    } else {
+      platformFeeLovelace = fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace - fullFeeLovelace;
+    }
 
     // Create checkout session record
     const session = await base44.entities.CheckoutSession.create({

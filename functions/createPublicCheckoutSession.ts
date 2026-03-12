@@ -41,11 +41,28 @@ Deno.serve(async (req) => {
       amountLovelace = Math.floor(adaAmount * 1_000_000);
     }
 
-    // Fee is deducted FROM the merchant amount — customer pays original amount only
-    // e.g. ₳25 total: merchant gets ₳24.5625, platform gets ₳0.4375
-    const platformFeeLovelace = Math.floor(amountLovelace * feePercent);
-    const merchantAmountLovelace = amountLovelace - platformFeeLovelace;
-    // amountLovelace stays unchanged — customer pays the original amount
+    // Calculate fee split based on fee_model
+    const feeModel = paymentLink.fee_model || 'merchant_pays';
+    const baseLovelace = amountLovelace;
+    const fullFeeLovelace = Math.floor(baseLovelace * feePercent);
+    let platformFeeLovelace, merchantAmountLovelace;
+
+    if (feeModel === 'customer_pays') {
+      // Customer pays base + fee, merchant receives full base amount
+      platformFeeLovelace = fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace;
+      amountLovelace = baseLovelace + fullFeeLovelace;
+    } else if (feeModel === 'split') {
+      // Customer pays base + half fee, merchant gets base - half fee, platform gets full fee
+      const halfFee = Math.floor(fullFeeLovelace / 2);
+      platformFeeLovelace = fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace - halfFee;
+      amountLovelace = baseLovelace + halfFee;
+    } else {
+      // merchant_pays (default): fee deducted from merchant, customer pays original amount
+      platformFeeLovelace = fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace - fullFeeLovelace;
+    }
 
     const session = await base44.asServiceRole.entities.CheckoutSession.create({
       payment_link_id: paymentLinkId,

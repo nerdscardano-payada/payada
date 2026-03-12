@@ -72,9 +72,25 @@ Deno.serve(async (req) => {
     const blockHeight = tx.block_height;
     const confirmations = latestBlock - blockHeight;
     const outputs = utxos.outputs || [];
-    const totalAmount = payment.expected_amount_ada * 1000000; // lovelace
-    const expectedFeeAmount = Math.floor(totalAmount * feePercent);
-    const expectedMerchantAmount = totalAmount - expectedFeeAmount;
+    const feeModel = paymentLink.fee_model || 'merchant_pays';
+    const totalAmount = payment.expected_amount_ada * 1000000; // lovelace (what customer paid)
+    let expectedFeeAmount, expectedMerchantAmount;
+
+    if (feeModel === 'customer_pays') {
+      // total = base + fee = base*(1+feePercent), so base = total/(1+feePercent)
+      const baseAmount = Math.floor(totalAmount / (1 + feePercent));
+      expectedFeeAmount = totalAmount - baseAmount;
+      expectedMerchantAmount = baseAmount;
+    } else if (feeModel === 'split') {
+      // total = base + halfFee = base*(1+feePercent/2), so base = total/(1+feePercent/2)
+      const baseAmount = Math.floor(totalAmount / (1 + feePercent / 2));
+      expectedFeeAmount = Math.floor(baseAmount * feePercent);
+      expectedMerchantAmount = baseAmount - Math.floor(baseAmount * feePercent / 2);
+    } else {
+      // merchant_pays: total = base, fee deducted from merchant
+      expectedFeeAmount = Math.floor(totalAmount * feePercent);
+      expectedMerchantAmount = totalAmount - expectedFeeAmount;
+    }
 
     // Validate merchant output
     let merchantOutputFound = false;

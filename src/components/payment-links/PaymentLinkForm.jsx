@@ -48,6 +48,7 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     collect_shipping: source.collect_shipping || false,
     expires_at: link?.expires_at || "",
     status: link?.status || "active",
+    fee_model: source.fee_model || "merchant_pays",
     _userEmail: "",
   });
 
