@@ -1,6 +1,6 @@
 import React from "react";
 import PageHeader from "@/components/shared/PageHeader";
-import { Check, Zap, Percent } from "lucide-react";
+import { Check, Zap, Percent, Settings2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
