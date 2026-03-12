@@ -137,6 +137,7 @@ Deno.serve(async (req) => {
         }
       } catch { /* not found */ }
     }
+    // (cntDecimals and cntTicker already initialized above)
 
     if (!receiveAddress && accessLinkId) {
       try {
