@@ -37,8 +37,7 @@ export default function ShoppingPageGenerator() {
   const [step, setStep] = useState(1);
   const [config, setConfig] = useState(DEFAULT_CONFIG);
   const [products, setProducts] = useState([
-    { ...emptyProduct(), id: 1, name: "Premium Digital Plan", description: "Full access to all features", price: "25", badge: "Best Seller", category: "digital" },
-    { ...emptyProduct(), id: 2, name: "Basic Physical Item", description: "Quality product with fast shipping", price: "15", category: "physical" },
+    { ...emptyProduct(), id: 1, name: "My Product", description: "", price: "", badge: "", category: "uncategorized" },
   ]);
   const [user, setUser] = useState(null);
   const [storeId, setStoreId] = useState(null);
