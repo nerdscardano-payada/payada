@@ -78,80 +78,78 @@ export default function StepManageProducts({ products, setProducts, links, onBac
             </div>
 
             {expanded === p.id && (
-              <div className="p-4 border-t border-slate-100 bg-slate-50/50 space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Product Name</Label>
-                    <Input value={p.name} onChange={(e) => update(p.id, "name", e.target.value)} placeholder="My Product" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Price (ADA)</Label>
-                    <Input value={p.price} onChange={(e) => update(p.id, "price", e.target.value)} placeholder="10" type="number" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Category</Label>
-                    <Input value={p.category} onChange={(e) => update(p.id, "category", e.target.value.toLowerCase())} placeholder="digital, physical, ..." />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Payment Link</Label>
-                    <Select value={p.linkId} onValueChange={(v) => update(p.id, "linkId", v)}>
-                      <SelectTrigger><SelectValue placeholder="Select link…" /></SelectTrigger>
-                      <SelectContent>
-                        {links.map((l) => (
-                          <SelectItem key={l.id} value={l.id}>
-                            {l.title} — {
-                              l.amount_mode === "fixed_cnt"
-                                ? `${l.cnt_amount?.toLocaleString() || "—"} ${l.cnt_ticker || "CNT"}`
-                                : l.amount_mode === "fixed_fiat"
-                                ? `${l.fiat_currency} ${l.amount_fiat?.toFixed(2) || "—"}`
-                                : `₳${l.amount_ada || "—"}`
-                            }
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+              <div className="p-4 border-t border-slate-100 bg-slate-50/50 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-slate-600">Product Name</Label>
+                  <Input value={p.name} onChange={(e) => update(p.id, "name", e.target.value)} placeholder="My Product" className="text-sm" />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500">Description</Label>
-                  <Textarea value={p.description} onChange={(e) => update(p.id, "description", e.target.value)} placeholder="Describe your product…" rows={2} />
+                  <Label className="text-xs font-medium text-slate-600">Price (ADA)</Label>
+                  <Input value={p.price} onChange={(e) => update(p.id, "price", e.target.value)} placeholder="10" type="number" className="text-sm" />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-slate-600">Description</Label>
+                <Textarea value={p.description} onChange={(e) => update(p.id, "description", e.target.value)} placeholder="Describe your product…" rows={2} className="text-sm" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-medium text-slate-600">Category</Label>
+                  <Input value={p.category} onChange={(e) => update(p.id, "category", e.target.value.toLowerCase())} placeholder="digital, physical, ..." className="text-sm" />
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500">Product Image</Label>
-                  <div className="flex items-center gap-2">
-                    <label className="flex-1 cursor-pointer">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => {
-                          const file = e.target.files[0];
-                          if (!file) return;
-                          const reader = new FileReader();
-                          reader.onload = (ev) => update(p.id, "imageUrl", ev.target.result);
-                          reader.readAsDataURL(file);
-                        }}
-                      />
-                      <div className="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg text-xs text-slate-500 hover:bg-slate-100 transition-colors">
-                        <Image className="w-3.5 h-3.5" />
-                        {p.imageUrl ? "Change image" : "Upload image"}
-                      </div>
-                    </label>
-                    {p.imageUrl && <img src={p.imageUrl} alt="" className="w-10 h-10 rounded-lg object-cover border border-slate-200" />}
-                  </div>
+                  <Label className="text-xs font-medium text-slate-600">Badge (e.g. Best Seller)</Label>
+                  <Input value={p.badge} onChange={(e) => update(p.id, "badge", e.target.value)} placeholder="Best Seller" className="text-sm" />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-slate-500">Badge (e.g. Best Seller)</Label>
-                    <Input value={p.badge} onChange={(e) => update(p.id, "badge", e.target.value)} placeholder="Best Seller" />
-                  </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-slate-600">Payment Link</Label>
+                <Select value={p.linkId} onValueChange={(v) => update(p.id, "linkId", v)}>
+                  <SelectTrigger className="text-sm"><SelectValue placeholder="Select link…" /></SelectTrigger>
+                  <SelectContent>
+                    {links.map((l) => (
+                      <SelectItem key={l.id} value={l.id}>
+                        {l.title} — {
+                          l.amount_mode === "fixed_cnt"
+                            ? `${l.cnt_amount?.toLocaleString() || "—"} ${l.cnt_ticker || "CNT"}`
+                            : l.amount_mode === "fixed_fiat"
+                            ? `${l.fiat_currency} ${l.amount_fiat?.toFixed(2) || "—"}`
+                            : `₳${l.amount_ada || "—"}`
+                        }
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-slate-600">Product Image</Label>
+                <div className="flex items-center gap-3">
+                  <label className="flex-1 cursor-pointer">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = (ev) => update(p.id, "imageUrl", ev.target.result);
+                        reader.readAsDataURL(file);
+                      }}
+                    />
+                    <div className="flex items-center gap-2 px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-500 hover:bg-slate-100 transition-colors">
+                      <Image className="w-4 h-4 flex-shrink-0" />
+                      {p.imageUrl ? "Change image" : "Upload image"}
+                    </div>
+                  </label>
+                  {p.imageUrl && <img src={p.imageUrl} alt="" className="w-12 h-12 rounded-lg object-cover border border-slate-200 flex-shrink-0" />}
                 </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs text-slate-500">Feature Bullets (one per line)</Label>
-                  <Textarea value={p.features} onChange={(e) => update(p.id, "features", e.target.value)} placeholder={"Fast delivery\nSecure checkout\n30-day guarantee"} rows={3} />
-                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-medium text-slate-600">Feature Bullets (one per line)</Label>
+                <Textarea value={p.features} onChange={(e) => update(p.id, "features", e.target.value)} placeholder={"Fast delivery\nSecure checkout\n30-day guarantee"} rows={3} className="text-sm" />
+              </div>
               </div>
             )}
           </div>
