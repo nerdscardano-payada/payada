@@ -74,14 +74,71 @@ export default function TokenSaleDashboard() {
     enabled: !!saleId,
   });
 
-  const distributeMutation = useMutation({
-    mutationFn: () => base44.functions.invoke("distributeTokens", { token_sale_id: saleId }),
+  const buildTxMutation = useMutation({
+    mutationFn: (merchantWalletAddress) =>
+      base44.functions.invoke("buildDistributionTx", { token_sale_id: saleId, merchant_wallet_address: merchantWalletAddress }),
+    onSuccess: (res) => {
+      const { txCbor, txBodyCbor, summary, purchase_ids } = res.data;
+      setTxCbor(txCbor);
+      setTxBodyCbor(txBodyCbor);
+      setDistSummary(summary);
+      setPendingPurchaseIds(purchase_ids);
+      setDistStep("signing");
+    },
+    onError: (e) => setDistError(e.message),
+  });
+
+  const markDistributedMutation = useMutation({
+    mutationFn: ({ purchase_ids, tx_hash }) =>
+      base44.functions.invoke("distributeTokens", { purchase_ids, tx_hash }),
     onSuccess: () => {
       queryClient.invalidateQueries(["token-purchases", saleId]);
       queryClient.invalidateQueries(["token-sale", saleId]);
-      setDistConfirm(false);
+      setDistStep("done");
     },
+    onError: (e) => setDistError(e.message),
   });
+
+  const handleSignAndSubmit = async () => {
+    setDistError(null);
+    setDistStep("submitting");
+    try {
+      // Find connected CIP-30 wallet
+      const cardano = window.cardano;
+      if (!cardano) throw new Error("No Cardano wallet extension found in browser");
+      const walletKeys = Object.keys(cardano).filter(k => cardano[k]?.enable);
+      if (walletKeys.length === 0) throw new Error("No Cardano wallet found");
+      const api = await cardano[walletKeys[0]].enable();
+
+      // Sign the tx body
+      const witnessSetCbor = await api.signTx(txCbor, true);
+
+      // Assemble signed tx: replace empty witness set with real one
+      // txCbor = 84 [txBody] a0 f5 f6  → replace a0 with witnessSetCbor
+      const submitRes = await base44.functions.invoke("submitSignedTx", { signedTxCbor: assembleTx(txBodyCbor, witnessSetCbor) });
+      const { txHash } = submitRes.data;
+
+      await markDistributedMutation.mutateAsync({ purchase_ids: pendingPurchaseIds, tx_hash: txHash });
+    } catch (e) {
+      setDistError(e.message || String(e));
+      setDistStep("signing");
+    }
+  };
+
+  function assembleTx(txBodyCbor, witnessSetCbor) {
+    // Full tx: array of 4: [txBody, witnessSet, true, null]
+    // We encode manually: 84 + txBody bytes + witnessSet bytes + f5 (true) + f6 (null)
+    function hexToBytes(hex) {
+      const r = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < hex.length; i += 2) r[i / 2] = parseInt(hex.substr(i, 2), 16);
+      return r;
+    }
+    function bytesToHex(b) { return Array.from(b).map(x => x.toString(16).padStart(2, '0')).join(''); }
+    const body = hexToBytes(txBodyCbor);
+    const witness = hexToBytes(witnessSetCbor);
+    const assembled = new Uint8Array([0x84, ...body, ...witness, 0xf5, 0xf6]);
+    return bytesToHex(assembled);
+  }
 
   const pendingPurchases = purchases.filter(p => p.status === "pending_distribution");
   const distributedPurchases = purchases.filter(p => p.status === "distributed");
