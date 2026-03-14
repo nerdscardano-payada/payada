@@ -269,13 +269,15 @@ export default function TokenSaleDashboard() {
         <Card className="border-amber-200 bg-amber-50">
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2 text-amber-800">
-              <Send className="w-4 h-4" /> Token Distribution
+              <Send className="w-4 h-4" /> Token Distribution ({pendingPurchases.length} pending)
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
+
+            {/* Summary stats */}
             <div className="grid grid-cols-3 gap-3 text-sm">
               <div className="bg-white rounded-lg p-3 border border-amber-100">
-                <p className="text-xs text-slate-500">Tokens to distribute</p>
+                <p className="text-xs text-slate-500">Gross tokens</p>
                 <p className="font-bold text-slate-900">{totalTokensToDistribute.toLocaleString()}</p>
               </div>
               <div className="bg-white rounded-lg p-3 border border-amber-100">
@@ -287,34 +289,84 @@ export default function TokenSaleDashboard() {
                 <p className="font-bold text-emerald-700">{netTokensToDistribute.toLocaleString()}</p>
               </div>
             </div>
-            <p className="text-xs text-amber-700">
-              <AlertTriangle className="w-3 h-3 inline mr-1" />
-              After clicking "Mark as Distributed", all {pendingPurchases.length} pending purchases will be marked distributed and {feeTokens.toLocaleString()} {sale.token_ticker} fee will be recorded.
-            </p>
-            {!distConfirm ? (
-              <Button
-                onClick={() => setDistConfirm(true)}
-                className="bg-emerald-600 hover:bg-emerald-700 gap-1.5"
-              >
-                <Send className="w-4 h-4" /> Distribute Tokens
+
+            {/* Step: idle → enter merchant wallet */}
+            {distStep === "idle" && (
+              <Button onClick={() => setDistStep("enter_address")} className="bg-emerald-600 hover:bg-emerald-700 gap-1.5">
+                <Send className="w-4 h-4" /> Distribute Tokens On-Chain
               </Button>
-            ) : (
-              <div className="flex items-center gap-2">
-                <p className="text-sm text-slate-700 font-medium">Are you sure? This cannot be undone.</p>
-                <Button
-                  onClick={() => distributeMutation.mutate()}
-                  disabled={distributeMutation.isPending}
-                  className="bg-emerald-600 hover:bg-emerald-700 gap-1.5"
-                  size="sm"
-                >
-                  {distributeMutation.isPending ? "Processing..." : "Confirm"}
-                </Button>
-                <Button variant="outline" size="sm" onClick={() => setDistConfirm(false)}>Cancel</Button>
+            )}
+
+            {distStep === "enter_address" && (
+              <div className="space-y-3 bg-white p-4 rounded-lg border border-amber-200">
+                <p className="text-sm font-medium text-slate-700">Enter the merchant wallet address that holds the {sale.token_ticker} tokens:</p>
+                <input
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  placeholder="addr1..."
+                  value={merchantAddress}
+                  onChange={e => setMerchantAddress(e.target.value)}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => { setDistError(null); setDistStep("building"); buildTxMutation.mutate(merchantAddress); }}
+                    disabled={!merchantAddress.startsWith("addr") || buildTxMutation.isPending}
+                    className="bg-emerald-600 hover:bg-emerald-700 gap-1.5"
+                  >
+                    {buildTxMutation.isPending ? "Building tx..." : "Build Transaction"}
+                  </Button>
+                  <Button variant="outline" onClick={resetDist}>Cancel</Button>
+                </div>
+                {distError && <p className="text-xs text-red-600">{distError}</p>}
               </div>
             )}
-            {distributeMutation.isError && (
-              <p className="text-xs text-red-600">{distributeMutation.error?.message}</p>
+
+            {distStep === "building" && (
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Clock className="w-4 h-4 animate-spin text-indigo-500" />
+                Building multi-output transaction via Blockfrost...
+              </div>
             )}
+
+            {distStep === "signing" && distSummary && (
+              <div className="space-y-3 bg-white p-4 rounded-lg border border-blue-200">
+                <p className="text-sm font-semibold text-slate-800">Transaction ready to sign</p>
+                <div className="grid grid-cols-2 gap-2 text-xs text-slate-600">
+                  <span>Buyers in this batch:</span><span className="font-mono font-bold">{distSummary.buyer_count}</span>
+                  <span>Net tokens to buyers:</span><span className="font-mono font-bold">{Number(distSummary.total_net_tokens).toLocaleString()} {distSummary.token_ticker}</span>
+                  <span>Platform fee tokens:</span><span className="font-mono font-bold">{Number(distSummary.total_fee_tokens).toLocaleString()} {distSummary.token_ticker}</span>
+                  <span>ADA needed for outputs:</span><span className="font-mono font-bold">₳{distSummary.ada_for_outputs}</span>
+                  <span>Tx fee:</span><span className="font-mono font-bold">₳{distSummary.tx_fee_ada}</span>
+                  <span>ADA change back:</span><span className="font-mono font-bold">₳{distSummary.ada_change}</span>
+                </div>
+                <p className="text-xs text-amber-700 flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  Your browser wallet will ask you to sign. This sends tokens on-chain — cannot be undone.
+                </p>
+                <div className="flex gap-2">
+                  <Button onClick={handleSignAndSubmit} className="bg-emerald-600 hover:bg-emerald-700 gap-1.5">
+                    <Send className="w-4 h-4" /> Sign & Submit
+                  </Button>
+                  <Button variant="outline" onClick={resetDist}>Cancel</Button>
+                </div>
+                {distError && <p className="text-xs text-red-600">{distError}</p>}
+              </div>
+            )}
+
+            {distStep === "submitting" && (
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Clock className="w-4 h-4 animate-spin text-emerald-500" />
+                Submitting transaction to Cardano blockchain...
+              </div>
+            )}
+
+            {distStep === "done" && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-sm text-emerald-800 flex items-center gap-2">
+                <CheckCircle className="w-5 h-5" />
+                Tokens distributed on-chain! Purchases marked as distributed.
+                <Button variant="outline" size="sm" onClick={resetDist} className="ml-auto">Close</Button>
+              </div>
+            )}
+
           </CardContent>
         </Card>
       )}
