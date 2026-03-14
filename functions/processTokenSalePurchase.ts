@@ -45,23 +45,44 @@ Deno.serve(async (req) => {
 
   const tokens_allocated = sale.token_price_ada ? Math.floor(ada_amount / sale.token_price_ada) : 0;
 
-  // Record purchase
-  const purchase = await base44.asServiceRole.entities.TokenSalePurchase.create({
-    token_sale_id,
-    wallet_address,
-    ada_amount,
-    tokens_allocated,
-    tx_hash,
-    status: 'pending_distribution',
-    token_ticker: sale.token_ticker,
-    token_price_ada_snapshot: sale.token_price_ada
-  });
+  // Calculate platform fee in ADA (always 1.75% of ADA raised, regardless of fee model)
+  const FEE_PERCENT = 1.75;
+  const fee_amount_ada = ada_amount * (FEE_PERCENT / 100);
+  const merchant_amount_ada = ada_amount - fee_amount_ada;
 
-  // Update sale totals
-  await base44.asServiceRole.entities.TokenSale.update(token_sale_id, {
-    total_raised_ada: currentRaised + ada_amount,
-    tokens_sold: (sale.tokens_sold || 0) + tokens_allocated
-  });
+  // Record purchase + fee Payment in parallel
+  const [purchase] = await Promise.all([
+    base44.asServiceRole.entities.TokenSalePurchase.create({
+      token_sale_id,
+      wallet_address,
+      ada_amount,
+      tokens_allocated,
+      tx_hash,
+      status: 'pending_distribution',
+      token_ticker: sale.token_ticker,
+      token_price_ada_snapshot: sale.token_price_ada,
+    }),
+    base44.asServiceRole.entities.Payment.create({
+      merchant_id: sale.merchant_id,
+      status: 'confirmed',
+      payment_type: 'ada',
+      tx_hash,
+      expected_amount_ada: ada_amount,
+      received_amount_ada: ada_amount,
+      fee_amount_ada,
+      merchant_amount_ada,
+      fee_output_validated: true,
+      merchant_output_validated: true,
+      confirmed_at: new Date().toISOString(),
+      payer_address: wallet_address,
+      payer_name: `LaunchPad: ${sale.title} (${sale.token_ticker})`,
+    }),
+    // Update sale totals
+    base44.asServiceRole.entities.TokenSale.update(token_sale_id, {
+      total_raised_ada: currentRaised + ada_amount,
+      tokens_sold: (sale.tokens_sold || 0) + tokens_allocated,
+    }),
+  ]);
 
   return Response.json({ purchase, tokens_allocated });
 });
