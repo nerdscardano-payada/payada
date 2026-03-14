@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AdminLaunchpad from './pages/AdminLaunchpad';
 import TokenSale from './pages/TokenSale';
+import TokenSaleDashboard from './pages/TokenSaleDashboard';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -62,6 +63,7 @@ const AuthenticatedApp = () => {
       ))}
       <Route path="/AdminLaunchpad" element={<LayoutWrapper currentPageName="AdminLaunchpad"><AdminLaunchpad /></LayoutWrapper>} />
       <Route path="/TokenSale" element={<TokenSale />} />
+      <Route path="/TokenSaleDashboard" element={<LayoutWrapper currentPageName="TokenSaleDashboard"><TokenSaleDashboard /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

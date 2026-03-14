@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Rocket, Plus, Trash2, ExternalLink, Pencil, AlertTriangle, TrendingUp, Clock, CheckCircle, PauseCircle } from "lucide-react";
+import { Rocket, Plus, Trash2, ExternalLink, Pencil, AlertTriangle, TrendingUp, Clock, CheckCircle, PauseCircle, LayoutDashboard } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const KNOWN_CNTS = [
   { ticker: "$NIGHT",  policy_id: "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa", asset_name: "4e49474854", decimals: 0 },
@@ -421,6 +422,11 @@ export default function AdminLaunchpad() {
                             <PauseCircle className="w-3.5 h-3.5" /> Pause
                           </Button>
                         )}
+                        <Link to={`/TokenSaleDashboard?id=${sale.id}`}>
+                          <Button size="sm" variant="outline" className="gap-1 text-xs">
+                            <LayoutDashboard className="w-3.5 h-3.5" /> Dashboard
+                          </Button>
+                        </Link>
                         <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700 gap-1"
                           onClick={() => window.open(`/TokenSale?slug=${sale.slug}`, "_blank")}>
                           <ExternalLink className="w-3.5 h-3.5" /> Preview
