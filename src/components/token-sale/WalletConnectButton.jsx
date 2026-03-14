@@ -75,8 +75,9 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
     try {
       const api = await window.cardano[walletKey].enable();
       const addrs = await api.getUsedAddresses();
-      const addr = addrs[0] || (await api.getUnusedAddresses())[0];
-      if (!addr) throw new Error("No address found");
+      const hexAddr = addrs[0] || (await api.getUnusedAddresses())[0];
+      if (!hexAddr) throw new Error("No address found");
+      const addr = hexAddrToBech32(hexAddr);
       onConnect(addr, api);
       setOpen(false);
     } catch (e) {
