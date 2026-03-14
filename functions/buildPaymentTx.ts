@@ -486,9 +486,11 @@ Deno.serve(async (req) => {
     const fullTx = [0x84, ...cborBytes, 0xa0, 0xf5, 0xf6];
     const txCbor = bytesToHex(new Uint8Array(fullTx));
 
+    const txBodyCbor = bytesToHex(new Uint8Array(cborBytes));
     return Response.json({
       success: true,
       txCbor,
+      txBodyCbor,
       debug: {
         inputs: selectedUtxos.length,
         outputs: outputsData.length,
