@@ -240,6 +240,9 @@ export default function PayTerminal() {
                   <span className="text-3xl font-bold text-white">₳ {paymentLink.amount_ada?.toFixed(2)}</span>
                   <span className="text-sm text-slate-500">ADA</span>
                 </div>
+                <div className="mt-3">
+                  <AdaRatePreview adaAmount={paymentLink.amount_ada} />
+                </div>
               </div>
               <div className="p-6">
                 <Button onClick={handleOneTimeNext} className="w-full h-12 text-base font-semibold text-white"

@@ -282,6 +282,11 @@ export default function Pay() {
                 })}
               </div>
             )}
+            {paymentLink.amount_mode !== "fixed_cnt" && (
+              <div className="mt-3">
+                <AdaRatePreview adaAmount={paymentLink.amount_ada} />
+              </div>
+            )}
             <div className="mt-4 flex items-baseline gap-2">
               {paymentLink.amount_mode === "fixed_cnt" ? (
                 <>

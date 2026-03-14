@@ -233,6 +233,7 @@ export default function Access() {
             <p className="text-3xl font-bold text-white">₳ {totalAda.toFixed(2)}</p>
             <p className="text-slate-400 text-xs mt-1">One-time access fee</p>
           </div>
+          <AdaRatePreview adaAmount={totalAda} />
         </div>
 
         {/* Member info fields */}

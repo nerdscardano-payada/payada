@@ -177,6 +177,7 @@ export default function POS() {
                 <p className="text-slate-400 text-xs mb-1">{session.label || label || "POS Payment"}</p>
                 <p className="text-4xl font-bold text-white">₳ {parseFloat(amountAda).toFixed(2)}</p>
               </div>
+              <AdaRatePreview adaAmount={amountAda} />
 
               {/* QR Code */}
               {paymentStatus !== "confirmed" && (
