@@ -101,6 +101,7 @@ function SaleForm({ onSuccess, merchantProfile, existingSale }) {
     e.preventDefault();
     const data = {
       ...form,
+      fee_model: form.fee_model || "merchant_pays",
       token_price_ada: parseFloat(form.token_price_ada),
       max_raise_ada: parseFloat(form.max_raise_ada),
       min_buy_ada: parseFloat(form.min_buy_ada),
