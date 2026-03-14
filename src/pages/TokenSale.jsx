@@ -78,14 +78,20 @@ export default function TokenSale() {
         ? null
         : null; // CIP-30 doesn't have a built-in builder — we'll use buildPaymentTx backend
 
+      // Calculate 1.75% platform fee
+      const totalLovelace = parseInt(lovelace);
+      const feeLovelace = Math.floor(totalLovelace * 0.0175);
+      const merchantLovelace = totalLovelace - feeLovelace;
+
       // Call our backend to build the tx
       const buildRes = await base44.functions.invoke("buildPaymentTx", {
-        receive_address: receiveAddress,
-        amount_lovelace: parseInt(lovelace),
-        sender_address: walletAddress,
+        walletAddress,
+        merchantAddress: receiveAddress,
+        merchantLovelace,
+        platformFeeLovelace: feeLovelace,
       });
 
-      if (!buildRes.data?.cbor) throw new Error("Failed to build transaction.");
+      if (!buildRes.data?.txCbor) throw new Error(buildRes.data?.error || "Failed to build transaction.");
 
       // Sign with wallet
       const signedTx = await walletApi.signTx(buildRes.data.cbor, true);
