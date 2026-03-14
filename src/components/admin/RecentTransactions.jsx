@@ -76,9 +76,7 @@ function TxRow({ p }) {
       </td>
       <td className="py-2.5 px-3 text-xs max-w-[160px]">
         {p.payer_address ? (
-          <span className="text-slate-400 font-mono truncate block" title={p.payer_address}>
-            {p.payer_address.slice(0, 14)}…
-          </span>
+          <CopyAddress address={p.payer_address} />
         ) : p.payer_name ? (
           <span className="text-amber-600 truncate block" title={`Name only — no wallet address recorded. payer_name: ${p.payer_name}`}>
             👤 {p.payer_name}
