@@ -257,8 +257,8 @@ export default function TokenSale() {
                 />
               </div>
 
-              {/* Currency converter */}
-              {adaAmount && (
+              {/* Currency converter — only valid for ADA payments */}
+              {adaAmount && (!selectedCurrency || selectedCurrency === "ADA") && (
                 <CurrencyConverter
                   adaAmount={adaAmount}
                   tokenTicker={sale.token_ticker}
