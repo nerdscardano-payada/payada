@@ -7,6 +7,57 @@ function shortAddr(addr) {
   return addr.slice(0, 12) + "…" + addr.slice(-6);
 }
 
+// Convert hex address (CIP-30) to bech32 addr1... format
+function hexAddrToBech32(hex) {
+  try {
+    const CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+    const GENERATOR = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3];
+    function polymod(values) {
+      let chk = 1;
+      for (const v of values) {
+        const b = chk >> 25;
+        chk = ((chk & 0x1ffffff) << 5) ^ v;
+        for (let i = 0; i < 5; i++) if ((b >> i) & 1) chk ^= GENERATOR[i];
+      }
+      return chk;
+    }
+    function hrpExpand(hrp) {
+      const ret = [];
+      for (const c of hrp) ret.push(c.charCodeAt(0) >> 5);
+      ret.push(0);
+      for (const c of hrp) ret.push(c.charCodeAt(0) & 31);
+      return ret;
+    }
+    function createChecksum(hrp, data) {
+      const values = hrpExpand(hrp).concat(data).concat([0,0,0,0,0,0]);
+      const mod = polymod(values) ^ 1;
+      return Array.from({length: 6}, (_, p) => (mod >> (5 * (5 - p))) & 31);
+    }
+    function encode(hrp, data) {
+      return hrp + '1' + data.concat(createChecksum(hrp, data)).map(d => CHARSET[d]).join('');
+    }
+    function convertbits(data, frombits, tobits) {
+      let acc = 0, bits = 0;
+      const ret = [], maxv = (1 << tobits) - 1;
+      for (const value of data) {
+        acc = (acc << frombits) | value;
+        bits += frombits;
+        while (bits >= tobits) { bits -= tobits; ret.push((acc >> bits) & maxv); }
+      }
+      if (bits > 0) ret.push((acc << (tobits - bits)) & maxv);
+      return ret;
+    }
+    // If already bech32 (starts with addr), return as-is
+    if (hex.startsWith('addr')) return hex;
+    const bytes = Array.from(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+    const networkId = bytes[0] & 0x0f;
+    const hrp = networkId === 0 ? 'addr_test' : 'addr';
+    return encode(hrp, convertbits(bytes, 8, 5));
+  } catch {
+    return hex; // fallback to original if conversion fails
+  }
+}
+
 export default function WalletConnectButton({ onConnect, onDisconnect, connectedAddress }) {
   const [open, setOpen] = useState(false);
   const [connecting, setConnecting] = useState(false);
