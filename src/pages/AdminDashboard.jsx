@@ -55,6 +55,14 @@ export default function AdminDashboard() {
           </p>
         </div>
 
+        {/* Recent Transactions */}
+        <section>
+          <h2 className="text-xl font-semibold text-slate-900 mb-4">
+            🔄 Laatste Transacties
+          </h2>
+          <RecentTransactions />
+        </section>
+
         {/* Fee Revenue Stats */}
         <section>
           <h2 className="text-xl font-semibold text-slate-900 mb-4">
