@@ -67,6 +67,7 @@ function SaleForm({ onSuccess, merchantProfile, existingSale }) {
     status: existingSale?.status || "draft",
   });
   const [slugLocked, setSlugLocked] = useState(true);
+  const [duplicateError, setDuplicateError] = useState(null);
 
   const handleTitleChange = (e) => {
     const title = e.target.value;
