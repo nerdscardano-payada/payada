@@ -74,28 +74,44 @@ function normalizeAddress(addr) {
   if (!addr) return null;
   // Already bech32
   if (addr.startsWith('addr') || addr.startsWith('stake')) return addr;
-  // Hex CBOR from CIP-30 getChangeAddress
+  // Pure hex (no CBOR wrapper) — Cardano address is 29 or 57 bytes = 58 or 114 hex chars
   let hex = addr.toLowerCase();
-  // Strip CBOR byte string header: 58xx or 59xxxx
-  if (hex.startsWith('58')) {
-    // 58 + 1 byte length = 4 hex chars header
+
+  // Strip CBOR byte string headers
+  if (hex.startsWith('5839') || hex.startsWith('5840') || hex.startsWith('5841') ||
+      hex.startsWith('5857') || hex.startsWith('5858') || hex.startsWith('5859') ||
+      hex.startsWith('585a') || hex.startsWith('585b') || hex.startsWith('585c')) {
+    // 58 xx = 1-byte length → 4 hex chars header
     hex = hex.slice(4);
   } else if (hex.startsWith('59')) {
-    // 59 + 2 byte length = 6 hex chars header
+    // 59 xxxx = 2-byte length → 6 hex chars header
     hex = hex.slice(6);
-  } else if (hex.startsWith('4') || hex.startsWith('5')) {
-    // Short form: 4x where x encodes length in same byte
-    hex = hex.slice(2);
+  } else if (hex.startsWith('58')) {
+    // generic 58 xx
+    hex = hex.slice(4);
+  } else {
+    // Try stripping any single-byte CBOR header (4x range)
+    const firstByte = parseInt(hex.slice(0, 2), 16);
+    const majorType = firstByte >> 5;
+    if (majorType === 2) { // byte string
+      const addInfo = firstByte & 0x1f;
+      if (addInfo <= 23) {
+        // length encoded in same byte, strip 1 byte header
+        hex = hex.slice(2);
+      }
+    }
   }
+
   try {
     const bytes = hexToBytes(hex);
-    // Determine HRP from header byte
+    if (bytes.length < 28) return addr; // too short, not a valid address
     const headerByte = bytes[0];
     const networkId = headerByte & 0x0f;
     const hrp = networkId === 1 ? 'addr' : 'addr_test';
     return encodeBech32(hrp, Array.from(bytes));
   } catch {
-    return addr; // fallback to original
+    // Return raw hex as-is so we at least have something
+    return hex.length >= 56 ? hex : addr;
   }
 }
 
