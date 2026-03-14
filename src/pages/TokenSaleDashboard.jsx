@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Rocket, Users, TrendingUp, Coins, ArrowLeft, Send,
-  CheckCircle, Clock, AlertTriangle, Download, Copy
+  CheckCircle, Clock, AlertTriangle, Download, Copy, Loader2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
