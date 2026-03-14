@@ -1,49 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { ExternalLink, Clock, TrendingUp, AlertTriangle } from "lucide-react";
+import { ExternalLink, AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-function Countdown({ endTime }) {
-  const [timeLeft, setTimeLeft] = useState({});
-
-  useEffect(() => {
-    const calc = () => {
-      const diff = new Date(endTime) - new Date();
-      if (diff <= 0) return setTimeLeft({ ended: true });
-      setTimeLeft({
-        days: Math.floor(diff / 86400000),
-        hours: Math.floor((diff % 86400000) / 3600000),
-        minutes: Math.floor((diff % 3600000) / 60000),
-        seconds: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    calc();
-    const t = setInterval(calc, 1000);
-    return () => clearInterval(t);
-  }, [endTime]);
-
-  if (timeLeft.ended) return <span className="text-red-400 text-sm">Sale ended</span>;
-
-  const pad = (n) => String(n ?? 0).padStart(2, "0");
-  return (
-    <div className="flex items-center gap-1 text-white font-mono text-2xl font-bold">
-      {[pad(timeLeft.days), pad(timeLeft.hours), pad(timeLeft.minutes), pad(timeLeft.seconds)].map((v, i) => (
-        <React.Fragment key={i}>
-          {i > 0 && <span className="text-white/40 text-xl">:</span>}
-          <div className="bg-white/10 rounded-lg px-2 py-1 min-w-[48px] text-center">{v}</div>
-        </React.Fragment>
-      ))}
-    </div>
-  );
-}
+import TokenSaleCountdown from "@/components/token-sale/TokenSaleCountdown";
+import CurrencyConverter from "@/components/token-sale/CurrencyConverter";
+import WhitelistGate from "@/components/token-sale/WhitelistGate";
+import WalletConnectButton from "@/components/token-sale/WalletConnectButton";
 
 export default function TokenSale() {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get("slug");
 
   const [adaAmount, setAdaAmount] = useState("");
+  const [walletAddress, setWalletAddress] = useState(null);
+  const [walletApi, setWalletApi] = useState(null);
+  const [purchasing, setPurchasing] = useState(false);
+  const [purchaseResult, setPurchaseResult] = useState(null);
+  const [purchaseError, setPurchaseError] = useState(null);
 
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ["token-sale-public", slug],
@@ -52,6 +27,81 @@ export default function TokenSale() {
   });
 
   const sale = sales[0];
+
+  const handleConnect = (addr, api) => {
+    setWalletAddress(addr);
+    setWalletApi(api);
+    setPurchaseResult(null);
+    setPurchaseError(null);
+  };
+
+  const handleDisconnect = () => {
+    setWalletAddress(null);
+    setWalletApi(null);
+    setPurchaseResult(null);
+    setPurchaseError(null);
+  };
+
+  const handlePurchase = async () => {
+    if (!walletApi || !sale || !adaAmount) return;
+    setPurchasing(true);
+    setPurchaseError(null);
+    setPurchaseResult(null);
+
+    try {
+      // Build & submit a simple ADA tx using CIP-30 wallet API
+      const lovelace = Math.floor(parseFloat(adaAmount) * 1_000_000).toString();
+      const receiveAddress = sale.receive_address;
+
+      if (!receiveAddress) throw new Error("Sale has no receive address configured.");
+
+      // Build tx via walletApi
+      const txBuilder = await walletApi.experimental?.signTx
+        ? null
+        : null; // CIP-30 doesn't have a built-in builder — we'll use buildPaymentTx backend
+
+      // Call our backend to build the tx
+      const buildRes = await base44.functions.invoke("buildPaymentTx", {
+        receive_address: receiveAddress,
+        amount_lovelace: parseInt(lovelace),
+        sender_address: walletAddress,
+      });
+
+      if (!buildRes.data?.cbor) throw new Error("Failed to build transaction.");
+
+      // Sign with wallet
+      const signedTx = await walletApi.signTx(buildRes.data.cbor, true);
+
+      // Submit
+      const submitRes = await base44.functions.invoke("submitSignedTx", {
+        signed_tx: signedTx,
+      });
+
+      if (!submitRes.data?.tx_hash) throw new Error("Transaction submission failed.");
+
+      const txHash = submitRes.data.tx_hash;
+
+      // Record purchase
+      const recordRes = await base44.functions.invoke("processTokenSalePurchase", {
+        token_sale_id: sale.id,
+        wallet_address: walletAddress,
+        ada_amount: parseFloat(adaAmount),
+        tx_hash: txHash,
+      });
+
+      if (recordRes.data?.error) throw new Error(recordRes.data.error);
+
+      setPurchaseResult({
+        txHash,
+        tokensAllocated: recordRes.data.tokens_allocated,
+      });
+      setAdaAmount("");
+    } catch (e) {
+      setPurchaseError(e.message || "Purchase failed.");
+    } finally {
+      setPurchasing(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -72,9 +122,12 @@ export default function TokenSale() {
     );
   }
 
-  const progressPct = sale.max_raise_ada ? Math.min(100, ((sale.total_raised_ada || 0) / sale.max_raise_ada) * 100) : 0;
-  const tokensOut = adaAmount && sale.token_price_ada ? Math.floor(parseFloat(adaAmount) / sale.token_price_ada).toLocaleString() : "—";
+  const progressPct = sale.max_raise_ada
+    ? Math.min(100, ((sale.total_raised_ada || 0) / sale.max_raise_ada) * 100)
+    : 0;
   const isActive = sale.status === "active";
+  const isWhitelisted = !sale.whitelist_enabled || (sale.whitelist_addresses || []).includes(walletAddress);
+  const canPurchase = isActive && walletAddress && isWhitelisted && adaAmount && !purchasing;
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -92,8 +145,7 @@ export default function TokenSale() {
           {sale.website_url && (
             <a href={sale.website_url} target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 text-sm transition-colors">
-              <ExternalLink className="w-3.5 h-3.5" />
-              Visit Website
+              <ExternalLink className="w-3.5 h-3.5" /> Visit Website
             </a>
           )}
         </div>
@@ -133,47 +185,112 @@ export default function TokenSale() {
 
         {/* Countdown */}
         {sale.end_time && (
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-2">
-            <p className="text-white/50 text-xs uppercase tracking-widest">Ends In</p>
-            <Countdown endTime={sale.end_time} />
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+            <div className="flex items-center gap-2 text-white/50 text-xs uppercase tracking-widest">
+              <Clock className="w-3.5 h-3.5" /> Sale ends in
+            </div>
+            <TokenSaleCountdown endTime={sale.end_time} />
           </div>
         )}
 
         {/* Purchase box */}
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
           <h2 className="font-semibold text-lg">Purchase {sale.token_ticker}</h2>
-          {sale.min_buy_ada && (
-            <p className="text-white/50 text-sm">Minimum: ₳{sale.min_buy_ada}</p>
-          )}
-          <div className="space-y-2">
-            <label className="text-sm text-white/60">Amount (ADA)</label>
-            <Input
-              type="number"
-              value={adaAmount}
-              onChange={e => setAdaAmount(e.target.value)}
-              placeholder={`Min ₳${sale.min_buy_ada || 50}`}
-              className="bg-white/10 border-white/20 text-white placeholder:text-white/30 text-lg h-12"
-            />
-          </div>
-          {adaAmount && (
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-1">
-              <p className="text-sm text-white/60">Purchase Summary</p>
-              <p className="font-semibold">Buying {tokensOut} {sale.token_ticker} for ₳{parseFloat(adaAmount).toLocaleString()} ADA</p>
-            </div>
-          )}
-          <Button
-            disabled={!isActive}
-            className="w-full h-12 text-base font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-40"
-          >
-            {isActive ? `Purchase ${sale.token_ticker}` : "Sale not active"}
-          </Button>
-          {!isActive && (
-            <div className="flex items-center gap-2 text-amber-400 text-sm bg-amber-400/10 border border-amber-400/20 rounded-lg p-3">
+
+          {/* Wallet connect */}
+          <WalletConnectButton
+            connectedAddress={walletAddress}
+            onConnect={handleConnect}
+            onDisconnect={handleDisconnect}
+          />
+
+          {/* Whitelist gate */}
+          <WhitelistGate sale={sale} walletAddress={walletAddress} />
+
+          {/* KYC notice */}
+          {sale.kyc_required && (
+            <div className="flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-xl p-3 text-purple-300 text-sm">
               <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-              This sale is currently <strong>{sale.status}</strong>. Wallet connect will be enabled when the sale goes live.
+              KYC verification required. Contact the project team to complete verification.
             </div>
           )}
-          <p className="text-xs text-white/30 text-center">Policy ID: {sale.token_policy_id?.slice(0, 30)}...</p>
+
+          {/* Amount input */}
+          {isActive && (!sale.whitelist_enabled || isWhitelisted) && (
+            <>
+              <div className="space-y-1.5">
+                <label className="text-sm text-white/60">Amount (ADA)</label>
+                {sale.min_buy_ada && sale.max_buy_ada && (
+                  <p className="text-white/30 text-xs">Min ₳{sale.min_buy_ada} — Max ₳{sale.max_buy_ada}</p>
+                )}
+                <Input
+                  type="number"
+                  value={adaAmount}
+                  onChange={e => { setAdaAmount(e.target.value); setPurchaseError(null); setPurchaseResult(null); }}
+                  placeholder={`Min ₳${sale.min_buy_ada || 50}`}
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/30 text-lg h-12"
+                />
+              </div>
+
+              {/* Currency converter */}
+              {adaAmount && (
+                <CurrencyConverter
+                  adaAmount={adaAmount}
+                  tokenTicker={sale.token_ticker}
+                  tokenPriceAda={sale.token_price_ada}
+                />
+              )}
+            </>
+          )}
+
+          {/* Success */}
+          {purchaseResult && (
+            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 space-y-2">
+              <div className="flex items-center gap-2 text-emerald-300 font-semibold">
+                <CheckCircle2 className="w-4 h-4" />
+                Purchase successful!
+              </div>
+              <p className="text-white/70 text-sm">
+                You have been allocated <strong className="text-white">{purchaseResult.tokensAllocated?.toLocaleString()} {sale.token_ticker}</strong>.
+                Tokens will be distributed automatically after the sale ends.
+              </p>
+              <a
+                href={`https://cardanoscan.io/transaction/${purchaseResult.txHash}`}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 text-xs transition-colors"
+              >
+                <ExternalLink className="w-3 h-3" />
+                View on CardanoScan
+              </a>
+            </div>
+          )}
+
+          {/* Error */}
+          {purchaseError && (
+            <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-red-300 text-sm">
+              <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              {purchaseError}
+            </div>
+          )}
+
+          {/* Purchase button */}
+          {isActive ? (
+            <Button
+              onClick={handlePurchase}
+              disabled={!canPurchase}
+              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-40"
+            >
+              {purchasing ? "Processing…" : `Purchase ${sale.token_ticker}`}
+            </Button>
+          ) : (
+            <Button disabled className="w-full h-12 text-base font-semibold disabled:opacity-40">
+              Sale {sale.status}
+            </Button>
+          )}
+
+          <p className="text-xs text-white/20 text-center break-all">
+            Policy: {sale.token_policy_id}
+          </p>
         </div>
       </div>
     </div>
