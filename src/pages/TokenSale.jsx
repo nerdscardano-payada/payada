@@ -252,7 +252,7 @@ export default function TokenSale() {
                   type="number"
                   value={adaAmount}
                   onChange={e => { setAdaAmount(e.target.value); setPurchaseError(null); setPurchaseResult(null); }}
-                  placeholder={`Min ₳${sale.min_buy_ada || 50}`}
+                  placeholder={selectedCurrency === "ADA" ? `Min ₳${sale.min_buy_ada || 50}` : `Enter amount`}
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/30 text-lg h-12"
                 />
               </div>
