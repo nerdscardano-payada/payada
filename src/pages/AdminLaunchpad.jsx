@@ -286,6 +286,13 @@ function SaleForm({ onSuccess, merchantProfile, existingSale }) {
         <span>Admin-only feature. Token distribution logic (sending tokens after payment) requires additional backend integration.</span>
       </div>
 
+      {duplicateError && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex gap-2 text-sm text-red-800">
+          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span>{duplicateError}</span>
+        </div>
+      )}
+
       <Button type="submit" disabled={mutation.isPending} className="w-full">
         {mutation.isPending ? (isEditing ? "Saving..." : "Creating...") : (isEditing ? "Save Changes" : "Create Token Sale")}
       </Button>
