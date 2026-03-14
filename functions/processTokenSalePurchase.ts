@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
           cnt_policy_id, cnt_asset_name, cnt_ticker, cnt_decimals, cnt_amount } = await req.json();
   const isCntPayment = !!cnt_policy_id && !!cnt_amount;
 
-  if (!token_sale_id || !wallet_address || !ada_amount || !tx_hash) {
+  if (!token_sale_id || !wallet_address || !tx_hash || (!ada_amount && !isCntPayment)) {
     return Response.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
