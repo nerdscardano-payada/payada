@@ -125,7 +125,7 @@ function SaleForm({ onSuccess, merchantProfile, existingSale }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-1">
             <Label>Sale Title</Label>
-            <Input value={form.title} onChange={handleTitleChange} placeholder="e.g. ATLAS Token Sale" required />
+            <Input value={form.title} onChange={handleTitleChange} placeholder="e.g. PayADA Token Sale" required />
           </div>
           <div className="space-y-1">
             <Label>Website URL</Label>
