@@ -30,7 +30,7 @@ export default function TokenSale() {
   const sale = sales[0];
 
   // Set default currency once sale loads
-  React.useEffect(() => {
+  useEffect(() => {
     if (sale && !selectedCurrency) {
       setSelectedCurrency((sale.accepted_currencies || ["ADA"])[0]);
     }
