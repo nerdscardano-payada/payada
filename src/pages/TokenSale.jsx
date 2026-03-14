@@ -52,10 +52,20 @@ export default function TokenSale() {
 
   const handlePurchase = async () => {
     if (!walletApi || !sale || !adaAmount) return;
-    setPurchasing(true);
     setPurchaseError(null);
     setPurchaseResult(null);
 
+    const amount = parseFloat(adaAmount);
+    if (sale.min_buy_ada && amount < sale.min_buy_ada) {
+      setPurchaseError(`Minimum purchase is ₳${sale.min_buy_ada}`);
+      return;
+    }
+    if (sale.max_buy_ada && amount > sale.max_buy_ada) {
+      setPurchaseError(`Maximum purchase is ₳${sale.max_buy_ada}`);
+      return;
+    }
+
+    setPurchasing(true);
     try {
       // Build & submit a simple ADA tx using CIP-30 wallet API
       const lovelace = Math.floor(parseFloat(adaAmount) * 1_000_000).toString();
