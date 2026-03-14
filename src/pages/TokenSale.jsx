@@ -105,7 +105,9 @@ export default function TokenSale() {
       });
       setAdaAmount("");
     } catch (e) {
-      setPurchaseError(e.message || "Purchase failed.");
+      // Extract actual backend error message from Axios response
+      const msg = e?.response?.data?.error || e?.response?.data?.message || e.message || "Purchase failed.";
+      setPurchaseError(msg);
     } finally {
       setPurchasing(false);
     }
