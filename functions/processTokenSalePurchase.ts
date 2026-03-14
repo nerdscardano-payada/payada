@@ -45,26 +45,50 @@ Deno.serve(async (req) => {
     return Response.json({ purchase: existing[0], duplicate: true });
   }
 
-  const tokens_allocated = sale.token_price_ada ? Math.floor(ada_amount / sale.token_price_ada) : 0;
+  const tokens_allocated = sale.token_price_ada
+    ? (isCntPayment
+        ? Math.floor((cnt_amount * (sale.cnt_to_ada_rate || 1)) / sale.token_price_ada)  // CNT → ADA equiv → tokens
+        : Math.floor(ada_amount / sale.token_price_ada))
+    : 0;
 
-  // Calculate platform fee in ADA (always 1.75% of ADA raised, regardless of fee model)
   const FEE_PERCENT = 1.75;
-  const fee_amount_ada = ada_amount * (FEE_PERCENT / 100);
-  const merchant_amount_ada = ada_amount - fee_amount_ada;
+  const feeRatio = FEE_PERCENT / 100;
+  const now = new Date().toISOString();
 
-  // Record purchase + fee Payment in parallel
-  const [purchase] = await Promise.all([
-    base44.asServiceRole.entities.TokenSalePurchase.create({
-      token_sale_id,
-      wallet_address,
-      ada_amount,
-      tokens_allocated,
+  // Build fee Payment record based on payment type
+  let feePaymentData;
+  if (isCntPayment) {
+    const cnt_fee_amount = cnt_amount * feeRatio;
+    const cnt_merchant_amount = cnt_amount - cnt_fee_amount;
+    feePaymentData = {
+      merchant_id: sale.merchant_id,
+      status: 'confirmed',
+      payment_type: 'cnt',
       tx_hash,
-      status: 'pending_distribution',
-      token_ticker: sale.token_ticker,
-      token_price_ada_snapshot: sale.token_price_ada,
-    }),
-    base44.asServiceRole.entities.Payment.create({
+      cnt_policy_id,
+      cnt_asset_name: cnt_asset_name || '',
+      cnt_ticker,
+      cnt_decimals: cnt_decimals || 0,
+      expected_amount_cnt: cnt_amount,
+      received_amount_cnt: cnt_amount,
+      merchant_amount_cnt: cnt_merchant_amount,
+      cnt_fees: [{
+        policy_id: cnt_policy_id,
+        asset_name: cnt_asset_name || '',
+        ticker: cnt_ticker,
+        decimals: cnt_decimals || 0,
+        amount: cnt_fee_amount,
+      }],
+      fee_output_validated: true,
+      merchant_output_validated: true,
+      confirmed_at: now,
+      payer_address: wallet_address,
+      payer_name: `LaunchPad: ${sale.title} (${sale.token_ticker})`,
+    };
+  } else {
+    const fee_amount_ada = ada_amount * feeRatio;
+    const merchant_amount_ada = ada_amount - fee_amount_ada;
+    feePaymentData = {
       merchant_id: sale.merchant_id,
       status: 'confirmed',
       payment_type: 'ada',
@@ -75,13 +99,29 @@ Deno.serve(async (req) => {
       merchant_amount_ada,
       fee_output_validated: true,
       merchant_output_validated: true,
-      confirmed_at: new Date().toISOString(),
+      confirmed_at: now,
       payer_address: wallet_address,
       payer_name: `LaunchPad: ${sale.title} (${sale.token_ticker})`,
+    };
+  }
+
+  const effectiveAdaAmount = isCntPayment ? 0 : ada_amount;
+
+  // Record purchase + fee Payment + update totals in parallel
+  const [purchase] = await Promise.all([
+    base44.asServiceRole.entities.TokenSalePurchase.create({
+      token_sale_id,
+      wallet_address,
+      ada_amount: isCntPayment ? (cnt_amount * (sale.cnt_to_ada_rate || 1)) : ada_amount,
+      tokens_allocated,
+      tx_hash,
+      status: 'pending_distribution',
+      token_ticker: sale.token_ticker,
+      token_price_ada_snapshot: sale.token_price_ada,
     }),
-    // Update sale totals
+    base44.asServiceRole.entities.Payment.create(feePaymentData),
     base44.asServiceRole.entities.TokenSale.update(token_sale_id, {
-      total_raised_ada: currentRaised + ada_amount,
+      total_raised_ada: currentRaised + effectiveAdaAmount,
       tokens_sold: (sale.tokens_sold || 0) + tokens_allocated,
     }),
   ]);
