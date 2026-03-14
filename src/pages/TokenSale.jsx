@@ -244,7 +244,7 @@ export default function TokenSale() {
           {isActive && (!sale.whitelist_enabled || isWhitelisted) && (
             <>
               <div className="space-y-1.5">
-                <label className="text-sm text-white/60">Amount (ADA)</label>
+                <label className="text-sm text-white/60">Amount ({selectedCurrency || "ADA"})</label>
                 {sale.min_buy_ada && sale.max_buy_ada && (
                   <p className="text-white/30 text-xs">Min ₳{sale.min_buy_ada} — Max ₳{sale.max_buy_ada}</p>
                 )}
