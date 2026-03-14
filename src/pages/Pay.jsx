@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import WalletConnect from "@/components/checkout/WalletConnect";
 import WalletPayButton from "@/components/checkout/WalletPayButton";
+import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 
 export default function Pay() {
   const [slug, setSlug] = useState("");

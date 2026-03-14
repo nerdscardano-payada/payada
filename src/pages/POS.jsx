@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import QRCode from "qrcode.react";
+import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 import { createPageUrl } from "@/utils";
 import {
   Hexagon, CheckCircle2, Clock, Loader2,
