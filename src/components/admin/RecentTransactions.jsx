@@ -1,8 +1,26 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { RefreshCw, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
+import { RefreshCw, ExternalLink, ChevronDown, ChevronUp, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+function CopyAddress({ address }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+  return (
+    <span className="flex items-center gap-1 group font-mono text-slate-400">
+      <span className="truncate" title={address}>{address.slice(0, 14)}…</span>
+      <button onClick={handleCopy} className="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-slate-700">
+        {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
+      </button>
+    </span>
+  );
+}
 
 const STATUS_STYLES = {
   confirmed:            "bg-green-100 text-green-700",
