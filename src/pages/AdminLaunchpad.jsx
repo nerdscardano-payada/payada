@@ -162,18 +162,7 @@ function SaleForm({ onSuccess, merchantProfile, existingSale }) {
       {/* Token Config */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-slate-700 border-b border-slate-100 pb-2">Token Configuration</h3>
-        <div className="space-y-2">
-          <Label>Quick-select Known Token</Label>
-          <div className="flex gap-2 flex-wrap">
-            {KNOWN_CNTS.map(cnt => (
-              <button type="button" key={cnt.ticker}
-                onClick={() => selectKnownToken(cnt)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${form.token_ticker === cnt.ticker ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-700 border-slate-200 hover:border-indigo-400"}`}>
-                {cnt.ticker}
-              </button>
-            ))}
-          </div>
-        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-1">
             <Label>Token Ticker</Label>
