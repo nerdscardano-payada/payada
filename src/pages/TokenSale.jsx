@@ -14,6 +14,7 @@ export default function TokenSale() {
   const slug = params.get("slug");
 
   const [adaAmount, setAdaAmount] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [walletAddress, setWalletAddress] = useState(null);
   const [walletApi, setWalletApi] = useState(null);
   const [purchasing, setPurchasing] = useState(false);
