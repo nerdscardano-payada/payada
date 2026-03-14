@@ -93,12 +93,28 @@ export default function TokenSale() {
 
       if (!buildRes.data?.txCbor) throw new Error(buildRes.data?.error || "Failed to build transaction.");
 
-      // Sign with wallet
-      const signedTx = await walletApi.signTx(buildRes.data.txCbor, true);
+      // Sign with wallet — returns witness set CBOR only
+      const witnessCbor = await walletApi.signTx(buildRes.data.txCbor, true);
+
+      // Reconstruct full signed tx: [txBody, witnessSet, true, null]
+      // txBody bytes are inside txBodyCbor; we rebuild the array wrapper
+      const txBodyCbor = buildRes.data.txBodyCbor;
+
+      // Assemble full tx CBOR hex: 84 + txBody + witnessSet + f5 + f6
+      function hexToU8(hex) {
+        return Uint8Array.from(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+      }
+      function u8ToHex(u8) {
+        return Array.from(u8).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+      const bodyBytes = hexToU8(txBodyCbor);
+      const witnessBytes = hexToU8(witnessCbor);
+      const fullTx = new Uint8Array([0x84, ...bodyBytes, ...witnessBytes, 0xf5, 0xf6]);
+      const signedTxCbor = u8ToHex(fullTx);
 
       // Submit
       const submitRes = await base44.functions.invoke("submitSignedTx", {
-        signedTxCbor: signedTx,
+        signedTxCbor,
       });
 
       if (!submitRes.data?.txHash) throw new Error(submitRes.data?.error || "Transaction submission failed.");
