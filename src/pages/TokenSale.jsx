@@ -98,12 +98,12 @@ export default function TokenSale() {
 
       // Submit
       const submitRes = await base44.functions.invoke("submitSignedTx", {
-        signed_tx: signedTx,
+        signedTxCbor: signedTx,
       });
 
-      if (!submitRes.data?.tx_hash) throw new Error("Transaction submission failed.");
+      if (!submitRes.data?.txHash) throw new Error(submitRes.data?.error || "Transaction submission failed.");
 
-      const txHash = submitRes.data.tx_hash;
+      const txHash = submitRes.data.txHash;
 
       // Record purchase
       const recordRes = await base44.functions.invoke("processTokenSalePurchase", {
