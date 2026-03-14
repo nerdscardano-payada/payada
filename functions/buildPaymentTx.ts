@@ -359,14 +359,25 @@ Deno.serve(async (req) => {
 
     // --- ADA payment mode (existing logic) ---
 
-    // Enforce minimum merchant output (dust protection: must be >= 1 ADA)
-    const merchantLov = BigInt(merchantLovelace) < MIN_OUTPUT ? MIN_OUTPUT : BigInt(merchantLovelace);
+    // Total ADA the buyer is sending (merchant + fee)
+    const rawMerchantLov = BigInt(merchantLovelace);
+    const rawFeeLov = platformFeeLovelace && PAYADA_FEE_WALLET ? BigInt(platformFeeLovelace) : 0n;
+    const totalInputIntended = rawMerchantLov + rawFeeLov;
 
-    // Enforce minimum fee output (dust protection: must be >= 1 ADA)
+    // Enforce minimum fee output (Cardano dust protection: must be >= 1 ADA).
+    // If fee < 1 ADA, bump it up but subtract the difference from merchantLov
+    // so the buyer always pays exactly the intended total.
     let feeLov = 0n;
-    if (platformFeeLovelace && PAYADA_FEE_WALLET) {
-      const rawFee = BigInt(platformFeeLovelace);
-      feeLov = rawFee < MIN_OUTPUT ? MIN_OUTPUT : rawFee;
+    let merchantLov = rawMerchantLov;
+    if (rawFeeLov > 0n && PAYADA_FEE_WALLET) {
+      if (rawFeeLov < MIN_OUTPUT) {
+        feeLov = MIN_OUTPUT;
+        merchantLov = totalInputIntended - feeLov;
+        // Safety: merchant must still get at least MIN_OUTPUT
+        if (merchantLov < MIN_OUTPUT) merchantLov = MIN_OUTPUT;
+      } else {
+        feeLov = rawFeeLov;
+      }
     }
 
     const totalOutput = merchantLov + feeLov;
