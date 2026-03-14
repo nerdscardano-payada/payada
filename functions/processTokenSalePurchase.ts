@@ -3,7 +3,9 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
 
-  const { token_sale_id, wallet_address, ada_amount, tx_hash } = await req.json();
+  const { token_sale_id, wallet_address, ada_amount, tx_hash,
+          cnt_policy_id, cnt_asset_name, cnt_ticker, cnt_decimals, cnt_amount } = await req.json();
+  const isCntPayment = !!cnt_policy_id && !!cnt_amount;
 
   if (!token_sale_id || !wallet_address || !ada_amount || !tx_hash) {
     return Response.json({ error: 'Missing required fields' }, { status: 400 });
