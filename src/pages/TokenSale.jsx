@@ -94,7 +94,7 @@ export default function TokenSale() {
       if (!buildRes.data?.txCbor) throw new Error(buildRes.data?.error || "Failed to build transaction.");
 
       // Sign with wallet
-      const signedTx = await walletApi.signTx(buildRes.data.cbor, true);
+      const signedTx = await walletApi.signTx(buildRes.data.txCbor, true);
 
       // Submit
       const submitRes = await base44.functions.invoke("submitSignedTx", {
