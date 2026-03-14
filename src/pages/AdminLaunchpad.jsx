@@ -63,6 +63,7 @@ function SaleForm({ onSuccess, merchantProfile, existingSale }) {
     start_time: existingSale?.start_time ? existingSale.start_time.slice(0, 16) : "",
     end_time: existingSale?.end_time ? existingSale.end_time.slice(0, 16) : "",
     accepted_currencies: existingSale?.accepted_currencies || ["ADA"],
+    fee_model: existingSale?.fee_model || "merchant_pays",
     status: existingSale?.status || "draft",
   });
   const [slugLocked, setSlugLocked] = useState(true);
