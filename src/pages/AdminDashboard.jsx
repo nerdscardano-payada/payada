@@ -5,6 +5,7 @@ import PlatformHealthOverview from "@/components/admin/PlatformHealthOverview";
 import SystemErrorLogs from "@/components/admin/SystemErrorLogs";
 import FeeRevenueStats from "@/components/admin/FeeRevenueStats";
 import MerchantOverview from "@/components/admin/MerchantOverview";
+import RecentTransactions from "@/components/admin/RecentTransactions";
 
 export default function AdminDashboard() {
   const { data: user, isLoading } = useQuery({
