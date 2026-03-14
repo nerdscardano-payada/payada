@@ -98,8 +98,21 @@ function SaleForm({ onSuccess, merchantProfile, existingSale }) {
     onSuccess: () => { queryClient.invalidateQueries(["token-sales"]); onSuccess(); },
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setDuplicateError(null);
+
+    // Check for duplicate policy_id + asset_name combination
+    const existing = await base44.entities.TokenSale.filter({ token_policy_id: form.token_policy_id });
+    const duplicate = existing.find(s =>
+      s.token_asset_name === form.token_asset_name &&
+      (!isEditing || s.id !== existingSale.id)
+    );
+    if (duplicate) {
+      setDuplicateError(`Deze token is al geregistreerd als "${duplicate.title}" (${duplicate.token_ticker}). Policy ID + Asset Name combinatie moet uniek zijn.`);
+      return;
+    }
+
     const data = {
       ...form,
       fee_model: form.fee_model || "merchant_pays",
