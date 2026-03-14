@@ -78,10 +78,30 @@ export default function TokenSale() {
         ? null
         : null; // CIP-30 doesn't have a built-in builder — we'll use buildPaymentTx backend
 
-      // Calculate 1.75% platform fee
-      const totalLovelace = parseInt(lovelace);
-      const feeLovelace = Math.floor(totalLovelace * 0.0175);
-      const merchantLovelace = totalLovelace - feeLovelace;
+      // Calculate 1.75% platform fee based on fee_model
+      const feeModel = sale.fee_model || "merchant_pays";
+      const baseLovelace = parseInt(lovelace); // what buyer typed = what merchant should receive
+      const FEE_RATE = 0.0175;
+
+      let merchantLovelace, feeLovelace, totalLovelace;
+
+      if (feeModel === "customer_pays") {
+        // Buyer pays base + fee on top
+        merchantLovelace = baseLovelace;
+        feeLovelace = Math.floor(baseLovelace * FEE_RATE);
+        totalLovelace = merchantLovelace + feeLovelace;
+      } else if (feeModel === "split") {
+        // Buyer pays base + half fee; merchant receives base - half fee
+        const halfFee = Math.floor(baseLovelace * FEE_RATE * 0.5);
+        feeLovelace = halfFee * 2;
+        merchantLovelace = baseLovelace - halfFee;
+        totalLovelace = baseLovelace + halfFee;
+      } else {
+        // merchant_pays (default): buyer pays base, fee deducted from merchant
+        totalLovelace = baseLovelace;
+        feeLovelace = Math.floor(totalLovelace * FEE_RATE);
+        merchantLovelace = totalLovelace - feeLovelace;
+      }
 
       // Call our backend to build the tx
       const buildRes = await base44.functions.invoke("buildPaymentTx", {
