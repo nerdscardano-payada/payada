@@ -176,6 +176,22 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
                 )} />
                 {!collapsed && <span className="truncate">CNT Lab <span className="text-[10px] bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded-full ml-1">TEST</span></span>}
               </Link>
+              <Link
+                to={createPageUrl("AdminLaunchpad")}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all group",
+                  currentPage === "AdminLaunchpad"
+                    ? "bg-cyan-500/15 text-cyan-400"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                )}
+              >
+                <Rocket className={cn(
+                  "w-[18px] h-[18px] flex-shrink-0",
+                  currentPage === "AdminLaunchpad" ? "text-cyan-400" : "text-slate-500 group-hover:text-slate-300"
+                )} />
+                {!collapsed && <span className="truncate">Launchpad Lab <span className="text-[10px] bg-cyan-500/20 text-cyan-400 px-1.5 py-0.5 rounded-full ml-1">NEW</span></span>}
+              </Link>
             </>
           )}
         </nav>
