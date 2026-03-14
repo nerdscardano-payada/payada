@@ -56,8 +56,18 @@ function TxRow({ p }) {
           ? new Date(p.created_date).toLocaleString("nl-BE", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })
           : "—"}
       </td>
-      <td className="py-2.5 px-3 text-slate-400 text-xs max-w-[140px] truncate" title={p.payer_address}>
-        {p.payer_address ? `${p.payer_address.slice(0, 14)}…` : "—"}
+      <td className="py-2.5 px-3 text-xs max-w-[160px]">
+        {p.payer_address ? (
+          <span className="text-slate-400 font-mono truncate block" title={p.payer_address}>
+            {p.payer_address.slice(0, 14)}…
+          </span>
+        ) : p.payer_name ? (
+          <span className="text-amber-600 truncate block" title={`Name only — no wallet address recorded. payer_name: ${p.payer_name}`}>
+            👤 {p.payer_name}
+          </span>
+        ) : (
+          <span className="text-slate-300">—</span>
+        )}
       </td>
     </tr>
   );
