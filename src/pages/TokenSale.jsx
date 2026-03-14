@@ -29,6 +29,13 @@ export default function TokenSale() {
 
   const sale = sales[0];
 
+  // Set default currency once sale loads
+  React.useEffect(() => {
+    if (sale && !selectedCurrency) {
+      setSelectedCurrency((sale.accepted_currencies || ["ADA"])[0]);
+    }
+  }, [sale]);
+
   const handleConnect = (addr, api) => {
     setWalletAddress(addr);
     setWalletApi(api);
