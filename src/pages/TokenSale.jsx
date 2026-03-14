@@ -186,8 +186,25 @@ export default function TokenSale() {
           <div className="h-3 bg-white/10 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all" style={{ width: `${progressPct}%` }} />
           </div>
-          {sale.accepted_currencies?.length > 0 && (
-            <p className="text-white/40 text-xs">Accepted: {sale.accepted_currencies.join(" · ")}</p>
+          {sale.accepted_currencies?.length > 1 && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {sale.accepted_currencies.map(c => (
+                <button
+                  key={c}
+                  onClick={() => setSelectedCurrency(c)}
+                  className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+                    selectedCurrency === c
+                      ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-300"
+                      : "bg-white/5 border-white/10 text-white/40 hover:text-white/70"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          )}
+          {sale.accepted_currencies?.length === 1 && (
+            <p className="text-white/40 text-xs">Accepted: {sale.accepted_currencies[0]}</p>
           )}
         </div>
 
