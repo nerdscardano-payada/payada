@@ -132,8 +132,8 @@ function PurchaseRow({ p }) {
           ? new Date(p.created_date).toLocaleString("nl-BE", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })
           : "—"}
       </td>
-      <td className="py-2.5 px-3 text-slate-400 text-xs max-w-[140px] truncate" title={p.wallet_address}>
-        {p.wallet_address ? `${p.wallet_address.slice(0, 14)}…` : "—"}
+      <td className="py-2.5 px-3 text-xs max-w-[140px]">
+        {p.wallet_address ? <CopyAddress address={p.wallet_address} /> : <span className="text-slate-300">—</span>}
       </td>
     </tr>
   );
