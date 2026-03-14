@@ -25,17 +25,19 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Min/max checks
-  if (sale.min_buy_ada && ada_amount < sale.min_buy_ada) {
-    return Response.json({ error: `Minimum purchase is ₳${sale.min_buy_ada}` }, { status: 400 });
-  }
-  if (sale.max_buy_ada && ada_amount > sale.max_buy_ada) {
-    return Response.json({ error: `Maximum purchase is ₳${sale.max_buy_ada}` }, { status: 400 });
+  // Min/max checks (ADA only)
+  if (!isCntPayment) {
+    if (sale.min_buy_ada && ada_amount < sale.min_buy_ada) {
+      return Response.json({ error: `Minimum purchase is ₳${sale.min_buy_ada}` }, { status: 400 });
+    }
+    if (sale.max_buy_ada && ada_amount > sale.max_buy_ada) {
+      return Response.json({ error: `Maximum purchase is ₳${sale.max_buy_ada}` }, { status: 400 });
+    }
   }
 
-  // Check raise cap
+  // Check raise cap (ADA only)
   const currentRaised = sale.total_raised_ada || 0;
-  if (sale.max_raise_ada && currentRaised + ada_amount > sale.max_raise_ada) {
+  if (!isCntPayment && sale.max_raise_ada && currentRaised + ada_amount > sale.max_raise_ada) {
     return Response.json({ error: 'This purchase would exceed the raise cap' }, { status: 400 });
   }
 
