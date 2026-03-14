@@ -51,7 +51,13 @@ export default function TokenSaleDashboard() {
   const saleId = params.get("id");
   const queryClient = useQueryClient();
   const [copied, setCopied] = useState(null);
-  const [distConfirm, setDistConfirm] = useState(false);
+  const [distStep, setDistStep] = useState("idle"); // idle | enter_address | building | signing | submitting | done
+  const [merchantAddress, setMerchantAddress] = useState("");
+  const [txCbor, setTxCbor] = useState(null);
+  const [txBodyCbor, setTxBodyCbor] = useState(null);
+  const [pendingPurchaseIds, setPendingPurchaseIds] = useState([]);
+  const [distSummary, setDistSummary] = useState(null);
+  const [distError, setDistError] = useState(null);
 
   const { data: sale, isLoading: saleLoading } = useQuery({
     queryKey: ["token-sale", saleId],
