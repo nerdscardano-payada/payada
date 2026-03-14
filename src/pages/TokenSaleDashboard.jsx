@@ -147,6 +147,8 @@ export default function TokenSaleDashboard() {
   const feeTokens = Math.floor(totalTokensToDistribute * (FEE_PERCENT / 100));
   const netTokensToDistribute = totalTokensToDistribute - feeTokens;
 
+  const resetDist = () => { setDistStep("idle"); setDistError(null); setTxCbor(null); setTxBodyCbor(null); setDistSummary(null); setPendingPurchaseIds([]); setMerchantAddress(""); };
+
   const copyToClipboard = (text, key) => {
     navigator.clipboard.writeText(text);
     setCopied(key);
