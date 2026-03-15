@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import StepSelectLink from "@/components/button-generator/StepSelectLink";
 import StepCustomize from "@/components/button-generator/StepCustomize";
 import StepGetCode from "@/components/button-generator/StepGetCode";
+import ButtonTransactionView from "@/components/button-generator/ButtonTransactionView";
 
 const STEPS = [
   { number: 1, label: "Choose Link" },
@@ -151,6 +152,9 @@ export default function ButtonGenerator() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Transaction view for selected link */}
+      {selectedLink && <ButtonTransactionView selectedLink={selectedLink} />}
     </div>
   );
 }
