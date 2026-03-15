@@ -85,7 +85,7 @@ export default function POSTransactionHistory() {
       </button>
 
       {expanded && (
-        <div className="divide-y divide-slate-50">
+        <div className="divide-y divide-slate-50 max-h-96 overflow-y-auto">
           {payments.length === 0 ? (
             <div className="p-8 text-center text-slate-400 text-sm">No POS transactions yet</div>
           ) : (
