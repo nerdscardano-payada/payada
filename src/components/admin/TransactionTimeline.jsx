@@ -51,31 +51,15 @@ export default function TransactionTimeline() {
     refetchInterval: 30000,
   });
 
-  // Extract unique IDs from payments
-  const uniquePaymentLinkIds = useMemo(() => 
-    [...new Set(payments.map(p => p.payment_link_id).filter(Boolean))], 
-    [payments]
-  );
-  const uniqueEventIds = useMemo(() => 
-    [...new Set(payments.map(p => p.event_id).filter(Boolean))], 
-    [payments]
-  );
-
   const { data: events = [] } = useQuery({
-    queryKey: ["admin-events-map", uniqueEventIds],
-    queryFn: () => uniqueEventIds.length > 0 
-      ? Promise.all(uniqueEventIds.map(id => base44.entities.Event.read(id)))
-      : Promise.resolve([]),
-    enabled: uniqueEventIds.length > 0,
+    queryKey: ["admin-events-map"],
+    queryFn: () => base44.entities.Event.list("-created_date", 500),
   });
   const eventMap = useMemo(() => events.reduce((m, e) => { m[e.id] = e.title; return m; }, {}), [events]);
 
   const { data: paymentLinks = [] } = useQuery({
-    queryKey: ["admin-payment-links-map", uniquePaymentLinkIds],
-    queryFn: () => uniquePaymentLinkIds.length > 0 
-      ? Promise.all(uniquePaymentLinkIds.map(id => base44.entities.PaymentLink.read(id)))
-      : Promise.resolve([]),
-    enabled: uniquePaymentLinkIds.length > 0,
+    queryKey: ["admin-payment-links-map"],
+    queryFn: () => base44.entities.PaymentLink.list("-created_date", 1000),
   });
   const paymentLinkMap = useMemo(() => paymentLinks.reduce((m, pl) => { m[pl.id] = pl.title; return m; }, {}), [paymentLinks]);
 
