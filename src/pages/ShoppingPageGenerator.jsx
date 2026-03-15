@@ -259,15 +259,17 @@ export default function ShoppingPageGenerator() {
   <title>${shopTitle}</title>
   ${fontImport}
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: ${font}; background: ${theme.bg}; color: ${theme.text}; min-height: 100vh; -webkit-font-smoothing: antialiased; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
-    .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-    @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr; } }
-    .category-filter.active { background: ${accent} !important; color: #fff !important; border-color: ${accent} !important; }
-    .product-card.hidden { display: none; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: ${theme.bg}; margin-bottom: 8px; border-radius: 8px; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: ${font}; background: ${theme.bg}; color: ${theme.text}; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 28px; }
+  .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr; } }
+  .category-filter.active { background: ${accent} !important; color: #fff !important; border-color: ${accent} !important; }
+  .product-card.hidden { display: none; }
+  .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: ${theme.bg}; margin-bottom: 8px; border-radius: 8px; }
+  ${glitchCSS}
+  ${subtitleHoverCSS}
   </style>
 </head>
 <body>
