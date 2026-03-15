@@ -10,6 +10,9 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AdminLaunchpad from './pages/AdminLaunchpad';
 import TokenSale from './pages/TokenSale';
 import TokenSaleDashboard from './pages/TokenSaleDashboard';
+import Events from './pages/Events';
+import EventCheckout from './pages/EventCheckout';
+import EventEntry from './pages/EventEntry';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -64,6 +67,9 @@ const AuthenticatedApp = () => {
       <Route path="/AdminLaunchpad" element={<LayoutWrapper currentPageName="AdminLaunchpad"><AdminLaunchpad /></LayoutWrapper>} />
       <Route path="/TokenSale" element={<TokenSale />} />
       <Route path="/TokenSaleDashboard" element={<LayoutWrapper currentPageName="TokenSaleDashboard"><TokenSaleDashboard /></LayoutWrapper>} />
+      <Route path="/Events" element={<LayoutWrapper currentPageName="Events"><Events /></LayoutWrapper>} />
+      <Route path="/EventCheckout" element={<EventCheckout />} />
+      <Route path="/EventEntry" element={<EventEntry />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

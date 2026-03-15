@@ -24,7 +24,8 @@ import {
   Bot,
   Zap,
   FlaskConical,
-  Rocket
+  Rocket,
+  Calendar
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
@@ -41,6 +42,7 @@ const navItems = [
   { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
   { name: "Shop Generator", icon: ShoppingCart, page: "ShoppingPageGenerator" },
   { name: "POS Terminal", icon: Zap, page: "POS" },
+  { name: "Events", icon: Calendar, page: "Events" },
 
   { type: "header", name: "Overview" },
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
