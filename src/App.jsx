@@ -7,6 +7,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
+import ProfileIncompleteScreen from '@/components/ProfileIncompleteScreen';
+import { useProfileCheck } from '@/components/hooks/useProfileCheck';
 import AdminLaunchpad from './pages/AdminLaunchpad';
 import TokenSale from './pages/TokenSale';
 import TokenSaleDashboard from './pages/TokenSaleDashboard';
