@@ -268,7 +268,7 @@ export default function RecentTransactions() {
             <tbody>
               {isLoading ? (
                 <tr><td colSpan={7} className="py-8 text-center text-slate-400 text-sm">Laden…</td></tr>
-              ) : displayedPurchases.length === 0 ? (
+              ) : displayedPurchases.length === 0 ?  (
                 <tr><td colSpan={7} className="py-8 text-center text-slate-400 text-sm">Geen presale aankopen gevonden.</td></tr>
               ) : (
                 displayedPurchases.map(p => <PurchaseRow key={p.id} p={p} />)
