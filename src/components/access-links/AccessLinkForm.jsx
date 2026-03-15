@@ -59,11 +59,22 @@ export default function AccessLinkForm({ link, onBack, user }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.title || !form.slug || !form.price_ada || !form.platform) {
+    const isCnt = form.payment_type === "cnt";
+    if (!form.title || !form.slug || !form.platform) {
       toast.error("Please fill in all required fields");
       return;
     }
-    saveMutation.mutate({ ...form, price_ada: parseFloat(form.price_ada) });
+    if (!isCnt && !form.price_ada) { toast.error("Please enter the ADA access fee"); return; }
+    if (isCnt && (!form.cnt_policy_id || !form.cnt_amount || !form.cnt_ticker)) {
+      toast.error("Please fill in all CNT fields");
+      return;
+    }
+    saveMutation.mutate({
+      ...form,
+      price_ada: isCnt ? 0 : parseFloat(form.price_ada),
+      cnt_amount: isCnt ? parseFloat(form.cnt_amount) : undefined,
+      cnt_decimals: isCnt ? parseInt(form.cnt_decimals) || 0 : undefined,
+    });
   };
 
   return (
