@@ -15,14 +15,12 @@ const KNOWN_CNTS = [
   { ticker: "$HOSKY",  policy_id: "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0", asset_name: "484f534b59",                         decimals: 0 },
   { ticker: "$TITAN",  policy_id: "8483844875ce4d61c2aa459240f277d32081ee08fe0ad16899a0f581", asset_name: "0014df10544954414e",                   decimals: 6 },
   // Stablecoins (USD-pegged)
-  { ticker: "USDM",   policy_id: "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad", asset_name: "0014df105553444d",   decimals: 6, is_stable_usd: true },
-  { ticker: "USDA",   policy_id: "fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456", asset_name: "55534441",           decimals: 6, is_stable_usd: true },
+  { ticker: "USDM",   policy_id: "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad", asset_name: "0014df105553444d",       decimals: 6, is_stable_usd: true },
+  { ticker: "USDA",   policy_id: "fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456", asset_name: "55534441",               decimals: 6, is_stable_usd: true },
   { ticker: "DJED",   policy_id: "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61", asset_name: "446a65644d6963726f555344", decimals: 6, is_stable_usd: true },
-  { ticker: "USDCx",  policy_id: "1f3aec8bfe7ea4fe14c5f121e2a92e301afe414147860d557cac7e34", asset_name: "5553444378",         decimals: 6, is_stable_usd: true },
-  { ticker: "$LQ",    policy_id: "da8c30857834c6ae7203935b89278c532b3995245295456f993e1d24", asset_name: "4c51",               decimals: 6 },
+  { ticker: "USDCx",  policy_id: "1f3aec8bfe7ea4fe14c5f121e2a92e301afe414147860d557cac7e34", asset_name: "5553444378",               decimals: 6, is_stable_usd: true },
+  { ticker: "$LQ",    policy_id: "da8c30857834c6ae7203935b89278c532b3995245295456f993e1d24", asset_name: "4c51",                   decimals: 6 },
 ];
-
-const TAPTOOLS_BASE = "https://openapi.taptools.io/api/v1";
 
 async function getAdaFiatRates() {
   const res = await fetch(
@@ -33,12 +31,49 @@ async function getAdaFiatRates() {
   return { ada_usd: data.cardano.usd, ada_eur: data.cardano.eur };
 }
 
-async function getCNTPriceInADA(policy_id, asset_name) {
-  const unit = policy_id + asset_name;
-  const res = await fetch(`${TAPTOOLS_BASE}/token/price?unit=${unit}`);
+// Fetch all MinSwap pairs once and build a price map
+async function fetchMinSwapPriceMap() {
+  const res = await fetch("https://api-mainnet-prod.minswap.org/coinmarketcap/v2/pairs");
   if (!res.ok) return null;
-  const data = await res.json();
-  return data?.price ?? null;
+  const pairs = await res.json();
+
+  // pairs is an object where keys are like "lovelace_<policyId><assetName>"
+  // Each pair has: base_volume, quote_volume, last_price (token per ADA or ADA per token)
+  // We want price in ADA for each token unit
+  const priceMap = {}; // unit (policyId+assetName) -> price in ADA
+
+  for (const [key, pair] of Object.entries(pairs)) {
+    // key format: "lovelace_<unit>" or "<unit>_lovelace"
+    // last_price is base/quote
+    const parts = key.split("_");
+    if (parts.length < 2) continue;
+
+    let unit = null;
+    let priceInAda = null;
+
+    if (parts[0] === "lovelace") {
+      // base=ADA, quote=token → last_price = ADA per token → we want token per ADA = 1/last_price
+      // Actually last_price in MinSwap CMC format = quote/base = token/ADA
+      unit = parts.slice(1).join("_");
+      // last_price = how many tokens per 1 ADA (in smallest unit adjusted)
+      // We want ADA per token = 1 / last_price
+      if (pair.last_price && pair.last_price > 0) {
+        priceInAda = 1 / pair.last_price;
+      }
+    } else if (parts[parts.length - 1] === "lovelace") {
+      unit = parts.slice(0, -1).join("_");
+      // last_price = ADA per token directly
+      priceInAda = pair.last_price;
+    }
+
+    if (unit && priceInAda && priceInAda > 0) {
+      // Normalize: remove underscores from unit (MinSwap uses policy_assetname format)
+      const normalizedUnit = unit.replace(/_/g, "");
+      priceMap[normalizedUnit] = priceInAda;
+    }
+  }
+
+  return priceMap;
 }
 
 Deno.serve(async (req) => {
@@ -51,7 +86,6 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
 
-    // If caller passes specific tickers, filter; otherwise return all known tokens
     const requestedTickers = body.tickers
       ? body.tickers.map(t => t.toUpperCase())
       : null;
@@ -60,37 +94,52 @@ Deno.serve(async (req) => {
       ? KNOWN_CNTS.filter(t => requestedTickers.includes(t.ticker.toUpperCase()))
       : KNOWN_CNTS;
 
-    const adaFiatRates = await getAdaFiatRates();
+    // Fetch ADA/fiat rates and MinSwap price map in parallel
+    const [adaFiatRates, minswapPrices] = await Promise.all([
+      getAdaFiatRates(),
+      fetchMinSwapPriceMap(),
+    ]);
 
-    // Fetch all CNT prices in parallel
-    const priceResults = await Promise.all(
-      tokensToFetch.map(async (token) => {
-        let price_in_ada = null;
-
-        if (token.is_stable_usd) {
-          // 1 stablecoin = 1 USD → convert to ADA
-          price_in_ada = 1 / adaFiatRates.ada_usd;
-        } else {
-          price_in_ada = await getCNTPriceInADA(token.policy_id, token.asset_name);
-        }
-
-        return {
-          ticker: token.ticker,
-          policy_id: token.policy_id,
-          asset_name: token.asset_name,
-          decimals: token.decimals,
-          is_stable_usd: token.is_stable_usd ?? false,
-          price_in_ada,
-          price_in_usd: price_in_ada != null ? price_in_ada * adaFiatRates.ada_usd : null,
-          price_in_eur: price_in_ada != null ? price_in_ada * adaFiatRates.ada_eur : null,
-        };
-      })
-    );
-
-    // Build tokens map keyed by ticker
     const tokens = {};
-    for (const t of priceResults) {
-      tokens[t.ticker] = t;
+
+    for (const token of tokensToFetch) {
+      let price_in_ada = null;
+      let price_source = null;
+
+      if (token.is_stable_usd) {
+        // 1 stablecoin = 1 USD → convert to ADA
+        price_in_ada = 1 / adaFiatRates.ada_usd;
+        price_source = "coingecko_derived";
+      } else if (minswapPrices) {
+        const unit = token.policy_id + token.asset_name;
+        const raw = minswapPrices[unit];
+        if (raw) {
+          // MinSwap prices are in lovelace terms — convert lovelace to ADA
+          // last_price for "lovelace_unit" pairs = tokens per lovelace → ADA per token = 1/(last_price * 1_000_000)
+          // We already did the inversion in fetchMinSwapPriceMap but used raw numbers
+          // The pair last_price from CMC v2 is in the raw unit amounts (lovelace vs token smallest unit)
+          // So we need to account for decimals: price_in_ada = raw / (10^decimals) * 1_000_000
+          // Actually let's re-examine: if last_price = tokens_raw / lovelace_raw,
+          // then ADA_per_token = (1/last_price) * (10^decimals / 1_000_000)
+          // But in fetchMinSwapPriceMap for lovelace_unit: priceInAda = 1/last_price (already done)
+          // last_price = token_raw per lovelace → 1/last_price = lovelace per token_raw
+          // To get ADA per token: (lovelace per token_raw) / 1_000_000 * 10^decimals
+          price_in_ada = raw / 1_000_000 * Math.pow(10, token.decimals);
+          price_source = "minswap";
+        }
+      }
+
+      tokens[token.ticker] = {
+        ticker: token.ticker,
+        policy_id: token.policy_id,
+        asset_name: token.asset_name,
+        decimals: token.decimals,
+        is_stable_usd: token.is_stable_usd ?? false,
+        price_in_ada,
+        price_in_usd: price_in_ada != null ? price_in_ada * adaFiatRates.ada_usd : null,
+        price_in_eur: price_in_ada != null ? price_in_ada * adaFiatRates.ada_eur : null,
+        price_source,
+      };
     }
 
     return Response.json({
