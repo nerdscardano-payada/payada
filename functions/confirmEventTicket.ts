@@ -28,7 +28,33 @@ Deno.serve(async (req) => {
     // Check if ticket already exists for this tx
     const existing = await sr.entities.EventTicket.filter({ event_id: eventId, tx_hash: txHash });
     if (existing.length > 0) {
-      return Response.json({ ticket: existing[0] });
+      const existingTicket = existing[0];
+      // If ticket exists but email was never sent, try sending it now
+      if (!existingTicket.email_sent && existingTicket.attendee_email) {
+        const event = await sr.entities.Event.get(eventId);
+        if (event) {
+          const entryUrl = `${req.headers.get('origin') || 'https://app.payada.io'}/EventEntry?ticket=${existingTicket.qr_code}`;
+          await sr.integrations.Core.SendEmail({
+            to: existingTicket.attendee_email,
+            subject: `Your ticket for ${event.title}`,
+            body: `<h2>🎟 Your Ticket</h2>
+<p>Hi ${existingTicket.attendee_name || 'there'},</p>
+<p>Your payment has been confirmed! Here are your ticket details:</p>
+<table style="border-collapse:collapse;margin:16px 0">
+  <tr><td style="padding:4px 12px 4px 0;color:#666">Event:</td><td><strong>${event.title}</strong></td></tr>
+  <tr><td style="padding:4px 12px 4px 0;color:#666">Ticket:</td><td>${existingTicket.ticket_type_name}</td></tr>
+  ${event.event_date ? `<tr><td style="padding:4px 12px 4px 0;color:#666">Date:</td><td>${new Date(event.event_date).toLocaleString()}</td></tr>` : ''}
+  ${event.location ? `<tr><td style="padding:4px 12px 4px 0;color:#666">Location:</td><td>${event.location}</td></tr>` : ''}
+</table>
+<p><strong>Your Ticket ID:</strong> <code>${existingTicket.qr_code}</code></p>
+<p>Present the following link at the entrance:</p>
+<p><a href="${entryUrl}" style="background:#4f46e5;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin:8px 0">View Ticket & Check-in</a></p>
+<p style="color:#999;font-size:12px">Powered by PayADA</p>`,
+          });
+          await sr.entities.EventTicket.update(existingTicket.id, { email_sent: true });
+        }
+      }
+      return Response.json({ ticket: existingTicket });
     }
 
     // Verify TX on blockchain
