@@ -140,11 +140,12 @@ Deno.serve(async (req) => {
       if (!ticket.attendee_email) {
         await sr.entities.EventTicket.update(ticket.id, { attendee_email: emailTo });
       }
-      const entryUrl = `${req.headers.get('origin') || 'https://app.payada.io'}/EventEntry?ticket=${qrCode}`;
-          await sr.integrations.Core.SendEmail({
-            to: emailTo,
-        subject: `Your ticket for ${event.title}`,
-        body: `<h2>🎟 Your Ticket</h2>
+      try {
+        const entryUrl = `${req.headers.get('origin') || 'https://app.payada.io'}/EventEntry?ticket=${qrCode}`;
+        await sr.integrations.Core.SendEmail({
+          to: emailTo,
+          subject: `Your ticket for ${event.title}`,
+          body: `<h2>🎟 Your Ticket</h2>
 <p>Hi ${ticket.attendee_name || 'there'},</p>
 <p>Your payment has been confirmed! Here are your ticket details:</p>
 <table style="border-collapse:collapse;margin:16px 0">
@@ -157,8 +158,11 @@ Deno.serve(async (req) => {
 <p>Present the following link at the entrance:</p>
 <p><a href="${entryUrl}" style="background:#4f46e5;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin:8px 0">View Ticket & Check-in</a></p>
 <p style="color:#999;font-size:12px">Powered by PayADA</p>`,
-      });
-      await sr.entities.EventTicket.update(ticket.id, { email_sent: true });
+        });
+        await sr.entities.EventTicket.update(ticket.id, { email_sent: true });
+      } catch (emailErr) {
+        console.error('Email send failed (non-fatal):', emailErr.message);
+      }
     }
 
     return Response.json({ ticket });
