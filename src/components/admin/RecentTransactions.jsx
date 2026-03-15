@@ -71,6 +71,7 @@ function TxRow({ p, eventMap = {}, paymentLinkMap = {} }) {
           <span className="text-slate-300">—</span>
         )}
       </td>
+      <td className="py-2.5 px-3 text-slate-600 font-medium">{merchantAmount}</td>
       <td className="py-2.5 px-3 text-green-700 font-medium">{fee}</td>
       <td className="py-2.5 px-3">
         {p.tx_hash ? (
