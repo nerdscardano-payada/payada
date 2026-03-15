@@ -44,6 +44,29 @@ Deno.serve(async (req) => {
     const event = await sr.entities.Event.get(eventId);
     if (!event) return Response.json({ error: 'Event not found' }, { status: 404 });
 
+    // If no payment record exists yet, create one so it shows up in the payments dashboard
+    if (!payment) {
+      const receivedLovelace = txInfo.output_amount?.find(a => a.unit === 'lovelace')?.quantity || 0;
+      const receivedAda = receivedLovelace / 1_000_000;
+      payment = await sr.entities.Payment.create({
+        merchant_id: event.merchant_id,
+        event_id: eventId,
+        tx_hash: txHash,
+        status: 'confirmed',
+        payment_type: 'ada',
+        received_amount_ada: receivedAda,
+        expected_amount_ada: receivedAda,
+        payer_address: null,
+        payer_name: attendeeName || null,
+        payer_email: attendeeEmail || null,
+        confirmed_at: new Date().toISOString(),
+      });
+    } else if (!payment.event_id) {
+      // Backfill event_id on existing payment
+      await sr.entities.Payment.update(payment.id, { event_id: eventId });
+      payment = { ...payment, event_id: eventId };
+    }
+
     // Find matching ticket type by price (approximate)
     const receivedAda = payment?.received_amount_ada || (txInfo.output_amount?.find(a => a.unit === 'lovelace')?.quantity / 1_000_000) || 0;
     const matchedType = (event.ticket_types || []).find(tt => Math.abs(tt.price_ada - receivedAda) < tt.price_ada * 0.05)
