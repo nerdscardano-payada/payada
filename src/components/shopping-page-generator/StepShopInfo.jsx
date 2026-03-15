@@ -44,7 +44,7 @@ const FONTS = [
 export { THEMES, FONTS };
 
 export default function StepShopInfo({ config, onChange, onNext }) {
-  const { shopTitle, shopSubtitle, logoText, logoImageUrl, footerText, theme, customAccent, useCustomAccent, font, showPoweredBy, enableCart, enableCategories, enableSearch } = config;
+  const { shopTitle, shopSubtitle, logoText, logoImageUrl, footerText, theme, customAccent, useCustomAccent, font, showPoweredBy, enableCart, enableCategories, enableSearch, heroEffect, gradientColor2, heroAnimation, heroImageUrl: heroImg, heroImageOverlay } = config;
 
   const set = (key, val) => onChange({ ...config, [key]: val });
 
