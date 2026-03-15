@@ -331,6 +331,7 @@ export default function ShoppingPageGenerator() {
       document.querySelectorAll('.product-card').forEach(c => c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none');
     });
     updateCart();
+    ${particleScript}
   </script>
 </body>
 </html>`;
