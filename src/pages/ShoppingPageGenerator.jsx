@@ -147,7 +147,7 @@ export default function ShoppingPageGenerator() {
           </div>
           ${enableCart ? `<button class="add-to-cart" data-product='${JSON.stringify({ id: p.id, name: p.name, price: parseFloat(p.price), slug: slug || p.id })}' style="display:flex;align-items:center;justify-content:center;gap:8px;background:${accent};color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 20px;border-radius:12px;border:none;cursor:pointer;box-shadow:0 6px 20px ${accent}40;transition:transform 0.15s;font-family:${font};" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">🛒 Add to Cart</button>`
             : slug ? `<a href="${baseUrl}/Pay?slug=${slug}" style="display:flex;align-items:center;justify-content:center;gap:8px;background:${accent};color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 20px;border-radius:12px;box-shadow:0 6px 20px ${accent}40;transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">🛒 Buy Now</a>`
-            : `<div style="color:${theme.text};opacity:0.3;font-size:13px;text-align:center;">Geen betaallink</div>`}
+            : `<div style="color:${theme.text};opacity:0.3;font-size:13px;text-align:center;">No payment link</div>`}
         </div>
       </div>`;
     }).join("");
