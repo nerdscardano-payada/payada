@@ -338,7 +338,11 @@ export default function Access() {
 
         {/* Fee info */}
         <div className="flex items-center justify-between text-xs text-slate-500 px-1">
-          <span>Platform fee ({feePercent}%): ₳{feeAda.toFixed(4)}</span>
+          {isCnt ? (
+            <span>Platform fee ({feePercent}%): {feeCnt.toLocaleString()} {accessLink.cnt_ticker}</span>
+          ) : (
+            <span>Platform fee ({feePercent}%): ₳{feeAda.toFixed(4)}</span>
+          )}
           <div className="flex items-center gap-1">
             <ShieldCheck className="w-3 h-3" />
             <span>PayADA</span>
