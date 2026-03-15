@@ -149,6 +149,12 @@ export default function RecentTransactions() {
     refetchInterval: 30000,
   });
 
+  const { data: events = [] } = useQuery({
+    queryKey: ["admin-events-map"],
+    queryFn: () => base44.entities.Event.list("-created_date", 200),
+  });
+  const eventMap = React.useMemo(() => events.reduce((m, e) => { m[e.id] = e.title; return m; }, {}), [events]);
+
   const { data: purchases = [], isLoading: loadingPurchases, refetch: refetchPurchases } = useQuery({
     queryKey: ["admin-recent-purchases"],
     queryFn: () => base44.entities.TokenSalePurchase.list("-created_date", 100),
