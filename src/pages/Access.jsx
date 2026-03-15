@@ -268,10 +268,14 @@ export default function Access() {
             <p className="text-slate-300 text-sm leading-relaxed">{accessLink.description}</p>
           )}
           <div className="pt-2 border-t border-white/10">
-            <p className="text-3xl font-bold text-white">₳ {totalAda.toFixed(2)}</p>
+            {isCnt ? (
+              <p className="text-3xl font-bold text-white">{totalCnt.toLocaleString()} <span className="text-lg text-purple-400">{accessLink.cnt_ticker}</span></p>
+            ) : (
+              <p className="text-3xl font-bold text-white">₳ {totalAda.toFixed(2)}</p>
+            )}
             <p className="text-slate-400 text-xs mt-1">One-time access fee</p>
           </div>
-          <AdaRatePreview adaAmount={totalAda} />
+          {!isCnt && <AdaRatePreview adaAmount={totalAda} />}
         </div>
 
         {/* Member info fields */}
