@@ -215,7 +215,7 @@ export default function FeeRevenueStats() {
         {feeTypeTab === "ada" ? (
           <>
             <StatCard
-              title="Totale Fee Inkomsten"
+              title="Totale Fee"
               value={`₳${totalFeeAda.toFixed(2)}`}
               subtitle="Alle tijden"
               icon={TrendingUp}
@@ -244,7 +244,7 @@ export default function FeeRevenueStats() {
         ) : (
           <>
             <StatCard
-              title="Totale Fee Inkomsten"
+              title="Totale Fee"
               value={Object.entries(cntFeesByToken).length > 0 
                 ? `${Object.entries(cntFeesByToken).length} tokens` 
                 : "0"
