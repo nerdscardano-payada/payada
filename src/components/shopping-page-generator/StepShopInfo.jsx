@@ -173,6 +173,85 @@ export default function StepShopInfo({ config, onChange, onNext }) {
         </div>
       </div>
 
+      {/* Hero Section Styling */}
+      <div className="space-y-4">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Hero Section</p>
+
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Title Effect</Label>
+          <Select value={heroEffect || "none"} onValueChange={(v) => set("heroEffect", v)}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">Default gradient</SelectItem>
+              <SelectItem value="gradient">Custom gradient</SelectItem>
+              <SelectItem value="neon">Neon glow</SelectItem>
+              <SelectItem value="glitch">Glitch</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {heroEffect === "gradient" && (
+          <div className="space-y-1.5">
+            <Label className="text-xs text-slate-500">Second gradient color</Label>
+            <div className="flex items-center gap-2">
+              <input type="color" value={gradientColor2 || "#38bdf8"} onChange={(e) => set("gradientColor2", e.target.value)} className="w-8 h-8 rounded cursor-pointer border border-slate-200" />
+              <Input value={gradientColor2 || "#38bdf8"} onChange={(e) => set("gradientColor2", e.target.value)} className="font-mono text-xs" />
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Background Animation</Label>
+          <Select value={heroAnimation || "none"} onValueChange={(v) => set("heroAnimation", v)}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">None</SelectItem>
+              <SelectItem value="particles">Particles</SelectItem>
+              <SelectItem value="waves">Waves</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label className="text-xs text-slate-500">Hero background image (optional)</Label>
+          <label className="cursor-pointer flex items-center gap-2">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => set("heroImageUrl", ev.target.result);
+                reader.readAsDataURL(file);
+              }}
+            />
+            <div className="flex-1 border-2 border-dashed border-slate-200 rounded-lg p-3 text-center text-xs text-slate-400 hover:border-indigo-400 hover:bg-indigo-50 transition-colors">
+              {heroImg ? "✓ Image selected — click to replace" : "Upload hero image"}
+            </div>
+            {heroImg && (
+              <button type="button" onClick={() => set("heroImageUrl", "")} className="text-red-400 text-xs hover:text-red-600">Remove</button>
+            )}
+          </label>
+        </div>
+
+        {heroImg && (
+          <div className="space-y-1.5">
+            <Label className="text-xs text-slate-500">Overlay opacity: {Math.round((heroImageOverlay ?? 0.5) * 100)}%</Label>
+            <input
+              type="range"
+              min="0"
+              max="0.9"
+              step="0.05"
+              value={heroImageOverlay ?? 0.5}
+              onChange={(e) => set("heroImageOverlay", parseFloat(e.target.value))}
+              className="w-full accent-indigo-500"
+            />
+          </div>
+        )}
+      </div>
+
       <motion.button
         whileTap={{ scale: 0.98 }}
         onClick={onNext}
