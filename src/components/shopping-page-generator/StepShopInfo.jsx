@@ -201,18 +201,6 @@ export default function StepShopInfo({ config, onChange, onNext }) {
         )}
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-slate-500">Background Animation</Label>
-          <Select value={heroAnimation || "none"} onValueChange={(v) => set("heroAnimation", v)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">None</SelectItem>
-              <SelectItem value="particles">Particles</SelectItem>
-              <SelectItem value="waves">Waves</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-1.5">
           <Label className="text-xs text-slate-500">Hero background image (optional)</Label>
           <label className="cursor-pointer flex items-center gap-2">
             <input
