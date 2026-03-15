@@ -101,10 +101,11 @@ export default function POSTransactionHistory() {
                         {p.status}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-4 text-xs text-slate-500">
+                    <div className="flex items-center gap-4 text-xs text-slate-500 flex-wrap">
                       <span>₳ {(p.received_amount_ada || p.expected_amount_ada || 0).toFixed(2)}</span>
                       <span>{format(new Date(p.created_date), "dd MMM, HH:mm")}</span>
                       {p.payer_name && <span>{p.payer_name}</span>}
+                      {p.payer_address && <span className="font-mono text-slate-400 truncate" title={p.payer_address}>📍 {p.payer_address.slice(0, 12)}…</span>}
                     </div>
                   </div>
                   {p.tx_hash && (

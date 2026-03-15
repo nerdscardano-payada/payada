@@ -226,7 +226,12 @@ export default function TransactionAudit() {
                         </div>
                       </td>
                       <td className="px-5 py-3.5 font-semibold text-slate-900">₳ {(p.received_amount_ada || p.expected_amount_ada || 0).toFixed(2)}</td>
-                      <td className="px-5 py-3.5 text-sm text-slate-600 hidden sm:table-cell max-w-xs truncate">{p.payer_name || p.payer_email || "—"}</td>
+                      <td className="px-5 py-3.5 text-sm text-slate-600 hidden sm:table-cell max-w-xs truncate">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span>{p.payer_name || p.payer_email || "—"}</span>
+                          {p.payer_address && <span className="font-mono text-slate-400 text-xs truncate" title={p.payer_address}>📍 {p.payer_address.slice(0, 8)}…</span>}
+                        </div>
+                      </td>
                       <td className="px-5 py-3.5">
                         <Badge className={p.status === "confirmed" ? "bg-green-100 text-green-700" : p.status === "detected" ? "bg-orange-100 text-orange-700" : "bg-slate-100 text-slate-600"}>
                           {p.status}

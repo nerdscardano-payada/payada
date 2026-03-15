@@ -81,6 +81,7 @@ export default function TerminalTransactionHistory({ terminal }) {
                     <span className="text-slate-500">
                       {format(new Date(p.created_date), "dd MMM HH:mm")}
                       {p.payer_name && ` • ${p.payer_name}`}
+                      {p.payer_address && ` • ${p.payer_address.slice(0, 10)}…`}
                     </span>
                   </div>
                   {p.tx_hash && (
