@@ -234,13 +234,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    const receivedAmountAda = merchantLovelace / 1_000_000;
+    const merchantAmountAda = merchantLovelace / 1_000_000;
     const feeAmountAda = feeLovelace / 1_000_000;
+    const receivedAmountAda = merchantAmountAda + feeAmountAda; // Total amount = merchant + fee
     const feeOutputValidated = PAYADA_FEE_WALLET ? feeLovelace > 0 : false;
 
     // Create Payment record
     const isCntPayment = cntPolicyId && cntAssetName && cntMerchantAmount > 0;
-    console.log(`[recordWalletPayment] Creating payment: merchantLovelace=${merchantLovelace}, cntPayment=${isCntPayment}, cntAmount=${cntMerchantAmount}`);
+    console.log(`[recordWalletPayment] Creating payment: merchantLovelace=${merchantLovelace}, feeLovelace=${feeLovelace}, cntPayment=${isCntPayment}, cntAmount=${cntMerchantAmount}`);
     const normalizedAddress = normalizeAddress(payerAddress) || payerAddress || null;
     console.log(`[recordWalletPayment] Payer address: raw=${payerAddress}, normalized=${normalizedAddress}`);
 
@@ -267,7 +268,7 @@ Deno.serve(async (req) => {
     merchant_output_validated: isCntPayment ? cntMerchantAmount > 0 : merchantLovelace > 0,
     fee_output_validated: feeOutputValidated,
     fee_amount_ada: feeAmountAda,
-    merchant_amount_ada: receivedAmountAda
+    merchant_amount_ada: merchantAmountAda
     };
 
     if (isCntPayment) {
