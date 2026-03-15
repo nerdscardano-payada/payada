@@ -31,6 +31,12 @@ const DEFAULT_CONFIG = {
   enableCart: true,
   enableCategories: true,
   enableSearch: true,
+  // Hero styling
+  heroEffect: "none", // none | gradient | neon | glitch
+  gradientColor2: "#38bdf8",
+  heroAnimation: "none", // none | particles | waves
+  heroImageUrl: "",
+  heroImageOverlay: 0.5,
 };
 
 export default function ShoppingPageGenerator() {
