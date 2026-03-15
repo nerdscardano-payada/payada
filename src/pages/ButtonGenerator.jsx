@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
-import { Fragment } from "react";
 import StepSelectLink from "@/components/button-generator/StepSelectLink";
 import StepCustomize from "@/components/button-generator/StepCustomize";
 import StepGetCode from "@/components/button-generator/StepGetCode";
