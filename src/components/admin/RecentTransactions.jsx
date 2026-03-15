@@ -31,7 +31,7 @@ const STATUS_STYLES = {
   detected:             "bg-orange-100 text-orange-700",
 };
 
-function TxRow({ p }) {
+function TxRow({ p, eventMap = {} }) {
   const isAda = p.payment_type !== "cnt";
   const ticker = p.cnt_ticker || "ADA";
   const amount = isAda
@@ -80,6 +80,15 @@ function TxRow({ p }) {
         ) : p.payer_name ? (
           <span className="text-amber-600 truncate block" title={`Name only — no wallet address recorded. payer_name: ${p.payer_name}`}>
             👤 {p.payer_name}
+          </span>
+        ) : (
+          <span className="text-slate-300">—</span>
+        )}
+      </td>
+      <td className="py-2.5 px-3 text-xs max-w-[140px]">
+        {p.event_id ? (
+          <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-medium truncate" title={eventMap[p.event_id]}>
+            🎟 {eventMap[p.event_id] || "Event"}
           </span>
         ) : (
           <span className="text-slate-300">—</span>
@@ -153,7 +162,7 @@ export default function RecentTransactions() {
     queryKey: ["admin-events-map"],
     queryFn: () => base44.entities.Event.list("-created_date", 200),
   });
-  const eventMap = React.useMemo(() => events.reduce((m, e) => { m[e.id] = e.title; return m; }, {}), [events]);
+  const eventMap = useMemo(() => events.reduce((m, e) => { m[e.id] = e.title; return m; }, {}), [events]);
 
   const { data: purchases = [], isLoading: loadingPurchases, refetch: refetchPurchases } = useQuery({
     queryKey: ["admin-recent-purchases"],
