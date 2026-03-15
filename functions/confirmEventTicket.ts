@@ -61,10 +61,15 @@ Deno.serve(async (req) => {
         payer_email: attendeeEmail || null,
         confirmed_at: new Date().toISOString(),
       });
-    } else if (!payment.event_id) {
-      // Backfill event_id on existing payment
-      await sr.entities.Payment.update(payment.id, { event_id: eventId });
-      payment = { ...payment, event_id: eventId };
+    } else {
+      // Backfill event_id and/or wallet address if missing
+      const updates = {};
+      if (!payment.event_id) updates.event_id = eventId;
+      if (!payment.payer_address && walletAddress) updates.payer_address = walletAddress;
+      if (Object.keys(updates).length > 0) {
+        await sr.entities.Payment.update(payment.id, updates);
+        payment = { ...payment, ...updates };
+      }
     }
 
     // Find matching ticket type by price (approximate)
