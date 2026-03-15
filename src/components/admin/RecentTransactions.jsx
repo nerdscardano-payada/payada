@@ -276,10 +276,10 @@ export default function RecentTransactions() {
                 <th className="py-2.5 px-3 font-medium">Status</th>
                 <th className="py-2.5 px-3 font-medium">Tokens</th>
                 <th className="py-2.5 px-3 font-medium">ADA Bedrag</th>
-                <th className="py-2.5 px-3 font-medium">Purchase TX</th>
-                <th className="py-2.5 px-3 font-medium">Distribution TX</th>
-                <th className="py-2.5 px-3 font-medium">Datum</th>
-                <th className="py-2.5 px-3 font-medium">Wallet</th>
+                <th className="py-2.5 px-3 font-medium">Compra TX</th>
+                <th className="py-2.5 px-3 font-medium">Distribuição TX</th>
+                <th className="py-2.5 px-3 font-medium">Data</th>
+                <th className="py-2.5 px-3 font-medium">Carteira</th>
               </tr>
             </thead>
             <tbody>
