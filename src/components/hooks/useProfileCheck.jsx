@@ -5,8 +5,6 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 export function useProfileCheck() {
-  const navigate = useNavigate();
-
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: async () => await base44.auth.me(),
@@ -31,12 +29,5 @@ export function useProfileCheck() {
     );
   };
 
-  useEffect(() => {
-    if (user && !isLoading && !isProfileComplete()) {
-      toast.warning("Please complete your Merchant Profile to continue");
-      navigate('/MerchantProfile');
-    }
-  }, [user, profile, isLoading, navigate]);
-
-  return { profile, user, isProfileComplete: isProfileComplete() };
+  return { profile, user, isLoading, isProfileComplete: isProfileComplete() };
 }
