@@ -20,7 +20,7 @@ function generateQrCode() {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { txHash, eventId, attendeeEmail } = await req.json();
+    const { txHash, eventId, attendeeEmail, attendeeName } = await req.json();
     if (!txHash || !eventId) return Response.json({ error: 'Missing fields' }, { status: 400 });
 
     const sr = base44.asServiceRole;
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
       ticket_type_id: matchedType?.id || null,
       ticket_type_name: matchedType?.name || "General Admission",
       price_ada: matchedType?.price_ada || 0,
-      attendee_name: payment?.payer_name || null,
+      attendee_name: payment?.payer_name || attendeeName || null,
       attendee_email: payment?.payer_email || attendeeEmail || null,
       tx_hash: txHash,
       payment_id: payment?.id || null,

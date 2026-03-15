@@ -63,7 +63,7 @@ export default function EventCheckout() {
     let attempts = 0;
     const poll = setInterval(async () => {
       attempts++;
-      const res = await base44.functions.invoke("confirmEventTicket", { txHash, eventId: event.id, attendeeEmail });
+      const res = await base44.functions.invoke("confirmEventTicket", { txHash, eventId: event.id, attendeeEmail, attendeeName });
       if (res.data?.ticket) {
         clearInterval(poll);
         setTicket(res.data.ticket);
