@@ -134,7 +134,7 @@ export default function PayTerminals() {
                 )}
               </div>
 
-              <div className="flex items-center gap-2 flex-shrink-0 flex-wrap justify-end md:flex-nowrap">
+              <div className="flex items-center gap-2 md:flex-shrink-0 flex-wrap justify-start md:justify-end md:flex-nowrap">
                 <Button variant="outline" size="sm" onClick={() => copyEmbed(terminal)} className="gap-1.5 text-xs">
                   <Copy className="w-3.5 h-3.5" /> Embed
                 </Button>
