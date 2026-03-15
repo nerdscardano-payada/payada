@@ -28,8 +28,9 @@ export default function Events() {
   React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
 
   const { data: events = [], isLoading } = useQuery({
-    queryKey: ["events"],
-    queryFn: () => base44.entities.Event.list("-created_date"),
+    queryKey: ["events", user?.email],
+    queryFn: () => base44.entities.Event.filter({ merchant_id: user.email }, "-created_date"),
+    enabled: !!user,
   });
 
   const deleteMutation = useMutation({
