@@ -37,6 +37,9 @@ function TxRow({ p, eventMap = {}, paymentLinkMap = {} }) {
   const amount = isAda
     ? `₳${(p.received_amount_ada || 0).toFixed(2)}`
     : `${(p.received_amount_cnt || 0).toLocaleString()} ${ticker}`;
+  const merchantAmount = isAda
+    ? `₳${(p.merchant_amount_ada || 0).toFixed(2)}`
+    : "—";
   const fee = isAda
     ? `₳${(p.fee_amount_ada || 0).toFixed(4)}`
     : p.cnt_fees?.map(f => `${f.amount.toFixed ? f.amount.toFixed(0) : f.amount} ${f.ticker}`).join(", ") || "—";
