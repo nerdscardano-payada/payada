@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Users, DollarSign, Activity, AlertCircle } from "lucide-react";
 
-function MetricCard({ title, value, icon: Icon, color = "text-slate-600" }) {
+function MetricCard({ title, value, Icon, color = "text-slate-600" }) {
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-5">
       <div className="flex items-start justify-between">
@@ -37,15 +37,10 @@ export default function KeyMetrics() {
         (sum, p) => sum + (p.received_amount_ada || 0),
         0
       );
-      const totalFeeAda = confirmedPayments.reduce(
-        (sum, p) => sum + (p.fee_amount_ada || 0),
-        0
-      );
       return {
         confirmed: confirmedPayments.length,
         total: payments.length,
         volumeAda: totalAda,
-        feesAda: totalFeeAda,
       };
     },
   });
@@ -80,23 +75,23 @@ export default function KeyMetrics() {
       <MetricCard
         title="Actieve Merchants"
         value={merchantCount}
-        icon={Users}
+        Icon={Users}
       />
       <MetricCard
         title="Totaal Transacties"
         value={paymentStats.total || 0}
-        icon={Activity}
+        Icon={Activity}
       />
       <MetricCard
         title="Transactie Volume"
         value={`₳${(paymentStats.volumeAda || 0).toFixed(0)}`}
-        icon={DollarSign}
+        Icon={DollarSign}
         color="text-green-600"
       />
       <MetricCard
         title="Kritieke Issues"
         value={errorCount}
-        icon={AlertCircle}
+        Icon={AlertCircle}
         color={errorCount > 0 ? "text-red-600" : "text-slate-600"}
       />
     </div>
