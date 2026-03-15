@@ -173,7 +173,7 @@ export default function POS() {
 
               {/* Quick amount buttons */}
               <div className="grid grid-cols-4 gap-2">
-                {[5, 10, 20, 50].map((amt) => (
+                {[20, 40, 60, 80].map((amt) => (
                   <button
                     key={amt}
                     onClick={() => setAmountAda(String(amt))}
