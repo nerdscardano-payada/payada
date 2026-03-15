@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import StepSelectLink from "@/components/button-generator/StepSelectLink";
@@ -29,10 +30,13 @@ const DEFAULT_CONFIG = {
 };
 
 export default function ButtonGenerator() {
+  const { isProfileComplete } = useProfileCheck();
   const [step, setStep] = useState(1);
   const [selectedLinkId, setSelectedLinkId] = useState("");
   const [config, setConfig] = useState(DEFAULT_CONFIG);
   const [user, setUser] = useState(null);
+
+  if (!isProfileComplete) return null;
 
   useEffect(() => {
     base44.auth.me().then(setUser);

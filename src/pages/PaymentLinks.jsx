@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import PageHeader from "@/components/shared/PageHeader";
 import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
@@ -20,11 +21,14 @@ import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PaymentLinks() {
+  const { isProfileComplete } = useProfileCheck();
   const [showForm, setShowForm] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
   const [prefillFromTemplate, setPrefillFromTemplate] = useState(null);
   const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
+
+  if (!isProfileComplete) return null;
 
   React.useEffect(() => {
     base44.auth.me().then(setUser);

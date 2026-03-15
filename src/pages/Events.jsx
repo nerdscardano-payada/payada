@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Calendar, MapPin, Ticket, Users, Edit, Trash2, QrCode, ExternalLink } from "lucide-react";
@@ -18,12 +19,15 @@ const STATUS_COLORS = {
 };
 
 export default function Events() {
+  const { isProfileComplete } = useProfileCheck();
   const [view, setView] = useState("list"); // list | form | checkin | attendees
   const [editing, setEditing] = useState(null);
   const [checkinEvent, setCheckinEvent] = useState(null);
   const [attendeesEvent, setAttendeesEvent] = useState(null);
   const [user, setUser] = React.useState(null);
   const queryClient = useQueryClient();
+
+  if (!isProfileComplete) return null;
 
   React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
 

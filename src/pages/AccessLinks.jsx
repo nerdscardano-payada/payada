@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import PageHeader from "@/components/shared/PageHeader";
 import EmptyState from "@/components/shared/EmptyState";
 import AccessLinkForm from "@/components/access-links/AccessLinkForm";
@@ -16,11 +17,14 @@ const PLATFORM_LABELS = { discord: "Discord", telegram: "Telegram", whatsapp: "W
 const PLATFORM_COLORS = { discord: "bg-indigo-100 text-indigo-700", telegram: "bg-sky-100 text-sky-700", whatsapp: "bg-green-100 text-green-700", website: "bg-slate-100 text-slate-700", other: "bg-slate-100 text-slate-600" };
 
 export default function AccessLinks() {
+  const { isProfileComplete } = useProfileCheck();
   const [showForm, setShowForm] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
   const [view, setView] = useState("links"); // "links" | "members"
   const [user, setUser] = React.useState(null);
   const queryClient = useQueryClient();
+
+  if (!isProfileComplete) return null;
 
   React.useEffect(() => { base44.auth.me().then(setUser); }, []);
 

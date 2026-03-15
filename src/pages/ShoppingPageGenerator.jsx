@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { createPageUrl } from "@/utils";
@@ -40,12 +41,15 @@ const DEFAULT_CONFIG = {
 };
 
 export default function ShoppingPageGenerator() {
+  const { isProfileComplete } = useProfileCheck();
   const [step, setStep] = useState(1);
   const [config, setConfig] = useState(DEFAULT_CONFIG);
   const [products, setProducts] = useState([
     { ...emptyProduct(), id: 1, name: "My Product", description: "", price: "", badge: "", category: "uncategorized" },
   ]);
   const [user, setUser] = useState(null);
+
+  if (!isProfileComplete) return null;
   const [storeId, setStoreId] = useState(null);
   const [storeName, setStoreName] = useState("");
   const [saving, setSaving] = useState(false);
