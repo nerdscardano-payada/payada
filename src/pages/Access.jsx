@@ -184,22 +184,60 @@ export default function Access() {
   }
 
   const feePercent = merchantProfile?.platform_fee_percent ?? 1.75;
-  const totalAda = accessLink.price_ada;
+  const isCnt = accessLink.payment_type === "cnt";
+
+  // ADA payment calcs
+  const totalAda = accessLink.price_ada || 0;
   const feeAda = +(totalAda * feePercent / 100).toFixed(6);
   const merchantAda = +(totalAda - feeAda).toFixed(6);
 
-  // Build a fake payment link config for WalletPayButton
-  const paymentLinkConfig = {
-    id: null, // this is an access link, not a payment link
+  // CNT payment calcs
+  const totalCnt = accessLink.cnt_amount || 0;
+  const feeCnt = Math.round(totalCnt * feePercent / 100);
+  const merchantCnt = totalCnt - feeCnt;
+
+  const receiveAddress = accessLink.receive_address || merchantProfile?.default_receive_address;
+
+  // Build payment link config for WalletPayButton
+  const paymentLinkConfig = isCnt ? {
+    id: null,
+    accessLinkId: accessLink.id,
+    merchant_id: accessLink.merchant_id,
+    slug: accessLink.slug,
+    amount_mode: "fixed_cnt",
+    cnt_policy_id: accessLink.cnt_policy_id,
+    cnt_asset_name: accessLink.cnt_asset_name,
+    cnt_ticker: accessLink.cnt_ticker,
+    cnt_amount: totalCnt,
+    cnt_decimals: accessLink.cnt_decimals || 0,
+    receive_address: receiveAddress,
+    collect_name: false,
+    collect_email: false,
+    confirmations_required: 2,
+  } : {
+    id: null,
     accessLinkId: accessLink.id,
     merchant_id: accessLink.merchant_id,
     slug: accessLink.slug,
     amount_ada: totalAda,
     amount_mode: "fixed_ada",
-    receive_address: accessLink.receive_address || merchantProfile?.default_receive_address,
+    receive_address: receiveAddress,
     collect_name: false,
     collect_email: false,
     confirmations_required: 2,
+  };
+
+  const sessionData = isCnt ? {
+    merchant_address: receiveAddress,
+    platform_fee_percent: feePercent,
+    amount_total_cnt: totalCnt,
+  } : {
+    merchant_address: receiveAddress,
+    merchant_amount_lovelace: Math.floor(merchantAda * 1_000_000),
+    merchant_amount_ada: merchantAda,
+    platform_fee_lovelace: Math.floor(feeAda * 1_000_000),
+    platform_fee_ada: feeAda,
+    amount_total_ada: totalAda,
   };
 
   const extraData = {
