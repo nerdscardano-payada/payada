@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import QRCode from "qrcode.react";
 import AdaRatePreview from "@/components/checkout/AdaRatePreview";
+import POSTransactionHistory from "@/components/pos/POSTransactionHistory";
 import { createPageUrl } from "@/utils";
 import {
   Hexagon, CheckCircle2, Clock, Loader2,
@@ -241,6 +242,11 @@ export default function POS() {
         <p className="text-center text-[11px] text-slate-700 mt-5">
           Cardano ADA · PayADA.io
         </p>
+      </div>
+
+      {/* Transaction History */}
+      <div className="max-w-sm mx-auto mt-12 mb-8">
+        <POSTransactionHistory />
       </div>
     </div>
   );

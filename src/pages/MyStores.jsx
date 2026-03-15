@@ -5,10 +5,12 @@ import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
 import { Plus, Store, Pencil, Trash2, ExternalLink, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import StoreTransactionHistory from "@/components/stores/StoreTransactionHistory";
 
 export default function MyStores() {
   const [user, setUser] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [selectedStore, setSelectedStore] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -28,6 +30,21 @@ export default function MyStores() {
       setDeletingId(null);
     },
   });
+
+  if (selectedStore) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-10">
+        <button
+          onClick={() => setSelectedStore(null)}
+          className="text-sm text-slate-600 hover:text-slate-900 font-medium mb-6"
+        >
+          ← Back to stores
+        </button>
+        <h1 className="text-2xl font-bold text-slate-900 mb-4">{selectedStore.name}</h1>
+        <StoreTransactionHistory store={selectedStore} />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
@@ -63,14 +80,14 @@ export default function MyStores() {
       ) : (
         <div className="grid gap-4">
           {stores.map((store) => (
-            <div key={store.id} className="bg-white border border-slate-200 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+            <div key={store.id} className="bg-white border border-slate-200 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedStore(store)}>
               <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
                 style={{ background: store.config?.theme?.accent ? store.config.theme.accent + "15" : "#eef2ff" }}>
                 {store.config?.logoText?.slice(0, 2) || "🛒"}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-slate-900 truncate">{store.name}</h3>
+                  <h3 className="font-semibold text-slate-900 truncate hover:text-indigo-600">{store.name}</h3>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${store.status === "active" ? "bg-green-50 text-green-600" : "bg-slate-100 text-slate-500"}`}>
                     {store.status}
                   </span>
@@ -83,7 +100,7 @@ export default function MyStores() {
                   <span>Updated {new Date(store.updated_date).toLocaleDateString()}</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="flex items-center gap-2 flex-shrink-0" onClick={e => e.stopPropagation()}>
                 <Link to={`${createPageUrl("ShoppingPageGenerator")}?storeId=${store.id}`}>
                   <Button variant="outline" size="sm" className="gap-1.5">
                     <Pencil className="w-3.5 h-3.5" />

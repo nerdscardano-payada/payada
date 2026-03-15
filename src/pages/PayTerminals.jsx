@@ -10,6 +10,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import EmptyState from "@/components/shared/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import TerminalForm from "@/components/terminals/TerminalForm";
+import TerminalTransactionHistory from "@/components/terminals/TerminalTransactionHistory";
 
 export default function PayTerminals() {
   const [showForm, setShowForm] = useState(false);
@@ -64,6 +65,23 @@ export default function PayTerminals() {
     return (
       <div>
         <TerminalForm terminal={editingTerminal} onBack={handleBack} />
+      </div>
+    );
+  }
+
+  if (editingTerminal) {
+    return (
+      <div>
+        <PageHeader title={`${editingTerminal.name} - Transactions`} subtitle="Recent payments for this terminal" />
+        <div className="flex gap-3 mb-4">
+          <button
+            onClick={() => setEditingTerminal(null)}
+            className="text-sm text-slate-600 hover:text-slate-900 font-medium"
+          >
+            ← Back to terminals
+          </button>
+        </div>
+        <TerminalTransactionHistory terminal={editingTerminal} />
       </div>
     );
   }
