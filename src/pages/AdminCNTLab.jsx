@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -180,8 +181,11 @@ function CNTLinkForm({ onSuccess, merchantProfile, existingLink }) {
 }
 
 export default function AdminCNTLab() {
+  const { isProfileComplete } = useProfileCheck();
   const [showForm, setShowForm] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
+
+  if (!isProfileComplete) return null;
 
   const { data: user } = useQuery({
     queryKey: ["current-user"],

@@ -307,9 +307,12 @@ function SaleFormFixed({ onSuccess, merchantProfile, existingsale }) {
 }
 
 export default function AdminLaunchpad() {
+  const { isProfileComplete } = useProfileCheck();
   const [showForm, setShowForm] = useState(false);
   const [editingSale, setEditingSale] = useState(null);
   const queryClient = useQueryClient();
+
+  if (!isProfileComplete) return null;
 
   const { data: user } = useQuery({
     queryKey: ["current-user"],
