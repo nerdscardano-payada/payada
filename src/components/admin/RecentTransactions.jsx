@@ -31,7 +31,7 @@ const STATUS_STYLES = {
   detected:             "bg-orange-100 text-orange-700",
 };
 
-function TxRow({ p, eventMap = {} }) {
+function TxRow({ p, eventMap = {}, paymentLinkMap = {} }) {
   const isAda = p.payment_type !== "cnt";
   const ticker = p.cnt_ticker || "ADA";
   const amount = isAda
@@ -40,6 +40,11 @@ function TxRow({ p, eventMap = {} }) {
   const fee = isAda
     ? `₳${(p.fee_amount_ada || 0).toFixed(4)}`
     : p.cnt_fees?.map(f => `${f.amount.toFixed ? f.amount.toFixed(0) : f.amount} ${f.ticker}`).join(", ") || "—";
+
+  // Get product name from payment link or event
+  const productName = p.payment_link_id 
+    ? paymentLinkMap[p.payment_link_id] 
+    : (p.event_id ? null : null); // will show separately in Bron
 
   return (
     <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors text-sm">
@@ -54,6 +59,15 @@ function TxRow({ p, eventMap = {} }) {
         </span>
       </td>
       <td className="py-2.5 px-3 font-medium text-slate-800">{amount}</td>
+      <td className="py-2.5 px-3 text-xs max-w-[140px]">
+        {productName ? (
+          <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium truncate" title={productName}>
+            💳 {productName}
+          </span>
+        ) : (
+          <span className="text-slate-300">—</span>
+        )}
+      </td>
       <td className="py-2.5 px-3 text-green-700 font-medium">{fee}</td>
       <td className="py-2.5 px-3">
         {p.tx_hash ? (
