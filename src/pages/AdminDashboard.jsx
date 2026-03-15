@@ -6,6 +6,7 @@ import SystemErrorLogs from "@/components/admin/SystemErrorLogs";
 import FeeRevenueStats from "@/components/admin/FeeRevenueStats";
 import MerchantOverview from "@/components/admin/MerchantOverview";
 import TransactionTimeline from "@/components/admin/TransactionTimeline";
+import RevenueChart from "@/components/admin/RevenueChart";
 
 export default function AdminDashboard() {
   const { data: user, isLoading } = useQuery({
