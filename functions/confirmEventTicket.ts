@@ -131,10 +131,14 @@ Deno.serve(async (req) => {
     });
 
     // Send email with ticket
-    if (ticket.attendee_email) {
+    const emailTo = ticket.attendee_email || attendeeEmail;
+    if (emailTo) {
+      if (!ticket.attendee_email) {
+        await sr.entities.EventTicket.update(ticket.id, { attendee_email: emailTo });
+      }
       const entryUrl = `${req.headers.get('origin') || 'https://app.payada.io'}/EventEntry?ticket=${qrCode}`;
-      await sr.integrations.Core.SendEmail({
-        to: ticket.attendee_email,
+          await sr.integrations.Core.SendEmail({
+            to: emailTo,
         subject: `Your ticket for ${event.title}`,
         body: `<h2>🎟 Your Ticket</h2>
 <p>Hi ${ticket.attendee_name || 'there'},</p>
