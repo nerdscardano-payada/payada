@@ -5,12 +5,12 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 export function useProfileCheck() {
-  const { data: user } = useQuery({
+  const { data: user, isLoading: userLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: async () => await base44.auth.me(),
   });
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['merchantProfile', user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
@@ -29,5 +29,5 @@ export function useProfileCheck() {
     );
   };
 
-  return { profile, user, isLoading, isProfileComplete: isProfileComplete() };
+  return { profile, user, isLoading: userLoading || profileLoading, isProfileComplete: isProfileComplete() };
 }
