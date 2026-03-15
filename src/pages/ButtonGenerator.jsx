@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
+import { Fragment } from "react";
 import StepSelectLink from "@/components/button-generator/StepSelectLink";
 import StepCustomize from "@/components/button-generator/StepCustomize";
 import StepGetCode from "@/components/button-generator/StepGetCode";
@@ -92,7 +93,7 @@ export default function ButtonGenerator() {
         {/* Step indicators */}
         <div className="flex items-center justify-center gap-0 mb-8">
           {STEPS.map((s, i) => (
-            <React.Fragment key={s.number}>
+            <Fragment key={s.number}>
               <div className="flex flex-col items-center gap-1.5">
                 <div className={cn(
                   "w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300",
@@ -119,8 +120,8 @@ export default function ButtonGenerator() {
                   step > s.number ? "bg-indigo-400" : "bg-slate-200"
                 )} />
               )}
-            </React.Fragment>
-          ))}
+            </Fragment>
+            ))}
         </div>
 
         {/* Step content */}

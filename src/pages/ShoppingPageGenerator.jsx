@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useProfileCheck } from "@/components/hooks/useProfileCheck";
@@ -405,7 +405,7 @@ export default function ShoppingPageGenerator() {
         {/* Step indicators */}
         <div className="flex items-center justify-center gap-0 mb-8">
           {STEPS.map((s, i) => (
-            <React.Fragment key={s.number}>
+            <Fragment key={s.number}>
               <div className="flex flex-col items-center gap-1.5">
                 <div className={cn(
                   "w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300",
@@ -432,9 +432,9 @@ export default function ShoppingPageGenerator() {
                   step > s.number ? "bg-indigo-400" : "bg-slate-200"
                 )} />
               )}
-            </React.Fragment>
-          ))}
-        </div>
+            </Fragment>
+            ))}
+            </div>
 
         {/* Step content */}
         <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xl shadow-slate-200/50 p-7">
