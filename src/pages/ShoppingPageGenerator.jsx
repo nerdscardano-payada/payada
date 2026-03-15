@@ -112,7 +112,7 @@ export default function ShoppingPageGenerator() {
   const baseUrl = window.location.origin;
 
   const generatePage = () => {
-    const { theme, font, shopTitle, shopSubtitle, logoText, logoImageUrl, footerText, showPoweredBy, enableCart, enableCategories, enableSearch } = config;
+    const { theme, font, shopTitle, shopSubtitle, logoText, logoImageUrl, footerText, showPoweredBy, enableCart, enableCategories, enableSearch, heroEffect, gradientColor2, heroAnimation, heroImageUrl: heroImg, heroImageOverlay } = config;
     const logoHtml = logoImageUrl
       ? `<div style="display:flex;align-items:center;gap:10px;"><img src="${logoImageUrl}" alt="${logoText}" style="height:36px;width:auto;object-fit:contain;border-radius:6px;" /><span style="font-size:18px;font-weight:800;">${logoText}</span></div>`
       : `<span style="font-size:18px;font-weight:800;">${logoText}</span>`;
