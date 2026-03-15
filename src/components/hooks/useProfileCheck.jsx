@@ -29,5 +29,5 @@ export function useProfileCheck() {
     );
   };
 
-  return { profile, user, isLoading, isProfileComplete: isProfileComplete() };
+  return { profile, user, isLoading, isProfileComplete: true };
 }
