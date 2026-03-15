@@ -239,15 +239,16 @@ export default function RecentTransactions() {
                 <th className="py-2.5 px-3 font-medium">TX Hash</th>
                 <th className="py-2.5 px-3 font-medium">Datum</th>
                 <th className="py-2.5 px-3 font-medium">Wallet</th>
+                <th className="py-2.5 px-3 font-medium">Bron</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <tr><td colSpan={7} className="py-8 text-center text-slate-400 text-sm">Laden…</td></tr>
               ) : displayedPayments.length === 0 ? (
-                <tr><td colSpan={7} className="py-8 text-center text-slate-400 text-sm">Geen betalingen gevonden.</td></tr>
+                <tr><td colSpan={8} className="py-8 text-center text-slate-400 text-sm">Geen betalingen gevonden.</td></tr>
               ) : (
-                displayedPayments.map(p => <TxRow key={p.id} p={p} />)
+                displayedPayments.map(p => <TxRow key={p.id} p={p} eventMap={eventMap} />)
               )}
             </tbody>
           </table>
