@@ -126,30 +126,35 @@ export default function AccessLinkForm({ link, onBack, user }) {
           ) : (
             <div className="space-y-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
               <p className="text-xs font-semibold text-purple-700 uppercase tracking-wide">CNT Configuration</p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label>Token Ticker *</Label>
-                  <Input value={form.cnt_ticker} onChange={e => set("cnt_ticker", e.target.value)} placeholder="$SNEK" />
-                </div>
-                <div className="space-y-1.5">
-                  <Label>Amount Required *</Label>
-                  <Input type="number" value={form.cnt_amount} onChange={e => set("cnt_amount", e.target.value)} placeholder="1000" />
-                </div>
-              </div>
+
               <div className="space-y-1.5">
-                <Label>Policy ID *</Label>
-                <Input value={form.cnt_policy_id} onChange={e => set("cnt_policy_id", e.target.value)} placeholder="279c909f..." />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <Label>Asset Name (hex)</Label>
-                  <Input value={form.cnt_asset_name} onChange={e => set("cnt_asset_name", e.target.value)} placeholder="534e454b (optional)" />
+                <Label>Select Token</Label>
+                <div className="flex gap-2 flex-wrap">
+                  {KNOWN_CNTS.map(cnt => (
+                    <button
+                      type="button"
+                      key={cnt.ticker}
+                      onClick={() => setForm(f => ({ ...f, cnt_ticker: cnt.ticker, cnt_policy_id: cnt.policy_id, cnt_asset_name: cnt.asset_name, cnt_decimals: cnt.decimals }))}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${form.cnt_ticker === cnt.ticker ? "bg-purple-600 text-white border-purple-600" : "bg-white text-slate-700 border-slate-200 hover:border-purple-400"}`}
+                    >
+                      {cnt.ticker}
+                    </button>
+                  ))}
                 </div>
-                <div className="space-y-1.5">
-                  <Label>Decimals</Label>
-                  <Input type="number" value={form.cnt_decimals} onChange={e => set("cnt_decimals", e.target.value)} placeholder="0" />
-                </div>
               </div>
+
+              <div className="space-y-1.5">
+                <Label>Amount Required *</Label>
+                <Input type="number" value={form.cnt_amount} onChange={e => set("cnt_amount", e.target.value)} placeholder="1000" />
+              </div>
+
+              {form.cnt_ticker && (
+                <div className="p-2 bg-white border border-purple-100 rounded text-xs text-slate-500 space-y-0.5">
+                  <p><span className="font-medium text-slate-700">Policy ID:</span> <span className="font-mono">{form.cnt_policy_id}</span></p>
+                  <p><span className="font-medium text-slate-700">Asset Name:</span> <span className="font-mono">{form.cnt_asset_name || "—"}</span></p>
+                  <p><span className="font-medium text-slate-700">Decimals:</span> {form.cnt_decimals}</p>
+                </div>
+              )}
             </div>
           )}
 
