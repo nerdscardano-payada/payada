@@ -59,6 +59,7 @@ Deno.serve(async (req) => {
       price_ada: matchedType?.price_ada || 0,
       attendee_name: payment?.payer_name || attendeeName || null,
       attendee_email: payment?.payer_email || attendeeEmail || null,
+      wallet_address: payment?.payer_address || null,
       tx_hash: txHash,
       payment_id: payment?.id || null,
       qr_code: qrCode,
