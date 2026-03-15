@@ -111,7 +111,7 @@ export default function PayTerminals() {
       ) : (
         <div className="space-y-3">
           {terminals.map((terminal) => (
-            <div key={terminal.id} className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4">
+            <div key={terminal.id} className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col md:flex-row md:items-center gap-4">
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: terminal.accent_color + "22" }}
