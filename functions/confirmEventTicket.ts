@@ -35,9 +35,9 @@ Deno.serve(async (req) => {
     const txInfo = await fetchTxInfo(txHash);
     if (!txInfo) return Response.json({ ticket: null, pending: true });
 
-    // Get associated payment record
-    const payments = await sr.entities.Payment.filter({ tx_hash: txHash });
-    const payment = payments[0] || null;
+    // Get associated payment record, or create one for event payments
+    let existingPayments = await sr.entities.Payment.filter({ tx_hash: txHash });
+    let payment = existingPayments[0] || null;
 
     // Get event to find correct ticket type from pending state
     // We rely on the payment link data or just use event defaults
