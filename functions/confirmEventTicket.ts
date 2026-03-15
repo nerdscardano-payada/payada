@@ -20,7 +20,7 @@ function generateQrCode() {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { txHash, eventId, attendeeEmail, attendeeName } = await req.json();
+    const { txHash, eventId, attendeeEmail, attendeeName, walletAddress } = await req.json();
     if (!txHash || !eventId) return Response.json({ error: 'Missing fields' }, { status: 400 });
 
     const sr = base44.asServiceRole;
@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
         payment_type: 'ada',
         received_amount_ada: receivedAda,
         expected_amount_ada: receivedAda,
-        payer_address: null, // will be filled from wallet after signing
+        payer_address: walletAddress || null,
         payer_name: attendeeName || null,
         payer_email: attendeeEmail || null,
         confirmed_at: new Date().toISOString(),
@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
       price_ada: matchedType?.price_ada || 0,
       attendee_name: payment?.payer_name || attendeeName || null,
       attendee_email: payment?.payer_email || attendeeEmail || null,
-      wallet_address: payment?.payer_address || null,
+      wallet_address: walletAddress || payment?.payer_address || null,
       tx_hash: txHash,
       payment_id: payment?.id || null,
       qr_code: qrCode,
