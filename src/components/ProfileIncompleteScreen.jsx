@@ -15,11 +15,11 @@ export default function ProfileIncompleteScreen() {
         </div>
 
         <h1 className="text-3xl font-bold text-white mb-2">
-          Profiel Incompleet
+          Profile Incomplete
         </h1>
 
         <p className="text-slate-300 mb-8">
-          Je moet je bedrijfsinformatie en Cardano-adres configureren voordat je de app kunt gebruiken.
+          You must configure your business information and Cardano address before you can use the app.
         </p>
 
         <div className="space-y-3 mb-8 text-left bg-slate-800/50 rounded-lg p-4 border border-slate-700">
@@ -28,8 +28,8 @@ export default function ProfileIncompleteScreen() {
               <span className="text-xs text-slate-300">1</span>
             </div>
             <div>
-              <p className="text-sm font-medium text-white">Bedrijfsnaam</p>
-              <p className="text-xs text-slate-400">Vul je bedrijfsnaam in</p>
+              <p className="text-sm font-medium text-white">Business Name</p>
+              <p className="text-xs text-slate-400">Enter your business name</p>
             </div>
           </div>
 
@@ -38,8 +38,8 @@ export default function ProfileIncompleteScreen() {
               <span className="text-xs text-slate-300">2</span>
             </div>
             <div>
-              <p className="text-sm font-medium text-white">Cardano-adres</p>
-              <p className="text-xs text-slate-400">Voeg je ontvangstadres in</p>
+              <p className="text-sm font-medium text-white">Cardano Address</p>
+              <p className="text-xs text-slate-400">Add your receiving address</p>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@ export default function ProfileIncompleteScreen() {
           size="lg"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold"
         >
-          Profiel Instellen <ArrowRight className="w-4 h-4 ml-2" />
+          Setup Profile <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
     </div>
