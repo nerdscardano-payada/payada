@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { FlaskConical, Coins, Plus, CheckCircle, Clock, XCircle, AlertTriangle, Trash2, ExternalLink, Pencil } from "lucide-react";
+import { FlaskConical, Coins, CheckCircle, Clock, XCircle, AlertTriangle, Trash2, ExternalLink, Pencil } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { KNOWN_CNTS } from "@/components/payment-links/wizard/knownCNTs";
 
@@ -211,35 +212,7 @@ export default function AdminCNTLab() {
     onSuccess: () => queryClient.invalidateQueries(["cnt-links"]),
   });
 
-  const createTestPaymentMutation = useMutation({
-    mutationFn: async (linkId) => {
-      const link = cntLinks.find(l => l.id === linkId);
-      if (!link) throw new Error("Link not found");
-      
-      const payment = {
-        merchant_id: link.merchant_id,
-        payment_link_id: linkId,
-        status: "confirmed",
-        payment_type: "cnt",
-        expected_amount_cnt: link.cnt_amount,
-        received_amount_cnt: link.cnt_amount,
-        cnt_policy_id: link.cnt_policy_id,
-        cnt_asset_name: link.cnt_asset_name,
-        cnt_ticker: link.cnt_ticker,
-        cnt_decimals: link.cnt_decimals,
-        payer_address: "addr1" + Math.random().toString(36).slice(2, 50),
-        payer_email: "test@example.com",
-        tx_hash: "0x" + Math.random().toString(16).slice(2, 66),
-        confirmations: 5,
-        block_height_detected: 10000000,
-        confirmed_at: new Date().toISOString(),
-        is_cnt_test: true,
-      };
-      
-      return base44.entities.Payment.create(payment);
-    },
-    onSuccess: () => queryClient.invalidateQueries(["cnt-payments"]),
-  });
+
 
   if (!user || user.role !== "admin") {
     return (
@@ -329,15 +302,6 @@ export default function AdminCNTLab() {
                       <p className="text-slate-500">{link.payment_count || 0} payments</p>
                       <p className="text-slate-400">{link.total_received_cnt || 0} {link.cnt_ticker} received</p>
                     </div>
-                    <Button
-                      size="sm"
-                      className="gap-1.5 bg-emerald-600 hover:bg-emerald-700"
-                      onClick={() => createTestPaymentMutation.mutate(link.id)}
-                      disabled={createTestPaymentMutation.isPending}
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      Add Test Payment
-                    </Button>
                     <Button
                       size="sm"
                       className="gap-1.5 bg-indigo-600 hover:bg-indigo-700"
