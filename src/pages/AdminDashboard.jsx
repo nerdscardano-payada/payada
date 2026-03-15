@@ -5,7 +5,7 @@ import KeyMetrics from "@/components/admin/KeyMetrics";
 import SystemErrorLogs from "@/components/admin/SystemErrorLogs";
 import FeeRevenueStats from "@/components/admin/FeeRevenueStats";
 import MerchantOverview from "@/components/admin/MerchantOverview";
-import RecentTransactions from "@/components/admin/RecentTransactions";
+import TransactionTimeline from "@/components/admin/TransactionTimeline";
 
 export default function AdminDashboard() {
   const { data: user, isLoading } = useQuery({
