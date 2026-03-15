@@ -63,10 +63,10 @@ function TxRow({ p, eventMap = {}, paymentLinkMap = {} }) {
         </span>
       </td>
       <td className="py-2.5 px-3 font-medium text-slate-800">{amount}</td>
-      <td className="py-2.5 px-3 text-xs max-w-[140px]">
+      <td className="py-2.5 px-3 text-xs max-w-[180px]">
         {productName ? (
           <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium truncate" title={productName}>
-            💳 {productName}
+            {isEvent ? "🎟" : "💳"} {productName}
           </span>
         ) : (
           <span className="text-slate-300">—</span>
@@ -99,15 +99,6 @@ function TxRow({ p, eventMap = {}, paymentLinkMap = {} }) {
         ) : p.payer_name ? (
           <span className="text-amber-600 truncate block" title={`Name only — no wallet address recorded. payer_name: ${p.payer_name}`}>
             👤 {p.payer_name}
-          </span>
-        ) : (
-          <span className="text-slate-300">—</span>
-        )}
-      </td>
-      <td className="py-2.5 px-3 text-xs max-w-[140px]">
-        {p.event_id ? (
-          <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-medium truncate" title={eventMap[p.event_id]}>
-            🎟 {eventMap[p.event_id] || "Event"}
           </span>
         ) : (
           <span className="text-slate-300">—</span>
