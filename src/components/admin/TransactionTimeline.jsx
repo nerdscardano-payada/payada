@@ -47,19 +47,19 @@ export default function TransactionTimeline() {
 
   const { data: payments = [], isLoading, refetch } = useQuery({
     queryKey: ["admin-recent-payments"],
-    queryFn: () => base44.entities.Payment.list("-created_date", 100),
+    queryFn: () => base44.entities.Payment.list("-created_date", 300),
     refetchInterval: 30000,
   });
 
   const { data: events = [] } = useQuery({
     queryKey: ["admin-events-map"],
-    queryFn: () => base44.entities.Event.list("-created_date", 200),
+    queryFn: () => base44.entities.Event.list("-created_date", 500),
   });
   const eventMap = useMemo(() => events.reduce((m, e) => { m[e.id] = e.title; return m; }, {}), [events]);
 
   const { data: paymentLinks = [] } = useQuery({
     queryKey: ["admin-payment-links-map"],
-    queryFn: () => base44.entities.PaymentLink.list("-created_date", 500),
+    queryFn: () => base44.entities.PaymentLink.list("-created_date", 1000),
   });
   const paymentLinkMap = useMemo(() => paymentLinks.reduce((m, pl) => { m[pl.id] = pl.title; return m; }, {}), [paymentLinks]);
 
