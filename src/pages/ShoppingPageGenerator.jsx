@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { createPageUrl } from "@/utils";
 import { Link } from "react-router-dom";
-import { Save, CheckCircle, LayoutGrid } from "lucide-react";
+import { Save, CheckCircle, LayoutGrid, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StepShopInfo, { THEMES, FONTS } from "@/components/shopping-page-generator/StepShopInfo";
 import StepManageProducts, { emptyProduct } from "@/components/shopping-page-generator/StepManageProducts";
@@ -41,7 +41,7 @@ const DEFAULT_CONFIG = {
 };
 
 export default function ShoppingPageGenerator() {
-  const { isProfileComplete } = useProfileCheck();
+  const { isProfileComplete, profile } = useProfileCheck();
   const [step, setStep] = useState(1);
   const [config, setConfig] = useState(DEFAULT_CONFIG);
   const [products, setProducts] = useState([
@@ -49,7 +49,27 @@ export default function ShoppingPageGenerator() {
   ]);
   const [user, setUser] = useState(null);
 
-  if (!isProfileComplete) return null;
+  // Show profile warning banner if not complete
+  if (!isProfileComplete && profile !== undefined) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-blue-50 border border-blue-300 rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <AlertCircle className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg font-semibold text-blue-900">Complete Your Profile</h2>
+          </div>
+          <p className="text-sm text-blue-800 mb-4">
+            To access PayADA tools, please complete your merchant profile first. You need to provide your business name and a receiving wallet address.
+          </p>
+          <button
+            onClick={() => window.location.href = '/MerchantProfile'}
+            className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
+            Go to Profile
+          </button>
+        </div>
+      </div>
+    );
+  }
   const [storeId, setStoreId] = useState(null);
   const [storeName, setStoreName] = useState("");
   const [saving, setSaving] = useState(false);

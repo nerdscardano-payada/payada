@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { AlertCircle } from "lucide-react";
 import StepSelectLink from "@/components/button-generator/StepSelectLink";
 import StepCustomize from "@/components/button-generator/StepCustomize";
 import StepGetCode from "@/components/button-generator/StepGetCode";
@@ -30,13 +31,33 @@ const DEFAULT_CONFIG = {
 };
 
 export default function ButtonGenerator() {
-  const { isProfileComplete } = useProfileCheck();
+  const { isProfileComplete, profile } = useProfileCheck();
   const [step, setStep] = useState(1);
   const [selectedLinkId, setSelectedLinkId] = useState("");
   const [config, setConfig] = useState(DEFAULT_CONFIG);
   const [user, setUser] = useState(null);
 
-  if (!isProfileComplete) return null;
+  // Show profile warning banner if not complete
+  if (!isProfileComplete && profile !== undefined) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-blue-50 border border-blue-300 rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <AlertCircle className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg font-semibold text-blue-900">Complete Your Profile</h2>
+          </div>
+          <p className="text-sm text-blue-800 mb-4">
+            To access PayADA tools, please complete your merchant profile first. You need to provide your business name and a receiving wallet address.
+          </p>
+          <button
+            onClick={() => window.location.href = '/MerchantProfile'}
+            className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
+            Go to Profile
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     base44.auth.me().then(setUser);
