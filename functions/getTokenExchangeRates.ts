@@ -31,46 +31,40 @@ async function getAdaFiatRates() {
   return { ada_usd: data.cardano.usd, ada_eur: data.cardano.eur };
 }
 
-// Fetch all MinSwap pairs once and build a price map
-async function fetchMinSwapPriceMap() {
-  const res = await fetch("https://api-mainnet-prod.minswap.org/coinmarketcap/v2/pairs");
-  if (!res.ok) return null;
-  const pairs = await res.json();
+// Fetch MinSwap asset metrics for up to 100 tokens, returns map: "policyId.tokenName" -> price_in_ada
+async function fetchMinSwapPrices() {
+  const priceMap = {};
+  let searchAfter = [];
 
-  // pairs is an object where keys are like "lovelace_<policyId><assetName>"
-  // Each pair has: base_volume, quote_volume, last_price (token per ADA or ADA per token)
-  // We want price in ADA for each token unit
-  const priceMap = {}; // unit (policyId+assetName) -> price in ADA
+  // Fetch up to 3 pages (300 assets) to cover all our tokens
+  for (let page = 0; page < 3; page++) {
+    const body = {
+      limit: 100,
+      only_verified: false,
+      sort_direction: "desc",
+      sort_field: "liquidity",
+      ...(searchAfter.length > 0 ? { search_after: searchAfter } : {}),
+    };
 
-  for (const [key, pair] of Object.entries(pairs)) {
-    // key format: "lovelace_<unit>" or "<unit>_lovelace"
-    // last_price is base/quote
-    const parts = key.split("_");
-    if (parts.length < 2) continue;
+    const res = await fetch("https://api-mainnet-prod.minswap.org/v1/assets/metrics", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
 
-    let unit = null;
-    let priceInAda = null;
+    if (!res.ok) break;
+    const data = await res.json();
 
-    if (parts[0] === "lovelace") {
-      // base=ADA, quote=token → last_price = ADA per token → we want token per ADA = 1/last_price
-      // Actually last_price in MinSwap CMC format = quote/base = token/ADA
-      unit = parts.slice(1).join("_");
-      // last_price = how many tokens per 1 ADA (in smallest unit adjusted)
-      // We want ADA per token = 1 / last_price
-      if (pair.last_price && pair.last_price > 0) {
-        priceInAda = 1 / pair.last_price;
+    for (const item of (data.asset_metrics || [])) {
+      const { currency_symbol, token_name } = item.asset;
+      if (currency_symbol && token_name && item.price != null) {
+        const key = `${currency_symbol}.${token_name}`;
+        priceMap[key] = item.price; // price is in ADA (no currency param)
       }
-    } else if (parts[parts.length - 1] === "lovelace") {
-      unit = parts.slice(0, -1).join("_");
-      // last_price = ADA per token directly
-      priceInAda = pair.last_price;
     }
 
-    if (unit && priceInAda && priceInAda > 0) {
-      // Normalize: remove underscores from unit (MinSwap uses policy_assetname format)
-      const normalizedUnit = unit.replace(/_/g, "");
-      priceMap[normalizedUnit] = priceInAda;
-    }
+    if (!data.search_after || data.search_after.length === 0) break;
+    searchAfter = data.search_after;
   }
 
   return priceMap;
@@ -94,10 +88,10 @@ Deno.serve(async (req) => {
       ? KNOWN_CNTS.filter(t => requestedTickers.includes(t.ticker.toUpperCase()))
       : KNOWN_CNTS;
 
-    // Fetch ADA/fiat rates and MinSwap price map in parallel
+    // Fetch ADA/fiat rates and MinSwap prices in parallel
     const [adaFiatRates, minswapPrices] = await Promise.all([
       getAdaFiatRates(),
-      fetchMinSwapPriceMap(),
+      fetchMinSwapPrices(),
     ]);
 
     const tokens = {};
@@ -107,24 +101,13 @@ Deno.serve(async (req) => {
       let price_source = null;
 
       if (token.is_stable_usd) {
-        // 1 stablecoin = 1 USD → convert to ADA
         price_in_ada = 1 / adaFiatRates.ada_usd;
         price_source = "coingecko_derived";
-      } else if (minswapPrices) {
-        const unit = token.policy_id + token.asset_name;
-        const raw = minswapPrices[unit];
-        if (raw) {
-          // MinSwap prices are in lovelace terms — convert lovelace to ADA
-          // last_price for "lovelace_unit" pairs = tokens per lovelace → ADA per token = 1/(last_price * 1_000_000)
-          // We already did the inversion in fetchMinSwapPriceMap but used raw numbers
-          // The pair last_price from CMC v2 is in the raw unit amounts (lovelace vs token smallest unit)
-          // So we need to account for decimals: price_in_ada = raw / (10^decimals) * 1_000_000
-          // Actually let's re-examine: if last_price = tokens_raw / lovelace_raw,
-          // then ADA_per_token = (1/last_price) * (10^decimals / 1_000_000)
-          // But in fetchMinSwapPriceMap for lovelace_unit: priceInAda = 1/last_price (already done)
-          // last_price = token_raw per lovelace → 1/last_price = lovelace per token_raw
-          // To get ADA per token: (lovelace per token_raw) / 1_000_000 * 10^decimals
-          price_in_ada = raw / 1_000_000 * Math.pow(10, token.decimals);
+      } else {
+        const key = `${token.policy_id}.${token.asset_name}`;
+        const raw = minswapPrices[key];
+        if (raw != null) {
+          price_in_ada = raw;
           price_source = "minswap";
         }
       }
