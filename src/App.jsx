@@ -13,6 +13,7 @@ import TokenSaleDashboard from './pages/TokenSaleDashboard';
 import Events from './pages/Events';
 import EventCheckout from './pages/EventCheckout';
 import EventEntry from './pages/EventEntry';
+import TransactionAudit from './pages/TransactionAudit';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -70,6 +71,7 @@ const AuthenticatedApp = () => {
       <Route path="/Events" element={<LayoutWrapper currentPageName="Events"><Events /></LayoutWrapper>} />
       <Route path="/EventCheckout" element={<EventCheckout />} />
       <Route path="/EventEntry" element={<EventEntry />} />
+      <Route path="/TransactionAudit" element={<LayoutWrapper currentPageName="TransactionAudit"><TransactionAudit /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
