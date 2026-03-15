@@ -25,6 +25,25 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
 
+const ProtectedRoute = ({ children, currentPageName }) => {
+  const { isProfileComplete, isLoading } = useProfileCheck();
+  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile"];
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!isProfileComplete && !publicPages.includes(currentPageName)) {
+    return <ProfileIncompleteScreen />;
+  }
+
+  return children;
+};
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
@@ -52,28 +71,32 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={
-        <LayoutWrapper currentPageName={mainPageKey}>
-          <MainPage />
-        </LayoutWrapper>
+        <ProtectedRoute currentPageName={mainPageKey}>
+          <LayoutWrapper currentPageName={mainPageKey}>
+            <MainPage />
+          </LayoutWrapper>
+        </ProtectedRoute>
       } />
       {Object.entries(Pages).map(([path, Page]) => (
         <Route
           key={path}
           path={`/${path}`}
           element={
-            <LayoutWrapper currentPageName={path}>
-              <Page />
-            </LayoutWrapper>
+            <ProtectedRoute currentPageName={path}>
+              <LayoutWrapper currentPageName={path}>
+                <Page />
+              </LayoutWrapper>
+            </ProtectedRoute>
           }
         />
       ))}
-      <Route path="/AdminLaunchpad" element={<LayoutWrapper currentPageName="AdminLaunchpad"><AdminLaunchpad /></LayoutWrapper>} />
+      <Route path="/AdminLaunchpad" element={<ProtectedRoute currentPageName="AdminLaunchpad"><LayoutWrapper currentPageName="AdminLaunchpad"><AdminLaunchpad /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/TokenSale" element={<TokenSale />} />
-      <Route path="/TokenSaleDashboard" element={<LayoutWrapper currentPageName="TokenSaleDashboard"><TokenSaleDashboard /></LayoutWrapper>} />
-      <Route path="/Events" element={<LayoutWrapper currentPageName="Events"><Events /></LayoutWrapper>} />
+      <Route path="/TokenSaleDashboard" element={<ProtectedRoute currentPageName="TokenSaleDashboard"><LayoutWrapper currentPageName="TokenSaleDashboard"><TokenSaleDashboard /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/Events" element={<ProtectedRoute currentPageName="Events"><LayoutWrapper currentPageName="Events"><Events /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/EventCheckout" element={<EventCheckout />} />
       <Route path="/EventEntry" element={<EventEntry />} />
-      <Route path="/TransactionAudit" element={<LayoutWrapper currentPageName="TransactionAudit"><TransactionAudit /></LayoutWrapper>} />
+      <Route path="/TransactionAudit" element={<ProtectedRoute currentPageName="TransactionAudit"><LayoutWrapper currentPageName="TransactionAudit"><TransactionAudit /></LayoutWrapper></ProtectedRoute>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
