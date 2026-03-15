@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
     const { qrCode } = await req.json();
     if (!qrCode) return Response.json({ ok: false, message: 'No ticket code provided' }, { status: 400 });
 
-    const sr = base44.asServiceRole;
+    const sr = base44.asServiceRole; // use service role so public (unauthenticated) users can look up tickets
     const tickets = await sr.entities.EventTicket.filter({ qr_code: qrCode });
     if (!tickets.length) return Response.json({ ok: false, message: 'Ticket not found' });
 
