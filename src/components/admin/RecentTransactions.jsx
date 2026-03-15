@@ -270,9 +270,9 @@ export default function RecentTransactions() {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={9} className="py-8 text-center text-slate-400 text-sm">Laden…</td></tr>
+                <tr><td colSpan={10} className="py-8 text-center text-slate-400 text-sm">Laden…</td></tr>
               ) : displayedPayments.length === 0 ? (
-                <tr><td colSpan={9} className="py-8 text-center text-slate-400 text-sm">Geen betalingen gevonden.</td></tr>
+                <tr><td colSpan={10} className="py-8 text-center text-slate-400 text-sm">Geen betalingen gevonden.</td></tr>
               ) : (
                 displayedPayments.map(p => <TxRow key={p.id} p={p} eventMap={eventMap} paymentLinkMap={paymentLinkMap} />)
               )}
