@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
         payment_type: 'ada',
         received_amount_ada: receivedAda,
         expected_amount_ada: receivedAda,
-        payer_address: null,
+        payer_address: null, // will be filled from wallet after signing
         payer_name: attendeeName || null,
         payer_email: attendeeEmail || null,
         confirmed_at: new Date().toISOString(),
