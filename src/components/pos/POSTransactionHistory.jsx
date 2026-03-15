@@ -72,10 +72,10 @@ export default function POSTransactionHistory() {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 overflow-hidden rounded-t-xl shadow-lg">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors border-b border-slate-100"
+        className="w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 transition-colors"
       >
         <div>
           <h3 className="font-semibold text-slate-900">Recent POS Transactions</h3>
