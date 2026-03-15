@@ -37,7 +37,7 @@ export default function PayTerminals() {
   });
 
   const getTerminalUrl = (terminal) =>
-    `${window.location.origin}${createPageUrl("PayTerminal")}?id=${terminal.id}`;
+    `https://payada.io/PayTerminal?id=${terminal.id}`;
 
   const copyUrl = (terminal) => {
     navigator.clipboard.writeText(getTerminalUrl(terminal));
