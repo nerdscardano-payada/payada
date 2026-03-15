@@ -129,8 +129,8 @@ export default function POS() {
   useEffect(() => () => clearInterval(pollRef.current), []);
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-start md:justify-center p-4">
+      <div className="w-full max-w-sm md:mt-0">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center mx-auto mb-3">
