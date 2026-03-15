@@ -3,11 +3,12 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Calendar, MapPin, Ticket, Users, MoreVertical, Eye, Edit, Trash2, QrCode, ExternalLink } from "lucide-react";
+import { Plus, Calendar, MapPin, Ticket, Users, Edit, Trash2, QrCode, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import EventForm from "@/components/events/EventForm";
 import EventCheckinPanel from "@/components/events/EventCheckinPanel";
+import EventAttendeesPanel from "@/components/events/EventAttendeesPanel";
 
 const STATUS_COLORS = {
   draft: "bg-slate-100 text-slate-600",
@@ -17,9 +18,10 @@ const STATUS_COLORS = {
 };
 
 export default function Events() {
-  const [view, setView] = useState("list"); // list | form | checkin
+  const [view, setView] = useState("list"); // list | form | checkin | attendees
   const [editing, setEditing] = useState(null);
   const [checkinEvent, setCheckinEvent] = useState(null);
+  const [attendeesEvent, setAttendeesEvent] = useState(null);
   const [user, setUser] = React.useState(null);
   const queryClient = useQueryClient();
 
@@ -41,6 +43,10 @@ export default function Events() {
 
   if (view === "checkin" && checkinEvent) {
     return <EventCheckinPanel event={checkinEvent} onBack={() => { setView("list"); setCheckinEvent(null); }} />;
+  }
+
+  if (view === "attendees" && attendeesEvent) {
+    return <EventAttendeesPanel event={attendeesEvent} onBack={() => { setView("list"); setAttendeesEvent(null); }} />;
   }
 
   return (
@@ -101,6 +107,14 @@ export default function Events() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 text-xs"
+                    onClick={() => { setAttendeesEvent(event); setView("attendees"); }}
+                  >
+                    <Users className="w-3.5 h-3.5" /> Attendees
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
