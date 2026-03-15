@@ -326,14 +326,7 @@ export default function Access() {
           {connectedWallet && memberName.trim() && (
             <WalletPayButton
               connectedWallet={connectedWallet}
-              sessionData={{
-                merchant_address: paymentLinkConfig.receive_address,
-                merchant_amount_lovelace: Math.floor(merchantAda * 1_000_000),
-                merchant_amount_ada: merchantAda,
-                platform_fee_lovelace: Math.floor(feeAda * 1_000_000),
-                platform_fee_ada: feeAda,
-                amount_total_ada: totalAda,
-              }}
+              sessionData={sessionData}
               paymentLink={paymentLinkConfig}
               payerName={memberName || null}
               payerEmail={memberEmail || null}
