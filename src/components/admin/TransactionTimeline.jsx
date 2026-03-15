@@ -123,37 +123,28 @@ export default function TransactionTimeline() {
 
                   {/* Content */}
                   <div className="flex-1 min-w-0 py-0.5">
-                    <div className="space-y-2">
+                    <div className="flex items-center gap-4 flex-wrap">
                       {/* Product & Amount */}
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold text-slate-900">{amount}</span>
-                        {productName && (
-                          <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full truncate">
-                            {isEvent ? "🎟" : "💳"} {productName}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Details row */}
-                      <div className="text-xs text-slate-500 flex flex-col gap-2">
-                        <div className="flex items-center gap-3 flex-wrap">
-                          <span className="capitalize">{p.status}</span>
-                          <span>Fee: {fee}</span>
-                          <span>{timeStr}</span>
-                        </div>
-                        <div className="flex items-center gap-3 flex-wrap">
-                          {p.payer_address && <CopyAddress address={p.payer_address} />}
-                          {p.tx_hash && (
-                            <a
-                              href={`https://cardanoscan.io/transaction/${p.tx_hash}`}
-                              target="_blank" rel="noopener noreferrer"
-                              className="text-indigo-500 hover:text-indigo-700 inline-flex items-center gap-1"
-                            >
-                              TX <ExternalLink className="w-3 h-3" />
-                            </a>
-                          )}
-                        </div>
-                      </div>
+                      <span className="font-semibold text-slate-900">{amount}</span>
+                      {productName && (
+                        <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full truncate">
+                          {isEvent ? "🎟" : "💳"} {productName}
+                        </span>
+                      )}
+                      {/* Details */}
+                      <span className="text-xs text-slate-500 capitalize">{p.status}</span>
+                      <span className="text-xs text-slate-500">Fee: {fee}</span>
+                      <span className="text-xs text-slate-500">{timeStr}</span>
+                      {p.payer_address && <CopyAddress address={p.payer_address} />}
+                      {p.tx_hash && (
+                        <a
+                          href={`https://cardanoscan.io/transaction/${p.tx_hash}`}
+                          target="_blank" rel="noopener noreferrer"
+                          className="text-indigo-500 hover:text-indigo-700 inline-flex items-center gap-1 text-xs"
+                        >
+                          TX <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
