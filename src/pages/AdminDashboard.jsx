@@ -93,13 +93,21 @@ export default function AdminDashboard() {
         </section>
 
         {/* Merchant Management */}
-        <section>
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">
-            🏢 Merchant Beheer
-          </h2>
-          <MerchantOverview />
-        </section>
-      </div>
-    </div>
-  );
-}
+         <section>
+           <h2 className="text-lg font-semibold text-slate-900 mb-4">
+             🏢 Merchant Beheer
+           </h2>
+           <MerchantOverview />
+         </section>
+
+         {/* Revenue Chart */}
+         <section>
+           <h2 className="text-lg font-semibold text-slate-900 mb-4">
+             📈 Groei (6 Maanden)
+           </h2>
+           <RevenueChart />
+         </section>
+        </div>
+        </div>
+        );
+        }
