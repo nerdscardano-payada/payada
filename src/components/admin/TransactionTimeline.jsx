@@ -123,23 +123,25 @@ export default function TransactionTimeline() {
 
                   {/* Content */}
                   <div className="flex-1 min-w-0 py-0.5">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        {/* Product & Amount */}
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-semibold text-slate-900">{amount}</span>
-                          {productName && (
-                            <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full truncate">
-                              {isEvent ? "🎟" : "💳"} {productName}
-                            </span>
-                          )}
-                        </div>
+                    <div className="space-y-2">
+                      {/* Product & Amount */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-slate-900">{amount}</span>
+                        {productName && (
+                          <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full truncate">
+                            {isEvent ? "🎟" : "💳"} {productName}
+                          </span>
+                        )}
+                      </div>
 
-                        {/* Details row */}
-                        <div className="text-xs text-slate-500 mt-1 flex items-center gap-3 flex-wrap">
+                      {/* Details row */}
+                      <div className="text-xs text-slate-500 flex flex-col gap-2">
+                        <div className="flex items-center gap-3 flex-wrap">
                           <span className="capitalize">{p.status}</span>
                           <span>Fee: {fee}</span>
                           <span>{timeStr}</span>
+                        </div>
+                        <div className="flex items-center gap-3 flex-wrap">
                           {p.payer_address && <CopyAddress address={p.payer_address} />}
                           {p.tx_hash && (
                             <a
