@@ -178,29 +178,6 @@ export default function StepShopInfo({ config, onChange, onNext }) {
         <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Hero Section</p>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-slate-500">Title Effect</Label>
-          <Select value={heroEffect || "none"} onValueChange={(v) => set("heroEffect", v)}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">Default gradient</SelectItem>
-              <SelectItem value="gradient">Custom gradient</SelectItem>
-              <SelectItem value="neon">Neon glow</SelectItem>
-              <SelectItem value="glitch">Glitch</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {heroEffect === "gradient" && (
-          <div className="space-y-1.5">
-            <Label className="text-xs text-slate-500">Second gradient color</Label>
-            <div className="flex items-center gap-2">
-              <input type="color" value={gradientColor2 || "#38bdf8"} onChange={(e) => set("gradientColor2", e.target.value)} className="w-8 h-8 rounded cursor-pointer border border-slate-200" />
-              <Input value={gradientColor2 || "#38bdf8"} onChange={(e) => set("gradientColor2", e.target.value)} className="font-mono text-xs" />
-            </div>
-          </div>
-        )}
-
-        <div className="space-y-1.5">
           <Label className="text-xs text-slate-500">Hero background image (optional)</Label>
           <label className="cursor-pointer flex items-center gap-2">
             <input
