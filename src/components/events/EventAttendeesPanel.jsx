@@ -48,10 +48,11 @@ export default function EventAttendeesPanel({ event, onBack }) {
   const pending = tickets.filter(t => t.status === "pending").length;
 
   const exportCsv = () => {
-    const header = "Name,Email,Ticket Type,Price (ADA),Status,Checked In At,Ticket ID";
+    const header = "Name,Email,Wallet Address,Ticket Type,Price (ADA),Status,Checked In At,Ticket ID";
     const rows = tickets.map(t => [
       t.attendee_name || "",
       t.attendee_email || "",
+      t.wallet_address || "",
       t.ticket_type_name || "",
       t.price_ada || 0,
       t.status,
@@ -137,9 +138,10 @@ export default function EventAttendeesPanel({ event, onBack }) {
       ) : (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
           {/* Desktop table header */}
-          <div className="hidden md:grid grid-cols-[2fr_2fr_1.5fr_1fr_1fr_1fr] gap-4 px-5 py-3 border-b border-slate-100 bg-slate-50">
+          <div className="hidden md:grid grid-cols-[1.5fr_1.5fr_1.5fr_1.2fr_1fr_1fr_1fr] gap-3 px-5 py-3 border-b border-slate-100 bg-slate-50">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Attendee</span>
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Email</span>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Wallet</span>
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Ticket</span>
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Price</span>
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Status</span>
@@ -149,11 +151,14 @@ export default function EventAttendeesPanel({ event, onBack }) {
             {filtered.map(ticket => (
               <div key={ticket.id} className="px-5 py-3.5 hover:bg-slate-50 transition-colors">
                 {/* Desktop row */}
-                <div className="hidden md:grid grid-cols-[2fr_2fr_1.5fr_1fr_1fr_1fr] gap-4 items-center">
+                <div className="hidden md:grid grid-cols-[1.5fr_1.5fr_1.5fr_1.2fr_1fr_1fr_1fr] gap-3 items-center">
                   <span className="font-medium text-slate-900 truncate">{ticket.attendee_name || <span className="text-slate-400 italic">Anonymous</span>}</span>
                   <span className="text-sm text-slate-500 truncate flex items-center gap-1">
                     <Mail className="w-3.5 h-3.5 flex-shrink-0" />
                     {ticket.attendee_email || "—"}
+                  </span>
+                  <span className="text-xs text-slate-400 font-mono truncate" title={ticket.wallet_address || ""}>
+                    {ticket.wallet_address ? `${ticket.wallet_address.slice(0, 8)}…${ticket.wallet_address.slice(-6)}` : "—"}
                   </span>
                   <span className="text-sm text-slate-600 truncate">{ticket.ticket_type_name}</span>
                   <span className="text-sm font-medium text-indigo-600">₳ {ticket.price_ada}</span>
@@ -175,9 +180,10 @@ export default function EventAttendeesPanel({ event, onBack }) {
                     </Badge>
                   </div>
                   <p className="text-sm text-slate-500">{ticket.attendee_email}</p>
-                  <div className="flex gap-3 text-xs text-slate-400">
+                  <div className="flex gap-3 text-xs text-slate-400 flex-wrap">
                     <span>{ticket.ticket_type_name}</span>
                     <span className="text-indigo-600 font-medium">₳ {ticket.price_ada}</span>
+                    {ticket.wallet_address && <span className="font-mono">{ticket.wallet_address.slice(0, 8)}…{ticket.wallet_address.slice(-6)}</span>}
                     {ticket.checked_in_at && <span className="text-emerald-600">✓ {format(new Date(ticket.checked_in_at), "HH:mm")}</span>}
                   </div>
                 </div>
