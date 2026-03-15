@@ -257,7 +257,6 @@ export default function RecentTransactions() {
                 <th className="py-2.5 px-3 font-medium">TX Hash</th>
                 <th className="py-2.5 px-3 font-medium">Datum</th>
                 <th className="py-2.5 px-3 font-medium">Wallet</th>
-                <th className="py-2.5 px-3 font-medium">Bron</th>
               </tr>
             </thead>
             <tbody>
