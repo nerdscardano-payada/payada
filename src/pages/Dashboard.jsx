@@ -91,9 +91,19 @@ export default function Dashboard() {
     enabled: !!user,
   });
 
+  const { data: events = [] } = useQuery({
+    queryKey: ["events-dash", user?.email],
+    queryFn: () => base44.entities.Event.filter({ merchant_id: user.email }),
+    enabled: !!user,
+  });
+
   const accessLinkMap = React.useMemo(() => {
     return accessLinks.reduce((map, link) => { map[link.id] = link.title; return map; }, {});
   }, [accessLinks]);
+
+  const eventMap = React.useMemo(() => {
+    return events.reduce((map, e) => { map[e.id] = e.title; return map; }, {});
+  }, [events]);
 
   const getCntDecimals = (policyId, stored) => (stored && stored > 0) ? stored : (KNOWN_DECIMALS[policyId] ?? 0);
   const getCntTicker = (p) => p.cnt_ticker || KNOWN_TICKERS[p.cnt_policy_id] || p.cnt_policy_id?.slice(0, 8) + "..." || "CNT";

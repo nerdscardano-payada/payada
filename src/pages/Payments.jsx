@@ -54,6 +54,12 @@ export default function Payments() {
     enabled: !!user,
   });
 
+  const { data: events = [], isLoading: isLoadingEvents } = useQuery({
+    queryKey: ["events", user?.email],
+    queryFn: () => base44.entities.Event.filter({ merchant_id: user.email }),
+    enabled: !!user,
+  });
+
   const paymentLinkMap = useMemo(() => {
     return paymentLinks.reduce((map, link) => {
       map[link.id] = link.title;
@@ -68,7 +74,14 @@ export default function Payments() {
     }, {});
   }, [accessLinks]);
 
-  const isLoading = isLoadingPayments || isLoadingLinks || isLoadingAccessLinks;
+  const eventMap = useMemo(() => {
+    return events.reduce((map, e) => {
+      map[e.id] = e.title;
+      return map;
+    }, {});
+  }, [events]);
+
+  const isLoading = isLoadingPayments || isLoadingLinks || isLoadingAccessLinks || isLoadingEvents;
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
