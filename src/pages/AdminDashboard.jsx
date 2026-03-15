@@ -67,19 +67,16 @@ export default function AdminDashboard() {
           <div className="lg:col-span-2 space-y-6">
             <section>
               <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                📈 Groei (6 Maanden)
+              </h2>
+              <RevenueChart />
+            </section>
+
+            <section>
+              <h2 className="text-lg font-semibold text-slate-900 mb-4">
                 📊 Transacties
               </h2>
               <TransactionTimeline />
-            </section>
-          </div>
-
-          {/* Right Column - System Health */}
-          <div className="space-y-6">
-            <section>
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">
-                🔧 Systeemstatus
-              </h2>
-              <SystemErrorLogs />
             </section>
           </div>
         </div>
