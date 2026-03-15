@@ -1,6 +1,40 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 const BLOCKFROST_API_KEY = Deno.env.get("BLOCKFROST_API_KEY");
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+
+async function sendTicketEmail({ to, attendeeName, event, ticketTypeName, qrCode, entryUrl }) {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: "PayADA Tickets <tickets@payada.io>",
+      to: [to],
+      subject: `Your ticket for ${event.title}`,
+      html: `<h2>🎟 Your Ticket</h2>
+<p>Hi ${attendeeName || 'there'},</p>
+<p>Your payment has been confirmed! Here are your ticket details:</p>
+<table style="border-collapse:collapse;margin:16px 0">
+  <tr><td style="padding:4px 12px 4px 0;color:#666">Event:</td><td><strong>${event.title}</strong></td></tr>
+  <tr><td style="padding:4px 12px 4px 0;color:#666">Ticket:</td><td>${ticketTypeName}</td></tr>
+  ${event.event_date ? `<tr><td style="padding:4px 12px 4px 0;color:#666">Date:</td><td>${new Date(event.event_date).toLocaleString()}</td></tr>` : ''}
+  ${event.location ? `<tr><td style="padding:4px 12px 4px 0;color:#666">Location:</td><td>${event.location}</td></tr>` : ''}
+</table>
+<p><strong>Your Ticket ID:</strong> <code>${qrCode}</code></p>
+<p>Present the following link at the entrance:</p>
+<p><a href="${entryUrl}" style="background:#4f46e5;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin:8px 0">View Ticket &amp; Check-in</a></p>
+<p style="color:#999;font-size:12px">Powered by PayADA</p>`,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Resend error: ${res.status} ${err}`);
+  }
+  return res.json();
+}
 const BLOCKFROST_URL = "https://cardano-mainnet.blockfrost.io/api/v0";
 
 async function fetchTxInfo(txHash) {
