@@ -107,11 +107,53 @@ export default function AccessLinkForm({ link, onBack, user }) {
             <Textarea value={form.description} onChange={e => set("description", e.target.value)} placeholder="Join our private trading community and get..." rows={3} />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label>Payment Currency *</Label>
+            <Select value={form.payment_type || "ada"} onValueChange={v => set("payment_type", v)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ada">ADA</SelectItem>
+                <SelectItem value="cnt">Cardano Native Token (CNT)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {(form.payment_type || "ada") === "ada" ? (
             <div className="space-y-1.5">
               <Label>Access Fee (ADA) *</Label>
               <Input type="number" value={form.price_ada} onChange={e => set("price_ada", e.target.value)} placeholder="10" />
             </div>
+          ) : (
+            <div className="space-y-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+              <p className="text-xs font-semibold text-purple-700 uppercase tracking-wide">CNT Configuration</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Token Ticker *</Label>
+                  <Input value={form.cnt_ticker} onChange={e => set("cnt_ticker", e.target.value)} placeholder="$SNEK" />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Amount Required *</Label>
+                  <Input type="number" value={form.cnt_amount} onChange={e => set("cnt_amount", e.target.value)} placeholder="1000" />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Policy ID *</Label>
+                <Input value={form.cnt_policy_id} onChange={e => set("cnt_policy_id", e.target.value)} placeholder="279c909f..." />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Asset Name (hex)</Label>
+                  <Input value={form.cnt_asset_name} onChange={e => set("cnt_asset_name", e.target.value)} placeholder="534e454b (optional)" />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Decimals</Label>
+                  <Input type="number" value={form.cnt_decimals} onChange={e => set("cnt_decimals", e.target.value)} placeholder="0" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label>Logo URL</Label>
               <Input value={form.logo_url} onChange={e => set("logo_url", e.target.value)} placeholder="https://..." />
@@ -119,7 +161,7 @@ export default function AccessLinkForm({ link, onBack, user }) {
           </div>
 
           <div className="space-y-1.5">
-            <Label>Receive Address (ADA Wallet)</Label>
+            <Label>Receive Address (Cardano Wallet)</Label>
             <Input value={form.receive_address} onChange={e => set("receive_address", e.target.value)} placeholder="addr1..." />
           </div>
 
