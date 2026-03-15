@@ -25,7 +25,8 @@ import {
   Zap,
   FlaskConical,
   Rocket,
-  Calendar
+  Calendar,
+  Eye
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
@@ -47,6 +48,7 @@ const navItems = [
   { type: "header", name: "Overview" },
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
   { name: "Payments", icon: CreditCard, page: "Payments" },
+  { name: "Transaction Audit", icon: Eye, page: "TransactionAudit" },
   { name: "Customers", icon: Users, page: "Customers" },
   { name: "Billing", icon: Receipt, page: "Billing" },
 
