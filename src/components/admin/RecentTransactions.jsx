@@ -46,8 +46,9 @@ function TxRow({ p, eventMap = {}, paymentLinkMap = {} }) {
 
   // Get product name from payment link or event
   const productName = p.payment_link_id 
-    ? paymentLinkMap[p.payment_link_id] 
-    : (p.event_id ? null : null); // will show separately in Bron
+    ? paymentLinkMap[p.payment_link_id]
+    : (p.event_id ? eventMap[p.event_id] : null);
+  const isEvent = !!p.event_id;
 
   return (
     <tr className="border-b border-slate-100 hover:bg-slate-50 transition-colors text-sm">
