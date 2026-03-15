@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { TrendingUp, DollarSign, Users, Activity } from "lucide-react";
@@ -108,6 +108,12 @@ export default function FeeRevenueStats() {
     queryKey: ["admin-merchants"],
     queryFn: () => base44.entities.MerchantProfile.list("-created_date", 200),
   });
+
+  const { data: events = [] } = useQuery({
+    queryKey: ["admin-events-fee"],
+    queryFn: () => base44.entities.Event.list("-created_date", 200),
+  });
+  const eventMap = useMemo(() => events.reduce((m, e) => { m[e.id] = e.title; return m; }, {}), [events]);
 
   // Combine real data with mock data if simulation is enabled
   const allPayments = SIMULATE_CNT ? [...confirmedPayments, ...MOCK_CNT_PAYMENTS] : confirmedPayments;
@@ -337,6 +343,7 @@ export default function FeeRevenueStats() {
               <thead>
                 <tr className="text-left text-xs text-slate-400 border-b border-slate-100">
                   <th className="pb-2 font-medium">TX Hash</th>
+                  <th className="pb-2 font-medium">Bron</th>
                   <th className="pb-2 font-medium">Ontvangen</th>
                   <th className="pb-2 font-medium">Fee</th>
                   <th className="pb-2 font-medium">Datum</th>
@@ -347,6 +354,15 @@ export default function FeeRevenueStats() {
                   <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50">
                     <td className="py-2 font-mono text-xs text-slate-500">
                       {p.tx_hash ? `${p.tx_hash.slice(0, 12)}...` : "—"}
+                    </td>
+                    <td className="py-2 text-xs">
+                      {p.event_id ? (
+                        <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-medium">
+                          🎟 {eventMap[p.event_id] || "Event"}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">Link</span>
+                      )}
                     </td>
                     <td className="py-2 text-slate-800 font-medium">₳{(p.received_amount_ada || 0).toFixed(4)}</td>
                     <td className="py-2 text-green-600 font-medium">₳{(p.fee_amount_ada || 0).toFixed(4)}</td>
