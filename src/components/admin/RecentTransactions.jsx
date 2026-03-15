@@ -164,6 +164,12 @@ export default function RecentTransactions() {
   });
   const eventMap = useMemo(() => events.reduce((m, e) => { m[e.id] = e.title; return m; }, {}), [events]);
 
+  const { data: paymentLinks = [] } = useQuery({
+    queryKey: ["admin-payment-links-map"],
+    queryFn: () => base44.entities.PaymentLink.list("-created_date", 500),
+  });
+  const paymentLinkMap = useMemo(() => paymentLinks.reduce((m, pl) => { m[pl.id] = pl.title; return m; }, {}), [paymentLinks]);
+
   const { data: purchases = [], isLoading: loadingPurchases, refetch: refetchPurchases } = useQuery({
     queryKey: ["admin-recent-purchases"],
     queryFn: () => base44.entities.TokenSalePurchase.list("-created_date", 100),
