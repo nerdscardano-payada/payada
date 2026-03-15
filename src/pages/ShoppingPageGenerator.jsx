@@ -12,9 +12,9 @@ import StepManageProducts, { emptyProduct } from "@/components/shopping-page-gen
 import StepPublish from "@/components/shopping-page-generator/StepPublish";
 
 const STEPS = [
-  { number: 1, label: "Winkelinfo" },
-  { number: 2, label: "Producten" },
-  { number: 3, label: "Publiceren" },
+  { number: 1, label: "Shop Info" },
+  { number: 2, label: "Products" },
+  { number: 3, label: "Publish" },
 ];
 
 const DEFAULT_CONFIG = {
