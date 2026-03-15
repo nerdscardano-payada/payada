@@ -244,7 +244,7 @@ export default function RecentTransactions() {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan={7} className="py-8 text-center text-slate-400 text-sm">Laden…</td></tr>
+                <tr><td colSpan={8} className="py-8 text-center text-slate-400 text-sm">Laden…</td></tr>
               ) : displayedPayments.length === 0 ? (
                 <tr><td colSpan={8} className="py-8 text-center text-slate-400 text-sm">Geen betalingen gevonden.</td></tr>
               ) : (
