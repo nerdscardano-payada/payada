@@ -59,11 +59,12 @@ export default function EventCheckout() {
   const handlePaySuccess = async (txHash) => {
     setPollingTxHash(txHash);
     setStep("success");
+    const walletAddress = connectedWallet?.address || null;
     // Poll for ticket confirmation
     let attempts = 0;
     const poll = setInterval(async () => {
       attempts++;
-      const res = await base44.functions.invoke("confirmEventTicket", { txHash, eventId: event.id, attendeeEmail, attendeeName });
+      const res = await base44.functions.invoke("confirmEventTicket", { txHash, eventId: event.id, attendeeEmail, attendeeName, walletAddress });
       if (res.data?.ticket) {
         clearInterval(poll);
         setTicket(res.data.ticket);
