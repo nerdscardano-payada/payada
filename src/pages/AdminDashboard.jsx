@@ -64,7 +64,7 @@ export default function AdminDashboard() {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Activity & Transactions */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <section>
               <h2 className="text-lg font-semibold text-slate-900 mb-4">
                 📈 Groei (6 Maanden)
