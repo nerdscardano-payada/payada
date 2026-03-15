@@ -258,8 +258,9 @@ export default function RecentTransactions() {
               <tr className="text-left text-xs text-slate-400 border-b border-slate-100 bg-slate-50">
                 <th className="py-2.5 px-3 font-medium">Status</th>
                 <th className="py-2.5 px-3 font-medium">Type</th>
-                <th className="py-2.5 px-3 font-medium">Bedrag</th>
+                <th className="py-2.5 px-3 font-medium">Bedrag (Total)</th>
                 <th className="py-2.5 px-3 font-medium">Product</th>
+                <th className="py-2.5 px-3 font-medium">Merchant</th>
                 <th className="py-2.5 px-3 font-medium">Fee</th>
                 <th className="py-2.5 px-3 font-medium">TX Hash</th>
                 <th className="py-2.5 px-3 font-medium">Datum</th>
