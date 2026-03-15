@@ -68,13 +68,17 @@ export default function EventForm({ event, user, onBack }) {
     },
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title || !form.slug) { toast.error("Title and slug are required"); return; }
     if (!form.ticket_types.length) { toast.error("Add at least one ticket type"); return; }
     for (const tt of form.ticket_types) {
       if (!tt.name || !tt.price_ada) { toast.error("All ticket types need a name and price"); return; }
     }
+    // Check slug uniqueness
+    const existing = await base44.entities.Event.filter({ slug: form.slug });
+    const conflict = existing.find(e => e.id !== event?.id);
+    if (conflict) { toast.error(`Slug "${form.slug}" is already in use. Please choose a different slug.`); return; }
     saveMutation.mutate({
       ...form,
       event_date: form.event_date ? new Date(form.event_date).toISOString() : null,

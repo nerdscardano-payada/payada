@@ -58,7 +58,7 @@ export default function AccessLinkForm({ link, onBack, user }) {
     },
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isCnt = form.payment_type === "cnt";
     if (!form.title || !form.slug || !form.platform) {
@@ -70,6 +70,10 @@ export default function AccessLinkForm({ link, onBack, user }) {
       toast.error("Please fill in all CNT fields");
       return;
     }
+    // Check slug uniqueness
+    const existing = await base44.entities.CommunityAccessLink.filter({ slug: form.slug });
+    const conflict = existing.find(l => l.id !== link?.id);
+    if (conflict) { toast.error(`Slug "${form.slug}" is already in use. Please choose a different slug.`); return; }
     saveMutation.mutate({
       ...form,
       price_ada: isCnt ? 0 : parseFloat(form.price_ada),
