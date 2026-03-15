@@ -280,10 +280,12 @@ export default function ShoppingPageGenerator() {
       <span style="font-size:12px;background:${accent}15;color:${accent};border:1px solid ${accent}30;padding:5px 12px;border-radius:999px;font-weight:600;">✦ Cardano ADA</span>
     </div>
   </header>
-  <section style="padding:80px 0 48px;text-align:center;">
-    <div class="container">
-      <h1 style="font-size:clamp(32px,6vw,60px);font-weight:900;letter-spacing:-0.04em;margin-bottom:16px;line-height:1.05;background:linear-gradient(135deg,${theme.text} 40%,${accent} 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${shopTitle}</h1>
-      <p style="font-size:17px;opacity:0.5;max-width:480px;margin:0 auto;">${shopSubtitle}</p>
+  <section style="padding:80px 0 48px;text-align:center;position:relative;overflow:hidden;${heroBgStyle}">
+    ${waveDiv}
+    ${particleCanvas}
+    <div class="container" style="position:relative;z-index:1;">
+      <h1 class="hero-title" data-text="${shopTitle}" style="${titleStyle}">${shopTitle}</h1>
+      <p class="hero-subtitle" style="${neonSubtitleStyle}">${shopSubtitle}</p>
     </div>
   </section>
   <main style="padding:16px 0 100px;">
