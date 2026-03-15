@@ -87,7 +87,7 @@ export default function Payments() {
     const q = search.toLowerCase().trim();
     const now = new Date();
     return payments.filter(p => {
-      const linkTitle = paymentLinkMap[p.payment_link_id] || accessLinkMap[p.access_link_id] || "";
+      const linkTitle = paymentLinkMap[p.payment_link_id] || accessLinkMap[p.access_link_id] || eventMap[p.event_id] || "";
       const matchesSearch = !q ||
         p.payer_email?.toLowerCase().includes(q) ||
         p.payer_name?.toLowerCase().includes(q) ||
@@ -209,7 +209,7 @@ export default function Payments() {
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {filtered.map((p) => {
-                  const linkTitle = paymentLinkMap[p.payment_link_id] || accessLinkMap[p.access_link_id];
+                  const linkTitle = paymentLinkMap[p.payment_link_id] || accessLinkMap[p.access_link_id] || (p.event_id ? `🎟 ${eventMap[p.event_id] || "Event"}` : null);
                   return (
                     <tr key={p.id} className="hover:bg-slate-50/50 transition-colors">
                       <td className="px-5 py-3.5">

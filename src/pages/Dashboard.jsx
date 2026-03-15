@@ -342,8 +342,8 @@ export default function Dashboard() {
                    <p className="text-xs text-slate-400">
                      {format(new Date(payment.created_date), "MMM d, HH:mm")}
                      {payment.payment_type === "cnt" && ` • ${payment.cnt_ticker || "CNT"}`}
-                     {(paymentLinkMap[payment.payment_link_id] || accessLinkMap[payment.access_link_id]) && (
-                       <span className="text-indigo-500 font-medium"> • {paymentLinkMap[payment.payment_link_id] || accessLinkMap[payment.access_link_id]}</span>
+                     {(paymentLinkMap[payment.payment_link_id] || accessLinkMap[payment.access_link_id] || payment.event_id) && (
+                       <span className="text-indigo-500 font-medium"> • {paymentLinkMap[payment.payment_link_id] || accessLinkMap[payment.access_link_id] || (payment.event_id ? `🎟 ${eventMap[payment.event_id] || "Event"}` : "")}</span>
                      )}
                    </p>
                   </div>
