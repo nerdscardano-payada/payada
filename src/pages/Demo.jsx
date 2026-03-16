@@ -723,7 +723,21 @@ export default function Demo() {
 
   const { data: demoPaymentLinks = [] } = useQuery({
     queryKey: ["demoPaymentLinks"],
-    queryFn: () => base44.entities.PaymentLink.filter({ merchant_id: DEMO_MERCHANT_ID }, "-created_date", 50),
+    queryFn: async () => {
+      const existing = await base44.entities.PaymentLink.filter({ merchant_id: DEMO_MERCHANT_ID }, "-created_date", 100);
+      // Ensure preset links exist in DB (slugs prefixed with "demo-")
+      for (const preset of PRESET_PAYMENT_LINKS_DATA) {
+        const found = existing.find(l => l.slug === preset.slug);
+        if (!found) {
+          await base44.entities.PaymentLink.create({
+            ...preset,
+            merchant_id: DEMO_MERCHANT_ID,
+            receive_address: "addr1demo_payada_demo_address",
+          });
+        }
+      }
+      return base44.entities.PaymentLink.filter({ merchant_id: DEMO_MERCHANT_ID }, "-created_date", 100);
+    },
     refetchInterval: 30000,
     select: data => data.filter(l => !l.expires_at || new Date(l.expires_at) > new Date()),
   });
