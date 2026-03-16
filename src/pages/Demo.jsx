@@ -149,7 +149,7 @@ function DemoPaymentLinks({ links, onCreate, onDelete, creating }) {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(EMPTY_PAYMENT_FORM);
 
-  const allLinks = [...PRESET_PAYMENT_LINKS, ...links];
+  const allLinks = links;
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const handleCreate = () => {
