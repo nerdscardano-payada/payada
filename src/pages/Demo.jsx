@@ -132,11 +132,11 @@ function DemoDashboard({ demoLinks, demoAccessLinks }) {
 }
 
 // ─── Payment Links ────────────────────────────────────────────────────────────
-const PRESET_PAYMENT_LINKS = [
-  { id: "p1", title: "Event Ticket", amount_ada: 20, slug: "event-ticket", status: "active", payment_count: 14, amount_mode: "fixed_ada", confirmations_required: 2, collect_email: true },
-  { id: "p2", title: "Donation", amount_ada: 10, slug: "donation", status: "active", payment_count: 8, amount_mode: "fixed_ada", confirmations_required: 2 },
-  { id: "p3", title: "Premium Community", amount_ada: 50, slug: "premium-community", status: "active", payment_count: 6, amount_mode: "fixed_ada", confirmations_required: 2 },
-  { id: "p4", title: "Product Purchase", amount_ada: 35, slug: "product-purchase", status: "active", payment_count: 4, amount_mode: "fixed_ada", confirmations_required: 2 },
+const PRESET_PAYMENT_LINKS_DATA = [
+  { title: "Event Ticket", amount_ada: 20, slug: "demo-event-ticket", status: "active", payment_count: 14, amount_mode: "fixed_ada", confirmations_required: 2, collect_email: true },
+  { title: "Donation", amount_ada: 10, slug: "demo-donation", status: "active", payment_count: 8, amount_mode: "fixed_ada", confirmations_required: 2 },
+  { title: "Premium Community", amount_ada: 50, slug: "demo-premium-community", status: "active", payment_count: 6, amount_mode: "fixed_ada", confirmations_required: 2 },
+  { title: "Product Purchase", amount_ada: 35, slug: "demo-product-purchase", status: "active", payment_count: 4, amount_mode: "fixed_ada", confirmations_required: 2 },
 ];
 
 const EMPTY_PAYMENT_FORM = {
