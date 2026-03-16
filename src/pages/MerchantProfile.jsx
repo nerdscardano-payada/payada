@@ -309,6 +309,38 @@ export default function MerchantProfilePage() {
           )}
         </div>
       </Card>
+
+      {/* Danger Zone */}
+      <Card className="p-8 border-red-200">
+        <h3 className="text-lg font-semibold text-red-700 mb-1">Danger Zone</h3>
+        <p className="text-sm text-slate-500 mb-4">Permanently delete your merchant account and all associated data. This action cannot be undone.</p>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" className="gap-2">
+              <Trash2 className="w-4 h-4" />
+              Delete Account
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure you want to delete your account?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. Your merchant account and all associated data — including payment links, transactions, terminals, and settings — will be permanently removed from our systems.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDeleteAccount}
+                disabled={isDeleting}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {isDeleting ? "Deleting..." : "Yes, delete my account"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </Card>
     </div>
   );
 }
