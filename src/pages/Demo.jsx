@@ -333,9 +333,9 @@ function DemoPaymentLinks({ links, onCreate, onDelete, creating }) {
 }
 
 // ─── Access Links ─────────────────────────────────────────────────────────────
-const PRESET_ACCESS_LINKS = [
-  { id: "a1", title: "VIP Trading Club", price_ada: 99, platform: "discord", slug: "vip-trading-club", status: "active", payment_count: 23, fee_model: "merchant_pays" },
-  { id: "a2", title: "NFT Alpha Group", price_ada: 50, platform: "telegram", slug: "nft-alpha", status: "active", payment_count: 11, fee_model: "merchant_pays" },
+const PRESET_ACCESS_LINKS_DATA = [
+  { title: "VIP Trading Club", price_ada: 99, platform: "discord", slug: "demo-vip-trading-club", status: "active", payment_count: 23, fee_model: "merchant_pays" },
+  { title: "NFT Alpha Group", price_ada: 50, platform: "telegram", slug: "demo-nft-alpha", status: "active", payment_count: 11, fee_model: "merchant_pays" },
 ];
 
 const EMPTY_ACCESS_FORM = {
