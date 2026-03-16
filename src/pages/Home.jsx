@@ -113,9 +113,9 @@ export default function HomePage() {
               >
                 {t("home.hero_cta")} <ArrowRight className="w-5 h-5" />
               </Button>
-              <Link to={createPageUrl("Documentation")}>
-                <Button size="lg" variant="outline" className="border-2">
-                  {t("home.hero_docs")}
+              <Link to="/Demo">
+                <Button size="lg" variant="outline" className="border-2 gap-2">
+                  ⚡ Try Demo
                 </Button>
               </Link>
             </div>

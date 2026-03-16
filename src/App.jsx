@@ -16,6 +16,7 @@ import Events from './pages/Events';
 import EventCheckout from './pages/EventCheckout';
 import EventEntry from './pages/EventEntry';
 import TransactionAudit from './pages/TransactionAudit';
+import Demo from './pages/Demo';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
