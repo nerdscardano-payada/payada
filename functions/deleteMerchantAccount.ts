@@ -11,7 +11,6 @@ Deno.serve(async (req) => {
 
     const merchantId = user.email;
 
-    // Delete all related entities
     const entitiesToClean = [
       'Payment', 'PaymentLink', 'Subscription', 'SubscriptionPlan',
       'Customer', 'PayTerminal', 'WebhookEndpoint', 'ApiKey',
@@ -21,9 +20,21 @@ Deno.serve(async (req) => {
     ];
 
     for (const entityName of entitiesToClean) {
-      const records = await base44.asServiceRole.entities[entityName].filter({ merchant_id: merchantId });
-      for (const record of records) {
-        await base44.asServiceRole.entities[entityName].delete(record.id);
+      try {
+        // Fetch in batches of 50 and delete
+        let hasMore = true;
+        while (hasMore) {
+          const records = await base44.asServiceRole.entities[entityName].filter({ merchant_id: merchantId }, null, 50);
+          if (!records || records.length === 0) {
+            hasMore = false;
+            break;
+          }
+          await Promise.all(records.map(r => base44.asServiceRole.entities[entityName].delete(r.id)));
+          if (records.length < 50) hasMore = false;
+        }
+      } catch (e) {
+        // Skip entities that don't have merchant_id or other errors
+        console.log(`Skipping ${entityName}: ${e.message}`);
       }
     }
 
