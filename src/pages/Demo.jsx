@@ -846,9 +846,9 @@ export default function Demo() {
 
         <div className="mt-10 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-2">Ready to accept real ADA payments?</h2>
-          <p className="text-blue-100 mb-5">Create your free PayADA account and start accepting payments in minutes.</p>
+          <p className="text-blue-100 mb-5">Create your PayADA account and start accepting payments in minutes.</p>
           <Button size="lg" onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))} className="bg-white text-blue-700 hover:bg-blue-50 gap-2">
-            Get Started Free <ArrowRight className="w-4 h-4" />
+            Get Started <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
       </div>
