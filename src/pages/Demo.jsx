@@ -351,7 +351,7 @@ function DemoAccessLinks({ links, onCreate, onDelete, creating }) {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(EMPTY_ACCESS_FORM);
 
-  const allLinks = [...PRESET_ACCESS_LINKS, ...links];
+  const allLinks = links;
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const handleCreate = () => {
