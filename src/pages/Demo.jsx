@@ -744,7 +744,19 @@ export default function Demo() {
 
   const { data: demoAccessLinks = [] } = useQuery({
     queryKey: ["demoAccessLinks"],
-    queryFn: () => base44.entities.CommunityAccessLink.filter({ merchant_id: DEMO_MERCHANT_ID }, "-created_date", 50),
+    queryFn: async () => {
+      const existing = await base44.entities.CommunityAccessLink.filter({ merchant_id: DEMO_MERCHANT_ID }, "-created_date", 100);
+      for (const preset of PRESET_ACCESS_LINKS_DATA) {
+        const found = existing.find(l => l.slug === preset.slug);
+        if (!found) {
+          await base44.entities.CommunityAccessLink.create({
+            ...preset,
+            merchant_id: DEMO_MERCHANT_ID,
+          });
+        }
+      }
+      return base44.entities.CommunityAccessLink.filter({ merchant_id: DEMO_MERCHANT_ID }, "-created_date", 100);
+    },
     refetchInterval: 30000,
     select: data => data.filter(l => !l.expires_at || new Date(l.expires_at) > new Date()),
   });
