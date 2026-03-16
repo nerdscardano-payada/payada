@@ -784,8 +784,8 @@ export default function Demo() {
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["demoAccessLinks"] }); toast.success("Link deleted"); },
   });
 
-  // All links for button/shop generator (presets + live)
-  const allPaymentLinks = [...PRESET_PAYMENT_LINKS, ...demoPaymentLinks];
+  // All links come from DB now (presets are seeded on load)
+  const allPaymentLinks = demoPaymentLinks;
 
   return (
     <div className="min-h-screen bg-slate-50">
