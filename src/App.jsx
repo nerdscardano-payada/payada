@@ -98,6 +98,7 @@ const AuthenticatedApp = () => {
       <Route path="/EventCheckout" element={<EventCheckout />} />
       <Route path="/EventEntry" element={<EventEntry />} />
       <Route path="/TransactionAudit" element={<ProtectedRoute currentPageName="TransactionAudit"><LayoutWrapper currentPageName="TransactionAudit"><TransactionAudit /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/Demo" element={<Demo />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
