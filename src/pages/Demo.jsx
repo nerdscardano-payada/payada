@@ -73,7 +73,7 @@ function DemoBanner() {
       <Zap className="w-4 h-4 flex-shrink-0" />
       <span>You're in Demo Mode — Links expire after 1 hour. No account needed.</span>
       <Button size="sm" onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))} className="bg-white text-blue-700 hover:bg-blue-50 h-7 text-xs font-semibold ml-2">
-        Get Started — Free <ArrowRight className="w-3 h-3 ml-1" />
+        Create Account <ArrowRight className="w-3 h-3 ml-1" />
       </Button>
     </div>
   );
