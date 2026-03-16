@@ -804,7 +804,7 @@ export default function Demo() {
             <Badge className="bg-amber-100 text-amber-700 border-0 text-xs ml-1">DEMO</Badge>
           </Link>
           <Button size="sm" onClick={() => base44.auth.redirectToLogin(createPageUrl("Dashboard"))} className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white">
-            Create Free Account
+            Create Account
           </Button>
         </div>
       </header>
