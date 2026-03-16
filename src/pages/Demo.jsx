@@ -303,22 +303,18 @@ function DemoPaymentLinks({ links, onCreate, onDelete, creating }) {
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      {link.expires_at ? (
-                        <>
-                          <a href={`/Pay?slug=${link.slug}`} target="_blank" rel="noopener noreferrer">
-                            <Button variant="ghost" size="icon" className="h-8 w-8" title="Open checkout">
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </Button>
-                          </a>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/Pay?slug=${link.slug}`); toast.success("URL copied!"); }}>
-                            <Copy className="w-3.5 h-3.5" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600" onClick={() => onDelete(link.id)}>
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </Button>
-                        </>
-                      ) : (
-                        <span className="text-xs text-slate-400 italic pr-2">demo preset</span>
+                      <a href={`/Pay?slug=${link.slug}`} target="_blank" rel="noopener noreferrer">
+                        <Button variant="ghost" size="icon" className="h-8 w-8" title="Open checkout">
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </Button>
+                      </a>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/Pay?slug=${link.slug}`); toast.success("URL copied!"); }}>
+                        <Copy className="w-3.5 h-3.5" />
+                      </Button>
+                      {link.expires_at && (
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600" onClick={() => onDelete(link.id)}>
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
                       )}
                     </div>
                   </td>
