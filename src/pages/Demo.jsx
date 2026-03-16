@@ -288,19 +288,28 @@ function DemoAccessLinks({ links, onCreate, onDelete, creating }) {
                   </td>
                   <td className="px-5 py-3.5 text-sm font-semibold text-slate-900">₳ {link.price_ada?.toFixed(2)}</td>
                   <td className="px-5 py-3.5 hidden sm:table-cell">
-                    {link.expires_at ? <ExpiresInBadge expiresAt={link.expires_at} /> : <span className="text-sm text-slate-600">{link.payment_count || 0}</span>}
+                  {link.expires_at ? <ExpiresInBadge expiresAt={link.expires_at} /> : <span className="text-sm text-slate-600">{link.payment_count || 0}</span>}
                   </td>
                   <td className="px-5 py-3.5 text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/Access?slug=${link.slug}`); toast.success("URL copied!"); }}>
-                        <Copy className="w-3.5 h-3.5" />
-                      </Button>
-                      {link.expires_at && (
+                  <div className="flex items-center justify-end gap-1">
+                    {link.expires_at ? (
+                      <>
+                        <a href={`/Access?slug=${link.slug}`} target="_blank" rel="noopener noreferrer">
+                          <Button variant="ghost" size="icon" className="h-8 w-8" title="Open checkout">
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </Button>
+                        </a>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/Access?slug=${link.slug}`); toast.success("URL copied!"); }}>
+                          <Copy className="w-3.5 h-3.5" />
+                        </Button>
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-600" onClick={() => onDelete(link.id)}>
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
-                      )}
-                    </div>
+                      </>
+                    ) : (
+                      <span className="text-xs text-slate-400 italic pr-2">demo preset</span>
+                    )}
+                  </div>
                   </td>
                 </tr>
               ))}
