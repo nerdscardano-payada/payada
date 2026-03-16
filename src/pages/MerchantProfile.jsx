@@ -321,7 +321,7 @@ export default function MerchantProfilePage() {
               Delete Account
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="max-w-[90vw] sm:max-w-lg mx-auto">
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure you want to delete your account?</AlertDialogTitle>
               <AlertDialogDescription>
