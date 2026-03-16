@@ -101,6 +101,12 @@ export default function MerchantProfilePage() {
     updateMutation.mutate(data);
   };
 
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    await base44.functions.invoke('deleteMerchantAccount', {});
+    await base44.auth.logout('/');
+  };
+
   if (userLoading || profileLoading) {
     return (
       <div className="space-y-6">
