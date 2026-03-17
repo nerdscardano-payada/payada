@@ -135,7 +135,7 @@ export default function Access() {
             <>
               <div className="space-y-2">
                 <p className="text-white text-lg font-semibold">Transaction submitted</p>
-                <p className="text-slate-400 text-sm">Waiting for blockchain confirmation. This usually takes 20-30 seconds.</p>
+                <p className="text-slate-400 text-sm">Waiting for blockchain confirmation. This usually takes 60-80 seconds.</p>
               </div>
               {txHash && (
                 <a href={`https://cardanoscan.io/transaction/${txHash}`} target="_blank" rel="noopener noreferrer" className="text-indigo-400 text-xs hover:underline break-all">
