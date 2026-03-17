@@ -142,6 +142,10 @@ Deno.serve(async (req) => {
     let paymentLink = null;
     let accessLink = null;
 
+    // Initialize CNT fields early
+    let cntDecimals = 0;
+    let cntTicker = null;
+
     if (paymentLinkId) {
       try {
         paymentLink = await sr.entities.PaymentLink.get(paymentLinkId);
@@ -153,7 +157,6 @@ Deno.serve(async (req) => {
         }
       } catch { /* not found */ }
     }
-    // (cntDecimals and cntTicker already initialized above)
 
     if (!receiveAddress && accessLinkId) {
       try {
