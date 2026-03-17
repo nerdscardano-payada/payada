@@ -284,9 +284,12 @@ Deno.serve(async (req) => {
       const txFee = estimateFee(selectedUtxos.length, numOutputs, true); // buffer already included in estimateFee
 
       // Total ADA needed: minUTxO for each token output + tx fee
+      // Change output also needs minUTxO if it carries tokens (other assets or CNT change)
+      const hasChangeTokens = collectedOtherAssets.size > 0 || (selectedCntTokens - cntTotal) > 0n;
       const numTokenOutputs = 1 + (cntFee > 0n ? 1 : 0);
       const adaForTokenOutputs = MIN_CNT_OUTPUT_LOVELACE * BigInt(numTokenOutputs);
-      const adaNeeded = adaForTokenOutputs + txFee;
+      const adaForChange = hasChangeTokens ? 2_000_000n : MIN_OUTPUT;
+      const adaNeeded = adaForTokenOutputs + txFee + adaForChange;
 
       // If CNT UTxOs don't have enough ADA, supplement with pure ADA UTxOs
       if (selectedCntLovelace < adaNeeded + MIN_OUTPUT) {
