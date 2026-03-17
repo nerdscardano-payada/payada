@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import {
   ArrowRight, TrendingUp, Link2, Users, CreditCard, Plus, Copy,
   Trash2, Clock, CheckCircle2, LayoutDashboard, ShoppingBag, Zap,
-  Code2, ArrowLeft, ExternalLink
+  Code2, ArrowLeft, ExternalLink, Monitor, RotateCcw, Loader2, QrCode
 } from "lucide-react";
 import { format, addHours } from "date-fns";
 import { createPageUrl } from "@/utils";
