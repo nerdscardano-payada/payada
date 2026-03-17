@@ -118,6 +118,11 @@ export default function HomePage() {
                   ⚡ Try Demo
                 </Button>
               </Link>
+              <Link to="/Documentation">
+                <Button size="lg" variant="outline" className="border-2 gap-2">
+                  📄 Docs
+                </Button>
+              </Link>
             </div>
             <p className="text-sm text-slate-500 mt-6">{t("home.hero_note")}</p>
           </div>
