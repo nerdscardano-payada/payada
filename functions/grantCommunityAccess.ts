@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { paymentId, txHash, accessLinkId } = await req.json();
+    const { paymentId, txHash, accessLinkId, confirmed, confirmations } = await req.json();
 
     if ((!paymentId && !txHash) || !accessLinkId) {
       return Response.json({ error: 'Missing paymentId or txHash, and accessLinkId' }, { status: 400 });
@@ -11,96 +11,88 @@ Deno.serve(async (req) => {
 
     const sr = base44.asServiceRole;
 
-    // Find the access link first
-    let link;
+    let link = null;
     try {
       link = await sr.entities.CommunityAccessLink.get(accessLinkId);
-    } catch { /* not found */ }
-    if (!link) return Response.json({ error: 'Access link not found' }, { status: 404 });
+    } catch {
+      link = null;
+    }
 
-    // Find payment by id or txHash
-    let payment;
+    if (!link) {
+      return Response.json({ error: 'Access link not found' }, { status: 404 });
+    }
+
+    let payment = null;
     if (paymentId) {
       try {
         payment = await sr.entities.Payment.get(paymentId);
-      } catch { /* not found */ }
-    } else if (txHash) {
-      const payments = await sr.entities.Payment.filter({ tx_hash: txHash });
-      payment = payments[0];
+      } catch {
+        payment = null;
+      }
     }
 
-    // If payment not yet recorded (tx still indexing), return invite link directly
-    if (!payment) {
-      return Response.json({ success: true, platform: link.platform, invite_link: link.invite_link, note: 'Payment still indexing, using static invite' });
+    if (!payment && txHash) {
+      const payments = await sr.entities.Payment.filter({ tx_hash: txHash }, '-created_date', 1);
+      payment = payments[0] || null;
     }
 
-    // Payment found but not yet confirmed — still allow access for wallet-direct flow
-    // (recordWalletPayment may mark it confirmed slightly later)
-
-    // For non-discord platforms, just return the invite_link
-    if (link.platform !== 'discord') {
-      return Response.json({ success: true, platform: link.platform, invite_link: link.invite_link });
-    }
-
-    // Discord: assign role via bot
-    const discordUsername = payment.payer_discord_username;
-    if (!discordUsername) {
-      return Response.json({ success: true, platform: 'discord', invite_link: link.invite_link, note: 'No Discord username provided' });
-    }
-
-    const { discord_guild_id, discord_role_id, discord_bot_token, welcome_message } = link;
-    if (!discord_guild_id || !discord_role_id || !discord_bot_token) {
-      return Response.json({ success: true, platform: 'discord', invite_link: link.invite_link, note: 'Discord bot not fully configured' });
-    }
-
-    const DISCORD_API = 'https://discord.com/api/v10';
-    const headers = { 'Authorization': `Bot ${discord_bot_token}`, 'Content-Type': 'application/json' };
-
-    const searchRes = await fetch(
-      `${DISCORD_API}/guilds/${discord_guild_id}/members/search?query=${encodeURIComponent(discordUsername.replace(/^@/, ''))}&limit=5`,
-      { headers }
-    );
-
-    if (!searchRes.ok) {
-      return Response.json({ success: true, invite_link: link.invite_link, note: 'Discord search failed, use invite link' });
-    }
-
-    const members = await searchRes.json();
-    const cleanInput = discordUsername.replace(/^@/, '').toLowerCase();
-    const member = members.find(m =>
-      m.user?.username?.toLowerCase() === cleanInput ||
-      m.user?.global_name?.toLowerCase() === cleanInput
-    );
-
-    if (!member) {
-      return Response.json({ success: true, invite_link: link.invite_link, note: `User "${discordUsername}" not found in server` });
-    }
-
-    const userId = member.user.id;
-    await fetch(`${DISCORD_API}/guilds/${discord_guild_id}/members/${userId}/roles/${discord_role_id}`, { method: 'PUT', headers });
-
-    if (welcome_message) {
+    if (!payment && txHash) {
       try {
-        const dmRes = await fetch(`${DISCORD_API}/users/@me/channels`, { method: 'POST', headers, body: JSON.stringify({ recipient_id: userId }) });
-        if (dmRes.ok) {
-          const dmChannel = await dmRes.json();
-          await fetch(`${DISCORD_API}/channels/${dmChannel.id}/messages`, { method: 'POST', headers, body: JSON.stringify({ content: welcome_message }) });
+        const recordRes = await sr.functions.invoke('recordWalletPayment', {
+          txHash,
+          merchantId: link.merchant_id,
+          accessLinkId: link.id,
+        });
+        const recordedPaymentId = recordRes?.data?.paymentId;
+        if (recordedPaymentId) {
+          payment = await sr.entities.Payment.get(recordedPaymentId);
         }
-      } catch { /* DM failed silently */ }
+      } catch (error) {
+        console.error('[grantCommunityAccess] recordWalletPayment failed:', error.message);
+      }
     }
 
-    await sr.entities.Notification.create({
-      merchant_id: payment.merchant_id,
-      type: 'payment_confirmed',
-      title: 'Community access granted',
-      message: `${discordUsername} received Discord access for "${link.title}" — ₳${payment.received_amount_ada?.toFixed(2)}`,
-      resource_type: 'payment',
-      resource_id: payment.id,
-      severity: 'info'
+    if (!payment) {
+      return Response.json({
+        success: true,
+        status: 'pending_recording',
+        platform: link.platform,
+        invite_link: link.invite_link,
+      });
+    }
+
+    if (payment.status !== 'confirmed') {
+      if (!confirmed) {
+        return Response.json({
+          success: true,
+          status: 'pending_confirmation',
+          paymentId: payment.id,
+          platform: link.platform,
+        });
+      }
+
+      payment = await sr.entities.Payment.update(payment.id, {
+        status: 'confirmed',
+        confirmed_at: new Date().toISOString(),
+        confirmations: Math.max(confirmations || 0, payment.confirmations || 0, 2),
+      });
+    }
+
+    if (link.platform === 'discord' && payment.payer_discord_username) {
+      setTimeout(() => {
+        sr.functions.invoke('grantDiscordAccess', { paymentId: payment.id })
+          .catch((error) => console.error('[grantCommunityAccess] grantDiscordAccess failed:', error.message));
+      }, 0);
+    }
+
+    return Response.json({
+      success: true,
+      status: 'confirmed',
+      paymentId: payment.id,
+      platform: link.platform,
+      invite_link: link.invite_link,
+      access_processing: link.platform === 'discord' && !!payment.payer_discord_username ? 'async' : 'completed',
     });
-
-    return Response.json({ success: true, platform: 'discord', discord_user_id: userId, role_assigned: discord_role_id });
-
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

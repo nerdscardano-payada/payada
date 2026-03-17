@@ -64,16 +64,29 @@ export default function Access() {
     setPaymentStatus("detected");
     setGrantingAccess(true);
 
-    // Poll for payment confirmation (detected → confirmed status)
-    let payment = null;
+    try {
+      await base44.functions.invoke("recordWalletPayment", {
+        txHash: hash,
+        merchantId: accessLink.merchant_id,
+        accessLinkId: accessLink.id,
+        payerAddress: connectedWallet?.address || null,
+        payerEmail: memberEmail || null,
+        payerName: memberName || null,
+        payerDiscordUsername: discordUsername || null,
+      });
+    } catch {
+      // continue - duplicate or delayed indexing is handled server-side
+    }
+
+    let confirmationData = null;
     const maxCheckAttempts = 20;
     const checkDelayMs = 3000;
     for (let attempt = 1; attempt <= maxCheckAttempts; attempt++) {
       try {
         if (attempt > 1) await new Promise(r => setTimeout(r, checkDelayMs));
         const res = await base44.functions.invoke("checkTxConfirmation", { txHash: hash });
-        payment = res.data;
-        if (payment?.status === "confirmed") {
+        confirmationData = res.data;
+        if (confirmationData?.confirmed) {
           setPaymentStatus("confirmed");
           break;
         }
@@ -82,13 +95,22 @@ export default function Access() {
       }
     }
 
-    // Now that payment is confirmed, grant access
     let grantRes = null;
     try {
-      const res = await base44.functions.invoke("grantCommunityAccess", { txHash: hash, accessLinkId: accessLink.id });
+      const res = await base44.functions.invoke("grantCommunityAccess", {
+        txHash: hash,
+        accessLinkId: accessLink.id,
+        confirmed: !!confirmationData?.confirmed,
+        confirmations: confirmationData?.confirmations || 0,
+      });
       grantRes = res.data;
     } catch {
       grantRes = { invite_link: accessLink.invite_link };
+    }
+
+    if (grantRes?.status === "pending_confirmation") {
+      setGrantingAccess(false);
+      return;
     }
 
     const rawLink = grantRes?.invite_link || accessLink.invite_link;
