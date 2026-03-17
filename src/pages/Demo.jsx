@@ -108,8 +108,11 @@ function DemoDashboard({ demoLinks, demoAccessLinks }) {
       </div>
 
       <Card className="overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100">
+        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between gap-3 flex-wrap">
           <h2 className="text-sm font-semibold text-slate-900">Recent Payments</h2>
+          <span className="flex items-center gap-1.5 text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+            <span>⚠</span> Demo data — real transaction IDs &amp; wallet addresses only visible in your account
+          </span>
         </div>
         <div className="divide-y divide-slate-50">
           {DEMO_PAYMENTS.map(p => (
