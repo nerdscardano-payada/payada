@@ -70,12 +70,39 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       
       console.log("Build response:", buildRes?.data);
       
+      // Check for error response from backend
+      if (buildRes?.data?.code === 'DIRTY_WALLET_DETECTED') {
+        const msg = buildRes?.data?.userMessage || "Your wallet needs optimization before payment.";
+        console.warn("Dirty wallet detected:", buildRes?.data);
+        toast.error(msg);
+        setTxLoading(false);
+        setTxStatus(null);
+        // Could trigger auto-clean flow here in future
+        return;
+      }
+      
+      if (!buildRes?.data?.success && buildRes?.data?.code) {
+        const msg = buildRes?.data?.userMessage || buildRes?.data?.error || "Payment failed.";
+        console.error("TX error code:", buildRes?.data?.code, msg);
+        toast.error(msg);
+        setTxLoading(false);
+        setTxStatus(null);
+        return;
+      }
+      
       if (!buildRes?.data?.txCbor) {
-        const errorMsg = buildRes?.data?.error || buildRes?.data?.details || "Failed to build transaction CBOR";
+        const errorMsg = buildRes?.data?.userMessage || buildRes?.data?.error || buildRes?.data?.details || "Failed to build transaction.";
         console.error("TX build error:", errorMsg);
         throw new Error(errorMsg);
       }
+      
       txCbor = buildRes.data.txCbor;
+      
+      // Warn if wallet is dirty but payment still works
+      if (buildRes?.data?.meta?.dirtyWallet) {
+        console.warn("⚠️ Dirty wallet detected but proceeding with payment");
+      }
+      
       console.log("TX CBOR built successfully:", txCbor.slice(0, 20));
     } catch (err) {
       console.error("TX build catch block:", err);
