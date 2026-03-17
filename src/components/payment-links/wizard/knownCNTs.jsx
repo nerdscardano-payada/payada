@@ -21,5 +21,4 @@ export const KNOWN_CNTS = [
   { ticker: "DJED",   policy_id: "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61", asset_name: "446a65644d6963726f555344",               decimals: 6 },
   { ticker: "iUSD",   policy_id: "f66d78b4a3cb3d37afa0ec36461e51ecbde00f26c8f0a68f94b69880", asset_name: "69555344",                                 decimals: 6 },
   { ticker: "USDCx",  policy_id: "1f3aec8bfe7ea4fe14c5f121e2a92e301afe414147860d557cac7e34", asset_name: "5553444378",                             decimals: 6 },
-  { ticker: "$LQ",    policy_id: "da8c30857834c6ae7203935b89278c532b3995245295456f993e1d24", asset_name: "4c51",                                   decimals: 6 },
 ];
