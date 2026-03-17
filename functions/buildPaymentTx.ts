@@ -581,8 +581,10 @@ Deno.serve(async (req) => {
       type: error?.constructor?.name
     });
     return Response.json({ 
+      success: false,
       error: error?.message || 'Unknown error',
-      details: error?.stack?.split('\n')[0] || 'No stack trace'
+      details: error?.stack?.split('\n')[0] || 'No stack trace',
+      userMessage: 'Transaction build failed. Please try again.'
     }, { status: 500 });
   }
 });
