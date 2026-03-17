@@ -4,8 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { KNOWN_CNTS } from "./knownCNTs";
-import { Link } from "react-router-dom";
-import { ExternalLink } from "lucide-react";
+
 
 export default function StepBasic({ form, update, isEditing, isAdmin }) {
   // All merchants have access to all platform-approved tokens
