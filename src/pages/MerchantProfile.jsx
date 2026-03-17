@@ -313,6 +313,49 @@ export default function MerchantProfilePage() {
         </div>
       </Card>
 
+      {/* CNT Token Access */}
+      <Card className="p-8" id="cnt">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+              <Coins className="w-5 h-5 text-purple-500" />
+              CNT Token Access
+            </h3>
+            <p className="text-sm text-slate-500 mt-0.5">Cardano Native Tokens approved for your account</p>
+          </div>
+          <Button onClick={() => setShowCNTRequest(true)} className="gap-2 bg-purple-600 hover:bg-purple-700 text-white" size="sm">
+            <Plus className="w-4 h-4" />
+            Request token
+          </Button>
+        </div>
+
+        {(!profile?.whitelisted_cnt_tokens || profile.whitelisted_cnt_tokens.length === 0) ? (
+          <div className="border border-dashed border-slate-200 rounded-lg p-6 text-center text-slate-400">
+            <Coins className="w-8 h-8 mx-auto mb-2 opacity-30" />
+            <p className="text-sm">No CNT tokens approved yet.</p>
+            <p className="text-xs mt-1">Submit a request and we'll review within 1–2 business days.</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {profile.whitelisted_cnt_tokens.map((token, i) => (
+              <div key={i} className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                <div>
+                  <span className="font-semibold text-slate-900">{token.ticker}</span>
+                  <p className="text-xs text-slate-500 font-mono mt-0.5">{token.policy_id}</p>
+                </div>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">Approved</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <Dialog open={showCNTRequest} onOpenChange={setShowCNTRequest}>
+          <DialogContent className="max-w-lg">
+            <CNTTokenRequestForm user={user} onClose={() => setShowCNTRequest(false)} />
+          </DialogContent>
+        </Dialog>
+      </Card>
+
       {/* Danger Zone */}
       <Card className="p-8 border-red-200">
         <h3 className="text-lg font-semibold text-red-700 mb-1">Danger Zone</h3>
