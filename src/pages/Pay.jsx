@@ -197,6 +197,7 @@ export default function Pay() {
             merchantId: paymentLink.merchant_id,
             payerEmail: payerEmail || null,
             payerName: payerName || null,
+            payerDiscordUsername: payerDiscordUsername || null,
             payerAddress: connectedWallet?.address || null,
             shippingStreet: shippingStreet || null,
             shippingCity: shippingCity || null,
