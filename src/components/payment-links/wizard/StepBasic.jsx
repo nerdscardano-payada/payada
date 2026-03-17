@@ -63,19 +63,9 @@ export default function StepBasic({ form, update, isEditing, isAdmin }) {
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="fixed_ada">Fixed amount in ADA</SelectItem>
-              {(isAdmin || whitelistedTokens.length > 0) && (
-                <SelectItem value="fixed_cnt">Cardano Native Token (CNT)</SelectItem>
-              )}
+                  <SelectItem value="fixed_cnt">Cardano Native Token (CNT)</SelectItem>
             </SelectContent>
           </Select>
-          {!isAdmin && whitelistedTokens.length === 0 && (
-            <p className="text-xs text-slate-500">
-              Want to accept CNT tokens?{" "}
-              <Link to="/MerchantProfile#cnt" className="text-indigo-500 hover:underline inline-flex items-center gap-0.5">
-                Request token access <ExternalLink className="w-3 h-3" />
-              </Link>
-            </p>
-          )}
         </div>
 
         {form.amount_mode === "fixed_ada" && (
