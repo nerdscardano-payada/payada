@@ -5,7 +5,7 @@ import { ArrowRight, Users } from "lucide-react";
 
 export default function TopCustomers({ customers }) {
   const top = [...customers]
-    .sort((a, b) => (b.total_paid_ada || 0) - (a.total_paid_ada || 0))
+    .sort((a, b) => (b.total_merchant_ada || b.total_paid_ada || 0) - (a.total_merchant_ada || a.total_paid_ada || 0))
     .slice(0, 5);
 
   return (
@@ -37,7 +37,7 @@ export default function TopCustomers({ customers }) {
                 <p className="text-xs text-slate-400">{c.payment_count || 0} payments</p>
               </div>
               <span className="text-sm font-semibold text-slate-900 tabular-nums">
-                ₳ {(c.total_paid_ada || 0).toFixed(2)}
+                ₳ {(c.total_merchant_ada || c.total_paid_ada || 0).toFixed(2)}
               </span>
             </div>
           ))}

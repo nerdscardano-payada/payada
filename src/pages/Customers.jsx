@@ -81,7 +81,10 @@ export default function Customers() {
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-sm font-semibold text-slate-900 tabular-nums">₳ {(c.total_paid_ada || 0).toFixed(2)}</span>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-semibold text-slate-900 tabular-nums">₳ {(c.total_merchant_ada || c.total_paid_ada || 0).toFixed(2)}</span>
+                        <span className="text-xs text-slate-400">net</span>
+                      </div>
                     </td>
                     <td className="px-5 py-3.5">
                       <span className="text-sm text-slate-600">{c.payment_count || 0}</span>
