@@ -255,11 +255,22 @@ Deno.serve(async (req) => {
       let selectedCntLovelace = 0n;
       let selectedCntTokens = 0n;
       const selectedUtxos = [];
+      const collectedOtherAssets = new Map(); // track ALL other tokens in selected UTxOs
       for (const utxo of cntUtxos) {
         selectedUtxos.push(utxo);
         for (const a of utxo.amount) {
-          if (a.unit === 'lovelace') selectedCntLovelace += BigInt(a.quantity);
-          if (a.unit === cntUnit) selectedCntTokens += BigInt(a.quantity);
+          if (a.unit === 'lovelace') {
+            selectedCntLovelace += BigInt(a.quantity);
+          } else if (a.unit === cntUnit) {
+            selectedCntTokens += BigInt(a.quantity);
+          } else {
+            // Track other tokens so we can return them as change
+            const pId = a.unit.slice(0, 56);
+            const aName = a.unit.slice(56);
+            if (!collectedOtherAssets.has(pId)) collectedOtherAssets.set(pId, new Map());
+            const prev = collectedOtherAssets.get(pId).get(aName) || 0n;
+            collectedOtherAssets.get(pId).set(aName, prev + BigInt(a.quantity));
+          }
         }
         if (selectedCntTokens >= cntTotal) break;
       }
