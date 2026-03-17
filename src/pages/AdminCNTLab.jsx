@@ -210,11 +210,6 @@ export default function AdminCNTLab() {
     queryFn: () => base44.entities.Payment.filter({ payment_type: "cnt" }),
   });
 
-  const { data: allMerchants = [], isLoading: loadingMerchants } = useQuery({
-    queryKey: ["all-merchants"],
-    queryFn: () => base44.entities.MerchantProfile.list(),
-  });
-
   const deleteLinkMutation = useMutation({
     mutationFn: (id) => base44.entities.PaymentLink.delete(id),
     onSuccess: () => queryClient.invalidateQueries(["cnt-links"]),
