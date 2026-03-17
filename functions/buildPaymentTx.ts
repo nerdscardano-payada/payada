@@ -290,14 +290,23 @@ Deno.serve(async (req) => {
       let selectedCntLovelace = 0n;
       let selectedCntTokens = 0n;
       const selectedUtxos = [];
+      const selectedInputAssets = new Map();
 
       for (const utxo of candidateCntUtxos) {
         selectedUtxos.push(utxo);
         for (const a of utxo.amount) {
           if (a.unit === 'lovelace') {
             selectedCntLovelace += BigInt(a.quantity);
-          } else if (a.unit === cntUnit) {
-            selectedCntTokens += BigInt(a.quantity);
+          } else {
+            const policyId = a.unit.slice(0, 56);
+            const assetName = a.unit.slice(56);
+            if (!selectedInputAssets.has(policyId)) selectedInputAssets.set(policyId, new Map());
+            const prev = selectedInputAssets.get(policyId).get(assetName) || 0n;
+            const next = prev + BigInt(a.quantity);
+            selectedInputAssets.get(policyId).set(assetName, next);
+            if (a.unit === cntUnit) {
+              selectedCntTokens += BigInt(a.quantity);
+            }
           }
         }
         if (selectedCntTokens >= cntTotal) break;
@@ -357,11 +366,28 @@ Deno.serve(async (req) => {
         outputsData.push({ addrBytes: feeAddrBytes, lovelace: MIN_CNT_OUTPUT_LOVELACE, assets: feeTokens });
       }
 
-      // Change output: return ADA + remaining CNT (clean UTXOs means no other tokens exist)
+      // Change output: return ADA + all remaining assets from selected inputs
       const changeAssets = new Map();
-      if (cntChange > 0n) {
-        changeAssets.set(cntPolicyId, new Map([[cntAssetName, cntChange]]));
+      for (const [policyId, assetMap] of selectedInputAssets.entries()) {
+        changeAssets.set(policyId, new Map(assetMap));
       }
+
+      if (changeAssets.has(cntPolicyId)) {
+        const targetAssets = changeAssets.get(cntPolicyId);
+        const currentTargetAmount = targetAssets.get(cntAssetName) || 0n;
+        const remainingTargetAmount = currentTargetAmount - cntTotal;
+
+        if (remainingTargetAmount > 0n) {
+          targetAssets.set(cntAssetName, remainingTargetAmount);
+        } else {
+          targetAssets.delete(cntAssetName);
+        }
+
+        if (targetAssets.size === 0) {
+          changeAssets.delete(cntPolicyId);
+        }
+      }
+
       outputsData.push({ addrBytes: walletAddrBytes, lovelace: adaChange, assets: changeAssets });
 
       // Encode transaction body
