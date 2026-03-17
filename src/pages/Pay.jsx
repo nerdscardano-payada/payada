@@ -324,7 +324,7 @@ export default function Pay() {
             <div className="p-6 space-y-4">
               {paymentLink.collect_email && (
                 <div className="space-y-2">
-                   <Label htmlFor="payer-email" className="text-slate-300 text-xs">Email</Label>
+                   <Label htmlFor="payer-email" className="text-slate-300 text-xs">Email <span className="text-red-400">*</span></Label>
                    <Input id="payer-email" value={payerEmail} onChange={(e) => setPayerEmail(e.target.value)}
                     placeholder="your@email.com"
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
