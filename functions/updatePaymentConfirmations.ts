@@ -96,47 +96,48 @@ async function processConfirmations(base44) {
     ));
   }
 
-  // Process confirmations in parallel — only await the Payment update, everything else is fire-and-forget
-  await Promise.all(
-    toConfirm.map(async ({ payment, confirmations }) => {
-      const confirmedAt = new Date().toISOString();
-      const updatedPayment = { ...payment, confirmations, confirmed_at: confirmedAt };
+  // Process confirmations with concurrency limit to avoid CPU overload
+  const confirmBatchSize = 3;
+  for (let i = 0; i < toConfirm.length; i += confirmBatchSize) {
+    const batch = toConfirm.slice(i, i + confirmBatchSize);
+    await Promise.all(
+      batch.map(async ({ payment, confirmations }) => {
+        const confirmedAt = new Date().toISOString();
+        const updatedPayment = { ...payment, confirmations, confirmed_at: confirmedAt };
 
-      await sr.entities.Payment.update(payment.id, { status: 'confirmed', confirmations, confirmed_at: confirmedAt });
+        await sr.entities.Payment.update(payment.id, { status: 'confirmed', confirmations, confirmed_at: confirmedAt });
 
-      // Fire-and-forget side effects (do NOT await)
-      triggerWebhook(sr, updatedPayment, payment.merchant_id)
-        .catch(err => console.error(`Webhook failed: ${err.message}`));
-
-      base44.asServiceRole.functions.invoke('logAuditEvent', {
-        merchantId: payment.merchant_id,
-        eventType: 'payment_confirmed',
-        resourceType: 'payment',
-        resourceId: payment.id,
-        result: 'success',
-        changes: { status: 'confirmed', confirmations },
-        metadata: { block_height: latestBlock, amount_ada: payment.received_amount_ada }
-      }).catch(err => console.error(`Audit log failed: ${err.message}`));
-
-      base44.asServiceRole.functions.invoke('sendMerchantNotification', {
-        merchantId: payment.merchant_id,
-        notificationType: 'payment_confirmed',
-        title: '✅ Payment Confirmed',
-        message: `Payment of ${(payment.received_amount_ada || 0).toFixed(2)} ADA has been confirmed with ${confirmations} confirmations.`,
-        resourceType: 'payment',
-        resourceId: payment.id,
-        actionUrl: `/payments/${payment.id}`,
-        severity: 'info',
-        metadata: { confirmations, amount_ada: payment.received_amount_ada }
-      }).catch(err => console.error(`Notification failed: ${err.message}`));
-
-      // Discord Gate: grant role if Discord username is present
-      if (payment.payer_discord_username) {
-        base44.asServiceRole.functions.invoke('grantDiscordAccess', { paymentId: payment.id })
-          .catch(err => console.error(`Discord grant failed: ${err.message}`));
-      }
-    })
-  );
+        // Trigger side effects without awaiting — they run in background
+        setTimeout(async () => {
+          triggerWebhook(sr, updatedPayment, payment.merchant_id).catch(err => console.error(`Webhook failed: ${err.message}`));
+          base44.asServiceRole.functions.invoke('logAuditEvent', {
+            merchantId: payment.merchant_id,
+            eventType: 'payment_confirmed',
+            resourceType: 'payment',
+            resourceId: payment.id,
+            result: 'success',
+            changes: { status: 'confirmed', confirmations },
+            metadata: { block_height: latestBlock, amount_ada: payment.received_amount_ada }
+          }).catch(err => console.error(`Audit log failed: ${err.message}`));
+          base44.asServiceRole.functions.invoke('sendMerchantNotification', {
+            merchantId: payment.merchant_id,
+            notificationType: 'payment_confirmed',
+            title: '✅ Payment Confirmed',
+            message: `Payment of ${(payment.received_amount_ada || 0).toFixed(2)} ADA has been confirmed with ${confirmations} confirmations.`,
+            resourceType: 'payment',
+            resourceId: payment.id,
+            actionUrl: `/payments/${payment.id}`,
+            severity: 'info',
+            metadata: { confirmations, amount_ada: payment.received_amount_ada }
+          }).catch(err => console.error(`Notification failed: ${err.message}`));
+          if (payment.payer_discord_username) {
+            base44.asServiceRole.functions.invoke('grantDiscordAccess', { paymentId: payment.id })
+              .catch(err => console.error(`Discord grant failed: ${err.message}`));
+          }
+        }, 0);
+      })
+    );
+  }
 
   return {
     latestBlockHeight: latestBlock,
