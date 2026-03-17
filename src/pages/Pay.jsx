@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import WalletConnect from "@/components/checkout/WalletConnect";
 import WalletPayButton from "@/components/checkout/WalletPayButton";
 import AdaRatePreview from "@/components/checkout/AdaRatePreview";
+import WalletHealthCheck from "@/components/checkout/WalletHealthCheck";
 
 export default function Pay() {
   const [slug, setSlug] = useState("");
@@ -36,6 +37,7 @@ export default function Pay() {
   const [txLoading, setTxLoading] = useState(false);
   const [pollCount, setPollCount] = useState(0);
   const [txSubmitted, setTxSubmitted] = useState(false);
+  const [walletHealth, setWalletHealth] = useState(null);
 
   // Extract slug or cartItems from URL query params
   useEffect(() => {
@@ -475,31 +477,39 @@ export default function Pay() {
                   )}
 
                       {/* Wallet flow only */}
-                  <div className="space-y-3">
-                    <p className="text-[11px] text-slate-500 text-center">
-                      Supported: Nami · Eternl · Lace · Typhon · GeroWallet · Yoroi · Vespr
-                    </p>
-                    <WalletConnect
-                      onConnected={(w) => setConnectedWallet(w)}
-                      onDisconnected={() => setConnectedWallet(null)}
-                    />
-                    {connectedWallet && (
-                      <>
-                        <WalletPayButton
-                          connectedWallet={connectedWallet}
-                          sessionData={sessionData}
-                          paymentLink={paymentLink}
-                          payerEmail={payerEmail || null}
-                          payerName={payerName || null}
-                          payerDiscordUsername={payerDiscordUsername || null}
-                          onSuccess={handleTxSuccess}
-                        />
+                      <div className="space-y-3">
                         <p className="text-[11px] text-slate-500 text-center">
-                          Your wallet will ask you to confirm and enter your password.
+                          Supported: Nami · Eternl · Lace · Typhon · GeroWallet · Yoroi · Vespr
                         </p>
-                      </>
-                    )}
-                  </div>
+                        <WalletConnect
+                          onConnected={(w) => setConnectedWallet(w)}
+                          onDisconnected={() => setConnectedWallet(null)}
+                        />
+                        {connectedWallet && (
+                          <>
+                            {paymentLink?.amount_mode === "fixed_cnt" && (
+                              <WalletHealthCheck
+                                connectedWallet={connectedWallet}
+                                paymentLink={paymentLink}
+                                onHealthChecked={setWalletHealth}
+                              />
+                            )}
+                            <WalletPayButton
+                              connectedWallet={connectedWallet}
+                              sessionData={sessionData}
+                              paymentLink={paymentLink}
+                              payerEmail={payerEmail || null}
+                              payerName={payerName || null}
+                              payerDiscordUsername={payerDiscordUsername || null}
+                              onSuccess={handleTxSuccess}
+                              walletHealth={walletHealth}
+                            />
+                            <p className="text-[11px] text-slate-500 text-center">
+                              Your wallet will ask you to confirm and enter your password.
+                            </p>
+                          </>
+                        )}
+                      </div>
                 </>
               )}
             </div>
