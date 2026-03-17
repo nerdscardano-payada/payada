@@ -84,6 +84,18 @@ function DemoBanner() {
   );
 }
 
+// ─── Demo chart data ──────────────────────────────────────────────────────────
+const DEMO_VOLUME_DATA = [
+  { day: "Mon", ada: 320 }, { day: "Tue", ada: 180 }, { day: "Wed", ada: 540 },
+  { day: "Thu", ada: 290 }, { day: "Fri", ada: 610 }, { day: "Sat", ada: 430 },
+  { day: "Sun", ada: 758 },
+];
+const DEMO_PAYMENT_COUNT_DATA = [
+  { day: "Mon", count: 4 }, { day: "Tue", count: 2 }, { day: "Wed", count: 7 },
+  { day: "Thu", count: 3 }, { day: "Fri", count: 9 }, { day: "Sat", count: 5 },
+  { day: "Sun", count: 11 },
+];
+
 // ─── Dashboard ───────────────────────────────────────────────────────────────
 function DemoDashboard({ demoLinks, demoAccessLinks }) {
   const totalAda = DEMO_PAYMENTS.reduce((s, p) => s + p.received_amount_ada, 0) +
