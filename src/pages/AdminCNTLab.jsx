@@ -184,6 +184,7 @@ export default function AdminCNTLab() {
   const { isProfileComplete } = useProfileCheck();
   const [showForm, setShowForm] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
+  const queryClient = useQueryClient();
 
   if (!isProfileComplete) return null;
 
