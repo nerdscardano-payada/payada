@@ -120,6 +120,53 @@ function DemoDashboard({ demoLinks, demoAccessLinks }) {
         ))}
       </div>
 
+      {/* Analytics Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">Payment Volume (ADA)</h3>
+              <p className="text-xs text-slate-400">Last 7 days</p>
+            </div>
+            <span className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">Demo data</span>
+          </div>
+          <ResponsiveContainer width="100%" height={180}>
+            <AreaChart data={DEMO_VOLUME_DATA}>
+              <defs>
+                <linearGradient id="adaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="day" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} tickFormatter={v => `₳${v}`} />
+              <Tooltip formatter={(v) => [`₳ ${v}`, "Volume"]} contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e2e8f0" }} />
+              <Area type="monotone" dataKey="ada" stroke="#6366f1" strokeWidth={2} fill="url(#adaGrad)" dot={{ fill: "#6366f1", r: 3 }} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </Card>
+
+        <Card className="p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">Payments per Day</h3>
+              <p className="text-xs text-slate-400">Last 7 days</p>
+            </div>
+            <span className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">Demo data</span>
+          </div>
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={DEMO_PAYMENT_COUNT_DATA}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="day" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
+              <Tooltip formatter={(v) => [v, "Payments"]} contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid #e2e8f0" }} />
+              <Bar dataKey="count" fill="#22d3ee" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </Card>
+      </div>
+
       <Card className="overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between gap-3 flex-wrap">
           <h2 className="text-sm font-semibold text-slate-900">Recent Payments</h2>
