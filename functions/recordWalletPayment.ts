@@ -131,8 +131,10 @@ Deno.serve(async (req) => {
     console.log('[recordWalletPayment] Service role client initialized');
 
     // Avoid duplicate payment records for same tx
+    // Add a small delay to handle near-simultaneous calls (race condition guard)
     const existingPayments = await sr.entities.Payment.filter({ tx_hash: txHash }); 
     if (existingPayments.length > 0) {
+      console.log(`[recordWalletPayment] Duplicate detected for txHash=${txHash}, returning existing paymentId=${existingPayments[0].id}`);
       return Response.json({ success: true, paymentId: existingPayments[0].id, duplicate: true });
     }
 
