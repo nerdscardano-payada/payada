@@ -181,9 +181,6 @@ Deno.serve(async (req) => {
     let cntAssetName = null;
     let cntMerchantAmount = 0;
     let cntFeeAmount = 0;
-    // Initialize from payment link if available (may be overwritten below)
-    let cntDecimals = paymentLink?.cnt_decimals || 0;
-    let cntTicker = paymentLink?.cnt_ticker || null;
 
     outputs.forEach(output => {
       if (receiveAddress && output.address === receiveAddress) {
