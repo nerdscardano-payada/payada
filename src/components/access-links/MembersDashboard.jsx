@@ -23,6 +23,14 @@ const PLATFORM_COLORS = {
   other: "bg-slate-100 text-slate-600 border-slate-200",
 };
 
+const STATUS_STYLES = {
+  confirmed: "bg-emerald-100 text-emerald-700",
+  detected: "bg-amber-100 text-amber-700",
+  pending: "bg-slate-100 text-slate-700",
+  failed: "bg-red-100 text-red-700",
+  expired: "bg-slate-100 text-slate-500",
+};
+
 function MemberRow({ payment }) {
   return (
     <tr className="hover:bg-slate-50/50 transition-colors">
@@ -39,8 +47,8 @@ function MemberRow({ payment }) {
         <span className="text-sm font-semibold text-slate-800 tabular-nums">₳ {payment.received_amount_ada?.toFixed(2) || payment.expected_amount_ada?.toFixed(2)}</span>
       </td>
       <td className="px-4 py-3">
-        <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-0 text-xs">
-          confirmed
+        <Badge className={`${STATUS_STYLES[payment.status] || STATUS_STYLES.pending} hover:bg-inherit border-0 text-xs`}>
+          {payment.status || "pending"}
         </Badge>
       </td>
       <td className="px-4 py-3 text-xs text-slate-400">
@@ -54,8 +62,8 @@ function PlatformGroup({ platform, links, payments }) {
   const [expanded, setExpanded] = useState(true);
   const [search, setSearch] = useState("");
 
-  const platformPayments = payments.filter(p =>
-    links.some(l => l.id === p.payment_link_id || l.id === p.access_link_id)
+  const platformPayments = payments.filter((payment) =>
+    links.some((link) => link.id === payment.access_link_id)
   );
 
   const filteredBySearch = platformPayments.filter(p => {
@@ -165,19 +173,13 @@ export default function MembersDashboard({ links, user }) {
     queryKey: ["accessPayments", user?.email, linkIds],
     queryFn: async () => {
       if (!linkIds.length) return [];
-      // Get all confirmed payments for this merchant
-      const [confirmed, detected] = await Promise.all([
-        base44.entities.Payment.filter({ merchant_id: user.email, status: "confirmed" }, "-confirmed_at", 500),
-        base44.entities.Payment.filter({ merchant_id: user.email, status: "detected" }, "-created_date", 100),
-      ]);
-      const all = [...confirmed, ...detected];
-      // Filter to only those linked to our access links
-      return all.filter(p => {
-        return linkIds.includes(p.access_link_id) || (p.payment_link_id && linkIds.includes(p.payment_link_id));
-      });
+      const allPayments = await base44.entities.Payment.filter({ merchant_id: user.email }, "-created_date", 500);
+      return allPayments
+        .filter((payment) => linkIds.includes(payment.access_link_id))
+        .sort((a, b) => new Date(b.confirmed_at || b.created_date).getTime() - new Date(a.confirmed_at || a.created_date).getTime());
     },
     enabled: !!user && linkIds.length > 0,
-    staleTime: 0, // Always refetch to get latest
+    staleTime: 0,
   });
 
   // Group links by platform
