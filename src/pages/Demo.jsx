@@ -50,6 +50,8 @@ const TABS = [
   { id: "access-links", label: "Access Links", icon: Users },
   { id: "button-generator", label: "Button Generator", icon: Code2 },
   { id: "shop-generator", label: "Shop Generator", icon: ShoppingBag },
+  { id: "pos", label: "POS Terminal", icon: QrCode },
+  { id: "pay-terminal", label: "Pay Terminal", icon: Monitor },
 ];
 
 function ExpiresInBadge({ expiresAt }) {
