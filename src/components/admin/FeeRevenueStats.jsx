@@ -323,7 +323,7 @@ export default function FeeRevenueStats() {
                          {cntPayments.filter(p => p.cnt_fees?.some(f => f.policy_id === data.policy_id)).length}
                         </td>
                         <td className="py-3 text-right font-semibold text-green-600">
-                          {(data.totalFees / Math.pow(10, data.decimals)).toFixed(2)} {data.ticker}
+                          {Number(data.totalFees).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: data.decimals })} {data.ticker}
                         </td>
                       </tr>
                     ))}
@@ -399,7 +399,7 @@ export default function FeeRevenueStats() {
                   </p>
                 </div>
                 <p className="text-sm text-blue-900 mb-2">
-                  Ontvangen: {((p.received_amount_cnt || 0) / Math.pow(10, decimals)).toFixed(decimals > 0 ? 3 : 0)} {ticker}
+                  Ontvangen: {Number(p.received_amount_cnt || 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: decimals })} {ticker}
                 </p>
                 {p.cnt_fees && p.cnt_fees.length > 0 && (
                   <div className="text-xs space-y-1 pt-2 border-t border-blue-100">
@@ -409,7 +409,7 @@ export default function FeeRevenueStats() {
                       const feeDecimals = resolveDecimals(fee.policy_id, fee.decimals);
                       return (
                         <p key={idx} className="text-green-600">
-                          {(fee.amount / Math.pow(10, feeDecimals)).toFixed(feeDecimals > 0 ? 3 : 0)} {feeTicker}
+                          {Number(fee.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: feeDecimals })} {feeTicker}
                         </p>
                       );
                     })}
