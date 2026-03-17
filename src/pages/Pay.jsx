@@ -121,6 +121,22 @@ export default function Pay() {
   }, [cartItems, cartLinks, cartLinksFetching]);
 
   const handleStartCheckout = async () => {
+    // Validate required fields
+    if (paymentLink.collect_email && !payerEmail.trim()) {
+      toast.error("Please enter your email address");
+      return;
+    }
+    if (paymentLink.collect_name && !payerName.trim()) {
+      toast.error("Please enter your name");
+      return;
+    }
+    if (paymentLink.collect_shipping) {
+      if (!shippingStreet.trim() || !shippingCity.trim() || !shippingPostalCode.trim() || !shippingCountry.trim()) {
+        toast.error("Please fill in your complete shipping address");
+        return;
+      }
+    }
+
     setCheckoutLoading(true);
     try {
       let response;
