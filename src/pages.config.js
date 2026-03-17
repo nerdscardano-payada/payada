@@ -54,15 +54,20 @@ import Access from './pages/Access';
 import AccessLinks from './pages/AccessLinks';
 import AdminCNTLab from './pages/AdminCNTLab';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminLaunchpad from './pages/AdminLaunchpad';
 import ApiKeys from './pages/ApiKeys';
 import Billing from './pages/Billing';
 import ButtonGenerator from './pages/ButtonGenerator';
 import Contact from './pages/Contact';
 import Customers from './pages/Customers';
 import Dashboard from './pages/Dashboard';
+import Demo from './pages/Demo';
 import Disclaimer from './pages/Disclaimer';
 import DiscordPlugin from './pages/DiscordPlugin';
 import Documentation from './pages/Documentation';
+import EventCheckout from './pages/EventCheckout';
+import EventEntry from './pages/EventEntry';
+import Events from './pages/Events';
 import Features from './pages/Features';
 import Home from './pages/Home';
 import Litepaper from './pages/Litepaper';
@@ -88,6 +93,9 @@ import Store from './pages/Store';
 import SubscriberPortal from './pages/SubscriberPortal';
 import Subscriptions from './pages/Subscriptions';
 import TermsOfService from './pages/TermsOfService';
+import TokenSale from './pages/TokenSale';
+import TokenSaleDashboard from './pages/TokenSaleDashboard';
+import TransactionAudit from './pages/TransactionAudit';
 import Unlock from './pages/Unlock';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
 import Webhooks from './pages/Webhooks';
@@ -102,15 +110,20 @@ export const PAGES = {
     "AccessLinks": AccessLinks,
     "AdminCNTLab": AdminCNTLab,
     "AdminDashboard": AdminDashboard,
+    "AdminLaunchpad": AdminLaunchpad,
     "ApiKeys": ApiKeys,
     "Billing": Billing,
     "ButtonGenerator": ButtonGenerator,
     "Contact": Contact,
     "Customers": Customers,
     "Dashboard": Dashboard,
+    "Demo": Demo,
     "Disclaimer": Disclaimer,
     "DiscordPlugin": DiscordPlugin,
     "Documentation": Documentation,
+    "EventCheckout": EventCheckout,
+    "EventEntry": EventEntry,
+    "Events": Events,
     "Features": Features,
     "Home": Home,
     "Litepaper": Litepaper,
@@ -136,6 +149,9 @@ export const PAGES = {
     "SubscriberPortal": SubscriberPortal,
     "Subscriptions": Subscriptions,
     "TermsOfService": TermsOfService,
+    "TokenSale": TokenSale,
+    "TokenSaleDashboard": TokenSaleDashboard,
+    "TransactionAudit": TransactionAudit,
     "Unlock": Unlock,
     "WebhookSetupWizard": WebhookSetupWizard,
     "Webhooks": Webhooks,

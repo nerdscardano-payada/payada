@@ -291,7 +291,7 @@ export default function Dashboard() {
           ) : (
             <>
               <PaymentVolumeChart payments={payments} />
-              <TopCustomers customers={customers} />
+              <TopCustomers customers={customers} payments={payments} />
             </>
           )}
         </div>

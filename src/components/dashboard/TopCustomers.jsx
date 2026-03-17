@@ -3,9 +3,70 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { ArrowRight, Users } from "lucide-react";
 
-export default function TopCustomers({ customers }) {
+const KNOWN_DECIMALS = {
+  "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114": 6,
+  "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6": 6,
+  "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489": 6,
+  "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad": 6,
+  "fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456": 6,
+  "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61": 6,
+};
+
+function getCntDecimals(policyId, storedDecimals) {
+  if (storedDecimals && storedDecimals > 0) return storedDecimals;
+  return KNOWN_DECIMALS[policyId] ?? 0;
+}
+
+function getCustomerDisplayData(customer, payments = []) {
+  const matchedPayments = payments.filter((payment) => {
+    if (customer.email && payment.payer_email === customer.email) return true;
+    if (customer.wallet_address && payment.payer_address === customer.wallet_address) return true;
+    return false;
+  });
+
+  const confirmedPayments = matchedPayments.filter((payment) => payment.status === "confirmed");
+  const adaTotal = confirmedPayments
+    .filter((payment) => payment.payment_type !== "cnt")
+    .reduce((sum, payment) => sum + (payment.merchant_amount_ada || payment.received_amount_ada || payment.expected_amount_ada || 0), 0);
+
+  const cntByToken = {};
+  confirmedPayments
+    .filter((payment) => payment.payment_type === "cnt")
+    .forEach((payment) => {
+      const key = payment.cnt_policy_id || payment.cnt_ticker || "CNT";
+      if (!cntByToken[key]) {
+        cntByToken[key] = {
+          ticker: payment.cnt_ticker || "CNT",
+          decimals: getCntDecimals(payment.cnt_policy_id, payment.cnt_decimals),
+          amount: 0,
+        };
+      }
+      cntByToken[key].amount += payment.merchant_amount_cnt ?? payment.received_amount_cnt ?? payment.expected_amount_cnt ?? 0;
+    });
+
+  const cntTokens = Object.values(cntByToken);
+  if (adaTotal === 0 && cntTokens.length === 1) {
+    const token = cntTokens[0];
+    return {
+      sortValue: Number(token.amount),
+      amountLabel: `${Number(token.amount).toLocaleString(undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: token.decimals,
+      })} ${token.ticker}`,
+    };
+  }
+
+  const adaValue = Number(adaTotal || customer.total_merchant_ada || customer.total_paid_ada || 0);
+  return {
+    sortValue: adaValue,
+    amountLabel: `₳ ${adaValue.toFixed(2)}`,
+  };
+}
+
+export default function TopCustomers({ customers, payments = [] }) {
   const top = [...customers]
-    .sort((a, b) => (b.total_merchant_ada || b.total_paid_ada || 0) - (a.total_merchant_ada || a.total_paid_ada || 0))
+    .map((customer) => ({ ...customer, __display: getCustomerDisplayData(customer, payments) }))
+    .sort((a, b) => b.__display.sortValue - a.__display.sortValue)
     .slice(0, 5);
 
   return (
@@ -37,7 +98,7 @@ export default function TopCustomers({ customers }) {
                 <p className="text-xs text-slate-400">{c.payment_count || 0} payments</p>
               </div>
               <span className="text-sm font-semibold text-slate-900 tabular-nums">
-                ₳ {(c.total_merchant_ada || c.total_paid_ada || 0).toFixed(2)}
+                {c.__display.amountLabel}
               </span>
             </div>
           ))}
