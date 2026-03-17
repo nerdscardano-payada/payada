@@ -119,16 +119,19 @@ async function processConfirmations(base44) {
             changes: { status: 'confirmed', confirmations },
             metadata: { block_height: latestBlock, amount_ada: payment.received_amount_ada }
           }).catch(err => console.error(`Audit log failed: ${err.message}`));
+          const amountLabel = payment.payment_type === 'cnt'
+            ? `${Number(payment.merchant_amount_cnt ?? payment.received_amount_cnt ?? payment.expected_amount_cnt ?? 0).toLocaleString()} ${payment.cnt_ticker || 'CNT'}`
+            : `₳ ${Number(payment.received_amount_ada || 0).toFixed(2)}`;
           base44.asServiceRole.functions.invoke('sendMerchantNotification', {
             merchantId: payment.merchant_id,
             notificationType: 'payment_confirmed',
             title: '✅ Payment Confirmed',
-            message: `Payment of ${(payment.received_amount_ada || 0).toFixed(2)} ADA has been confirmed with ${confirmations} confirmations.`,
+            message: `Payment of ${amountLabel} has been confirmed with ${confirmations} confirmations.`,
             resourceType: 'payment',
             resourceId: payment.id,
             actionUrl: `/payments/${payment.id}`,
             severity: 'info',
-            metadata: { confirmations, amount_ada: payment.received_amount_ada }
+            metadata: { confirmations, amount_ada: payment.received_amount_ada, amount_cnt: payment.received_amount_cnt, amount_label: amountLabel, payment_type: payment.payment_type, cnt_ticker: payment.cnt_ticker }
           }).catch(err => console.error(`Notification failed: ${err.message}`));
           if (payment.payer_discord_username) {
             base44.asServiceRole.functions.invoke('grantDiscordAccess', { paymentId: payment.id })

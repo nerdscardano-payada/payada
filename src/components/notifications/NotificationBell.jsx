@@ -4,6 +4,16 @@ import { base44 } from "@/api/base44Client";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
+function formatPaymentAmount(payment) {
+  if (payment?.payment_type === "cnt") {
+    const amount = payment.merchant_amount_cnt ?? payment.received_amount_cnt ?? payment.expected_amount_cnt ?? 0;
+    return `${Number(amount).toLocaleString()} ${payment.cnt_ticker || "CNT"}`;
+  }
+
+  const amount = payment?.received_amount_ada ?? payment?.expected_amount_ada ?? 0;
+  return `₳ ${Number(amount).toFixed(2)}`;
+}
+
 export default function NotificationBell({ user, collapsed }) {
   const [notifications, setNotifications] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -20,7 +30,7 @@ export default function NotificationBell({ user, collapsed }) {
           id: event.data.id,
           type: "payment_confirmed",
           payer: event.data.payer_name || event.data.payer_email || "Unknown",
-          amount: event.data.received_amount_ada || event.data.expected_amount_ada,
+          amountLabel: formatPaymentAmount(event.data),
           timestamp: new Date(),
           read: false,
         };
@@ -132,7 +142,7 @@ export default function NotificationBell({ user, collapsed }) {
                           {notif.payer}
                         </p>
                         <p className="text-sm font-semibold text-cyan-400 mt-1">
-                          ₳ {notif.amount?.toFixed(2)}
+                          {notif.amountLabel}
                         </p>
                         <p className="text-xs text-slate-500 mt-1">
                           {format(notif.timestamp, "HH:mm")}

@@ -109,11 +109,15 @@ Deno.serve(async (req) => {
     }
 
     // Log to notification
+    const amountLabel = payment.payment_type === 'cnt'
+      ? `${Number(payment.merchant_amount_cnt ?? payment.received_amount_cnt ?? payment.expected_amount_cnt ?? 0).toLocaleString()} ${payment.cnt_ticker || 'CNT'}`
+      : `₳ ${Number(payment.received_amount_ada || 0).toFixed(2)}`;
+
     await sr.entities.Notification.create({
       merchant_id: payment.merchant_id,
       type: 'payment_confirmed',
       title: 'Discord access granted',
-      message: `${discordUsername} received Discord role after payment of ₳${payment.received_amount_ada?.toFixed(2)}`,
+      message: `${discordUsername} received Discord role after payment of ${amountLabel}`,
       resource_type: 'payment',
       resource_id: paymentId,
       severity: 'info'

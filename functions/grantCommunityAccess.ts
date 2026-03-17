@@ -85,6 +85,22 @@ Deno.serve(async (req) => {
       }, 0);
     }
 
+    if (link.platform !== 'discord') {
+      const amountLabel = payment.payment_type === 'cnt'
+        ? `${Number(payment.merchant_amount_cnt ?? payment.received_amount_cnt ?? payment.expected_amount_cnt ?? 0).toLocaleString()} ${payment.cnt_ticker || 'CNT'}`
+        : `₳ ${Number(payment.received_amount_ada || 0).toFixed(2)}`;
+
+      await sr.entities.Notification.create({
+        merchant_id: payment.merchant_id,
+        type: 'payment_confirmed',
+        title: 'Community access granted',
+        message: `${payment.payer_name || payment.payer_email || 'A member'} received access after payment of ${amountLabel}`,
+        resource_type: 'payment',
+        resource_id: payment.id,
+        severity: 'info'
+      });
+    }
+
     return Response.json({
       success: true,
       status: 'confirmed',
