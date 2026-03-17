@@ -215,14 +215,6 @@ export default function AdminCNTLab() {
     queryFn: () => base44.entities.MerchantProfile.list(),
   });
 
-  const [expandedMerchant, setExpandedMerchant] = useState(null);
-  const [addingToken, setAddingToken] = useState({}); // merchantId -> selected ticker
-
-  const updateMerchantWhitelistMutation = useMutation({
-    mutationFn: ({ profileId, tokens }) => base44.entities.MerchantProfile.update(profileId, { whitelisted_cnt_tokens: tokens }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["all-merchants"] }),
-  });
-
   const deleteLinkMutation = useMutation({
     mutationFn: (id) => base44.entities.PaymentLink.delete(id),
     onSuccess: () => queryClient.invalidateQueries(["cnt-links"]),
