@@ -911,8 +911,11 @@ function DemoPayTerminal() {
               <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/PayTerminal?id=${t.id}`); toast.success("Link copied!"); }}>
                 <Copy className="w-3.5 h-3.5" /> Link
               </Button>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => { const url = `${window.location.origin}/PayTerminal?id=${t.id}`; const code = `<iframe src="${url}" width="480" height="700" frameborder="0" style="border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.12);"></iframe>`; navigator.clipboard.writeText(code); toast.success("Embed code copied!"); }}>
+                <Copy className="w-3.5 h-3.5" /> Embed
+              </Button>
               <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => setPreviewId(previewId === t.id ? null : t.id)}>
-                <ExternalLink className="w-3.5 h-3.5" /> {previewId === t.id ? "Hide" : "Preview"}
+                {previewId === t.id ? "Hide preview" : "Preview"}
               </Button>
             </div>
           </div>
