@@ -35,13 +35,13 @@ import StepPublish from "@/components/shopping-page-generator/StepPublish";
 const DEMO_MERCHANT_ID = "demo@payada.io";
 
 const DEMO_PAYMENTS = [
-  { id: "d1", payer_email: "alice@example.com", received_amount_ada: 50, status: "confirmed", product: "Event Ticket", tx_hash: "8f3a2b1c...e4d9", created_date: new Date(Date.now() - 3600000 * 2).toISOString() },
-  { id: "d2", payer_email: "bob@example.com", received_amount_ada: 120, status: "confirmed", product: "Premium Community", tx_hash: "1d7e4f2a...c8b3", created_date: new Date(Date.now() - 3600000 * 5).toISOString() },
-  { id: "d3", payer_email: "carol@example.com", received_amount_ada: 250, status: "confirmed", product: "Product Purchase", tx_hash: "9c5b3e7d...f1a2", created_date: new Date(Date.now() - 3600000 * 12).toISOString() },
-  { id: "d4", payer_email: "dave@example.com", received_amount_ada: 75, status: "confirmed", product: "Donation", tx_hash: "2a8d6c4f...b7e1", created_date: new Date(Date.now() - 3600000 * 24).toISOString() },
-  { id: "d5", payer_email: "eve@example.com", received_amount_ada: 200, status: "confirmed", product: "Event Ticket", tx_hash: "5e1f9b3a...d4c8", created_date: new Date(Date.now() - 3600000 * 36).toISOString() },
-  { id: "d6", payer_email: "frank@example.com", received_amount_ada: 99, status: "confirmed", product: "VIP Trading Club", tx_hash: "3b7c2e5f...a9d1", created_date: new Date(Date.now() - 3600000 * 48).toISOString() },
-  { id: "d7", payer_email: "grace@example.com", received_amount_ada: 35, status: "confirmed", product: "Product Purchase", tx_hash: "6d4a1b8e...f2c7", created_date: new Date(Date.now() - 3600000 * 60).toISOString() },
+  { id: "d1", payer_email: "alice@example.com", received_amount_ada: 50, status: "confirmed", product: "Event Ticket", tx_hash: "8f3a2b1c...e4d9", wallet: "addr1qx8zt4...f3k2", created_date: new Date(Date.now() - 3600000 * 2).toISOString() },
+  { id: "d2", payer_email: "bob@example.com", received_amount_ada: 120, status: "confirmed", product: "Premium Community", tx_hash: "1d7e4f2a...c8b3", wallet: "addr1vy9mn2...a7p1", created_date: new Date(Date.now() - 3600000 * 5).toISOString() },
+  { id: "d3", payer_email: "carol@example.com", received_amount_ada: 250, status: "confirmed", product: "Product Purchase", tx_hash: "9c5b3e7d...f1a2", wallet: "addr1q4rw7j...d9s5", created_date: new Date(Date.now() - 3600000 * 12).toISOString() },
+  { id: "d4", payer_email: "dave@example.com", received_amount_ada: 75, status: "confirmed", product: "Donation", tx_hash: "2a8d6c4f...b7e1", wallet: "addr1vxk3hn...e2m8", created_date: new Date(Date.now() - 3600000 * 24).toISOString() },
+  { id: "d5", payer_email: "eve@example.com", received_amount_ada: 200, status: "confirmed", product: "Event Ticket", tx_hash: "5e1f9b3a...d4c8", wallet: "addr1q9pf6c...b1t4", created_date: new Date(Date.now() - 3600000 * 36).toISOString() },
+  { id: "d6", payer_email: "frank@example.com", received_amount_ada: 99, status: "confirmed", product: "VIP Trading Club", tx_hash: "3b7c2e5f...a9d1", wallet: "addr1vya8lz...r5n7", created_date: new Date(Date.now() - 3600000 * 48).toISOString() },
+  { id: "d7", payer_email: "grace@example.com", received_amount_ada: 35, status: "confirmed", product: "Product Purchase", tx_hash: "6d4a1b8e...f2c7", wallet: "addr1qxm5dk...c3w9", created_date: new Date(Date.now() - 3600000 * 60).toISOString() },
 ];
 
 const TABS = [
