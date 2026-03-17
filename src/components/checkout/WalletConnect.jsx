@@ -118,30 +118,27 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     try {
       const api = await window.cardano[walletId].enable();
       
-      // Get address (CIP-30 returns hex-encoded CBOR, need to convert to bech32)
+      // Get address (CIP-30 returns hex, convert to bech32)
       const changeAddr = await api.getChangeAddress();
       
-      // Convert hex CBOR address to bech32 for backend
+      // Convert address to bech32 if needed
       let address = changeAddr;
-      try {
-        // CIP-30 returns CBOR-encoded address in hex
-        // Format: 0x58 (byte string type) + length (1 byte) + address bytes
-        if (changeAddr && changeAddr.length > 4 && changeAddr.startsWith('58')) {
-          const length = parseInt(changeAddr.slice(2, 4), 16);
-          const addrHex = changeAddr.slice(4, 4 + length * 2);
+      if (address && !address.startsWith('addr')) {
+        try {
+          // Strip CBOR wrapper if present (0x58XX prefix)
+          let addrHex = address;
+          if (address.startsWith('58')) {
+            const length = parseInt(address.slice(2, 4), 16);
+            addrHex = address.slice(4, 4 + length * 2);
+          }
           
-          // Convert raw address hex to bech32
+          // Convert raw hex to bech32
           address = hexToBech32(addrHex, 'addr');
-          console.log("Converted address to bech32:", address);
+          console.log("Converted hex to bech32:", address.slice(0, 20) + '...');
+        } catch (e) {
+          console.warn("Address conversion error:", e.message);
+          throw new Error('Failed to convert wallet address to proper format');
         }
-      } catch (e) {
-        console.warn("Address CBOR decode failed:", e);
-        // If it already looks like bech32, use as-is
-        if (!changeAddr.startsWith('addr')) {
-          console.error("Cannot convert address:", changeAddr);
-          throw new Error('Invalid wallet address format');
-        }
-        address = changeAddr;
       }
 
       // Get balance in lovelace — CBOR decode
