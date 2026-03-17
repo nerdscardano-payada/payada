@@ -125,17 +125,23 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       let address = changeAddr;
       try {
         // CIP-30 returns CBOR-encoded address in hex
-        // Decode: first byte 0x58 (byte string), second byte = length, then raw address bytes
-        if (changeAddr.startsWith('58')) {
+        // Format: 0x58 (byte string type) + length (1 byte) + address bytes
+        if (changeAddr && changeAddr.length > 4 && changeAddr.startsWith('58')) {
           const length = parseInt(changeAddr.slice(2, 4), 16);
           const addrHex = changeAddr.slice(4, 4 + length * 2);
-          const addrBytes = new Uint8Array(addrHex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
           
-          // Convert to bech32 using CIP-5 format
-          address = encodeBech32('addr', Array.from(addrBytes));
+          // Convert raw address hex to bech32
+          address = hexToBech32(addrHex, 'addr');
+          console.log("Converted address to bech32:", address);
         }
       } catch (e) {
-        console.warn("Address conversion failed, using raw:", e);
+        console.warn("Address CBOR decode failed:", e);
+        // If it already looks like bech32, use as-is
+        if (!changeAddr.startsWith('addr')) {
+          console.error("Cannot convert address:", changeAddr);
+          throw new Error('Invalid wallet address format');
+        }
+        address = changeAddr;
       }
 
       // Get balance in lovelace — CBOR decode
