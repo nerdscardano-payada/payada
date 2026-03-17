@@ -125,7 +125,7 @@ export default function HomePage() {
                 </Button>
               </Link>
             </div>
-            <p className="text-sm text-slate-500 mt-6">{t("home.hero_note")}</p>
+
           </div>
           <div className="relative">
             <div className="bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl p-1 shadow-2xl">
