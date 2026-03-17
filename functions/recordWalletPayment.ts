@@ -252,7 +252,7 @@ Deno.serve(async (req) => {
     status: 'detected',
     payment_type: isCntPayment ? 'cnt' : 'ada',
     expected_amount_ada: expectedAmountAda,
-    received_amount_ada: receivedAmountAda,
+    received_amount_ada: merchantAmountAda,
     tx_hash: txHash,
     payer_address: normalizedAddress,
     payer_email: payerEmail || null,
