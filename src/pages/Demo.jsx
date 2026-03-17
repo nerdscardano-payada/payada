@@ -878,7 +878,6 @@ function DemoPOS() {
 // ─── Pay Terminal Demo ────────────────────────────────────────────────────────
 const DEMO_TERMINALS = [
   { id: "t1", name: "Webshop Checkout", description: "Embedded on product pages", mode: "one_time", accent_color: "#6366f1", status: "active", payments: 38 },
-  { id: "t2", name: "Monthly Membership", description: "Subscription plan selector", mode: "subscription", accent_color: "#06b6d4", status: "active", payments: 12 },
   { id: "t3", name: "Donation Widget", description: "Nonprofit fundraising page", mode: "one_time", accent_color: "#10b981", status: "active", payments: 57 },
 ];
 
