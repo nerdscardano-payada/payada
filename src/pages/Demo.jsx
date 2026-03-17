@@ -715,6 +715,239 @@ function DemoShopGenerator({ links }) {
   );
 }
 
+// ─── POS Terminal Demo ────────────────────────────────────────────────────────
+const DEMO_POS_HISTORY = [
+  { id: "p1", label: "Coffee", amount: 5, time: "09:14", date: "Today" },
+  { id: "p2", label: "Ticket", amount: 20, time: "10:32", date: "Today" },
+  { id: "p3", label: "Merchandise", amount: 45, time: "14:05", date: "Today" },
+  { id: "p4", label: "Beer", amount: 8, time: "16:22", date: "Yesterday" },
+  { id: "p5", label: "Donation", amount: 25, time: "18:47", date: "Yesterday" },
+];
+
+function DemoPOS() {
+  const [amountAda, setAmountAda] = useState("");
+  const [label, setLabel] = useState("");
+  const [stage, setStage] = useState("input"); // input | qr | confirmed
+
+  const handleGenerate = () => {
+    if (!amountAda || parseFloat(amountAda) <= 0) return toast.error("Enter a valid amount");
+    setStage("qr");
+  };
+
+  const handleSimulatePayment = () => {
+    setStage("confirmed");
+    toast.success("Payment confirmed! (demo simulation)");
+  };
+
+  const handleReset = () => {
+    setStage("input");
+    setAmountAda("");
+    setLabel("");
+  };
+
+  return (
+    <div className="max-w-sm mx-auto">
+      <div className="bg-slate-950 rounded-2xl overflow-hidden border border-slate-800">
+        {/* Header */}
+        <div className="text-center pt-8 pb-4 px-6">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center mx-auto mb-3">
+            <Zap className="w-6 h-6 text-white" />
+          </div>
+          <h1 className="text-xl font-bold text-white">PayADA POS</h1>
+          <p className="text-xs text-slate-500 mt-1">Physical point of sale · Cardano ADA</p>
+        </div>
+
+        <div className="px-6 pb-6">
+          {stage === "input" && (
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-slate-400 text-xs">Amount (ADA)</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-lg">₳</span>
+                  <input
+                    type="number" value={amountAda} onChange={e => setAmountAda(e.target.value)}
+                    placeholder="0.00"
+                    className="w-full bg-slate-800 border border-slate-700 text-white text-2xl font-bold pl-8 h-14 rounded-lg placeholder:text-slate-600 outline-none focus:border-indigo-500"
+                  />
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-slate-400 text-xs">Description (optional)</label>
+                <input
+                  value={label} onChange={e => setLabel(e.target.value)}
+                  placeholder="e.g. Coffee, Ticket, Beer..."
+                  className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-3 h-10 placeholder:text-slate-600 outline-none focus:border-indigo-500"
+                />
+              </div>
+              <div className="grid grid-cols-4 gap-2">
+                {[20, 40, 60, 80].map(amt => (
+                  <button key={amt} onClick={() => setAmountAda(String(amt))}
+                    className="py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold border border-slate-700">
+                    ₳{amt}
+                  </button>
+                ))}
+              </div>
+              <button onClick={handleGenerate} disabled={!amountAda}
+                className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white font-semibold rounded-lg">
+                Generate QR Code
+              </button>
+            </div>
+          )}
+
+          {stage === "qr" && (
+            <div className="space-y-4 text-center">
+              <div>
+                <p className="text-slate-400 text-xs mb-1">{label || "POS Payment"}</p>
+                <p className="text-4xl font-bold text-white">₳ {parseFloat(amountAda).toFixed(2)}</p>
+              </div>
+              {/* Fake QR */}
+              <div className="flex justify-center">
+                <div className="bg-white p-4 rounded-xl w-[200px] h-[200px] flex items-center justify-center">
+                  <div className="grid grid-cols-5 gap-1 w-full h-full">
+                    {Array.from({ length: 25 }).map((_, i) => (
+                      <div key={i} className={`rounded-sm ${[0,1,2,5,10,12,14,18,20,22,23,24,6,7,8,15,16,17].includes(i) ? "bg-slate-900" : "bg-white"}`} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-800/60 text-amber-400">
+                <Clock className="w-5 h-5 flex-shrink-0" />
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-white">Awaiting payment…</p>
+                  <p className="text-[11px] text-slate-500">Ask customer to scan with a Cardano wallet</p>
+                </div>
+              </div>
+              <button onClick={handleSimulatePayment}
+                className="w-full h-10 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-sm">
+                Simulate Payment ✓ (demo)
+              </button>
+              <button onClick={handleReset}
+                className="w-full h-10 border border-slate-700 text-slate-300 hover:bg-slate-800 rounded-lg text-sm flex items-center justify-center gap-2">
+                <RotateCcw className="w-4 h-4" /> Cancel
+              </button>
+            </div>
+          )}
+
+          {stage === "confirmed" && (
+            <div className="space-y-4 text-center">
+              <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-xl font-bold text-white">Payment Confirmed!</p>
+                <p className="text-slate-400 text-sm mt-1">₳ {parseFloat(amountAda).toFixed(2)} received</p>
+              </div>
+              <button onClick={handleReset}
+                className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg flex items-center justify-center gap-2">
+                <RotateCcw className="w-4 h-4" /> New Payment
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Transaction history */}
+      <div className="mt-6">
+        <h3 className="text-sm font-semibold text-slate-700 mb-3">Recent Transactions</h3>
+        <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-50">
+          {DEMO_POS_HISTORY.map(tx => (
+            <div key={tx.id} className="flex items-center justify-between px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-slate-900">{tx.label}</p>
+                  <p className="text-xs text-slate-400">{tx.date} · {tx.time}</p>
+                </div>
+              </div>
+              <span className="text-sm font-semibold text-slate-900">₳ {tx.amount}.00</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Pay Terminal Demo ────────────────────────────────────────────────────────
+const DEMO_TERMINALS = [
+  { id: "t1", name: "Webshop Checkout", description: "Embedded on product pages", mode: "one_time", accent_color: "#6366f1", status: "active", payments: 38 },
+  { id: "t2", name: "Monthly Membership", description: "Subscription plan selector", mode: "subscription", accent_color: "#06b6d4", status: "active", payments: 12 },
+  { id: "t3", name: "Donation Widget", description: "Nonprofit fundraising page", mode: "one_time", accent_color: "#10b981", status: "active", payments: 57 },
+];
+
+function DemoPayTerminal() {
+  const [previewId, setPreviewId] = useState(null);
+  const terminal = DEMO_TERMINALS.find(t => t.id === previewId);
+
+  return (
+    <div className="space-y-5">
+      <div className="flex justify-end">
+        <Button className="bg-indigo-600 hover:bg-indigo-700 gap-2" onClick={() => toast.info("Create your account to build real terminals!")}>
+          <Plus className="w-4 h-4" /> New Terminal
+        </Button>
+      </div>
+
+      <div className="space-y-3">
+        {DEMO_TERMINALS.map(t => (
+          <div key={t.id} className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col md:flex-row md:items-center gap-4">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: t.accent_color + "22" }}>
+              <Monitor className="w-5 h-5" style={{ color: t.accent_color }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="font-semibold text-slate-900">{t.name}</p>
+                <Badge className="bg-emerald-100 text-emerald-700 border-0 text-xs">Active</Badge>
+                <Badge variant="outline" className="text-xs">{t.mode === "one_time" ? "One-time" : "Subscription"}</Badge>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">{t.description} · {t.payments} payments</p>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/PayTerminal?id=${t.id}`); toast.success("Link copied!"); }}>
+                <Copy className="w-3.5 h-3.5" /> Link
+              </Button>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => setPreviewId(previewId === t.id ? null : t.id)}>
+                <ExternalLink className="w-3.5 h-3.5" /> {previewId === t.id ? "Hide" : "Preview"}
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {terminal && (
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-sm mx-auto">
+          <div className="text-center mb-5">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: terminal.accent_color + "22" }}>
+              <Monitor className="w-5 h-5" style={{ color: terminal.accent_color }} />
+            </div>
+            <h3 className="font-bold text-slate-900">{terminal.name}</h3>
+            <p className="text-xs text-slate-400">{terminal.description}</p>
+          </div>
+          <div className="space-y-3">
+            <div className="space-y-1">
+              <label className="text-xs text-slate-500">Your name</label>
+              <input className="w-full border border-slate-200 rounded-lg px-3 h-9 text-sm outline-none focus:border-indigo-400" placeholder="John Doe" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs text-slate-500">Email</label>
+              <input className="w-full border border-slate-200 rounded-lg px-3 h-9 text-sm outline-none focus:border-indigo-400" placeholder="john@example.com" />
+            </div>
+            <button
+              className="w-full h-10 text-white font-semibold rounded-lg text-sm"
+              style={{ backgroundColor: terminal.accent_color }}
+              onClick={() => toast.info("Sign up to accept real payments!")}
+            >
+              Pay with ADA
+            </button>
+          </div>
+          <p className="text-center text-[11px] text-slate-400 mt-3">Powered by PayADA</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Demo Page ───────────────────────────────────────────────────────────
 export default function Demo() {
   const [activeTab, setActiveTab] = useState("dashboard");
