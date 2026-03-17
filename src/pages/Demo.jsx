@@ -19,7 +19,8 @@ import {
   Trash2, Clock, CheckCircle2, LayoutDashboard, ShoppingBag, Zap,
   Code2, ArrowLeft, ExternalLink, Monitor, RotateCcw, Loader2, QrCode
 } from "lucide-react";
-import { format, addHours } from "date-fns";
+import { format, addHours, subDays } from "date-fns";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { createPageUrl } from "@/utils";
 
 // Button generator imports
