@@ -181,7 +181,7 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
 
       {/* Step content */}
       <div className="bg-white rounded-xl border border-slate-200/60 p-6 mb-6">
-        {step === 1 && <StepBasic form={form} update={update} isEditing={isEditing} isAdmin={user?.role === "admin"} />}
+        {step === 1 && <StepBasic form={form} update={update} isEditing={isEditing} isAdmin={user?.role === "admin"} whitelistedTokens={merchantProfile?.whitelisted_cnt_tokens || []} />}
         {step === 2 && <StepOptions form={form} update={update} />}
         {step === 3 && <StepSummary form={form} />}
       </div>
