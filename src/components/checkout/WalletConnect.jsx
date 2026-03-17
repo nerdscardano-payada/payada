@@ -2,17 +2,42 @@ import React, { useState, useEffect } from "react";
 import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Bech32 encoding for Cardano addresses (CIP-5)
-function encodeBech32(hrp, data) {
-  const CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
+// Convert hex string to Bech32 (Cardano address format)
+function hexToBech32(hexStr, hrp = 'addr') {
+  const CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
   
-  // Calculate checksum (bech32 polymod)
-  const polymod = (values) => {
+  // Convert hex to bytes
+  const bytes = [];
+  for (let i = 0; i < hexStr.length; i += 2) {
+    bytes.push(parseInt(hexStr.substr(i, 2), 16));
+  }
+  
+  // Convert 8-bit bytes to 5-bit groups
+  let bits = 0, value = 0, count = 0;
+  const result = [];
+  
+  for (const byte of bytes) {
+    value = (value << 8) | byte;
+    bits += 8;
+    while (bits >= 5) {
+      bits -= 5;
+      result.push((value >> bits) & 31);
+    }
+  }
+  if (bits > 0) {
+    result.push((value << (5 - bits)) & 31);
+  }
+  
+  // Calculate checksum
+  const values = [...hrp.split('').map(c => c.charCodeAt(0) >> 5), 0];
+  for (const c of hrp) values.push(c.charCodeAt(0) & 31);
+  
+  const polymod = (v) => {
     const GENERATOR = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3];
     let chk = 1;
-    for (const v of values) {
+    for (const x of v) {
       const b = chk >> 25;
-      chk = ((chk & 0x1ffffff) << 5) ^ v;
+      chk = ((chk & 0x1ffffff) << 5) ^ x;
       for (let i = 0; i < 5; i++) {
         chk ^= ((b >> i) & 1) ? GENERATOR[i] : 0;
       }
@@ -20,14 +45,15 @@ function encodeBech32(hrp, data) {
     return chk;
   };
   
-  const values = hrp.split('').map(c => c.charCodeAt(0) >> 5).concat(0);
-  for (const c of hrp) values.push(c.charCodeAt(0) & 31);
-  for (const d of data) values.push(d);
+  const checksum = polymod([...values, ...result, 0, 0, 0, 0, 0, 0]) ^ 1;
+  result.push((checksum >> 25) & 31);
+  result.push((checksum >> 20) & 31);
+  result.push((checksum >> 15) & 31);
+  result.push((checksum >> 10) & 31);
+  result.push((checksum >> 5) & 31);
+  result.push(checksum & 31);
   
-  const checksum = polymod(values.concat([0, 0, 0, 0, 0, 0])) ^ 1;
-  const combined = data.concat([(checksum >> 25) & 31, (checksum >> 20) & 31, (checksum >> 15) & 31, (checksum >> 10) & 31, (checksum >> 5) & 31, checksum & 31]);
-  
-  return hrp + '1' + combined.map(d => CHARSET[d]).join('');
+  return hrp + '1' + result.map(d => CHARSET[d]).join('');
 }
 
 // Known wallets with fallback icons
