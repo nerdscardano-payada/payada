@@ -7,11 +7,9 @@ import { KNOWN_CNTS } from "./knownCNTs";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 
-export default function StepBasic({ form, update, isEditing, isAdmin, whitelistedTokens = [] }) {
-  // Merchants see only their whitelisted tokens; admins see all
-  const availableTokens = isAdmin
-    ? KNOWN_CNTS
-    : KNOWN_CNTS.filter(cnt => whitelistedTokens.some(w => w.policy_id === cnt.policy_id));
+export default function StepBasic({ form, update, isEditing, isAdmin }) {
+  // All merchants have access to all platform-approved tokens
+  const availableTokens = KNOWN_CNTS;
   const generateSlug = (title, email) => {
     const base = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     if (isEditing) return base;
