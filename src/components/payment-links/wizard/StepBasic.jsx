@@ -96,13 +96,6 @@ export default function StepBasic({ form, update, isEditing, isAdmin }) {
 
         {form.amount_mode === "fixed_cnt" && (
           <div className="space-y-4">
-            {!isAdmin && availableTokens.length === 0 && (
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
-                No tokens approved yet. Please{" "}
-                <Link to="/MerchantProfile#cnt" className="underline font-medium">request token access</Link>{" "}
-                first.
-              </div>
-            )}
             <div className="space-y-2">
               <Label>Select token</Label>
               <div className="flex flex-wrap gap-2">
