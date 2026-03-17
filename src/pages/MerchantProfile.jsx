@@ -36,6 +36,7 @@ export default function MerchantProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [formData, setFormData] = useState({});
+  const [showCNTRequest, setShowCNTRequest] = useState(false);
   const [logoMode, setLogoMode] = useState("url"); // "url" or "upload"
   const [logoFile, setLogoFile] = useState(null);
   const [logoUploading, setLogoUploading] = useState(false);
