@@ -20,23 +20,41 @@ export default function WalletHealthCheck({
     const performCheck = async () => {
       setChecking(true);
       try {
+        if (!connectedWallet?.address) {
+          console.warn("No wallet address available");
+          setChecking(false);
+          return;
+        }
+
+        console.log("Performing health check for:", connectedWallet.address);
+        
         const res = await base44.functions.invoke('detectAndCleanDirtyWallet', {
           walletAddress: connectedWallet.address,
-          cntPolicyId: paymentLink.cnt_policy_id,
-          cntAssetName: paymentLink.cnt_asset_name
+          cntPolicyId: paymentLink?.cnt_policy_id,
+          cntAssetName: paymentLink?.cnt_asset_name
         });
 
-        setHealthCheck(res.data?.status);
+        console.log("Health check result:", res.data);
+
+        if (res.data?.error) {
+          console.error("Health check error:", res.data.error);
+          // Silently fail health check, allow payment to proceed
+          return;
+        }
+
+        const status = res.data?.status;
+        setHealthCheck(status);
         
-        if (res.data?.status?.recommendation === "DIRTY" || res.data?.status?.recommendation === "MIXED") {
+        if (status?.recommendation === "DIRTY" || status?.recommendation === "MIXED") {
           setShowCleanWarning(true);
         }
 
         if (onHealthChecked) {
-          onHealthChecked(res.data?.status);
+          onHealthChecked(status);
         }
       } catch (err) {
-        console.error("Wallet health check failed:", err);
+        console.error("Wallet health check failed:", err?.message || err);
+        // Don't block payment on health check failure
       } finally {
         setChecking(false);
       }
