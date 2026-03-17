@@ -275,7 +275,7 @@ export default function Payments() {
                           ) : (
                             <>
                               <span className="text-sm font-semibold text-slate-900 tabular-nums">
-                                ₳ {(p.received_amount_ada || p.expected_amount_ada)?.toFixed(3)}
+                                ₳ {(p.merchant_amount_ada || p.received_amount_ada || p.expected_amount_ada)?.toFixed(3)}
                               </span>
                               {p.fiat_value_snapshot && (
                                 <p className="text-xs text-slate-400">{p.fiat_currency} {p.fiat_value_snapshot.toFixed(2)}</p>
