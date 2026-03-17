@@ -184,15 +184,23 @@ const MIN_LOVELACE_PER_OUTPUT = 1_000_000n; // 1 ADA
 
 Deno.serve(async (req) => {
   try {
+    const body = await req.json();
     const {
       walletAddress, merchantAddress,
       merchantLovelace, platformFeeLovelace,
-      // CNT payment fields
       cntPolicyId, cntAssetName, cntAmount, cntFeeAmount
-    } = await req.json();
+    } = body;
+
+    console.log("buildPaymentTx input:", { walletAddress, merchantAddress, merchantLovelace, cntPolicyId });
 
     if (!walletAddress || !merchantAddress || !merchantLovelace) {
-      return Response.json({ error: 'Missing required fields' }, { status: 400 });
+      const missing = [];
+      if (!walletAddress) missing.push('walletAddress');
+      if (!merchantAddress) missing.push('merchantAddress');
+      if (!merchantLovelace) missing.push('merchantLovelace');
+      const errMsg = `Missing required fields: ${missing.join(', ')}`;
+      console.error(errMsg);
+      return Response.json({ error: errMsg }, { status: 400 });
     }
 
     const walletBech32 = hexAddrToBech32(walletAddress);
@@ -528,6 +536,14 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error("buildPaymentTx FATAL ERROR:", {
+      message: error?.message,
+      stack: error?.stack,
+      type: error?.constructor?.name
+    });
+    return Response.json({ 
+      error: error?.message || 'Unknown error',
+      details: error?.stack?.split('\n')[0] || 'No stack trace'
+    }, { status: 500 });
   }
 });
