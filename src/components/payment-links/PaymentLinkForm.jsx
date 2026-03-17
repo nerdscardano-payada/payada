@@ -21,6 +21,7 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
   const isEditing = !!link;
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
+  const [merchantProfile, setMerchantProfile] = useState(null);
   const [step, setStep] = useState(1);
   const [showSaveTemplate, setShowSaveTemplate] = useState(false);
   const [templateName, setTemplateName] = useState("");
