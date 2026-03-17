@@ -313,28 +313,35 @@ Deno.serve(async (req) => {
     }
 
     // Upsert Customer record (identified by wallet address or email)
-    const customerIdentifier = payerEmail || normalizeAddress(payerAddress);
+    const normalizedWallet = normalizeAddress(payerAddress) || null;
+    const customerIdentifier = payerEmail || normalizedWallet;
     if (customerIdentifier) {
-      const filterKey = payerEmail ? { merchant_id: merchantId, email: payerEmail } : { merchant_id: merchantId, wallet_address: normalizeAddress(payerAddress) };
+      const filterKey = payerEmail
+        ? { merchant_id: merchantId, email: payerEmail }
+        : { merchant_id: merchantId, wallet_address: normalizedWallet };
       const existingCustomers = await sr.entities.Customer.filter(filterKey);
       if (existingCustomers.length > 0) {
         const existing = existingCustomers[0];
-        await sr.entities.Customer.update(existing.id, {
+        const updateData = {
           total_paid_ada: (existing.total_paid_ada || 0) + receivedAmountAda,
           payment_count: (existing.payment_count || 0) + 1,
-          wallet_address: normalizeAddress(payerAddress) || existing.wallet_address,
+          wallet_address: normalizedWallet || existing.wallet_address,
           name: payerName || existing.name,
-        });
+        };
+        if (payerEmail) updateData.email = payerEmail;
+        await sr.entities.Customer.update(existing.id, updateData);
       } else {
-        await sr.entities.Customer.create({
+        const newCustomer = {
           merchant_id: merchantId,
-          email: payerEmail || null,
           name: payerName || "Anonymous",
-          wallet_address: normalizeAddress(payerAddress) || null,
+          wallet_address: normalizedWallet || null,
           total_paid_ada: receivedAmountAda,
           payment_count: 1,
           has_active_subscription: false,
-        });
+        };
+        // Only set email if provided — avoids ValidationError on null email
+        if (payerEmail) newCustomer.email = payerEmail;
+        await sr.entities.Customer.create(newCustomer);
       }
     }
 
