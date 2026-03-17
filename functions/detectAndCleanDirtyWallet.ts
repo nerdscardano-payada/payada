@@ -55,10 +55,15 @@ function getAddrBytes(addr) {
 
 Deno.serve(async (req) => {
   try {
-    const { walletAddress, cntPolicyId, cntAssetName } = await req.json();
+    const body = await req.json();
+    const { walletAddress, cntPolicyId, cntAssetName } = body;
 
-    if (!walletAddress) {
-      return Response.json({ error: 'Missing walletAddress' }, { status: 400 });
+    console.log("detectAndCleanDirtyWallet input:", { walletAddress, cntPolicyId, cntAssetName });
+
+    if (!walletAddress || typeof walletAddress !== 'string') {
+      const errMsg = `Invalid walletAddress: expected string, got ${typeof walletAddress}`;
+      console.error(errMsg);
+      return Response.json({ error: errMsg }, { status: 400 });
     }
 
     const walletAddrBytes = getAddrBytes(walletAddress);
@@ -66,13 +71,17 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid wallet address' }, { status: 400 });
     }
 
-    // Get wallet hex format for Blockfrost
+    // Validate address format
     const walletBech32 = walletAddress.startsWith('addr') ? walletAddress : null;
     if (!walletBech32) {
-      return Response.json({ error: 'Must provide bech32 address' }, { status: 400 });
+      const errMsg = `Address must start with 'addr', got: ${walletAddress.slice(0, 20)}...`;
+      console.error(errMsg);
+      return Response.json({ error: errMsg }, { status: 400 });
     }
 
+    console.log("Fetching UTXOs for:", walletBech32);
     const utxos = await blockfrost(`/addresses/${walletBech32}/utxos?count=100&order=desc`);
+    console.log("UTXOs fetched:", utxos?.length || 0);
 
     if (!utxos || utxos.length === 0) {
       return Response.json({ error: 'No UTxOs found' }, { status: 400 });
@@ -132,6 +141,14 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error("detectAndCleanDirtyWallet FATAL ERROR:", {
+      message: error?.message,
+      stack: error?.stack,
+      type: error?.constructor?.name
+    });
+    return Response.json({ 
+      error: error?.message || 'Unknown error',
+      details: error?.stack?.split('\n')[0] || 'No stack trace'
+    }, { status: 500 });
   }
 });
