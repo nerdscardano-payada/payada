@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -8,14 +8,6 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
   const [txLoading, setTxLoading] = useState(false);
   const [txStatus, setTxStatus] = useState(null); // null | 'building' | 'signing' | 'submitting'
 
-  // Prevent bfcache — this kills the wallet extension port
-  useEffect(() => {
-    const onPageShow = (e) => {
-      if (e.persisted) window.location.reload();
-    };
-    window.addEventListener("pageshow", onPageShow);
-    return () => window.removeEventListener("pageshow", onPageShow);
-  }, []);
 
   const isCnt = paymentLink?.amount_mode === "fixed_cnt";
 
