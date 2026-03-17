@@ -203,8 +203,20 @@ Deno.serve(async (req) => {
       return Response.json({ error: errMsg }, { status: 400 });
     }
 
-    const walletBech32 = hexAddrToBech32(walletAddress);
-    const walletAddrBytes = getAddrBytes(walletAddress);
+    // Handle both bech32 and hex-encoded addresses
+    let walletBech32 = walletAddress;
+    if (!walletAddress.startsWith('addr')) {
+      // Try to convert hex CBOR to bech32
+      try {
+        walletBech32 = hexAddrToBech32(walletAddress);
+        console.log("Converted hex address to bech32:", walletBech32);
+      } catch (e) {
+        console.error("Address conversion failed:", e);
+        return Response.json({ error: 'Invalid wallet address format' }, { status: 400 });
+      }
+    }
+    
+    const walletAddrBytes = getAddrBytes(walletBech32);
     const merchantAddrBytes = getAddrBytes(merchantAddress);
 
     if (!walletAddrBytes || !merchantAddrBytes) {
