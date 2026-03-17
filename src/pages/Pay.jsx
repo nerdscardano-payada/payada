@@ -341,7 +341,7 @@ export default function Pay() {
               {paymentLink.collect_shipping && (
                 <div className="space-y-3">
                   <div className="border-t border-slate-800 pt-3">
-                    <p className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Shipping Address</p>
+                    <p className="text-xs font-semibold text-slate-400 mb-3 uppercase tracking-wider">Shipping Address <span className="text-red-400">*</span></p>
                     <div className="space-y-2">
                       <div className="space-y-2">
                         <Label htmlFor="shipping-street" className="text-slate-300 text-xs">Street Address</Label>
