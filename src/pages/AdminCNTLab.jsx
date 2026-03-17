@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { FlaskConical, Coins, CheckCircle, Clock, XCircle, AlertTriangle, Trash2, ExternalLink, Pencil, Shield, UserCheck, ChevronDown, ChevronUp } from "lucide-react";
+import { FlaskConical, Coins, CheckCircle, Clock, XCircle, AlertTriangle, Trash2, ExternalLink, Pencil, Shield } from "lucide-react";
 import { Plus } from "lucide-react";
 
 import { KNOWN_CNTS } from "@/components/payment-links/wizard/knownCNTs";
