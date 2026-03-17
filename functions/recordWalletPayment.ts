@@ -141,6 +141,8 @@ Deno.serve(async (req) => {
     let expectedAmountAda = 0;
     let paymentLink = null;
     let accessLink = null;
+    let cntDecimals = 0;
+    let cntTicker = null;
 
     if (paymentLinkId) {
       try {
