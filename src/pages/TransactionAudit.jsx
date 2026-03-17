@@ -239,7 +239,14 @@ export default function TransactionAudit() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-3.5 font-semibold text-slate-900">₳ {(p.merchant_amount_ada || p.received_amount_ada || p.expected_amount_ada || 0).toFixed(2)}</td>
+                      <td className="px-5 py-3.5 font-semibold text-slate-900">
+                        {p.payment_type === "cnt"
+                          ? `${Number(p.merchant_amount_cnt ?? p.received_amount_cnt ?? p.expected_amount_cnt ?? 0).toLocaleString(undefined, {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: getCntDecimals(p.cnt_policy_id, p.cnt_decimals),
+                            })} ${p.cnt_ticker || "CNT"}`
+                          : `₳ ${(p.merchant_amount_ada || p.received_amount_ada || p.expected_amount_ada || 0).toFixed(2)}`}
+                      </td>
                       <td className="px-5 py-3.5 text-sm text-slate-600 hidden sm:table-cell max-w-xs truncate">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span>{p.payer_name || p.payer_email || "—"}</span>
