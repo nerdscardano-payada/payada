@@ -36,6 +36,14 @@ const generateSlug = (title) => {
   return `cnt-${base}-${suffix}`;
 };
 
+const formatCntAmount = (amount, decimals = 0) => {
+  if (amount === null || amount === undefined || amount === "") return "—";
+  return Number(amount).toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: decimals,
+  });
+};
+
 function CNTLinkForm({ onSuccess, merchantProfile, existingLink }) {
   const isEditing = !!existingLink;
   const queryClient = useQueryClient();
@@ -349,8 +357,8 @@ export default function AdminCNTLab() {
                       <Badge className="bg-purple-100 text-purple-700 text-xs">{payment.cnt_ticker}</Badge>
                     </div>
                     <p className="text-sm text-slate-700">
-                      Expected: <strong>{(payment.expected_amount_cnt / Math.pow(10, payment.cnt_decimals || 0))?.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: payment.cnt_decimals || 0 })}</strong> ·
-                      Received: <strong>{(payment.received_amount_cnt / Math.pow(10, payment.cnt_decimals || 0))?.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: payment.cnt_decimals || 0 }) || "—"}</strong>
+                      Expected: <strong>{formatCntAmount(payment.expected_amount_cnt, payment.cnt_decimals || 0)}</strong> ·
+                      Received: <strong>{formatCntAmount(payment.received_amount_cnt, payment.cnt_decimals || 0)}</strong>
                     </p>
                     {payment.tx_hash && (
                       <a href={`https://cardanoscan.io/transaction/${payment.tx_hash}`} target="_blank" rel="noopener noreferrer"
