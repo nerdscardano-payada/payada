@@ -482,6 +482,7 @@ function DemoAccessLinks({ links, onCreate, onDelete, creating }) {
               <div className="space-y-1.5">
                 <Label>Receive Address (Cardano Wallet)</Label>
                 <Input value={form.receive_address} onChange={e => set("receive_address", e.target.value)} placeholder="addr1..." />
+                <p className="text-xs text-slate-400 mt-1">Leave empty in demo — not required for testing.</p>
               </div>
             </div>
 
