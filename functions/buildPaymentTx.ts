@@ -242,7 +242,10 @@ Deno.serve(async (req) => {
         .filter(u => u.amount.length === 1 && u.amount[0].unit === 'lovelace')
         .sort((a, b) => Number(BigInt(b.amount[0].quantity) - BigInt(a.amount[0].quantity)));
       const cntUnit = cntPolicyId + cntAssetName;
-      const cntUtxos = utxos.filter(u => u.amount.some(a => a.unit === cntUnit));
+      // Prefer UTxOs that ONLY contain the target CNT (no other tokens) to keep wallet summary clean
+      const allCntUtxos = utxos.filter(u => u.amount.some(a => a.unit === cntUnit));
+      const cleanCntUtxos = allCntUtxos.filter(u => u.amount.every(a => a.unit === 'lovelace' || a.unit === cntUnit));
+      const cntUtxos = cleanCntUtxos.length > 0 ? cleanCntUtxos : allCntUtxos;
 
       if (cntUtxos.length === 0) {
         return Response.json({ error: `No UTxOs found with ${cntUnit}. Ensure your wallet has the token.` }, { status: 400 });
