@@ -1083,6 +1083,8 @@ export default function Demo() {
         )}
         {activeTab === "button-generator" && <DemoButtonGenerator links={allPaymentLinks} />}
         {activeTab === "shop-generator" && <DemoShopGenerator links={allPaymentLinks} />}
+        {activeTab === "pos" && <DemoPOS />}
+        {activeTab === "pay-terminal" && <DemoPayTerminal />}
 
         <div className="mt-10 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-2">Ready to accept real ADA payments?</h2>
