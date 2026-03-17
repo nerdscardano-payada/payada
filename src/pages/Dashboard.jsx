@@ -352,7 +352,11 @@ export default function Dashboard() {
                   <StatusBadge status={payment.status} />
                   <span className="text-sm font-semibold text-slate-900 tabular-nums">
                     {payment.payment_type === "cnt"
-                      ? (() => { const dec = getCntDecimals(payment.cnt_policy_id, payment.cnt_decimals); return `${((payment.merchant_amount_cnt || payment.received_amount_cnt || payment.expected_amount_cnt) / Math.pow(10, dec)).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: dec })} ${getCntTicker(payment)}`; })()
+                      ? (() => {
+                          const dec = getCntDecimals(payment.cnt_policy_id, payment.cnt_decimals);
+                          const amount = payment.merchant_amount_cnt ?? payment.received_amount_cnt ?? payment.expected_amount_cnt ?? 0;
+                          return `${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: dec })} ${getCntTicker(payment)}`;
+                        })()
                       : `₳ ${(payment.merchant_amount_ada || payment.received_amount_ada || payment.expected_amount_ada)?.toFixed(2)}`
                     }
                   </span>
