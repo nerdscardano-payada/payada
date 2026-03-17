@@ -382,108 +382,25 @@ export default function AdminCNTLab() {
           )}
         </TabsContent>
 
-        {/* Token Whitelist Tab */}
+        {/* Platform Tokens Tab */}
         <TabsContent value="tokens" className="mt-4 space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="text-base flex items-center gap-2">
                 <Shield className="w-4 h-4 text-purple-500" />
-                Merchant Token Whitelists
+                Platform-Approved CNT Tokens
               </CardTitle>
-              <p className="text-sm text-slate-500">Manage which CNT tokens each merchant can accept.</p>
+              <p className="text-sm text-slate-500">These tokens are available to all merchants on the platform.</p>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {loadingMerchants ? (
-                <div className="space-y-2">{[...Array(3)].map((_, i) => <div key={i} className="h-12 bg-slate-100 rounded-lg animate-pulse" />)}</div>
-              ) : allMerchants.length === 0 ? (
-                <p className="text-slate-400 text-sm">No merchant profiles found.</p>
-              ) : (
-                allMerchants.map(merchant => {
-                  const whitelisted = merchant.whitelisted_cnt_tokens || [];
-                  const isExpanded = expandedMerchant === merchant.id;
-                  const selectedTicker = addingToken[merchant.id] || "";
-                  const selectedCnt = KNOWN_CNTS.find(c => c.ticker === selectedTicker);
-
-                  const addToken = () => {
-                    if (!selectedCnt) return;
-                    if (whitelisted.some(w => w.policy_id === selectedCnt.policy_id)) return;
-                    const updated = [...whitelisted, { policy_id: selectedCnt.policy_id, asset_name: selectedCnt.asset_name, ticker: selectedCnt.ticker, decimals: selectedCnt.decimals }];
-                    updateMerchantWhitelistMutation.mutate({ profileId: merchant.id, tokens: updated });
-                    setAddingToken(prev => ({ ...prev, [merchant.id]: "" }));
-                  };
-
-                  const removeToken = (policyId) => {
-                    const updated = whitelisted.filter(w => w.policy_id !== policyId);
-                    updateMerchantWhitelistMutation.mutate({ profileId: merchant.id, tokens: updated });
-                  };
-
-                  return (
-                    <div key={merchant.id} className="border border-slate-200 rounded-lg overflow-hidden">
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 transition-colors"
-                        onClick={() => setExpandedMerchant(isExpanded ? null : merchant.id)}
-                      >
-                        <div className="flex items-center gap-3">
-                          <UserCheck className="w-4 h-4 text-slate-400" />
-                          <div>
-                            <p className="font-medium text-slate-900">{merchant.business_name}</p>
-                            <p className="text-xs text-slate-500">{merchant.user_id}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">{whitelisted.length} token{whitelisted.length !== 1 ? "s" : ""}</span>
-                          {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
-                        </div>
-                      </button>
-
-                      {isExpanded && (
-                        <div className="border-t border-slate-100 p-4 space-y-3 bg-slate-50">
-                          {whitelisted.length === 0 ? (
-                            <p className="text-sm text-slate-400">No tokens whitelisted yet.</p>
-                          ) : (
-                            <div className="flex flex-wrap gap-2">
-                              {whitelisted.map(token => (
-                                <div key={token.policy_id} className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg px-3 py-1.5">
-                                  <span className="text-sm font-medium text-slate-800">{token.ticker}</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => removeToken(token.policy_id)}
-                                    className="text-red-400 hover:text-red-600 ml-1"
-                                  >
-                                    <Trash2 className="w-3 h-3" />
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          <div className="flex gap-2 pt-1">
-                            <select
-                              value={selectedTicker}
-                              onChange={e => setAddingToken(prev => ({ ...prev, [merchant.id]: e.target.value }))}
-                              className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-purple-400"
-                            >
-                              <option value="">— Add token —</option>
-                              {KNOWN_CNTS.filter(cnt => !whitelisted.some(w => w.policy_id === cnt.policy_id)).map(cnt => (
-                                <option key={cnt.ticker} value={cnt.ticker}>{cnt.ticker}</option>
-                              ))}
-                            </select>
-                            <Button
-                              size="sm"
-                              disabled={!selectedTicker || updateMerchantWhitelistMutation.isPending}
-                              onClick={addToken}
-                              className="bg-purple-600 hover:bg-purple-700 text-white"
-                            >
-                              <Plus className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })
-              )}
+            <CardContent>
+              <div className="flex flex-wrap gap-2">
+                {KNOWN_CNTS.map(cnt => (
+                  <div key={cnt.policy_id} className="border border-slate-200 rounded-lg px-3 py-2 bg-slate-50">
+                    <p className="font-semibold text-sm text-slate-900">{cnt.ticker}</p>
+                    <p className="text-xs text-slate-400 font-mono mt-0.5">{cnt.policy_id.slice(0, 20)}…</p>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
