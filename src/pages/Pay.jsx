@@ -315,7 +315,11 @@ export default function Pay() {
                 </>
               ) : (
                 <>
-                  <span className="text-3xl font-bold text-white">₳ {paymentLink.amount_ada?.toFixed(2)}</span>
+                  <span className="text-3xl font-bold text-white">
+                    ₳ {sessionStarted && sessionData?.merchant_amount_ada 
+                      ? sessionData.merchant_amount_ada.toFixed(2)
+                      : paymentLink.amount_ada?.toFixed(2)}
+                  </span>
                   <span className="text-sm text-slate-500">ADA</span>
                 </>
               )}
