@@ -27,8 +27,13 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   : <>{children}</>;
 
 const ProtectedRoute = ({ children, currentPageName }) => {
-  const { isProfileComplete, isLoading } = useProfileCheck();
   const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile"];
+  const isPublicPage = publicPages.includes(currentPageName);
+  const { isProfileComplete, isLoading } = useProfileCheck(!isPublicPage);
+
+  if (isPublicPage) {
+    return children;
+  }
 
   if (isLoading) {
     return (
@@ -38,7 +43,7 @@ const ProtectedRoute = ({ children, currentPageName }) => {
     );
   }
 
-  if (!isProfileComplete && !publicPages.includes(currentPageName)) {
+  if (!isProfileComplete) {
     return <ProfileIncompleteScreen />;
   }
 
