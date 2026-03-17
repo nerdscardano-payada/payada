@@ -614,7 +614,9 @@ function DemoShopGenerator({ links }) {
   const [step, setStep] = useState(1);
   const [config, setConfig] = useState(DEFAULT_SHOP_CONFIG);
   const [products, setProducts] = useState([
-    { ...emptyProduct(), id: 1, name: "My Product", description: "", price: "", badge: "", category: "uncategorized" },
+    { ...emptyProduct(), id: 1, name: "ADA Starter Pack", description: "Everything you need to get started with Cardano payments.", price: "25", badge: "Popular", category: "digital", imageUrl: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400&q=80" },
+    { ...emptyProduct(), id: 2, name: "Premium Membership", description: "Unlock exclusive content, early access & community perks.", price: "99", badge: "Best Value", category: "membership", imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&q=80" },
+    { ...emptyProduct(), id: 3, name: "NFT Collection Access", description: "Get early access to our curated NFT drops on Cardano.", price: "150", badge: "Limited", category: "nft", imageUrl: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&q=80" },
   ]);
 
   const accent = config.useCustomAccent ? config.customAccent : config.theme.accent;
