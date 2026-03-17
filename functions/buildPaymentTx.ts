@@ -336,11 +336,11 @@ Deno.serve(async (req) => {
         outputsData.push({ addrBytes: feeAddrBytes, lovelace: MIN_CNT_OUTPUT_LOVELACE, assets: feeTokens });
       }
 
-      // Change output: ADA change + remaining CNT (if any) + other tokens (must all be returned)
-      const changeAssets = new Map(collectedOtherAssets);
+      // Change output: ADA change + remaining CNT (if any)
+      // Only return the target CNT as change; other tokens from "dirty" UTxOs are NOT returned (user keeps them)
+      const changeAssets = new Map();
       if (cntChange > 0n) {
-        if (!changeAssets.has(cntPolicyId)) changeAssets.set(cntPolicyId, new Map());
-        changeAssets.get(cntPolicyId).set(cntAssetName, cntChange);
+        changeAssets.set(cntPolicyId, new Map([[cntAssetName, cntChange]]));
       }
       outputsData.push({ addrBytes: walletAddrBytes, lovelace: adaChange, assets: changeAssets });
 
