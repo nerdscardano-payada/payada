@@ -219,10 +219,8 @@ export default function AdminCNTLab() {
 
   const updateMerchantWhitelistMutation = useMutation({
     mutationFn: ({ profileId, tokens }) => base44.entities.MerchantProfile.update(profileId, { whitelisted_cnt_tokens: tokens }),
-    onSuccess: () => queryClient.invalidateQueries(["all-merchants"]),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["all-merchants"] }),
   });
-
-  const queryClient = useQueryClient();
 
   const deleteLinkMutation = useMutation({
     mutationFn: (id) => base44.entities.PaymentLink.delete(id),
