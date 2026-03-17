@@ -19,6 +19,17 @@ const PLATFORMS = [
   { value: "other", label: "Other" },
 ];
 
+const normalizeSlug = (value) => value
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "");
+
+const buildScopedSlug = (slug, email) => {
+  const normalizedSlug = normalizeSlug(slug);
+  const prefix = email?.split("@")[0].toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "m";
+  return normalizedSlug.startsWith(`${prefix}-`) ? normalizedSlug : `${prefix}-${normalizedSlug}`;
+};
+
 export default function AccessLinkForm({ link, onBack, user }) {
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
@@ -70,12 +81,13 @@ export default function AccessLinkForm({ link, onBack, user }) {
       toast.error("Please fill in all CNT fields");
       return;
     }
-    // Check slug uniqueness
-    const existing = await base44.entities.CommunityAccessLink.filter({ slug: form.slug });
+    const finalSlug = link?.id ? normalizeSlug(form.slug) : buildScopedSlug(form.slug, user?.email);
+    const existing = await base44.entities.CommunityAccessLink.filter({ slug: finalSlug });
     const conflict = existing.find(l => l.id !== link?.id);
-    if (conflict) { toast.error(`Slug "${form.slug}" is already in use. Please choose a different slug.`); return; }
+    if (conflict) { toast.error(`Slug "${finalSlug}" is already in use. Please choose a different slug.`); return; }
     saveMutation.mutate({
       ...form,
+      slug: finalSlug,
       price_ada: isCnt ? 0 : parseFloat(form.price_ada),
       cnt_amount: isCnt ? parseFloat(form.cnt_amount) : undefined,
       cnt_decimals: isCnt ? parseInt(form.cnt_decimals) || 0 : undefined,
@@ -103,7 +115,7 @@ export default function AccessLinkForm({ link, onBack, user }) {
             </div>
             <div className="space-y-1.5">
               <Label>Slug *</Label>
-              <Input value={form.slug} onChange={e => set("slug", e.target.value.toLowerCase().replace(/\s+/g, "-"))} placeholder="tradingclub" />
+              <Input value={form.slug} onChange={e => set("slug", normalizeSlug(e.target.value))} placeholder="tradingclub" />
             </div>
           </div>
 
