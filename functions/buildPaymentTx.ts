@@ -266,9 +266,13 @@ Deno.serve(async (req) => {
       );
       
       if (cleanCntUtxos.length === 0) {
+        console.warn("Dirty wallet detected for CNT payment", { cntUnit, totalUtxos: allCntUtxos.length });
         return Response.json({ 
+          success: false,
           error: `Your wallet contains ${cntUnit} tokens mixed with other tokens. Please consolidate your wallet to have only ADA and ${cntUnit}.`,
-          code: 'WALLET_NOT_CLEAN'
+          code: 'DIRTY_WALLET_DETECTED',
+          userMessage: 'Your wallet needs optimization. Multiple tokens in the same UTXO can cause payment failures.',
+          recommendation: 'auto_clean'
         }, { status: 400 });
       }
 
@@ -444,9 +448,13 @@ Deno.serve(async (req) => {
       return null;
     };
 
+    // 🎯 Smart UTXO selection: prefer clean -> fallback to mixed
     let selection = trySelect(pureAdaUtxos);
+    let usedMixed = false;
+    
     if (!selection) {
       selection = trySelect([...pureAdaUtxos, ...mixedUtxos]);
+      if (selection) usedMixed = true;
     }
 
     if (!selection) {
@@ -454,13 +462,27 @@ Deno.serve(async (req) => {
         const lov = u.amount.find(a => a.unit === 'lovelace');
         return sum + (lov ? BigInt(lov.quantity) : 0n);
       }, 0n);
+      const needed = Number(totalOutput) / 1_000_000 + 0.5;
+      const have = Number(totalAvailable) / 1_000_000;
+      
+      console.error("Insufficient ADA", { needed, have, totalOutput: Number(totalOutput) });
       return Response.json({
-        error: `Insufficient ADA. Need ₳${Number(totalOutput) / 1_000_000 + 0.5} (incl. fees + min outputs), have ₳${Number(totalAvailable) / 1_000_000}`
+        success: false,
+        error: `Insufficient ADA. Need ₳${needed.toFixed(2)}, have ₳${have.toFixed(2)}`,
+        code: 'INSUFFICIENT_ADA',
+        userMessage: `Not enough ADA in wallet. Need at least ₳${needed.toFixed(2)}`
       }, { status: 400 });
     }
 
     const { selected: selectedUtxos, selectedLovelace, collectedAssets, fee } = selection;
     const changeLovelace = selectedLovelace - totalOutput - fee;
+    
+    // 🔍 Detect if wallet is dirty (multiple tokens in single UTXOs)
+    const isDirtyWallet = selectedUtxos.some(u => u.amount.filter(a => a.unit !== 'lovelace').length > 1);
+    
+    if (isDirtyWallet) {
+      console.warn("Dirty ADA wallet detected - using mixed UTXOs", { selectedUtxos: selectedUtxos.length });
+    }
 
     // Build inputs
     const inputs = selectedUtxos.map(u => [hexToBytes(u.tx_hash), u.tx_index]);
@@ -526,6 +548,11 @@ Deno.serve(async (req) => {
       success: true,
       txCbor,
       txBodyCbor,
+      meta: {
+        dirtyWallet: isDirtyWallet,
+        usedMixedUtxos: usedMixed,
+        warning: isDirtyWallet ? 'Wallet contains multiple tokens in same UTXO' : null
+      },
       debug: {
         inputs: selectedUtxos.length,
         outputs: outputsData.length,
