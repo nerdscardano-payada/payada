@@ -33,7 +33,17 @@ import StepShopInfo, { THEMES, FONTS } from "@/components/shopping-page-generato
 import StepManageProducts, { emptyProduct } from "@/components/shopping-page-generator/StepManageProducts";
 import StepPublish from "@/components/shopping-page-generator/StepPublish";
 
-const DEMO_MERCHANT_ID = "demo@payada.io";
+// Each browser session gets its own isolated demo environment
+function getDemoMerchantId() {
+  const key = "payada_demo_session_id";
+  let sessionId = sessionStorage.getItem(key);
+  if (!sessionId) {
+    sessionId = "demo-" + Math.random().toString(36).slice(2, 10);
+    sessionStorage.setItem(key, sessionId);
+  }
+  return sessionId + "@demo.payada.io";
+}
+const DEMO_MERCHANT_ID = getDemoMerchantId();
 
 const DEMO_PAYMENTS = [
   { id: "d1", payer_email: "alice@example.com", received_amount_ada: 50, status: "confirmed", product: "Event Ticket", tx_hash: "8f3a2b1c...e4d9", wallet: "addr1qx8zt4...f3k2", created_date: new Date(Date.now() - 3600000 * 2).toISOString() },
