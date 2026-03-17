@@ -120,7 +120,7 @@ export default function Dashboard() {
     if (!cntByToken[key]) {
       cntByToken[key] = { ticker: p.cnt_ticker, policy_id: p.cnt_policy_id, decimals: p.cnt_decimals || 0, amount: 0 };
     }
-    cntByToken[key].amount += p.received_amount_cnt || 0;
+    cntByToken[key].amount += p.merchant_amount_cnt || p.received_amount_cnt || 0;
   });
 
   const [paymentPeriod, setPaymentPeriod] = useState("all");
@@ -133,7 +133,7 @@ export default function Dashboard() {
   });
 
   const filteredConfirmedAda = filteredPayments.filter(p => p.status === "confirmed" && (p.payment_type === "ada" || !p.payment_type));
-  const totalAda = filteredConfirmedAda.reduce((sum, p) => sum + (p.received_amount_ada || p.expected_amount_ada || 0), 0);
+  const totalAda = filteredConfirmedAda.reduce((sum, p) => sum + (p.merchant_amount_ada || p.received_amount_ada || p.expected_amount_ada || 0), 0);
 
   const confirmedPaymentsCount = filteredConfirmedAda.length;
   const activeLinks = paymentLinks.filter(l => l.status === "active").length;
@@ -352,8 +352,8 @@ export default function Dashboard() {
                   <StatusBadge status={payment.status} />
                   <span className="text-sm font-semibold text-slate-900 tabular-nums">
                     {payment.payment_type === "cnt"
-                      ? (() => { const dec = getCntDecimals(payment.cnt_policy_id, payment.cnt_decimals); return `${((payment.received_amount_cnt || payment.expected_amount_cnt) / Math.pow(10, dec)).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: dec })} ${getCntTicker(payment)}`; })()
-                      : `₳ ${(payment.received_amount_ada || payment.expected_amount_ada)?.toFixed(2)}`
+                      ? (() => { const dec = getCntDecimals(payment.cnt_policy_id, payment.cnt_decimals); return `${((payment.merchant_amount_cnt || payment.received_amount_cnt || payment.expected_amount_cnt) / Math.pow(10, dec)).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: dec })} ${getCntTicker(payment)}`; })()
+                      : `₳ ${(payment.merchant_amount_ada || payment.received_amount_ada || payment.expected_amount_ada)?.toFixed(2)}`
                     }
                   </span>
                 </div>
