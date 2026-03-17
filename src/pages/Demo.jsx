@@ -801,12 +801,17 @@ function DemoPOS() {
                 <p className="text-4xl font-bold text-white">₳ {parseFloat(amountAda).toFixed(2)}</p>
               </div>
               {/* Fake QR */}
-              <div className="flex justify-center">
-                <div className="bg-white p-4 rounded-xl w-[200px] h-[200px] flex items-center justify-center">
-                  <div className="grid grid-cols-5 gap-1 w-full h-full">
+              <div className="flex flex-col items-center gap-2">
+                <div className="bg-white p-4 rounded-xl w-[200px] h-[200px] flex items-center justify-center relative">
+                  <div className="grid grid-cols-5 gap-1 w-full h-full opacity-30">
                     {Array.from({ length: 25 }).map((_, i) => (
                       <div key={i} className={`rounded-sm ${[0,1,2,5,10,12,14,18,20,22,23,24,6,7,8,15,16,17].includes(i) ? "bg-slate-900" : "bg-white"}`} />
                     ))}
+                  </div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 rounded-xl px-3 text-center">
+                    <QrCode className="w-8 h-8 text-slate-400 mb-1.5" />
+                    <p className="text-xs font-medium text-slate-600">Live QR in real account</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">Demo mode — no real transaction</p>
                   </div>
                 </div>
               </div>
