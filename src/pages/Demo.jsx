@@ -908,10 +908,10 @@ function DemoPayTerminal() {
               <p className="text-xs text-slate-400 mt-0.5">{t.description} · {t.payments} payments</p>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/PayTerminal?id=${t.id}`); toast.success("Link copied!"); }}>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => toast.info("In your real account, this copies the shareable terminal URL.")}>
                 <Copy className="w-3.5 h-3.5" /> Link
               </Button>
-              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => { const url = `${window.location.origin}/PayTerminal?id=${t.id}`; const code = `<iframe src="${url}" width="480" height="700" frameborder="0" style="border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.12);"></iframe>`; navigator.clipboard.writeText(code); toast.success("Embed code copied!"); }}>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => toast.info("In your real account, this copies the iframe embed code for your website.")}>
                 <Copy className="w-3.5 h-3.5" /> Embed
               </Button>
               <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => setPreviewId(previewId === t.id ? null : t.id)}>
