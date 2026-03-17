@@ -114,7 +114,8 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       console.log("TX CBOR built successfully:", txCbor.slice(0, 20));
     } catch (err) {
       console.error("TX build catch block:", err);
-      const displayMsg = err?.message || "Failed to build transaction.";
+      const backendError = err?.response?.data;
+      const displayMsg = backendError?.userMessage || backendError?.error || err?.message || "Failed to build transaction.";
       toast.error(displayMsg);
       setTxLoading(false);
       setTxStatus(null);

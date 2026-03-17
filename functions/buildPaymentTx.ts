@@ -272,28 +272,26 @@ Deno.serve(async (req) => {
         return Response.json({ error: `No UTxOs found with the required token. Ensure your wallet has the token.` }, { status: 400 });
       }
 
-      // STRICT: only use CLEAN CNT UTxOs (ADA + target CNT only, no other tokens)
+      // Prefer clean CNT UTxOs, but do not block the payment when the wallet is mixed.
       const cleanCntUtxos = allCntUtxos.filter(u => 
         u.amount.every(a => a.unit === 'lovelace' || a.unit === cntUnit)
       );
-      
-      if (cleanCntUtxos.length === 0) {
-        console.warn("Dirty wallet detected for CNT payment", { cntUnit, totalUtxos: allCntUtxos.length });
-        return Response.json({ 
-          success: false,
-          error: `Your wallet contains ${cntUnit} tokens mixed with other tokens. Please consolidate your wallet to have only ADA and ${cntUnit}.`,
-          code: 'DIRTY_WALLET_DETECTED',
-          userMessage: 'Your wallet needs optimization. Multiple tokens in the same UTXO can cause payment failures.',
-          recommendation: 'auto_clean'
-        }, { status: 400 });
+      const dirtyCntWallet = cleanCntUtxos.length === 0;
+      const candidateCntUtxos = dirtyCntWallet ? allCntUtxos : cleanCntUtxos;
+
+      if (dirtyCntWallet) {
+        console.warn("Dirty wallet detected for CNT payment, falling back to mixed CNT UTxOs", {
+          cntUnit,
+          totalUtxos: allCntUtxos.length
+        });
       }
 
-      // Select minimum clean UTxOs needed (no other tokens to leak)
+      // Select minimum CNT UTxOs needed
       let selectedCntLovelace = 0n;
       let selectedCntTokens = 0n;
       const selectedUtxos = [];
 
-      for (const utxo of cleanCntUtxos) {
+      for (const utxo of candidateCntUtxos) {
         selectedUtxos.push(utxo);
         for (const a of utxo.amount) {
           if (a.unit === 'lovelace') {
@@ -398,6 +396,11 @@ Deno.serve(async (req) => {
         success: true,
         txCbor,
         txBodyCbor,
+        meta: {
+          dirtyWallet: dirtyCntWallet,
+          usedMixedUtxos: dirtyCntWallet,
+          warning: dirtyCntWallet ? 'Wallet contains mixed token UTxOs' : null
+        },
         debug: {
           inputs: selectedUtxos.length,
           outputs: outputsData.length,
