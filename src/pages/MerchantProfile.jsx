@@ -321,7 +321,7 @@ export default function MerchantProfilePage() {
               <Coins className="w-5 h-5 text-purple-500" />
               CNT Token Access
             </h3>
-            <p className="text-sm text-slate-500 mt-0.5">Cardano Native Tokens approved for your account</p>
+            <p className="text-sm text-slate-500 mt-0.5">Request support for Cardano Native Tokens not yet available on PayADA</p>
           </div>
           {profile?.whitelisted_cnt_tokens?.length > 0 && (
             <Button onClick={() => setShowCNTRequest(true)} className="gap-2 bg-purple-600 hover:bg-purple-700 text-white" size="sm">
