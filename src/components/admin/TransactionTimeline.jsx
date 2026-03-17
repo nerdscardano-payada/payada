@@ -97,10 +97,10 @@ export default function TransactionTimeline() {
           <div className="space-y-3">
             {displayedPayments.map((p, idx) => {
               const isAda = p.payment_type !== "cnt";
-              const ticker = p.cnt_ticker || "ADA";
-              const amount = isAda
-                ? `₳${(p.received_amount_ada || 0).toFixed(2)}`
-                : `${(p.received_amount_cnt || 0).toLocaleString()} ${ticker}`;
+               const ticker = p.cnt_ticker || "ADA";
+               const amount = isAda
+                 ? `₳${(p.merchant_amount_ada || p.received_amount_ada || 0).toFixed(2)}`
+                 : `${(p.merchant_amount_cnt || p.received_amount_cnt || 0).toLocaleString()} ${ticker}`;
               const fee = isAda ? `₳${(p.fee_amount_ada || 0).toFixed(4)}` : "—";
               const productName = p.payment_link_id 
                 ? paymentLinkMap[p.payment_link_id]
