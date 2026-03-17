@@ -252,28 +252,30 @@ Deno.serve(async (req) => {
         return Response.json({ error: `No UTxOs found with the required token. Ensure your wallet has the token.` }, { status: 400 });
       }
 
-      // STRICT UTXO selection: only use clean CNT UTxOs (target token + ADA only)
-      // This prevents "dirty" UTxOs with other tokens from breaking the transaction
+      // Select CNT UTxOs with preference for clean ones, but track ALL assets to preserve them
       const cleanCntUtxos = allCntUtxos.filter(u => u.amount.every(a => a.unit === 'lovelace' || a.unit === cntUnit));
-      
-      if (cleanCntUtxos.length === 0) {
-        return Response.json({ 
-          error: `No clean CNT UTxOs found. Your wallet has the token mixed with other tokens. Please consolidate your wallet first.` 
-        }, { status: 400 });
-      }
+      const rankedCntUtxos = cleanCntUtxos.length > 0 ? cleanCntUtxos : allCntUtxos;
 
-      // Select the minimum number of CLEAN CNT UTxOs needed
+      // Track ALL assets from selected UTxOs (nothing gets lost)
       let selectedCntLovelace = 0n;
       let selectedCntTokens = 0n;
       const selectedUtxos = [];
+      const allCollectedAssets = new Map(); // ALL assets from inputs
 
-      for (const utxo of cleanCntUtxos) {
+      for (const utxo of rankedCntUtxos) {
         selectedUtxos.push(utxo);
         for (const a of utxo.amount) {
           if (a.unit === 'lovelace') {
             selectedCntLovelace += BigInt(a.quantity);
           } else if (a.unit === cntUnit) {
             selectedCntTokens += BigInt(a.quantity);
+          } else {
+            // Track other tokens to return in change
+            const pId = a.unit.slice(0, 56);
+            const aName = a.unit.slice(56);
+            if (!allCollectedAssets.has(pId)) allCollectedAssets.set(pId, new Map());
+            const prev = allCollectedAssets.get(pId).get(aName) || 0n;
+            allCollectedAssets.get(pId).set(aName, prev + BigInt(a.quantity));
           }
         }
         if (selectedCntTokens >= cntTotal) break;
@@ -284,7 +286,7 @@ Deno.serve(async (req) => {
       }
 
       const cntChange = selectedCntTokens - cntTotal;
-      const hasChangeTokens = cntChange > 0n;
+      const hasChangeTokens = allCollectedAssets.size > 0 || cntChange > 0n;
 
       // Estimate fees and ADA needed
       const numTokenOutputs = 1 + (cntFee > 0n ? 1 : 0);
@@ -333,10 +335,12 @@ Deno.serve(async (req) => {
         outputsData.push({ addrBytes: feeAddrBytes, lovelace: MIN_CNT_OUTPUT_LOVELACE, assets: feeTokens });
       }
 
-      // Change output: ADA change + remaining CNT (if any)
-      const changeAssets = new Map();
+      // Change output: MUST contain ALL remaining assets (ADA + CNT change + any other tokens from inputs)
+      // This is critical: nothing can be lost
+      const changeAssets = new Map(allCollectedAssets);
       if (cntChange > 0n) {
-        changeAssets.set(cntPolicyId, new Map([[cntAssetName, cntChange]]));
+        if (!changeAssets.has(cntPolicyId)) changeAssets.set(cntPolicyId, new Map());
+        changeAssets.get(cntPolicyId).set(cntAssetName, cntChange);
       }
       outputsData.push({ addrBytes: walletAddrBytes, lovelace: adaChange, assets: changeAssets });
 
