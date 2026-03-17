@@ -57,7 +57,7 @@ function buildData(payments, period) {
     if (p.status === "confirmed") {
       bucket.confirmed += 1;
       bucket.volume += p.received_amount_ada || p.expected_amount_ada || 0;
-      bucket.revenue += p.merchant_amount_ada || (p.received_amount_ada || p.expected_amount_ada || 0);
+      bucket.revenue += p.merchant_amount_ada || 0;
     }
   });
 
