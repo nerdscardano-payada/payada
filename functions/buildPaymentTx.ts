@@ -252,31 +252,28 @@ Deno.serve(async (req) => {
         return Response.json({ error: `No UTxOs found with the required token. Ensure your wallet has the token.` }, { status: 400 });
       }
 
-      // Rank CNT UTxOs: clean (only CNT+ADA) first, then mixed (with other tokens)
+      // STRICT UTXO selection: only use clean CNT UTxOs (target token + ADA only)
+      // This prevents "dirty" UTxOs with other tokens from breaking the transaction
       const cleanCntUtxos = allCntUtxos.filter(u => u.amount.every(a => a.unit === 'lovelace' || a.unit === cntUnit));
-      const dirtyCntUtxos = allCntUtxos.filter(u => !u.amount.every(a => a.unit === 'lovelace' || a.unit === cntUnit));
-      const rankedCntUtxos = [...cleanCntUtxos, ...dirtyCntUtxos];
+      
+      if (cleanCntUtxos.length === 0) {
+        return Response.json({ 
+          error: `No clean CNT UTxOs found. Your wallet has the token mixed with other tokens. Please consolidate your wallet first.` 
+        }, { status: 400 });
+      }
 
-      // Select the minimum number of CNT UTxOs needed (prefer clean ones)
+      // Select the minimum number of CLEAN CNT UTxOs needed
       let selectedCntLovelace = 0n;
       let selectedCntTokens = 0n;
       const selectedUtxos = [];
-      const collectedOtherAssets = new Map();
 
-      for (const utxo of rankedCntUtxos) {
+      for (const utxo of cleanCntUtxos) {
         selectedUtxos.push(utxo);
         for (const a of utxo.amount) {
           if (a.unit === 'lovelace') {
             selectedCntLovelace += BigInt(a.quantity);
           } else if (a.unit === cntUnit) {
             selectedCntTokens += BigInt(a.quantity);
-          } else {
-            // Track any other tokens — they must be returned as change
-            const pId = a.unit.slice(0, 56);
-            const aName = a.unit.slice(56);
-            if (!collectedOtherAssets.has(pId)) collectedOtherAssets.set(pId, new Map());
-            const prev = collectedOtherAssets.get(pId).get(aName) || 0n;
-            collectedOtherAssets.get(pId).set(aName, prev + BigInt(a.quantity));
           }
         }
         if (selectedCntTokens >= cntTotal) break;
@@ -287,7 +284,7 @@ Deno.serve(async (req) => {
       }
 
       const cntChange = selectedCntTokens - cntTotal;
-      const hasChangeTokens = collectedOtherAssets.size > 0 || cntChange > 0n;
+      const hasChangeTokens = cntChange > 0n;
 
       // Estimate fees and ADA needed
       const numTokenOutputs = 1 + (cntFee > 0n ? 1 : 0);
