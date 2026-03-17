@@ -65,13 +65,22 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     let txCbor;
     try {
       // Step 1: Build tx via backend BEFORE re-enabling wallet
+      console.log("Building transaction with params:", buildParams);
       const buildRes = await base44.functions.invoke('buildPaymentTx', buildParams);
+      
+      console.log("Build response:", buildRes?.data);
+      
       if (!buildRes?.data?.txCbor) {
-        throw new Error(buildRes?.data?.error || "Failed to build transaction CBOR");
+        const errorMsg = buildRes?.data?.error || buildRes?.data?.details || "Failed to build transaction CBOR";
+        console.error("TX build error:", errorMsg);
+        throw new Error(errorMsg);
       }
       txCbor = buildRes.data.txCbor;
+      console.log("TX CBOR built successfully:", txCbor.slice(0, 20));
     } catch (err) {
-      toast.error(err?.message || "Failed to build transaction.");
+      console.error("TX build catch block:", err);
+      const displayMsg = err?.message || "Failed to build transaction.";
+      toast.error(displayMsg);
       setTxLoading(false);
       setTxStatus(null);
       return;
