@@ -209,6 +209,19 @@ export default function AdminCNTLab() {
     queryFn: () => base44.entities.Payment.filter({ payment_type: "cnt" }),
   });
 
+  const { data: allMerchants = [], isLoading: loadingMerchants } = useQuery({
+    queryKey: ["all-merchants"],
+    queryFn: () => base44.entities.MerchantProfile.list(),
+  });
+
+  const [expandedMerchant, setExpandedMerchant] = useState(null);
+  const [addingToken, setAddingToken] = useState({}); // merchantId -> selected ticker
+
+  const updateMerchantWhitelistMutation = useMutation({
+    mutationFn: ({ profileId, tokens }) => base44.entities.MerchantProfile.update(profileId, { whitelisted_cnt_tokens: tokens }),
+    onSuccess: () => queryClient.invalidateQueries(["all-merchants"]),
+  });
+
   const queryClient = useQueryClient();
 
   const deleteLinkMutation = useMutation({
