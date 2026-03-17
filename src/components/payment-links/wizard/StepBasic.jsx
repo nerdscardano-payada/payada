@@ -4,8 +4,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { KNOWN_CNTS } from "./knownCNTs";
+import { Link } from "react-router-dom";
+import { ExternalLink } from "lucide-react";
 
-export default function StepBasic({ form, update, isEditing, isAdmin }) {
+export default function StepBasic({ form, update, isEditing, isAdmin, whitelistedTokens = [] }) {
+  // Merchants see only their whitelisted tokens; admins see all
+  const availableTokens = isAdmin
+    ? KNOWN_CNTS
+    : KNOWN_CNTS.filter(cnt => whitelistedTokens.some(w => w.policy_id === cnt.policy_id));
   const generateSlug = (title, email) => {
     const base = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     if (isEditing) return base;
