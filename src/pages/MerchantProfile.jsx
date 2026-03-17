@@ -323,10 +323,12 @@ export default function MerchantProfilePage() {
             </h3>
             <p className="text-sm text-slate-500 mt-0.5">Cardano Native Tokens approved for your account</p>
           </div>
-          <Button onClick={() => setShowCNTRequest(true)} className="gap-2 bg-purple-600 hover:bg-purple-700 text-white" size="sm">
-            <Plus className="w-4 h-4" />
-            Request token
-          </Button>
+          {profile?.whitelisted_cnt_tokens?.length > 0 && (
+            <Button onClick={() => setShowCNTRequest(true)} className="gap-2 bg-purple-600 hover:bg-purple-700 text-white" size="sm">
+              <Plus className="w-4 h-4" />
+              Request token
+            </Button>
+          )}
         </div>
 
         {(!profile?.whitelisted_cnt_tokens || profile.whitelisted_cnt_tokens.length === 0) ? (
@@ -334,6 +336,10 @@ export default function MerchantProfilePage() {
             <Coins className="w-8 h-8 mx-auto mb-2 opacity-30" />
             <p className="text-sm">No CNT tokens approved yet.</p>
             <p className="text-xs mt-1">Submit a request and we'll review within 1–2 business days.</p>
+            <Button onClick={() => setShowCNTRequest(true)} className="gap-2 bg-purple-600 hover:bg-purple-700 text-white mt-4" size="sm">
+              <Plus className="w-4 h-4" />
+              Request token access
+            </Button>
           </div>
         ) : (
           <div className="space-y-2">
