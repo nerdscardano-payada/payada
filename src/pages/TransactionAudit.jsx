@@ -132,7 +132,7 @@ export default function TransactionAudit() {
   const stats = {
     total: annotatedPayments.length,
     confirmed: annotatedPayments.filter(p => p.status === "confirmed").length,
-    volume: annotatedPayments.filter(p => p.status === "confirmed").reduce((sum, p) => sum + (p.received_amount_ada || 0), 0),
+    volume: annotatedPayments.filter(p => p.status === "confirmed").reduce((sum, p) => sum + (p.merchant_amount_ada || p.received_amount_ada || 0), 0),
   };
 
   if (!user) return null;
@@ -225,7 +225,7 @@ export default function TransactionAudit() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-5 py-3.5 font-semibold text-slate-900">₳ {(p.received_amount_ada || p.expected_amount_ada || 0).toFixed(2)}</td>
+                      <td className="px-5 py-3.5 font-semibold text-slate-900">₳ {(p.merchant_amount_ada || p.received_amount_ada || p.expected_amount_ada || 0).toFixed(2)}</td>
                       <td className="px-5 py-3.5 text-sm text-slate-600 hidden sm:table-cell max-w-xs truncate">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span>{p.payer_name || p.payer_email || "—"}</span>
