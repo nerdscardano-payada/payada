@@ -57,11 +57,12 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     base44.auth.me().then((u) => {
       setUser(u);
       setForm((prev) => ({ ...prev, _userEmail: u?.email || "" }));
-      if (!isEditing && u?.email) {
+      if (u?.email) {
         base44.entities.MerchantProfile.filter({ user_id: u.email }).then((profiles) => {
-          const defaultAddress = profiles?.[0]?.default_receive_address;
-          if (defaultAddress) {
-            setForm((prev) => ({ ...prev, receive_address: prev.receive_address || defaultAddress }));
+          const profile = profiles?.[0];
+          setMerchantProfile(profile);
+          if (!isEditing && profile?.default_receive_address) {
+            setForm((prev) => ({ ...prev, receive_address: prev.receive_address || profile.default_receive_address }));
           }
         });
       }
