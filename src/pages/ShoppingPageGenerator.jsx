@@ -127,7 +127,7 @@ export default function ShoppingPageGenerator() {
 
   const { data: links = [] } = useQuery({
     queryKey: ["paymentLinks", user?.email],
-    queryFn: () => base44.entities.PaymentLink.filter({ merchant_id: user.email, status: "active" }, "-created_date", 100),
+    queryFn: () => base44.entities.PaymentLink.filter({ merchant_id: user.email, status: "active", amount_mode: "fixed_ada" }, "-created_date", 100),
     enabled: !!user,
   });
 
