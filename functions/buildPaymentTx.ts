@@ -334,7 +334,6 @@ Deno.serve(async (req) => {
       }
 
       // Change output: ADA change + remaining CNT (if any)
-      // Only return the target CNT as change; other tokens from "dirty" UTxOs are NOT returned (user keeps them)
       const changeAssets = new Map();
       if (cntChange > 0n) {
         changeAssets.set(cntPolicyId, new Map([[cntAssetName, cntChange]]));
