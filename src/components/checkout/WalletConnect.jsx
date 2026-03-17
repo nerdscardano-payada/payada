@@ -120,25 +120,30 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       
       // Get address (CIP-30 returns hex, convert to bech32)
       const changeAddr = await api.getChangeAddress();
-      
+      console.log("🔥 Raw changeAddr from wallet:", changeAddr.slice(0, 30) + '...');
+
       // Convert address to bech32 if needed
       let address = changeAddr;
       if (address && !address.startsWith('addr')) {
+        console.log("🔥 Address is NOT bech32, converting...", { length: address.length, startsWithCbor: address.startsWith('58') });
         try {
           // Strip CBOR wrapper if present (0x58XX prefix)
           let addrHex = address;
           if (address.startsWith('58')) {
             const length = parseInt(address.slice(2, 4), 16);
             addrHex = address.slice(4, 4 + length * 2);
+            console.log("🔥 Stripped CBOR, new hex:", addrHex.slice(0, 30) + '...');
           }
-          
+
           // Convert raw hex to bech32
           address = hexToBech32(addrHex, 'addr');
-          console.log("Converted hex to bech32:", address.slice(0, 20) + '...');
+          console.log("🔥 ✅ Successfully converted hex to bech32:", address.slice(0, 20) + '...');
         } catch (e) {
-          console.warn("Address conversion error:", e.message);
+          console.error("🔥 ❌ Address conversion FAILED:", e.message, e);
           throw new Error('Failed to convert wallet address to proper format');
         }
+      } else {
+        console.log("🔥 Address is already bech32, skipping conversion");
       }
 
       // Get balance in lovelace — CBOR decode
