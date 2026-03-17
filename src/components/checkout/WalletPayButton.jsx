@@ -62,6 +62,14 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       buildParams = { walletAddress, merchantAddress, merchantLovelace, platformFeeLovelace };
     }
 
+    // 🔥 DEBUG: Log exactly what we're sending to the backend
+    console.log("🔥 PAYLOAD DEBUG:", {
+      walletAddress: walletAddress ? walletAddress.slice(0, 20) + '...' : 'MISSING',
+      merchantAddress: merchantAddress ? merchantAddress.slice(0, 20) + '...' : 'MISSING',
+      isCnt,
+      ...buildParams
+    });
+
     let txCbor;
     try {
       // Step 1: Build tx via backend BEFORE re-enabling wallet
