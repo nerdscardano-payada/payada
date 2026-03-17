@@ -22,36 +22,20 @@ export default function PayTerminal() {
   const [connectedWallet, setConnectedWallet] = useState(null);
   const [txHash, setTxHash] = useState(null);
 
-  const { data: terminals = [], isLoading: loadingTerminal } = useQuery({
+  const { data: terminalData, isLoading } = useQuery({
     queryKey: ["pay-terminal", terminalId],
-    queryFn: () => base44.entities.PayTerminal.filter({ id: terminalId, status: "active" }, "-created_date", 1),
-    enabled: !!terminalId,
-  });
-  const terminal = terminals[0] || null;
-
-  // Fetch payment link (one_time mode)
-  const { data: paymentLinks = [], isLoading: loadingLink } = useQuery({
-    queryKey: ["terminal-paymentlink", terminal?.payment_link_slug],
-    queryFn: () => base44.entities.PaymentLink.filter({ slug: terminal.payment_link_slug, status: "active" }, "-created_date", 1),
-    enabled: !!terminal && terminal.mode === "one_time" && !!terminal.payment_link_slug,
-  });
-  const paymentLink = paymentLinks[0] || null;
-
-  // Fetch subscription plans (subscription mode)
-  const { data: allPlans = [], isLoading: loadingPlans } = useQuery({
-    queryKey: ["terminal-plans", terminal?.plan_ids],
     queryFn: async () => {
-      if (!terminal?.plan_ids?.length) return [];
-      const results = await Promise.all(
-        terminal.plan_ids.map((id) => base44.entities.SubscriptionPlan.filter({ id, status: "active" }, "-created_date", 1))
-      );
-      return results.flat();
+      const res = await base44.functions.invoke("getPublicPayTerminal", { terminalId });
+      return res.data;
     },
-    enabled: !!terminal && terminal.mode === "subscription" && !!terminal?.plan_ids?.length,
+    enabled: !!terminalId,
+    retry: 1,
   });
 
+  const terminal = terminalData?.terminal || null;
+  const paymentLink = terminalData?.paymentLink || null;
+  const allPlans = terminalData?.plans || [];
   const accentColor = terminal?.accent_color || "#6366f1";
-  const isLoading = loadingTerminal || loadingLink || loadingPlans;
 
   // ── Handlers ──
 
