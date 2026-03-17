@@ -121,7 +121,7 @@ function DemoDashboard({ demoLinks, demoAccessLinks }) {
                 <div>
                   <p className="text-sm font-medium text-slate-900">{p.payer_email}</p>
                   <p className="text-xs text-slate-500">{p.product}</p>
-                  <p className="text-xs text-slate-400 font-mono">{p.tx_hash}</p>
+                  <p className="text-xs text-slate-400 font-mono">{p.wallet} · {p.tx_hash}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
