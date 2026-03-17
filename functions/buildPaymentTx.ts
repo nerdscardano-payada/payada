@@ -304,7 +304,7 @@ Deno.serve(async (req) => {
       const adaChange = selectedCntLovelace - adaForTokenOutputs - txFee;
       const cntChange = selectedCntTokens - cntTotal;
 
-      if (adaChange < 0n) {
+      if (adaChange < adaForChange) {
         return Response.json({ error: `Insufficient ADA for token outputs. Need ₳${Number(adaNeeded) / 1_000_000} for minUTxO + fees.` }, { status: 400 });
       }
 
