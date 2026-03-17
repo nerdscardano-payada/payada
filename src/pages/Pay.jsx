@@ -420,29 +420,15 @@ export default function Pay() {
 
               {paymentStatus === "pending" && (
                 <>
-                  {/* CNT fee breakdown */}
-                  {sessionData && paymentLink.amount_mode === "fixed_cnt" && (() => {
-                    const total = paymentLink.cnt_amount || 0;
-                    const feePercent = sessionData.platform_fee_percent || 1.75;
-                    const feeAmt = Math.round(total * (feePercent / 100));
-                    const merchantAmt = total - feeAmt;
-                    return (
-                      <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
-                        <div className="flex justify-between">
-                          <span>Total</span>
-                          <span className="text-white font-semibold">{total.toLocaleString()} {paymentLink.cnt_ticker}</span>
-                        </div>
-                        <div className="flex justify-between text-slate-400">
-                          <span>Platform fee ({feePercent}%)</span>
-                          <span>{feeAmt.toLocaleString()} {paymentLink.cnt_ticker}</span>
-                        </div>
-                        <div className="border-t border-slate-700 pt-1.5 flex justify-between">
-                          <span>Merchant receives</span>
-                          <span className="text-emerald-400 font-semibold">{merchantAmt.toLocaleString()} {paymentLink.cnt_ticker}</span>
-                        </div>
+                  {/* CNT — show only what is sent */}
+                  {sessionData && paymentLink.amount_mode === "fixed_cnt" && (
+                    <div className="bg-slate-800/50 rounded-lg p-3 text-xs text-slate-300">
+                      <div className="flex justify-between">
+                        <span>You send</span>
+                        <span className="text-white font-semibold">{(paymentLink.cnt_amount || 0).toLocaleString()} {paymentLink.cnt_ticker}</span>
                       </div>
-                    );
-                  })()}
+                    </div>
+                  )}
 
                   {/* Fee breakdown — ADA only */}
                   {sessionData && paymentLink.amount_mode !== "fixed_cnt" && (
