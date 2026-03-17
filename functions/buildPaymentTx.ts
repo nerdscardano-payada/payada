@@ -324,9 +324,16 @@ Deno.serve(async (req) => {
         outputsData.push({ addrBytes: feeAddrBytes, lovelace: MIN_CNT_OUTPUT_LOVELACE, assets: feeTokens });
       }
 
-      // Change output (ADA + remaining CNT if any)
-      const changeAssets = cntChange > 0n ? new Map([[cntPolicyId, new Map([[cntAssetName, cntChange]])]]) : new Map();
-      outputsData.push({ addrBytes: walletAddrBytes, lovelace: adaChange, assets: changeAssets });
+      // Change output (ADA + remaining CNT + any other tokens from selected UTxOs)
+      const changeAssets = new Map(collectedOtherAssets); // start with all other tokens
+      if (cntChange > 0n) {
+        if (!changeAssets.has(cntPolicyId)) changeAssets.set(cntPolicyId, new Map());
+        changeAssets.get(cntPolicyId).set(cntAssetName, cntChange);
+      }
+      // If change has native tokens, ensure minUTxO ADA is enough (use 2 ADA to be safe)
+      const changeMinLovelace = changeAssets.size > 0 ? 2_000_000n : MIN_OUTPUT;
+      const finalAdaChange = adaChange < changeMinLovelace ? changeMinLovelace : adaChange;
+      outputsData.push({ addrBytes: walletAddrBytes, lovelace: finalAdaChange, assets: changeAssets });
 
       // Encode transaction body
       const cborBytes = [];
