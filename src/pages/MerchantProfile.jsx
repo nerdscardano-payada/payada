@@ -9,9 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertCircle, CheckCircle2, Edit2, Save, Upload, Link, Trash2, Coins, Plus } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import CNTTokenRequestForm from "@/components/cnt/CNTTokenRequestForm";
+import { AlertCircle, CheckCircle2, Edit2, Save, Upload, Link, Trash2, Coins } from "lucide-react";
+import { KNOWN_CNTS } from "@/components/payment-links/wizard/knownCNTs";
 import {
   AlertDialog,
   AlertDialogAction,
