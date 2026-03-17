@@ -483,6 +483,9 @@ export default function Pay() {
                           connectedWallet={connectedWallet}
                           sessionData={sessionData}
                           paymentLink={paymentLink}
+                          payerEmail={payerEmail || null}
+                          payerName={payerName || null}
+                          payerDiscordUsername={payerDiscordUsername || null}
                           onSuccess={handleTxSuccess}
                         />
                         <p className="text-[11px] text-slate-500 text-center">
