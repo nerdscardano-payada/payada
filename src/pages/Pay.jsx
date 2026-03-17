@@ -332,7 +332,7 @@ export default function Pay() {
               )}
               {paymentLink.collect_name && (
                 <div className="space-y-2">
-                   <Label htmlFor="payer-name" className="text-slate-300 text-xs">Name</Label>
+                   <Label htmlFor="payer-name" className="text-slate-300 text-xs">Name <span className="text-red-400">*</span></Label>
                    <Input id="payer-name" value={payerName} onChange={(e) => setPayerName(e.target.value)}
                     placeholder="Your name"
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
