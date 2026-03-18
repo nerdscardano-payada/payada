@@ -322,13 +322,22 @@ Deno.serve(async (req) => {
       const cleanCntUtxos = allCntUtxos.filter(u =>
         u.amount.every(a => a.unit === 'lovelace' || a.unit === cntUnit)
       );
-      const dirtyCntWallet = cleanCntUtxos.length === 0;
-      const candidateCntUtxos = dirtyCntWallet ? allCntUtxos : cleanCntUtxos;
+      const dirtyCntUtxos = allCntUtxos.filter(u =>
+        u.amount.some(a => a.unit !== 'lovelace' && a.unit !== cntUnit)
+      );
+      const cleanTokenTotal = cleanCntUtxos.reduce((sum, utxo) => sum + getUnitQuantity(utxo, cntUnit), 0n);
+      const needsDirtyCntUtxos = cleanTokenTotal < cntTotal;
+      const dirtyCntWallet = dirtyCntUtxos.length > 0;
+      const candidateCntUtxos = needsDirtyCntUtxos
+        ? [...sortUtxosByUnitQuantityDesc(cleanCntUtxos, cntUnit), ...sortUtxosByUnitQuantityDesc(dirtyCntUtxos, cntUnit)]
+        : sortUtxosByUnitQuantityDesc(cleanCntUtxos, cntUnit);
 
-      if (dirtyCntWallet) {
-        console.warn("Dirty wallet detected for CNT payment, falling back to mixed CNT UTxOs", {
+      if (needsDirtyCntUtxos) {
+        console.warn("CNT payment requires mixed IAG UTxOs", {
           cntUnit,
-          totalUtxos: allCntUtxos.length
+          cleanTokenTotal: cleanTokenTotal.toString(),
+          required: cntTotal.toString(),
+          dirtyUtxos: dirtyCntUtxos.length
         });
       }
 
@@ -339,6 +348,15 @@ Deno.serve(async (req) => {
       } = selectTokenUtxos(candidateCntUtxos, cntUnit, cntTotal);
 
       if (selectedCntTokens < cntTotal) {
+        console.error("CNT build insufficient tokens", {
+          cntUnit,
+          required: cntTotal.toString(),
+          selected: selectedCntTokens.toString(),
+          cleanTokenTotal: cleanTokenTotal.toString(),
+          allCntUtxos: allCntUtxos.length,
+          cleanCntUtxos: cleanCntUtxos.length,
+          dirtyCntUtxos: dirtyCntUtxos.length,
+        });
         return Response.json({ error: `Insufficient tokens. Need ${cntTotal}, have ${selectedCntTokens}.` }, { status: 400 });
       }
 
