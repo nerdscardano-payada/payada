@@ -67,7 +67,7 @@ function MemberRow({ payment }) {
         </div>
       </td>
       <td className="px-4 py-3">
-        <span className="text-sm font-semibold text-slate-800 tabular-nums">₳ {payment.received_amount_ada?.toFixed(2) || payment.expected_amount_ada?.toFixed(2)}</span>
+        <span className="text-sm font-semibold text-slate-800 tabular-nums">{formatPaymentAmount(payment)}</span>
       </td>
       <td className="px-4 py-3">
         <Badge className={`${STATUS_STYLES[payment.status] || STATUS_STYLES.pending} hover:bg-inherit border-0 text-xs`}>

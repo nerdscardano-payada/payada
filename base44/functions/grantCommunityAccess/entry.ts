@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { paymentId, txHash, accessLinkId, confirmed, confirmations } = await req.json();
+    const { paymentId, txHash, accessLinkId, confirmed, confirmations, payerAddress, payerEmail, payerName, payerDiscordUsername } = await req.json();
 
     if ((!paymentId && !txHash) || !accessLinkId) {
       return Response.json({ error: 'Missing paymentId or txHash, and accessLinkId' }, { status: 400 });
@@ -42,6 +42,10 @@ Deno.serve(async (req) => {
           txHash,
           merchantId: link.merchant_id,
           accessLinkId: link.id,
+          payerAddress: payerAddress || null,
+          payerEmail: payerEmail || null,
+          payerName: payerName || null,
+          payerDiscordUsername: payerDiscordUsername || null,
         });
         const recordedPaymentId = recordRes?.data?.paymentId;
         if (recordedPaymentId) {

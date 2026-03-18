@@ -110,6 +110,10 @@ export default function Access() {
         accessLinkId: accessLink.id,
         confirmed: !!confirmationData?.confirmed,
         confirmations: confirmationData?.confirmations || 0,
+        payerAddress: connectedWallet?.address || null,
+        payerEmail: memberEmail || null,
+        payerName: memberName || null,
+        payerDiscordUsername: discordUsername || null,
       });
       grantRes = res.data;
     } catch {
