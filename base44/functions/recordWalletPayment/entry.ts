@@ -186,6 +186,8 @@ Deno.serve(async (req) => {
         if (accessLink) {
           receiveAddress = accessLink.receive_address;
           expectedAmountAda = accessLink.price_ada || 0;
+          cntDecimals = getKnownCntDecimals(accessLink.cnt_policy_id, accessLink.cnt_asset_name, accessLink.cnt_decimals || 0);
+          cntTicker = accessLink.cnt_ticker || null;
           if (!receiveAddress) {
             const profiles = await sr.entities.MerchantProfile.filter({ user_id: merchantId });
             receiveAddress = profiles[0]?.default_receive_address;
@@ -299,6 +301,7 @@ Deno.serve(async (req) => {
      paymentData.cnt_asset_name = cntAssetName;
      paymentData.cnt_ticker = cntTicker;
      paymentData.cnt_decimals = cntDecimals;
+     paymentData.expected_amount_cnt = paymentLink?.cnt_amount || accessLink?.cnt_amount || null;
      paymentData.received_amount_cnt = cntMerchantAmount / divisor;
      paymentData.cnt_fees = cntFeeAmount > 0 ? [{
        policy_id: cntPolicyId,

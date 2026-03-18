@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 
 const KNOWN_DECIMALS = {
+  "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa": 6,
   "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114": 6,
   "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6": 6,
   "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489": 6,
@@ -20,9 +21,23 @@ const KNOWN_DECIMALS = {
   "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61": 6,
 };
 
+const KNOWN_TICKERS = {
+  "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa": "$NIGHT",
+  "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114": "$IAG",
+  "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6": "$MIN",
+  "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489": "$NMKR",
+  "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad": "USDM",
+  "fe7c786ab321f41c654ef6c1af7b3250a613c24e4213e0425a7ae456": "USDA",
+  "8db269c3ec630e06ae29f74bc39edd1f87c819f1056206e879a1cd61": "DJED",
+};
+
 function getCntDecimals(policyId, storedDecimals) {
   if (storedDecimals && storedDecimals > 0) return storedDecimals;
   return KNOWN_DECIMALS[policyId] ?? 0;
+}
+
+function getCntTicker(policyId, storedTicker) {
+  return storedTicker || KNOWN_TICKERS[policyId] || "CNT";
 }
 
 export default function Payments() {

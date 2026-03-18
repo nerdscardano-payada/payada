@@ -125,7 +125,7 @@ function PlatformGroup({ platform, links, payments }) {
               <div className="px-5 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
                 <div>
                   <span className="text-sm font-semibold text-slate-800">{link.title}</span>
-                  <span className="ml-2 text-xs text-slate-400">₳ {link.price_ada?.toFixed(2)} / access</span>
+                  <span className="ml-2 text-xs text-slate-400">{formatLinkPrice(link)} / access</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-slate-500">{members.length} member{members.length !== 1 ? "s" : ""}</span>
