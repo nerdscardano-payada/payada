@@ -79,14 +79,14 @@ Deno.serve(async (req) => {
                 ` : `
                 <tr>
                   <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Amount:</td>
-                  <td style="padding: 8px 0; color: #1a202c; font-weight: 600; text-align: right;">₳ ${amountAda}</td>
+                  <td style="padding: 8px 0; color: #1a202c; font-weight: 600; text-align: right;">₳ ${grossAda}</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Platform Fee:</td>
                   <td style="padding: 8px 0; color: #ef4444; text-align: right;">-₳ ${feeAda}</td>
                 </tr>
                 <tr style="border-top: 2px solid #e5e7eb;">
-                  <td style="padding: 12px 0; color: #1a202c; font-weight: 700; font-size: 16px;">Net:</td>
+                  <td style="padding: 12px 0; color: #1a202c; font-weight: 700; font-size: 16px;">Merchant Receives:</td>
                   <td style="padding: 12px 0; color: #10b981; font-weight: 700; font-size: 16px; text-align: right;">₳ ${netAda}</td>
                 </tr>
                 `}
