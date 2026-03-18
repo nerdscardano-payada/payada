@@ -294,10 +294,6 @@ Deno.serve(async (req) => {
       const merchantTokens = new Map([[cntPolicyId, new Map([[cntAssetName, cntMerchant]])]]);
       const feeTokens = cntFee > 0n ? new Map([[cntPolicyId, new Map([[cntAssetName, cntFee]])]]) : null;
 
-      // Each output with native tokens needs minUTxO ADA
-      // Cardano protocol minimum for token UTxOs is ~1.2-1.4 ADA depending on token complexity
-      const MIN_CNT_OUTPUT_LOVELACE = 1_300_000n; // 1.3 ADA per token output (above Cardano minimum)
-
       // UTXO selection strategy for clean CNT payments:
       // 1. Combine enough CNT UTxOs to cover the requested token amount.
       // 2. Force extra ADA on token outputs to satisfy Cardano min-ADA requirements.
