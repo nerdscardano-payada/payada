@@ -175,8 +175,8 @@ function estimateFee(numInputs, numOutputs, hasNativeTokens) {
   const outputSize = hasNativeTokens ? 150 * numOutputs : 100 * numOutputs;
   const txSize = baseSize + inputSize + outputSize;
   const fee = 155381n + 44n * BigInt(txSize);
-  // Add generous buffer for witness overhead and safety
-  return fee + 400000n; // 0.4 ADA buffer to cover protocol fee validation
+  // Keep a small safety margin without overcharging the payer
+  return fee + 120000n;
 }
 
 function getUtxoLovelace(utxo) {
@@ -289,7 +289,7 @@ Deno.serve(async (req) => {
 
     // ⭐ Smart Payment Rules Engine: enforce minimum outputs
     const MIN_OUTPUT = 1_000_000n;       // 1 ADA minimum per output (Cardano dust protection)
-    const FEE_BUFFER = 400_000n;         // 0.4 ADA buffer on top of estimate (covered in estimateFee)
+    const FEE_BUFFER = 0n;
 
     // --- CNT payment mode ---
     const isCntPayment = !!(cntPolicyId && cntAssetName && cntAmount);
@@ -369,8 +369,8 @@ Deno.serve(async (req) => {
 
       const cntChange = selectedCntTokens - cntTotal;
       const hasChangeTokens = cntChange > 0n;
-      const MIN_CNT_OUTPUT_LOVELACE = 3_000_000n;
-      const MIN_CNT_CHANGE_LOVELACE = hasChangeTokens ? 3_000_000n : MIN_OUTPUT;
+      const MIN_CNT_OUTPUT_LOVELACE = 2_000_000n;
+      const MIN_CNT_CHANGE_LOVELACE = hasChangeTokens ? 2_000_000n : MIN_OUTPUT;
       const numTokenOutputs = 1 + (cntFee > 0n ? 1 : 0);
       let txFee = estimateFee(selectedUtxos.length, numTokenOutputs + 1, true);
       let adaNeeded = (MIN_CNT_OUTPUT_LOVELACE * BigInt(numTokenOutputs)) + MIN_CNT_CHANGE_LOVELACE + txFee;
