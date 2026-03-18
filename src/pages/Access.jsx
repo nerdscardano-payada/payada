@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import WalletConnect from "@/components/checkout/WalletConnect";
 import WalletPayButton from "@/components/checkout/WalletPayButton";
 import AdaRatePreview from "@/components/checkout/AdaRatePreview";
+import { getKnownCntDecimals } from "@/components/payment-links/wizard/knownCNTs";
 import { CheckCircle, Users, ExternalLink, Loader2, ShieldCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,13 @@ const PLATFORM_LABELS = {
   website: "Access Website",
   other: "Access Community",
 };
+
+function formatCntAmount(amount, decimals = 0) {
+  return Number(amount || 0).toLocaleString(undefined, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: decimals,
+  });
+}
 
 export default function Access() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -228,9 +236,10 @@ export default function Access() {
     merchantAda = (baseLovelace - halfFee) / 1_000_000;
   }
 
-  // CNT payment calcs
+  // CNT payment calcs aligned with Pay
+  const cntDecimals = getKnownCntDecimals(accessLink.cnt_policy_id, accessLink.cnt_asset_name, accessLink.cnt_decimals || 0);
   const totalCnt = accessLink.cnt_amount || 0;
-  const feeCnt = totalCnt * (feePercent / 100);
+  const feeCnt = Math.round(totalCnt * (feePercent / 100));
   const merchantCnt = totalCnt - feeCnt;
 
   const receiveAddress = accessLink.receive_address || merchantProfile?.default_receive_address;
@@ -246,7 +255,7 @@ export default function Access() {
     cnt_asset_name: accessLink.cnt_asset_name,
     cnt_ticker: accessLink.cnt_ticker,
     cnt_amount: totalCnt,
-    cnt_decimals: accessLink.cnt_decimals || 0,
+    cnt_decimals: cntDecimals,
     receive_address: receiveAddress,
     collect_name: false,
     collect_email: false,
@@ -306,7 +315,7 @@ export default function Access() {
           )}
           <div className="pt-2 border-t border-white/10">
             {isCnt ? (
-              <p className="text-3xl font-bold text-white">{totalCnt.toLocaleString()} <span className="text-lg text-purple-400">{accessLink.cnt_ticker}</span></p>
+              <p className="text-3xl font-bold text-white">{formatCntAmount(totalCnt, cntDecimals)} <span className="text-lg text-purple-400">{accessLink.cnt_ticker}</span></p>
             ) : (
               <p className="text-3xl font-bold text-white">₳ {totalAda.toFixed(2)}</p>
             )}
@@ -376,7 +385,7 @@ export default function Access() {
         {/* Fee info */}
         <div className="flex items-center justify-between text-xs text-slate-500 px-1">
           {isCnt ? (
-            <span>Platform fee ({feePercent}%): {feeCnt.toLocaleString()} {accessLink.cnt_ticker}</span>
+            <span>Platform fee ({feePercent}%): {formatCntAmount(feeCnt, cntDecimals)} {accessLink.cnt_ticker}</span>
           ) : (
             <span>Platform fee ({feePercent}%): ₳{feeAda.toFixed(4)}</span>
           )}
