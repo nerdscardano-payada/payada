@@ -9,14 +9,18 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    const { tx_prefix, merchant_id } = await req.json();
+    const { tx_prefix, merchant_id, access_link_id } = await req.json();
 
-    if (!tx_prefix || !merchant_id) {
-      return Response.json({ error: 'Missing tx_prefix or merchant_id' }, { status: 400 });
+    if (!merchant_id) {
+      return Response.json({ error: 'Missing merchant_id' }, { status: 400 });
     }
 
     const payments = await base44.asServiceRole.entities.Payment.filter({ merchant_id }, '-created_date', 200);
-    const payment = payments.find((item) => (item.tx_hash || '').startsWith(tx_prefix));
+    const payment = tx_prefix
+      ? payments.find((item) => (item.tx_hash || '').startsWith(tx_prefix))
+      : access_link_id
+        ? payments.find((item) => item.access_link_id === access_link_id)
+        : payments[0];
 
     if (!payment) {
       return Response.json({ error: 'Payment not found' }, { status: 404 });
