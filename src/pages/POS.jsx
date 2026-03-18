@@ -3,7 +3,6 @@ import { base44 } from "@/api/base44Client";
 import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import QRCode from "qrcode.react";
 import AdaRatePreview from "@/components/checkout/AdaRatePreview";
-import POSTransactionHistory from "@/components/pos/POSTransactionHistory";
 import { createPageUrl } from "@/utils";
 import {
   Hexagon, CheckCircle2, Clock, Loader2,
@@ -270,10 +269,6 @@ export default function POS() {
         </p>
       </div>
 
-      {/* Transaction History */}
-      <div className="max-w-sm mx-auto mt-12 mb-8">
-        <POSTransactionHistory />
-      </div>
     </div>
   );
 }
