@@ -49,6 +49,28 @@ const KNOWN_CNT_DECIMALS = {
 function getKnownCntDecimals(policyId, assetName, fallback = 0) {
   return KNOWN_CNT_DECIMALS[`${policyId}:${assetName}`] ?? fallback;
 }
+const KNOWN_CNT_DECIMALS = {
+  "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa:4e49474854": 6,
+  "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3:534e454b": 0,
+  "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6:4d494e": 6,
+  "533bb94a8850ee3ccbe483106489399112b74c905342cb1792a797a0:494e4459": 6,
+  "9a9693a9a37912a5097918f97918d15240c92ab729a0b7c4aa144d77:53554e444145": 6,
+  "e5a42a1a1d3d1da71b0449663c32798725888d2eb0843c4dabeca05a:576f726c644d6f62696c65546f6b656e58": 6,
+  "804f5544c1962a40546827cab750a88404dc7108c0f588b72964754f:56594649": 6,
+  "f43a62fdc3965df486de8a0d32fe800963589c41b38946602a0dc535:41474958": 8,
+  "e824c0011176f0926ad51f492bcc63ac6a03a589653520839dc7e3d9:464554": 8,
+  "edfd7a1d77bcb8b884c474bdc92a16002d1fb720e454fa6e99344479:4e5458": 6,
+  "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114:494147": 6,
+  "f13ac4d66b3ee19a6aa0f2a22298737bd907cc95121662fc971b5275:535452494b45": 6,
+  "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489:4e4d4b52": 6,
+  "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0:484f534b59": 0,
+  "8483844875ce4d61c2aa459240f277d32081ee08fe0ad16899a0f581:0014df10544954414e": 6,
+  "da8c30857834c6ae7203935b89278c532b3995245295456f993e1d24:4c51": 6,
+};
+
+function getKnownCntDecimals(policyId, assetName, fallback = 0) {
+  return KNOWN_CNT_DECIMALS[`${policyId}:${assetName}`] ?? fallback;
+}
 
 const CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
 
@@ -174,7 +196,7 @@ Deno.serve(async (req) => {
         if (paymentLink) {
           receiveAddress = paymentLink.receive_address;
           expectedAmountAda = paymentLink.amount_ada || 0;
-          cntDecimals = paymentLink.cnt_decimals || 0;
+          cntDecimals = getKnownCntDecimals(paymentLink.cnt_policy_id, paymentLink.cnt_asset_name, paymentLink.cnt_decimals || 0);
           cntTicker = paymentLink.cnt_ticker || null;
         }
       } catch { /* not found */ }
