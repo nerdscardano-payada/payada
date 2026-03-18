@@ -7,8 +7,6 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
-import ProfileIncompleteScreen from '@/components/ProfileIncompleteScreen';
-import { useProfileCheck } from '@/components/hooks/useProfileCheck';
 import AdminLaunchpad from './pages/AdminLaunchpad';
 import TokenSale from './pages/TokenSale';
 import TokenSaleDashboard from './pages/TokenSaleDashboard';
@@ -26,27 +24,7 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
 
-const ProtectedRoute = ({ children, currentPageName }) => {
-  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile"];
-  const isPublicPage = publicPages.includes(currentPageName);
-  const { isProfileComplete, isLoading } = useProfileCheck(!isPublicPage);
-
-  if (isPublicPage) {
-    return children;
-  }
-
-  if (isLoading) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  if (!isProfileComplete) {
-    return <ProfileIncompleteScreen />;
-  }
-
+const ProtectedRoute = ({ children }) => {
   return children;
 };
 
