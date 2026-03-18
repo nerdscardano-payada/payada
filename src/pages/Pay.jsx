@@ -18,6 +18,7 @@ export default function Pay() {
   const [slug, setSlug] = useState("");
   const [cartItems, setCartItems] = useState([]);
   const [paymentLink, setPaymentLink] = useState(null);
+  const [estimatedNetworkFee, setEstimatedNetworkFee] = useState(null);
   const [payerEmail, setPayerEmail] = useState("");
   const [payerName, setPayerName] = useState("");
   const [shippingStreet, setShippingStreet] = useState("");
@@ -432,21 +433,20 @@ export default function Pay() {
                   {sessionData && paymentLink.amount_mode === "fixed_cnt" && (() => {
                     const total = paymentLink.cnt_amount || 0;
                     const feePercent = sessionData.platform_fee_percent || 1.75;
-                    const feeAmt = Math.round(total * (feePercent / 100));
-                    const merchantAmt = total - feeAmt;
+                    const feeAmt = total * (feePercent / 100);
                     return (
-                      <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
+                      <div className="bg-slate-800/50 rounded-lg p-3 space-y-2 text-xs text-slate-300">
                         <div className="flex justify-between">
-                          <span>Total</span>
-                          <span className="text-white font-semibold">{total.toLocaleString()} {paymentLink.cnt_ticker}</span>
+                          <span>You pay</span>
+                          <span className="text-white font-semibold">{total.toLocaleString(undefined, { maximumFractionDigits: 6 })} {paymentLink.cnt_ticker}</span>
                         </div>
                         <div className="flex justify-between text-slate-400">
-                          <span>Platform fee ({feePercent}%)</span>
-                          <span>{feeAmt.toLocaleString()} {paymentLink.cnt_ticker}</span>
+                          <span>Platform fee included ({feePercent}%)</span>
+                          <span>{feeAmt.toLocaleString(undefined, { maximumFractionDigits: 6 })} {paymentLink.cnt_ticker}</span>
                         </div>
-                        <div className="border-t border-slate-700 pt-1.5 flex justify-between">
-                          <span>Merchant receives</span>
-                          <span className="text-emerald-400 font-semibold">{merchantAmt.toLocaleString()} {paymentLink.cnt_ticker}</span>
+                        <div className="border-t border-slate-700 pt-2 flex justify-between text-slate-400">
+                          <span>Estimated network fee</span>
+                          <span>{estimatedNetworkFee ? `~₳ ${estimatedNetworkFee.toFixed(3)}` : "Shown in wallet before signing"}</span>
                         </div>
                       </div>
                     );
@@ -502,6 +502,7 @@ export default function Pay() {
                               payerName={payerName || null}
                               payerDiscordUsername={payerDiscordUsername || null}
                               onSuccess={handleTxSuccess}
+                              onBuildMeta={({ networkFeeAda }) => setEstimatedNetworkFee(networkFeeAda)}
                               walletHealth={walletHealth}
                             />
                             <p className="text-[11px] text-slate-500 text-center">

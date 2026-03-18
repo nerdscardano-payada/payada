@@ -369,8 +369,8 @@ Deno.serve(async (req) => {
 
       const cntChange = selectedCntTokens - cntTotal;
       const hasChangeTokens = cntChange > 0n;
-      const MIN_CNT_OUTPUT_LOVELACE = 2_000_000n;
-      const MIN_CNT_CHANGE_LOVELACE = hasChangeTokens ? 2_000_000n : MIN_OUTPUT;
+      const MIN_CNT_OUTPUT_LOVELACE = 1_500_000n;
+      const MIN_CNT_CHANGE_LOVELACE = hasChangeTokens ? 1_500_000n : MIN_OUTPUT;
       const numTokenOutputs = 1 + (cntFee > 0n ? 1 : 0);
       let txFee = estimateFee(selectedUtxos.length, numTokenOutputs + 1, true);
       let adaNeeded = (MIN_CNT_OUTPUT_LOVELACE * BigInt(numTokenOutputs)) + MIN_CNT_CHANGE_LOVELACE + txFee;

@@ -12,7 +12,7 @@ function toBaseUnits(amount, decimals = 0) {
   return `${normalizedWhole}${normalizedFraction}`.replace(/^0+(?=\d)/, "") || "0";
 }
 
-export default function WalletPayButton({ connectedWallet, sessionData, paymentLink, payerEmail, payerName, payerDiscordUsername, onSuccess }) {
+export default function WalletPayButton({ connectedWallet, sessionData, paymentLink, payerEmail, payerName, payerDiscordUsername, onSuccess, onBuildMeta }) {
   const [txLoading, setTxLoading] = useState(false);
   const [txStatus, setTxStatus] = useState(null); // null | 'building' | 'signing' | 'submitting'
 
@@ -104,6 +104,7 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
       }
       
       txCbor = buildRes.data.txCbor;
+      onBuildMeta?.({ networkFeeAda: buildRes?.data?.debug?.fee || null });
       
       // Warn if wallet is dirty but payment still works
       if (buildRes?.data?.meta?.dirtyWallet) {
