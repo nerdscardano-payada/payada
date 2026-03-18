@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { useProfileCheck } from "@/components/hooks/useProfileCheck";
+import MerchantProfileBanner from "@/components/shared/MerchantProfileBanner";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Copy, ExternalLink, Pencil, Trash2, Monitor } from "lucide-react";
 import { toast } from "sonner";
@@ -13,6 +15,7 @@ import TerminalForm from "@/components/terminals/TerminalForm";
 import TerminalTransactionHistory from "@/components/terminals/TerminalTransactionHistory";
 
 export default function PayTerminals() {
+  const { isProfileComplete, profile } = useProfileCheck();
   const [showForm, setShowForm] = useState(false);
   const [editingTerminal, setEditingTerminal] = useState(null);
   const [user, setUser] = useState(null);
@@ -81,6 +84,7 @@ export default function PayTerminals() {
             ← Back to terminals
           </button>
         </div>
+        {!isProfileComplete && profile !== undefined && <MerchantProfileBanner />}
         <TerminalTransactionHistory terminal={editingTerminal} />
       </div>
     );
@@ -95,6 +99,8 @@ export default function PayTerminals() {
         actionLabel="New Terminal"
         actionIcon={Plus}
       />
+
+      {!isProfileComplete && profile !== undefined && <MerchantProfileBanner />}
 
       {isLoading ? (
         <div className="space-y-3">
