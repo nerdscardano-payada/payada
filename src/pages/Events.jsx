@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import EventForm from "@/components/events/EventForm";
 import EventCheckinPanel from "@/components/events/EventCheckinPanel";
 import EventAttendeesPanel from "@/components/events/EventAttendeesPanel";
+import PageHeader from "@/components/shared/PageHeader";
+import MerchantProfileBanner from "@/components/shared/MerchantProfileBanner";
 
 const STATUS_COLORS = {
   draft: "bg-slate-100 text-slate-600",
@@ -19,15 +21,13 @@ const STATUS_COLORS = {
 };
 
 export default function Events() {
-  const { isProfileComplete } = useProfileCheck();
+  const { isProfileComplete, profile } = useProfileCheck();
   const [view, setView] = useState("list"); // list | form | checkin | attendees
   const [editing, setEditing] = useState(null);
   const [checkinEvent, setCheckinEvent] = useState(null);
   const [attendeesEvent, setAttendeesEvent] = useState(null);
   const [user, setUser] = React.useState(null);
   const queryClient = useQueryClient();
-
-  if (!isProfileComplete) return null;
 
   React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
 
@@ -56,15 +56,15 @@ export default function Events() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Events</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Sell tickets and accept ADA payments for your events</p>
-        </div>
-        <Button onClick={() => { setEditing(null); setView("form"); }} className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2">
-          <Plus className="w-4 h-4" /> New Event
-        </Button>
-      </div>
+      <PageHeader
+        title="Events"
+        subtitle="Sell tickets and accept ADA payments for your events"
+        action={() => { setEditing(null); setView("form"); }}
+        actionLabel="New Event"
+        actionIcon={Plus}
+      />
+
+      {!isProfileComplete && profile !== undefined && <MerchantProfileBanner />}
 
       {isLoading ? (
         <div className="grid gap-4">

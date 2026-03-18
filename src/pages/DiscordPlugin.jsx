@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useProfileCheck } from "@/components/hooks/useProfileCheck";
+import PageHeader from "@/components/shared/PageHeader";
+import MerchantProfileBanner from "@/components/shared/MerchantProfileBanner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,28 +22,6 @@ export default function DiscordPlugin() {
   const [user, setUser] = React.useState(null);
   const [showWizard, setShowWizard] = React.useState(false);
   React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
-
-  // Show profile warning banner if not complete
-  if (!isProfileComplete && profile !== undefined) {
-    return (
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="bg-blue-50 border border-blue-300 rounded-xl p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <AlertTriangle className="w-5 h-5 text-blue-600" />
-            <h2 className="text-lg font-semibold text-blue-900">Complete Your Profile</h2>
-          </div>
-          <p className="text-sm text-blue-800 mb-4">
-            To access PayADA tools, please complete your merchant profile first. You need to provide your business name and a receiving wallet address.
-          </p>
-          <button
-            onClick={() => window.location.href = '/MerchantProfile'}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
-            Go to Profile
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   const { data: plugins = [], isLoading } = useQuery({
     queryKey: ["discord-plugin", user?.email],
@@ -129,10 +110,11 @@ export default function DiscordPlugin() {
   if (showWizard || (!plugin && !isLoading)) {
     return (
       <div className="max-w-2xl space-y-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Discord Gate</h1>
-          <p className="text-slate-500 text-sm mt-1">Automatically grant Discord roles after confirmed ADA payments.</p>
-        </div>
+        <PageHeader
+          title="Discord Gate"
+          subtitle="Automatically grant Discord roles after confirmed ADA payments."
+        />
+        {!isProfileComplete && profile !== undefined && <MerchantProfileBanner />}
         <DiscordSetupWizard
           initialForm={plugin ? {
             guild_id: plugin.guild_id || "", role_id: plugin.role_id || "",
@@ -151,18 +133,16 @@ export default function DiscordPlugin() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Discord Gate</h1>
-          <p className="text-slate-500 text-sm mt-1">
-            Automatically grant Discord roles to customers after a confirmed ADA payment.
-          </p>
-        </div>
+      <PageHeader
+        title="Discord Gate"
+        subtitle="Automatically grant Discord roles to customers after a confirmed ADA payment."
+      >
         <Badge className={plugin?.enabled ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"}>
           {plugin?.enabled ? "Active" : "Inactive"}
         </Badge>
-      </div>
+      </PageHeader>
+
+      {!isProfileComplete && profile !== undefined && <MerchantProfileBanner />}
 
       {/* Form */}
       <div className="bg-white rounded-xl border border-slate-200 divide-y divide-slate-100">
