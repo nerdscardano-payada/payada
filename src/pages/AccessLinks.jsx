@@ -16,6 +16,17 @@ import { toast } from "sonner";
 const PLATFORM_LABELS = { discord: "Discord", telegram: "Telegram", whatsapp: "WhatsApp", website: "Website", other: "Other" };
 const PLATFORM_COLORS = { discord: "bg-indigo-100 text-indigo-700", telegram: "bg-sky-100 text-sky-700", whatsapp: "bg-green-100 text-green-700", website: "bg-slate-100 text-slate-700", other: "bg-slate-100 text-slate-600" };
 
+function formatAccessPrice(link) {
+  if (link.payment_type === "cnt") {
+    return `${Number(link.cnt_amount || 0).toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: link.cnt_decimals || 0,
+    })} ${link.cnt_ticker || "CNT"}`;
+  }
+
+  return `₳ ${Number(link.price_ada || 0).toFixed(2)}`;
+}
+
 export default function AccessLinks() {
   const { isProfileComplete, profile } = useProfileCheck();
   const [showForm, setShowForm] = useState(false);
@@ -78,7 +89,7 @@ export default function AccessLinks() {
     <div>
       <PageHeader
         title="Access Links"
-        subtitle="Sell access to your Discord, Telegram or private community with ADA"
+        subtitle="Sell access to your Discord, Telegram or private community with ADA or CNT"
         action={() => { setEditingLink(null); setShowForm(true); }}
         actionLabel="New Access Link"
         actionIcon={Plus}
@@ -110,7 +121,7 @@ export default function AccessLinks() {
           <EmptyState
             icon={Users}
             title="No access links yet"
-            description="Create your first Access Link to start selling community memberships with ADA."
+            description="Create your first Access Link to start selling community memberships with ADA or CNT."
             actionLabel="Create Access Link"
             onAction={() => setShowForm(true)}
           />
@@ -142,7 +153,7 @@ export default function AccessLinks() {
                       </span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className="text-sm font-semibold text-slate-900 tabular-nums">₳ {link.price_ada?.toFixed(2)}</span>
+                      <span className="text-sm font-semibold text-slate-900 tabular-nums">{formatAccessPrice(link)}</span>
                     </td>
                     <td className="px-5 py-3.5 hidden md:table-cell">
                       <span className="text-sm text-slate-600">{link.payment_count || 0}</span>
