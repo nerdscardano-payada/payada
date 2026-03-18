@@ -36,8 +36,7 @@ Deno.serve(async (req) => {
     }
 
     const feePercent = (merchant.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100;
-    const calculatedFeeLovelace = Math.floor(amountLovelace * feePercent);
-    const platformFeeLovelace = calculatedFeeLovelace > 0 ? Math.max(calculatedFeeLovelace, 1_000_000) : 0;
+    const platformFeeLovelace = Math.floor(amountLovelace * feePercent);
     const merchantAmountLovelace = amountLovelace - platformFeeLovelace;
 
     // Calculate next due date

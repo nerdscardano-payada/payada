@@ -22,48 +22,42 @@ Deno.serve(async (req) => {
 
     const priceAda = ticketType.price_ada;
     const feeModel = event.fee_model || 'merchant_pays';
+    const feePercent = PLATFORM_FEE_PERCENT;
 
-    // Get merchant receive address + fee profile
-    const merchantId = event.merchant_id;
-    let merchantAddress = event.receive_address;
-    const profiles = await sr.entities.MerchantProfile.filter({ user_id: merchantId });
-    const merchant = profiles[0] || null;
-    if (!merchantAddress) {
-      merchantAddress = merchant?.default_receive_address;
+    let amountTotalAda, merchantAmountAda, platformFeeAda;
+
+    if (feeModel === 'merchant_pays') {
+      amountTotalAda = priceAda;
+      platformFeeAda = priceAda * (feePercent / 100);
+      merchantAmountAda = priceAda - platformFeeAda;
+    } else if (feeModel === 'customer_pays') {
+      platformFeeAda = priceAda * (feePercent / 100);
+      amountTotalAda = priceAda + platformFeeAda;
+      merchantAmountAda = priceAda;
+    } else { // split
+      platformFeeAda = priceAda * (feePercent / 100);
+      amountTotalAda = priceAda + (platformFeeAda / 2);
+      merchantAmountAda = priceAda - (platformFeeAda / 2);
     }
 
-    const feePercentValue = merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT;
-    const feePercent = feePercentValue / 100;
-    const baseLovelace = Math.floor(priceAda * 1_000_000);
-    const calculatedFeeLovelace = Math.floor(baseLovelace * feePercent);
-    const fullFeeLovelace = calculatedFeeLovelace > 0 ? Math.max(calculatedFeeLovelace, 1_000_000) : 0;
-    let amountTotalLovelace, merchantAmountLovelace, platformFeeLovelace;
-
-    if (feeModel === 'customer_pays') {
-      platformFeeLovelace = fullFeeLovelace;
-      merchantAmountLovelace = baseLovelace;
-      amountTotalLovelace = baseLovelace + fullFeeLovelace;
-    } else if (feeModel === 'split') {
-      const halfFee = Math.floor(fullFeeLovelace / 2);
-      platformFeeLovelace = fullFeeLovelace;
-      merchantAmountLovelace = baseLovelace - halfFee;
-      amountTotalLovelace = baseLovelace + halfFee;
-    } else {
-      platformFeeLovelace = fullFeeLovelace;
-      merchantAmountLovelace = baseLovelace - fullFeeLovelace;
-      amountTotalLovelace = baseLovelace;
+    // Get merchant receive address
+    const merchantId = event.merchant_id;
+    let merchantAddress = event.receive_address;
+    if (!merchantAddress) {
+      const profiles = await sr.entities.MerchantProfile.filter({ user_id: merchantId });
+      merchantAddress = profiles[0]?.default_receive_address;
     }
 
     return Response.json({
       eventId: event.id,
       ticketTypeId,
-      amount_total_ada: amountTotalLovelace / 1_000_000,
-      merchant_amount_ada: merchantAmountLovelace / 1_000_000,
-      platform_fee_ada: platformFeeLovelace / 1_000_000,
-      merchant_amount_lovelace: merchantAmountLovelace,
-      platform_fee_lovelace: platformFeeLovelace,
+      amount_total_ada: Math.round(amountTotalAda * 1000) / 1000,
+      merchant_amount_ada: Math.round(merchantAmountAda * 1000) / 1000,
+      platform_fee_ada: Math.round(platformFeeAda * 1000) / 1000,
+      merchant_amount_lovelace: Math.floor(merchantAmountAda * 1_000_000),
+      platform_fee_lovelace: Math.floor(platformFeeAda * 1_000_000),
       merchant_address: merchantAddress,
-      platform_fee_percent: feePercentValue,
+      platform_fee_percent: feePercent,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
