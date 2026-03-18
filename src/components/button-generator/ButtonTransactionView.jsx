@@ -6,6 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 
+function formatPaymentAmount(payment) {
+  if (payment.payment_type === "cnt") {
+    const decimals = payment.cnt_decimals || 0;
+    const amount = payment.merchant_amount_cnt ?? payment.received_amount_cnt ?? payment.expected_amount_cnt ?? 0;
+    return `${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: decimals })} ${payment.cnt_ticker || "CNT"}`;
+  }
+
+  return `₳ ${(payment.received_amount_ada || payment.expected_amount_ada || 0).toFixed(2)}`;
+}
+
 export default function ButtonTransactionView({ selectedLink }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -23,7 +33,13 @@ export default function ButtonTransactionView({ selectedLink }) {
   if (!selectedLink || payments.length === 0) return null;
 
   const confirmed = payments.filter(p => p.status === "confirmed");
-  const volume = confirmed.reduce((sum, p) => sum + (p.received_amount_ada || 0), 0);
+  const volumeLabel = selectedLink?.amount_mode === "fixed_cnt"
+    ? (() => {
+        const amount = confirmed.reduce((sum, p) => sum + (p.merchant_amount_cnt ?? p.received_amount_cnt ?? 0), 0);
+        const decimals = selectedLink?.cnt_decimals || 0;
+        return `${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: decimals })} ${selectedLink?.cnt_ticker || "CNT"}`;
+      })()
+    : `₳ ${confirmed.reduce((sum, p) => sum + (p.received_amount_ada || 0), 0).toFixed(2)}`;
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden mt-6">
@@ -34,7 +50,7 @@ export default function ButtonTransactionView({ selectedLink }) {
         <div>
           <h3 className="font-semibold text-slate-900 text-sm">"{selectedLink.title}" Transactions</h3>
           <p className="text-xs text-slate-400 mt-0.5">
-            {confirmed.length} confirmed • ₳ {volume.toFixed(2)} volume
+            {confirmed.length} confirmed • {volumeLabel} volume
           </p>
         </div>
         {expanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
@@ -54,7 +70,7 @@ export default function ButtonTransactionView({ selectedLink }) {
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium text-slate-900">₳ {(p.received_amount_ada || p.expected_amount_ada || 0).toFixed(2)}</span>
+                      <span className="font-medium text-slate-900">{formatPaymentAmount(p)}</span>
                       <Badge className={p.status === "confirmed" ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"}>
                         {p.status}
                       </Badge>
