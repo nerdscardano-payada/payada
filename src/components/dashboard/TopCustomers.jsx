@@ -19,8 +19,12 @@ function getCntDecimals(policyId, storedDecimals) {
 
 function getCustomerDisplayData(customer, payments = []) {
   const matchedPayments = payments.filter((payment) => {
-    if (customer.email && payment.payer_email === customer.email) return true;
-    if (customer.wallet_address && payment.payer_address === customer.wallet_address) return true;
+    if (customer.email) {
+      return payment.payer_email === customer.email;
+    }
+    if (customer.wallet_address) {
+      return payment.payer_address === customer.wallet_address;
+    }
     return false;
   });
 
