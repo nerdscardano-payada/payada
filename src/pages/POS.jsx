@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import MerchantProfileBanner from "@/components/shared/MerchantProfileBanner";
 
 const STATUS_COLORS = {
   idle: "text-slate-400",
@@ -30,30 +31,6 @@ export default function POS() {
   const [paymentStatus, setPaymentStatus] = useState("idle");
   const [paymentId, setPaymentId] = useState(null);
   const pollRef = useRef(null);
-
-  // Show profile warning banner if not complete
-  if (!isProfileComplete && profile !== undefined) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
-        <div className="w-full max-w-sm">
-          <div className="bg-slate-900 rounded-2xl border border-blue-500/30 p-8">
-            <div className="flex items-center gap-3 mb-4">
-              <AlertCircle className="w-6 h-6 text-blue-400 flex-shrink-0" />
-              <h2 className="text-lg font-semibold text-white">Complete Your Profile</h2>
-            </div>
-            <p className="text-sm text-slate-300 mb-6">
-              To access PayADA payment tools, please complete your merchant profile first. You need to provide your business name and a receiving wallet address.
-            </p>
-            <button
-              onClick={() => window.location.href = '/MerchantProfile'}
-              className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
-              Go to Profile
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const checkoutUrl = session
     ? `${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, "")}/?page=Pay&slug=${session.slug}`
@@ -138,6 +115,8 @@ export default function POS() {
           <h1 className="text-xl font-bold text-white">PayADA POS</h1>
           <p className="text-xs text-slate-500 mt-1">Physical point of sale · Cardano ADA</p>
         </div>
+
+        {!isProfileComplete && profile !== undefined && <MerchantProfileBanner />}
 
         <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
           {!session ? (

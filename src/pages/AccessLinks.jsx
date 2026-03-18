@@ -12,6 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import MerchantProfileBanner from "@/components/shared/MerchantProfileBanner";
 
 const PLATFORM_LABELS = { discord: "Discord", telegram: "Telegram", whatsapp: "WhatsApp", website: "Website", other: "Other" };
 const PLATFORM_COLORS = { discord: "bg-indigo-100 text-indigo-700", telegram: "bg-sky-100 text-sky-700", whatsapp: "bg-green-100 text-green-700", website: "bg-slate-100 text-slate-700", other: "bg-slate-100 text-slate-600" };
@@ -34,28 +35,6 @@ export default function AccessLinks() {
   const [view, setView] = useState("links"); // "links" | "members"
   const [user, setUser] = React.useState(null);
   const queryClient = useQueryClient();
-
-  // Show profile warning banner if not complete
-  if (!isProfileComplete && profile !== undefined) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-blue-50 border border-blue-300 rounded-xl p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <AlertCircle className="w-5 h-5 text-blue-600" />
-            <h2 className="text-lg font-semibold text-blue-900">Complete Your Profile</h2>
-          </div>
-          <p className="text-sm text-blue-800 mb-4">
-            To access PayADA tools, please complete your merchant profile first. You need to provide your business name and a receiving wallet address.
-          </p>
-          <button
-            onClick={() => window.location.href = '/MerchantProfile'}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
-            Go to Profile
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   React.useEffect(() => { base44.auth.me().then(setUser); }, []);
 
@@ -94,6 +73,8 @@ export default function AccessLinks() {
         actionLabel="New Access Link"
         actionIcon={Plus}
       />
+
+      {!isProfileComplete && profile !== undefined && <MerchantProfileBanner />}
 
       {/* View toggle */}
       <div className="flex items-center gap-2 mb-4">
