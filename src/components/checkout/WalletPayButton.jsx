@@ -3,6 +3,7 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
+import { getKnownCntDecimals } from "@/components/payment-links/wizard/knownCNTs";
 
 function toBaseUnits(amount, decimals = 0) {
   const value = String(amount ?? "0").trim();
@@ -32,7 +33,11 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
 
     if (isCnt) {
       // CNT payment: split tokens between merchant and fee wallet
-      const decimals = paymentLink.cnt_decimals || 0;
+      const decimals = getKnownCntDecimals(
+        paymentLink.cnt_policy_id,
+        paymentLink.cnt_asset_name,
+        paymentLink.cnt_decimals || 0
+      );
       const cntTotal = BigInt(toBaseUnits(paymentLink.cnt_amount, decimals));
       const feePercent = sessionData.platform_fee_percent || 1.75;
       const cntFeeAmount = (cntTotal * BigInt(Math.round(feePercent * 100))) / 10000n;

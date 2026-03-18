@@ -1,5 +1,5 @@
 export const KNOWN_CNTS = [
-  { ticker: "$NIGHT",  policy_id: "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa", asset_name: "4e49474854",                         decimals: 0 },
+  { ticker: "$NIGHT",  policy_id: "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa", asset_name: "4e49474854",                         decimals: 6 },
   { ticker: "$SNEK",   policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3",  asset_name: "534e454b",                           decimals: 0 },
   { ticker: "$MIN",    policy_id: "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6", asset_name: "4d494e",                             decimals: 6 },
   { ticker: "$INDY",   policy_id: "533bb94a8850ee3ccbe483106489399112b74c905342cb1792a797a0", asset_name: "494e4459",                           decimals: 6 },
@@ -22,3 +22,11 @@ export const KNOWN_CNTS = [
   { ticker: "iUSD",   policy_id: "f66d78b4a3cb3d37afa0ec36461e51ecbde00f26c8f0a68f94b69880", asset_name: "69555344",                                 decimals: 6 },
   { ticker: "USDCx",  policy_id: "1f3aec8bfe7ea4fe14c5f121e2a92e301afe414147860d557cac7e34", asset_name: "5553444378",                             decimals: 6 },
 ];
+
+export const KNOWN_CNT_DECIMALS = Object.fromEntries(
+  KNOWN_CNTS.map((cnt) => [`${cnt.policy_id}:${cnt.asset_name}`, cnt.decimals])
+);
+
+export function getKnownCntDecimals(policyId, assetName, fallback = 0) {
+  return KNOWN_CNT_DECIMALS[`${policyId}:${assetName}`] ?? fallback;
+}

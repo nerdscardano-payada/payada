@@ -1,6 +1,7 @@
 import React from "react";
 
 const KNOWN_DECIMALS = {
+  "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa": 6, // $NIGHT
   "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114": 6, // $IAG
   "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6": 6, // $MIN
   "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489": 6, // $NMKR
