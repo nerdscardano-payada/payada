@@ -4,6 +4,14 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { base44 } from "@/api/base44Client";
 
+function toBaseUnits(amount, decimals = 0) {
+  const value = String(amount ?? "0").trim();
+  const [whole = "0", fraction = ""] = value.split(".");
+  const normalizedWhole = whole.replace(/^0+(?=\d)/, "") || "0";
+  const normalizedFraction = (fraction + "0".repeat(decimals)).slice(0, decimals);
+  return `${normalizedWhole}${normalizedFraction}`.replace(/^0+(?=\d)/, "") || "0";
+}
+
 export default function WalletPayButton({ connectedWallet, sessionData, paymentLink, payerEmail, payerName, payerDiscordUsername, onSuccess }) {
   const [txLoading, setTxLoading] = useState(false);
   const [txStatus, setTxStatus] = useState(null); // null | 'building' | 'signing' | 'submitting'
@@ -25,10 +33,9 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
     if (isCnt) {
       // CNT payment: split tokens between merchant and fee wallet
       const decimals = paymentLink.cnt_decimals || 0;
-      const divisor = Math.pow(10, decimals);
-      const cntTotal = Math.round((paymentLink.cnt_amount || 0) * divisor);
+      const cntTotal = BigInt(toBaseUnits(paymentLink.cnt_amount, decimals));
       const feePercent = sessionData.platform_fee_percent || 1.75;
-      const cntFeeAmount = Math.round(cntTotal * (feePercent / 100));
+      const cntFeeAmount = (cntTotal * BigInt(Math.round(feePercent * 100))) / 10000n;
       buildParams = {
         walletAddress,
         merchantAddress,
@@ -36,8 +43,8 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
         platformFeeLovelace: "0",
         cntPolicyId: paymentLink.cnt_policy_id,
         cntAssetName: paymentLink.cnt_asset_name,
-        cntAmount: String(cntTotal),
-        cntFeeAmount: String(cntFeeAmount),
+        cntAmount: cntTotal.toString(),
+        cntFeeAmount: cntFeeAmount.toString(),
       };
     } else {
       const merchantLovelace = String(
