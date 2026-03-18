@@ -220,6 +220,17 @@ function selectTokenUtxos(utxos, unit, requiredAmount) {
   return { selectedUtxos, totalTokens, totalLovelace };
 }
 
+function mergeUtxoAssetsIntoSelection(utxo, selectedInputAssets) {
+  for (const asset of utxo.amount) {
+    if (asset.unit === 'lovelace') continue;
+    const policyId = asset.unit.slice(0, 56);
+    const assetName = asset.unit.slice(56);
+    if (!selectedInputAssets.has(policyId)) selectedInputAssets.set(policyId, new Map());
+    const prev = selectedInputAssets.get(policyId).get(assetName) || 0n;
+    selectedInputAssets.get(policyId).set(assetName, prev + BigInt(asset.quantity));
+  }
+}
+
 // Minimum ADA per output (Cardano minimum UTxO requirement)
 const MIN_LOVELACE_PER_OUTPUT = 1_000_000n; // 1 ADA
 
@@ -335,14 +346,7 @@ Deno.serve(async (req) => {
       let selectedCntLovelace = initialSelectedCntLovelace;
 
       for (const utxo of selectedUtxos) {
-        for (const a of utxo.amount) {
-          if (a.unit === 'lovelace') continue;
-          const policyId = a.unit.slice(0, 56);
-          const assetName = a.unit.slice(56);
-          if (!selectedInputAssets.has(policyId)) selectedInputAssets.set(policyId, new Map());
-          const prev = selectedInputAssets.get(policyId).get(assetName) || 0n;
-          selectedInputAssets.get(policyId).set(assetName, prev + BigInt(a.quantity));
-        }
+        mergeUtxoAssetsIntoSelection(utxo, selectedInputAssets);
       }
 
       const cntChange = selectedCntTokens - cntTotal;
@@ -354,12 +358,16 @@ Deno.serve(async (req) => {
       let adaNeeded = (MIN_CNT_OUTPUT_LOVELACE * BigInt(numTokenOutputs)) + MIN_CNT_CHANGE_LOVELACE + txFee;
 
       if (selectedCntLovelace < adaNeeded) {
-        for (const utxo of pureAdaUtxos) {
-          const alreadySelected = selectedUtxos.some(selected => selected.tx_hash === utxo.tx_hash && selected.tx_index === utxo.tx_index);
-          if (alreadySelected) continue;
+        const supportUtxos = utxos
+          .filter(utxo => !utxo.amount.some(a => a.unit === cntUnit))
+          .filter(utxo => utxo.amount.some(a => a.unit === 'lovelace'))
+          .filter(utxo => !selectedUtxos.some(selected => selected.tx_hash === utxo.tx_hash && selected.tx_index === utxo.tx_index))
+          .sort((a, b) => Number(getUtxoLovelace(b) - getUtxoLovelace(a)));
 
+        for (const utxo of supportUtxos) {
           selectedUtxos.push(utxo);
           selectedCntLovelace += getUtxoLovelace(utxo);
+          mergeUtxoAssetsIntoSelection(utxo, selectedInputAssets);
           txFee = estimateFee(selectedUtxos.length, numTokenOutputs + 1, true);
           adaNeeded = (MIN_CNT_OUTPUT_LOVELACE * BigInt(numTokenOutputs)) + MIN_CNT_CHANGE_LOVELACE + txFee;
 
@@ -381,6 +389,14 @@ Deno.serve(async (req) => {
       });
 
       if (adaChange < MIN_CNT_CHANGE_LOVELACE) {
+        console.error("CNT build insufficient ADA", {
+          selectedUtxos: selectedUtxos.length,
+          selectedCntLovelace: selectedCntLovelace.toString(),
+          adaForTokenOutputs: adaForTokenOutputs.toString(),
+          txFee: txFee.toString(),
+          minChange: MIN_CNT_CHANGE_LOVELACE.toString(),
+          adaChange: adaChange.toString(),
+        });
         return Response.json({ error: `Insufficient ADA. Need ₳${Number(adaForTokenOutputs + txFee + MIN_CNT_CHANGE_LOVELACE) / 1_000_000} for minUTxO + fees.` }, { status: 400 });
       }
 
