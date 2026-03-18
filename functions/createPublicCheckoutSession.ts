@@ -44,7 +44,8 @@ Deno.serve(async (req) => {
     // Calculate fee split based on fee_model
     const feeModel = paymentLink.fee_model || 'merchant_pays';
     const baseLovelace = amountLovelace;
-    const fullFeeLovelace = Math.floor(baseLovelace * feePercent);
+    const calculatedFeeLovelace = Math.floor(baseLovelace * feePercent);
+    const fullFeeLovelace = calculatedFeeLovelace > 0 ? Math.max(calculatedFeeLovelace, 1_000_000) : 0;
     let platformFeeLovelace, merchantAmountLovelace;
 
     if (feeModel === 'customer_pays') {
