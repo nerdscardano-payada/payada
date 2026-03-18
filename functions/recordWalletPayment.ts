@@ -323,7 +323,7 @@ Deno.serve(async (req) => {
       if (existingCustomers.length > 0) {
         const existing = existingCustomers[0];
         const updateData = {
-          total_paid_ada: (existing.total_paid_ada || 0) + receivedAmountAda,
+          total_paid_ada: isCntPayment ? (existing.total_paid_ada || 0) : (existing.total_paid_ada || 0) + receivedAmountAda,
           payment_count: (existing.payment_count || 0) + 1,
           wallet_address: normalizedWallet || existing.wallet_address,
           name: payerName || existing.name,
@@ -335,7 +335,7 @@ Deno.serve(async (req) => {
           merchant_id: merchantId,
           name: payerName || "Anonymous",
           wallet_address: normalizedWallet || null,
-          total_paid_ada: receivedAmountAda,
+          total_paid_ada: isCntPayment ? 0 : receivedAmountAda,
           payment_count: 1,
           has_active_subscription: false,
         };

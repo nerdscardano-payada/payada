@@ -24,13 +24,13 @@ function getCustomerDisplayData(customer, payments = []) {
     return false;
   });
 
-  const confirmedPayments = matchedPayments.filter((payment) => payment.status === "confirmed");
-  const adaTotal = confirmedPayments
+  const visiblePayments = matchedPayments.filter((payment) => !["failed", "expired"].includes(payment.status));
+  const adaTotal = visiblePayments
     .filter((payment) => payment.payment_type !== "cnt")
     .reduce((sum, payment) => sum + (payment.merchant_amount_ada || payment.received_amount_ada || payment.expected_amount_ada || 0), 0);
 
   const cntByToken = {};
-  confirmedPayments
+  visiblePayments
     .filter((payment) => payment.payment_type === "cnt")
     .forEach((payment) => {
       const key = payment.cnt_policy_id || payment.cnt_ticker || "CNT";

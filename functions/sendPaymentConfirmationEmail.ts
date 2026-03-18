@@ -30,9 +30,15 @@ Deno.serve(async (req) => {
     }
 
     // Format payment details
+    const isCntPayment = payment.payment_type === 'cnt';
     const amountAda = (payment.received_amount_ada || payment.expected_amount_ada || 0).toFixed(2);
     const feeAda = (payment.fee_amount_ada || 0).toFixed(2);
     const netAda = ((payment.received_amount_ada || payment.expected_amount_ada || 0) - (payment.fee_amount_ada || 0)).toFixed(2);
+    const cntDecimals = payment.cnt_decimals || 0;
+    const cntTicker = payment.cnt_ticker || 'CNT';
+    const cntAmount = Number(payment.received_amount_cnt || payment.expected_amount_cnt || 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: cntDecimals });
+    const cntFee = Number(payment.cnt_fees?.[0]?.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: cntDecimals });
+    const cntNet = Number(payment.merchant_amount_cnt || payment.received_amount_cnt || payment.expected_amount_cnt || 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: cntDecimals });
     const payerInfo = escapeHtml(payment.payer_name || payment.payer_email || 'Unknown');
     const txHash = payment.tx_hash || 'N/A';
     const blockUrl = `https://cexplorer.io/tx/${txHash}`;
@@ -55,6 +61,20 @@ Deno.serve(async (req) => {
                   <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Payer:</td>
                   <td style="padding: 8px 0; color: #1a202c; font-weight: 600; text-align: right;">${payerInfo}</td>
                 </tr>
+                ${isCntPayment ? `
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Amount:</td>
+                  <td style="padding: 8px 0; color: #1a202c; font-weight: 600; text-align: right;">${cntAmount} ${cntTicker}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Platform Fee:</td>
+                  <td style="padding: 8px 0; color: #ef4444; text-align: right;">-${cntFee} ${cntTicker}</td>
+                </tr>
+                <tr style="border-top: 2px solid #e5e7eb;">
+                  <td style="padding: 12px 0; color: #1a202c; font-weight: 700; font-size: 16px;">Merchant Receives:</td>
+                  <td style="padding: 12px 0; color: #10b981; font-weight: 700; font-size: 16px; text-align: right;">${cntNet} ${cntTicker}</td>
+                </tr>
+                ` : `
                 <tr>
                   <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Amount:</td>
                   <td style="padding: 8px 0; color: #1a202c; font-weight: 600; text-align: right;">₳ ${amountAda}</td>
@@ -67,6 +87,7 @@ Deno.serve(async (req) => {
                   <td style="padding: 12px 0; color: #1a202c; font-weight: 700; font-size: 16px;">Net:</td>
                   <td style="padding: 12px 0; color: #10b981; font-weight: 700; font-size: 16px; text-align: right;">₳ ${netAda}</td>
                 </tr>
+                `}
               </table>
             </div>
             <div style="margin: 20px 0;">
@@ -89,7 +110,7 @@ Deno.serve(async (req) => {
 
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: merchantEmail,
-      subject: `✓ Payment confirmed - ₳ ${amountAda}`,
+      subject: isCntPayment ? `✓ Payment confirmed - ${cntAmount} ${cntTicker}` : `✓ Payment confirmed - ₳ ${amountAda}`,
       body: htmlBody
     });
 

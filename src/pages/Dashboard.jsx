@@ -111,6 +111,12 @@ export default function Dashboard() {
   const confirmedAdaPayments = payments.filter(p => p.status === "confirmed" && (p.payment_type === "ada" || !p.payment_type));
   const confirmedCntPayments = payments.filter(p => p.status === "confirmed" && p.payment_type === "cnt");
 
+  React.useEffect(() => {
+    if (confirmedCntPayments.length > 0 && confirmedAdaPayments.length === 0) {
+      setPaymentTypeTab("cnt");
+    }
+  }, [confirmedCntPayments.length, confirmedAdaPayments.length]);
+
   const allConfirmedPayments = payments.filter(p => p.status === "confirmed");
 
   // CNT summary by token
