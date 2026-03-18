@@ -31,9 +31,11 @@ Deno.serve(async (req) => {
 
     // Format payment details
     const isCntPayment = payment.payment_type === 'cnt';
-    const amountAda = (payment.received_amount_ada || payment.expected_amount_ada || 0).toFixed(2);
-    const feeAda = (payment.fee_amount_ada || 0).toFixed(2);
-    const netAda = ((payment.received_amount_ada || payment.expected_amount_ada || 0) - (payment.fee_amount_ada || 0)).toFixed(2);
+    const merchantAda = Number(payment.merchant_amount_ada || payment.received_amount_ada || payment.expected_amount_ada || 0);
+    const feeAdaValue = Number(payment.fee_amount_ada || 0);
+    const grossAda = (merchantAda + feeAdaValue).toFixed(2);
+    const feeAda = feeAdaValue.toFixed(2);
+    const netAda = merchantAda.toFixed(2);
     const cntDecimals = payment.cnt_decimals || 0;
     const cntTicker = payment.cnt_ticker || 'CNT';
     const cntAmount = Number(payment.received_amount_cnt || payment.expected_amount_cnt || 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: cntDecimals });
