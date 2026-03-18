@@ -31,6 +31,29 @@ const STATUS_STYLES = {
   expired: "bg-slate-100 text-slate-500",
 };
 
+function formatLinkPrice(link) {
+  if (link.payment_type === "cnt") {
+    return `${Number(link.cnt_amount || 0).toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: link.cnt_decimals || 0,
+    })} ${link.cnt_ticker || "CNT"}`;
+  }
+
+  return `₳ ${Number(link.price_ada || 0).toFixed(2)}`;
+}
+
+function formatPaymentAmount(payment) {
+  if (payment.payment_type === "cnt") {
+    const amount = payment.received_amount_cnt ?? payment.expected_amount_cnt ?? 0;
+    return `${Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: payment.cnt_decimals || 0,
+    })} ${payment.cnt_ticker || "CNT"}`;
+  }
+
+  return `₳ ${payment.received_amount_ada?.toFixed(2) || payment.expected_amount_ada?.toFixed(2)}`;
+}
+
 function MemberRow({ payment }) {
   return (
     <tr className="hover:bg-slate-50/50 transition-colors">
