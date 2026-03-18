@@ -229,7 +229,7 @@ export default function Dashboard() {
             />
             <StatCard
               title="Payments"
-              value={filteredPayments.filter(p => p.status === "confirmed").length}
+              value={confirmedPaymentsCount}
               subtitle={
                 <div className="flex gap-1 mt-1">
                   {["7d", "30d", "all"].map(p => (
@@ -296,7 +296,7 @@ export default function Dashboard() {
             </>
           ) : (
             <>
-              <PaymentVolumeChart payments={payments} />
+              <PaymentVolumeChart payments={payments.filter(p => p.payment_type === "ada" || !p.payment_type)} />
               <TopCustomers customers={customers} payments={payments} />
             </>
           )}
