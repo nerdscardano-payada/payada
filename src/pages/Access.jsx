@@ -207,15 +207,30 @@ export default function Access() {
 
   const feePercent = merchantProfile?.platform_fee_percent ?? 1.75;
   const isCnt = accessLink.payment_type === "cnt";
+  const feeModel = accessLink.fee_model || "merchant_pays";
 
-  // ADA payment calcs
+  // ADA payment calcs aligned with Payment Links
   const totalAda = accessLink.price_ada || 0;
-  const feeAda = +(totalAda * feePercent / 100).toFixed(6);
-  const merchantAda = +(totalAda - feeAda).toFixed(6);
+  const baseLovelace = Math.floor(totalAda * 1_000_000);
+  const calculatedFeeLovelace = Math.floor(baseLovelace * (feePercent / 100));
+  const fullFeeLovelace = calculatedFeeLovelace > 0 ? Math.max(calculatedFeeLovelace, 1_000_000) : 0;
+
+  let amountTotalAda = totalAda;
+  let merchantAda = (baseLovelace - fullFeeLovelace) / 1_000_000;
+  let feeAda = fullFeeLovelace / 1_000_000;
+
+  if (feeModel === "customer_pays") {
+    amountTotalAda = (baseLovelace + fullFeeLovelace) / 1_000_000;
+    merchantAda = baseLovelace / 1_000_000;
+  } else if (feeModel === "split") {
+    const halfFee = Math.floor(fullFeeLovelace / 2);
+    amountTotalAda = (baseLovelace + halfFee) / 1_000_000;
+    merchantAda = (baseLovelace - halfFee) / 1_000_000;
+  }
 
   // CNT payment calcs
   const totalCnt = accessLink.cnt_amount || 0;
-  const feeCnt = Math.round(totalCnt * feePercent / 100);
+  const feeCnt = totalCnt * (feePercent / 100);
   const merchantCnt = totalCnt - feeCnt;
 
   const receiveAddress = accessLink.receive_address || merchantProfile?.default_receive_address;
@@ -259,7 +274,7 @@ export default function Access() {
     merchant_amount_ada: merchantAda,
     platform_fee_lovelace: Math.floor(feeAda * 1_000_000),
     platform_fee_ada: feeAda,
-    amount_total_ada: totalAda,
+    amount_total_ada: amountTotalAda,
   };
 
   const extraData = {
