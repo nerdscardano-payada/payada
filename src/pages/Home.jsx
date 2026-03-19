@@ -187,11 +187,6 @@ export default function HomePage() {
             <div className="text-center mb-14">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("home.usecases_title")}</h2>
               <p className="text-lg text-slate-600 max-w-3xl mx-auto mb-6">{t("home.usecases_sub")}</p>
-              <Link to="/Demo">
-                <Button variant="outline" className="border-slate-200 bg-white gap-2">
-                  ⚡ {t("home.demo_cta")}
-                </Button>
-              </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {Array.isArray(useCases) && useCases.map((item, index) => {
