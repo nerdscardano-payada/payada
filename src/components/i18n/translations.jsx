@@ -21,6 +21,34 @@ export const translations = {
       confirmed: "Confirmed",
       net_amount: "Net Amount",
       fee: "Fee",
+      launch_title: "Welcome to PayADA! 🎉",
+      launch_desc: "The easiest way to accept Cardano payments is now live.",
+      hero_badge: "Cardano-native payment infrastructure",
+      hero_primary_cta: "Start accepting payments",
+      hero_secondary_cta: "Monetize your community",
+      demo_cta: "Try Demo",
+      docs_cta: "Docs",
+      pathways_title: "Choose your starting point",
+      pathways_sub: "Start with one clear goal, then unlock the rest as you grow.",
+      pathways: [
+        { title: "Accept payments", description: "Create a payment link in minutes and start getting paid in ADA or Cardano Native Tokens.", cta: "Create payment link" },
+        { title: "Monetize your community", description: "Sell Discord or Telegram access with simple setup and automated delivery.", cta: "Set up community access" },
+        { title: "Sell tickets / events", description: "Launch an event, add ticket types, and manage QR check-ins in one flow.", cta: "Create event" }
+      ],
+      usecases_title: "Built for the most common Cardano payment use cases",
+      usecases_sub: "From your first payment link to events and private communities, PayADA keeps setup simple.",
+      usecases: [
+        { title: "💸 Get paid", description: "Create payment links and start accepting ADA + CNTs instantly." },
+        { title: "💬 Monetize communities", description: "Sell Discord / Telegram access with automated role assignment." },
+        { title: "🎟️ Sell tickets", description: "Create events and manage check-ins with QR codes." }
+      ],
+      why_title: "Why PayADA",
+      why_items: [
+        "Supports ADA + Cardano Native Tokens",
+        "No smart contracts needed",
+        "Built for creators, communities & projects",
+        "Live in minutes"
+      ],
       features_title: "Built for modern merchants",
       features_sub: "Everything you need to accept Cardano payments and manage your blockchain business.",
       steps_title: "Get started in 3 easy steps",
@@ -377,6 +405,34 @@ export const translations = {
       confirmed: "Bevestigd",
       net_amount: "Nettobedrag",
       fee: "Kosten",
+      launch_title: "Welkom bij PayADA! 🎉",
+      launch_desc: "De eenvoudigste manier om Cardano-betalingen te accepteren is nu live.",
+      hero_badge: "Cardano-native betaalinfrastructuur",
+      hero_primary_cta: "Start met betalingen accepteren",
+      hero_secondary_cta: "Monetize je community",
+      demo_cta: "Probeer demo",
+      docs_cta: "Docs",
+      pathways_title: "Kies je startpunt",
+      pathways_sub: "Begin met één duidelijk doel en ontdek de rest terwijl je groeit.",
+      pathways: [
+        { title: "Betalingen accepteren", description: "Maak in enkele minuten een betaallink en ontvang ADA of Cardano Native Tokens.", cta: "Maak betaallink" },
+        { title: "Monetize je community", description: "Verkoop toegang tot Discord of Telegram met een eenvoudige setup en automatische toegang.", cta: "Stel community-toegang in" },
+        { title: "Tickets / events verkopen", description: "Lanceer een event, voeg tickettypes toe en beheer QR check-ins in één flow.", cta: "Maak event" }
+      ],
+      usecases_title: "Gebouwd voor de belangrijkste Cardano use cases",
+      usecases_sub: "Van je eerste betaallink tot events en private communities: PayADA houdt de setup eenvoudig.",
+      usecases: [
+        { title: "💸 Krijg betaald", description: "Maak betaallinks en accepteer direct ADA + CNT's." },
+        { title: "💬 Monetize communities", description: "Verkoop Discord / Telegram-toegang met automatische roltoewijzing." },
+        { title: "🎟️ Verkoop tickets", description: "Maak events aan en beheer check-ins met QR-codes." }
+      ],
+      why_title: "Waarom PayADA",
+      why_items: [
+        "Ondersteunt ADA + Cardano Native Tokens",
+        "Geen smart contracts nodig",
+        "Gebouwd voor creators, communities en projecten",
+        "Live in enkele minuten"
+      ],
       features_title: "Gebouwd voor moderne handelaren",
       features_sub: "Alles wat je nodig hebt om Cardano-betalingen te accepteren en je blockchain-bedrijf te beheren.",
       steps_title: "Start in 3 eenvoudige stappen",
@@ -614,6 +670,34 @@ export const translations = {
       confirmed: "Bestätigt",
       net_amount: "Nettobetrag",
       fee: "Gebühr",
+      launch_title: "Willkommen bei PayADA! 🎉",
+      launch_desc: "Der einfachste Weg, Cardano-Zahlungen zu akzeptieren, ist jetzt live.",
+      hero_badge: "Cardano-native Zahlungsinfrastruktur",
+      hero_primary_cta: "Zahlungen akzeptieren",
+      hero_secondary_cta: "Community monetarisieren",
+      demo_cta: "Demo testen",
+      docs_cta: "Docs",
+      pathways_title: "Wählen Sie Ihren Startpunkt",
+      pathways_sub: "Beginnen Sie mit einem klaren Ziel und schalten Sie den Rest frei, während Sie wachsen.",
+      pathways: [
+        { title: "Zahlungen akzeptieren", description: "Erstellen Sie in Minuten einen Zahlungslink und empfangen Sie ADA oder Cardano Native Tokens.", cta: "Zahlungslink erstellen" },
+        { title: "Community monetarisieren", description: "Verkaufen Sie Discord- oder Telegram-Zugang mit einfacher Einrichtung und automatischer Freigabe.", cta: "Community-Zugang einrichten" },
+        { title: "Tickets / Events verkaufen", description: "Starten Sie ein Event, fügen Sie Tickettypen hinzu und verwalten Sie QR-Check-ins in einem Ablauf.", cta: "Event erstellen" }
+      ],
+      usecases_title: "Für die wichtigsten Cardano-Zahlungsfälle entwickelt",
+      usecases_sub: "Vom ersten Zahlungslink bis zu Events und privaten Communities hält PayADA die Einrichtung einfach.",
+      usecases: [
+        { title: "💸 Bezahlt werden", description: "Erstellen Sie Zahlungslinks und akzeptieren Sie sofort ADA + CNTs." },
+        { title: "💬 Communities monetarisieren", description: "Verkaufen Sie Discord / Telegram-Zugang mit automatischer Rollenzuweisung." },
+        { title: "🎟️ Tickets verkaufen", description: "Erstellen Sie Events und verwalten Sie Check-ins mit QR-Codes." }
+      ],
+      why_title: "Warum PayADA",
+      why_items: [
+        "Unterstützt ADA + Cardano Native Tokens",
+        "Keine Smart Contracts erforderlich",
+        "Für Creator, Communities und Projekte gebaut",
+        "In Minuten live"
+      ],
       features_title: "Für moderne Händler entwickelt",
       features_sub: "Alles, was Sie brauchen, um Cardano-Zahlungen zu akzeptieren und Ihr Blockchain-Geschäft zu verwalten.",
       steps_title: "In 3 einfachen Schritten starten",
@@ -851,6 +935,34 @@ export const translations = {
       confirmed: "Confirmé",
       net_amount: "Montant net",
       fee: "Frais",
+      launch_title: "Bienvenue sur PayADA ! 🎉",
+      launch_desc: "La façon la plus simple d'accepter les paiements Cardano est maintenant en ligne.",
+      hero_badge: "Infrastructure de paiement native Cardano",
+      hero_primary_cta: "Commencer à accepter des paiements",
+      hero_secondary_cta: "Monétiser votre communauté",
+      demo_cta: "Essayer la démo",
+      docs_cta: "Docs",
+      pathways_title: "Choisissez votre point de départ",
+      pathways_sub: "Commencez avec un objectif clair, puis débloquez le reste à mesure que vous grandissez.",
+      pathways: [
+        { title: "Accepter des paiements", description: "Créez un lien de paiement en quelques minutes et commencez à recevoir de l'ADA ou des Cardano Native Tokens.", cta: "Créer un lien de paiement" },
+        { title: "Monétiser votre communauté", description: "Vendez l'accès Discord ou Telegram avec une configuration simple et une livraison automatique.", cta: "Configurer l'accès communauté" },
+        { title: "Vendre des tickets / événements", description: "Lancez un événement, ajoutez des types de billets et gérez les check-ins QR dans un seul flux.", cta: "Créer un événement" }
+      ],
+      usecases_title: "Conçu pour les principaux cas d'usage Cardano",
+      usecases_sub: "Du premier lien de paiement aux événements et communautés privées, PayADA garde la configuration simple.",
+      usecases: [
+        { title: "💸 Être payé", description: "Créez des liens de paiement et acceptez instantanément ADA + CNT." },
+        { title: "💬 Monétiser les communautés", description: "Vendez l'accès Discord / Telegram avec attribution automatique des rôles." },
+        { title: "🎟️ Vendre des tickets", description: "Créez des événements et gérez les check-ins avec des QR codes." }
+      ],
+      why_title: "Pourquoi PayADA",
+      why_items: [
+        "Prend en charge ADA + Cardano Native Tokens",
+        "Aucun smart contract nécessaire",
+        "Conçu pour les créateurs, communautés et projets",
+        "En ligne en quelques minutes"
+      ],
       features_title: "Conçu pour les commerçants modernes",
       features_sub: "Tout ce dont vous avez besoin pour accepter les paiements Cardano et gérer votre activité blockchain.",
       steps_title: "Démarrez en 3 étapes simples",
@@ -1088,6 +1200,34 @@ export const translations = {
       confirmed: "Confirmado",
       net_amount: "Monto neto",
       fee: "Comisión",
+      launch_title: "¡Bienvenido a PayADA! 🎉",
+      launch_desc: "La forma más fácil de aceptar pagos Cardano ya está disponible.",
+      hero_badge: "Infraestructura de pagos nativa de Cardano",
+      hero_primary_cta: "Empieza a aceptar pagos",
+      hero_secondary_cta: "Monetiza tu comunidad",
+      demo_cta: "Probar demo",
+      docs_cta: "Docs",
+      pathways_title: "Elige tu punto de partida",
+      pathways_sub: "Empieza con un objetivo claro y desbloquea el resto a medida que creces.",
+      pathways: [
+        { title: "Aceptar pagos", description: "Crea un enlace de pago en minutos y empieza a cobrar en ADA o Cardano Native Tokens.", cta: "Crear enlace de pago" },
+        { title: "Monetiza tu comunidad", description: "Vende acceso a Discord o Telegram con una configuración simple y entrega automática.", cta: "Configurar acceso a la comunidad" },
+        { title: "Vender tickets / eventos", description: "Lanza un evento, añade tipos de entradas y gestiona check-ins QR en un solo flujo.", cta: "Crear evento" }
+      ],
+      usecases_title: "Creado para los casos de uso Cardano más importantes",
+      usecases_sub: "Desde tu primer enlace de pago hasta eventos y comunidades privadas, PayADA mantiene la configuración simple.",
+      usecases: [
+        { title: "💸 Cobra", description: "Crea enlaces de pago y acepta al instante ADA + CNT." },
+        { title: "💬 Monetiza comunidades", description: "Vende acceso a Discord / Telegram con asignación automática de roles." },
+        { title: "🎟️ Vende tickets", description: "Crea eventos y gestiona check-ins con códigos QR." }
+      ],
+      why_title: "Por qué PayADA",
+      why_items: [
+        "Compatible con ADA + Cardano Native Tokens",
+        "No se necesitan smart contracts",
+        "Pensado para creadores, comunidades y proyectos",
+        "Activo en minutos"
+      ],
       features_title: "Diseñado para comerciantes modernos",
       features_sub: "Todo lo que necesitas para aceptar pagos Cardano y gestionar tu negocio blockchain.",
       steps_title: "Comienza en 3 sencillos pasos",
@@ -1325,6 +1465,34 @@ export const translations = {
       confirmed: "Confirmado",
       net_amount: "Valor líquido",
       fee: "Taxa",
+      launch_title: "Bem-vindo à PayADA! 🎉",
+      launch_desc: "A maneira mais fácil de aceitar pagamentos Cardano já está no ar.",
+      hero_badge: "Infraestrutura de pagamentos nativa de Cardano",
+      hero_primary_cta: "Comece a aceitar pagamentos",
+      hero_secondary_cta: "Monetize sua comunidade",
+      demo_cta: "Testar demo",
+      docs_cta: "Docs",
+      pathways_title: "Escolha seu ponto de partida",
+      pathways_sub: "Comece com um objetivo claro e libere o resto conforme cresce.",
+      pathways: [
+        { title: "Aceitar pagamentos", description: "Crie um link de pagamento em minutos e comece a receber ADA ou Cardano Native Tokens.", cta: "Criar link de pagamento" },
+        { title: "Monetize sua comunidade", description: "Venda acesso ao Discord ou Telegram com configuração simples e entrega automática.", cta: "Configurar acesso da comunidade" },
+        { title: "Vender ingressos / eventos", description: "Lance um evento, adicione tipos de ingresso e gerencie check-ins por QR em um só fluxo.", cta: "Criar evento" }
+      ],
+      usecases_title: "Feito para os principais casos de uso Cardano",
+      usecases_sub: "Do seu primeiro link de pagamento a eventos e comunidades privadas, a PayADA mantém tudo simples.",
+      usecases: [
+        { title: "💸 Receba pagamentos", description: "Crie links de pagamento e aceite instantaneamente ADA + CNT." },
+        { title: "💬 Monetize comunidades", description: "Venda acesso ao Discord / Telegram com atribuição automática de cargos." },
+        { title: "🎟️ Venda ingressos", description: "Crie eventos e gerencie check-ins com QR codes." }
+      ],
+      why_title: "Por que PayADA",
+      why_items: [
+        "Suporta ADA + Cardano Native Tokens",
+        "Sem necessidade de smart contracts",
+        "Feita para creators, comunidades e projetos",
+        "No ar em minutos"
+      ],
       features_title: "Construído para comerciantes modernos",
       features_sub: "Tudo o que você precisa para aceitar pagamentos Cardano e gerenciar seu negócio blockchain.",
       steps_title: "Comece em 3 passos simples",
@@ -1562,6 +1730,34 @@ export const translations = {
       confirmed: "Onaylandı",
       net_amount: "Net Tutar",
       fee: "Ücret",
+      launch_title: "PayADA'ya hoş geldiniz! 🎉",
+      launch_desc: "Cardano ödemelerini kabul etmenin en kolay yolu artık yayında.",
+      hero_badge: "Cardano'ya özgü ödeme altyapısı",
+      hero_primary_cta: "Ödeme almaya başla",
+      hero_secondary_cta: "Topluluğundan gelir elde et",
+      demo_cta: "Demo'yu dene",
+      docs_cta: "Dokümanlar",
+      pathways_title: "Başlangıç noktanı seç",
+      pathways_sub: "Tek bir net hedefle başla, büyüdükçe diğerlerini aç.",
+      pathways: [
+        { title: "Ödeme kabul et", description: "Dakikalar içinde bir ödeme bağlantısı oluştur ve ADA veya Cardano Native Tokens ile ödeme almaya başla.", cta: "Ödeme bağlantısı oluştur" },
+        { title: "Topluluğunu monetize et", description: "Discord veya Telegram erişimini basit kurulum ve otomatik teslimle sat.", cta: "Topluluk erişimini kur" },
+        { title: "Bilet / etkinlik sat", description: "Bir etkinlik başlat, bilet türleri ekle ve QR check-in'leri tek akışta yönet.", cta: "Etkinlik oluştur" }
+      ],
+      usecases_title: "En önemli Cardano kullanım senaryoları için tasarlandı",
+      usecases_sub: "İlk ödeme bağlantından etkinliklere ve özel topluluklara kadar PayADA kurulumu basit tutar.",
+      usecases: [
+        { title: "💸 Ödeme al", description: "Ödeme bağlantıları oluştur ve anında ADA + CNT kabul et." },
+        { title: "💬 Topluluklardan gelir elde et", description: "Otomatik rol atamasıyla Discord / Telegram erişimi sat." },
+        { title: "🎟️ Bilet sat", description: "Etkinlikler oluştur ve check-in'leri QR kodlarla yönet." }
+      ],
+      why_title: "Neden PayADA",
+      why_items: [
+        "ADA + Cardano Native Tokens desteği",
+        "Smart contract gerekmez",
+        "Creator'lar, topluluklar ve projeler için üretildi",
+        "Dakikalar içinde yayında"
+      ],
       features_title: "Modern tüccarlar için tasarlandı",
       features_sub: "Cardano ödemelerini kabul etmek ve blockchain işinizi yönetmek için ihtiyacınız olan her şey.",
       steps_title: "3 kolay adımda başlayın",

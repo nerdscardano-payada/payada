@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Zap, Lock, TrendingUp, Globe } from "lucide-react";
+import { ArrowRight, CheckCircle2, Zap, Lock, TrendingUp, Globe, CreditCard, Users, Ticket } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
 import { useTranslation } from "@/components/i18n/useTranslation";
@@ -11,7 +11,9 @@ import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
 
-const featureIcons = [Zap, Lock, TrendingUp, Globe];
+const pathwayIcons = [CreditCard, Users, Ticket];
+const whyIcons = [Zap, Lock, Globe, TrendingUp];
+const pathwayPages = ["PaymentLinks", "AccessLinks", "Events"];
 
 export default function HomePage() {
   const { t, lang, setLang } = useTranslation();
@@ -21,32 +23,30 @@ export default function HomePage() {
       if (loggedIn) window.location.href = createPageUrl("Dashboard");
     });
 
-    // Launch celebration on homepage
     const hasSeenLaunchCelebration = localStorage.getItem("payada_launch_2026");
     if (!hasSeenLaunchCelebration) {
-      // Show confetti
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 }
       });
 
-      // Show welcome toast
-      toast.success("Welcome to PayADA! 🎉", {
-        description: "The easiest way to accept Cardano payments is now live.",
+      toast.success(t("home.launch_title"), {
+        description: t("home.launch_desc"),
         duration: 5000
       });
 
-      // Mark as seen
       localStorage.setItem("payada_launch_2026", "true");
     }
   }, []);
 
   const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   const handleLogin = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
+  const handleStartFlow = (pageName) => base44.auth.redirectToLogin(createPageUrl(pageName));
 
-  const features = t("home_features");
-  const steps = t("home_steps");
+  const pathways = t("home.pathways");
+  const useCases = t("home.usecases");
+  const whyItems = t("home.why_items");
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -95,82 +95,74 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+      {/* Hero + Pathways */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.10),transparent_35%)]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-700 mb-6">
+              <span className="h-2 w-2 rounded-full bg-cyan-500" />
+              {t("home.hero_badge")}
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-tight">
               {t("home.hero_title")}
             </h1>
-            <p className="text-xl text-slate-600 mb-8">
+            <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-8">
               {t("home.hero_sub")}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
               <Button
                 size="lg"
-                onClick={handleSignUp}
-                className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white gap-2"
+                onClick={() => handleStartFlow("PaymentLinks")}
+                className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white gap-2 min-w-[240px]"
               >
-                {t("home.hero_cta")} <ArrowRight className="w-5 h-5" />
+                {t("home.hero_primary_cta")} <ArrowRight className="w-5 h-5" />
               </Button>
-
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => handleStartFlow("AccessLinks")}
+                className="border-2 gap-2 min-w-[240px]"
+              >
+                {t("home.hero_secondary_cta")}
+              </Button>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
               <Link to="/Demo">
-                <Button size="lg" variant="outline" className="border-2 gap-2">
-                  ⚡ Try Demo
+                <Button size="lg" variant="outline" className="border-slate-200 bg-white/80 gap-2">
+                  ⚡ {t("home.demo_cta")}
                 </Button>
               </Link>
               <Link to="/Documentation">
-                <Button size="lg" variant="outline" className="border-2 gap-2">
-                  📄 Docs
+                <Button size="lg" variant="outline" className="border-slate-200 bg-white/80 gap-2">
+                  📄 {t("home.docs_cta")}
                 </Button>
               </Link>
             </div>
+          </div>
 
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">{t("home.pathways_title")}</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">{t("home.pathways_sub")}</p>
           </div>
-          <div className="relative">
-            <div className="bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl p-1 shadow-2xl">
-              <div className="bg-slate-950 rounded-xl p-6 md:p-8">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400 text-sm">{t("home.payment_received")}</span>
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  </div>
-                  <div className="text-3xl font-bold text-white">₳ 250</div>
-                  <div className="text-slate-400 text-sm">{t("home.confirmed")} • Block #8,234,567</div>
-                  <div className="pt-4 border-t border-slate-700">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-slate-500 text-xs">{t("home.net_amount")}</p>
-                        <p className="text-white font-semibold">₳ 246.25</p>
-                      </div>
-                      <div>
-                        <p className="text-slate-500 text-xs">{t("home.fee")}</p>
-                        <p className="text-white font-semibold">₳ 3.75</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Features Section */}
-      <section className="bg-slate-50 py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("home.features_title")}</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">{t("home.features_sub")}</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {Array.isArray(features) && features.map((feature, i) => {
-              const Icon = featureIcons[i];
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Array.isArray(pathways) && pathways.map((pathway, index) => {
+              const Icon = pathwayIcons[index];
               return (
-                <div key={i} className="bg-white rounded-xl p-8 border border-slate-200 hover:border-cyan-300 transition-colors">
-                  <Icon className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent mb-4" />
-                  <h3 className="text-xl font-semibold text-slate-900 mb-2">{feature.title}</h3>
-                  <p className="text-slate-600">{feature.description}</p>
+                <div key={pathway.title} className="group rounded-3xl border border-slate-200 bg-white/90 backdrop-blur-sm p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center mb-5 shadow-lg shadow-cyan-100">
+                    <Icon className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-3">{pathway.title}</h3>
+                  <p className="text-slate-600 mb-6 min-h-[72px]">{pathway.description}</p>
+                  <Button
+                    variant="ghost"
+                    className="px-0 text-blue-600 hover:text-blue-700 hover:bg-transparent group-hover:translate-x-1 transition-transform"
+                    onClick={() => handleStartFlow(pathwayPages[index])}
+                  >
+                    {pathway.cta} <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
                 </div>
               );
             })}
@@ -178,26 +170,48 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 text-center mb-16">{t("home.steps_title")}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {Array.isArray(steps) && steps.map((step, i) => (
-            <div key={i} className="relative">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center border-2 border-blue-500">
-                  <span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent font-bold text-lg">{i + 1}</span>
+      {/* Use Cases */}
+      <section className="bg-slate-50 py-20 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("home.usecases_title")}</h2>
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto">{t("home.usecases_sub")}</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Array.isArray(useCases) && useCases.map((item, index) => {
+              const Icon = pathwayIcons[index];
+              return (
+                <div key={item.title} className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center mb-5">
+                    <Icon className="w-6 h-6 text-cyan-300" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-slate-900 mb-2">{item.title}</h3>
+                  <p className="text-slate-600">{item.description}</p>
                 </div>
-                <div className="pt-1">
-                  <h3 className="text-lg font-semibold text-slate-900">{step.title}</h3>
-                  <p className="text-slate-600 mt-2">{step.description}</p>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Why PayADA */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("home.why_title")}</h2>
+            <p className="text-lg text-slate-600 max-w-2xl">{t("home.cta_sub")}</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {Array.isArray(whyItems) && whyItems.map((item, index) => {
+              const Icon = whyIcons[index] || CheckCircle2;
+              return (
+                <div key={item} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                  <Icon className="w-5 h-5 text-blue-600 mb-3" />
+                  <p className="font-medium text-slate-900">{item}</p>
                 </div>
-              </div>
-              {i < steps.length - 1 && (
-                <div className="hidden md:block absolute top-12 -right-4 w-8 h-1 bg-gradient-to-r from-blue-200 to-cyan-200"></div>
-              )}
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
       </section>
 
