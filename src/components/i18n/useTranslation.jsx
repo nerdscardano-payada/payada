@@ -2,11 +2,27 @@ import { useState, useCallback } from "react";
 import { translations as baseTranslations } from "./translations";
 import { extraTranslations } from "./translationsExtra";
 
+const isPlainObject = (value) => value && typeof value === "object" && !Array.isArray(value);
+
+const mergeTranslations = (base, extra) => {
+  const merged = { ...base };
+
+  Object.entries(extra || {}).forEach(([key, value]) => {
+    if (isPlainObject(value) && isPlainObject(base?.[key])) {
+      merged[key] = { ...base[key], ...value };
+    } else {
+      merged[key] = value;
+    }
+  });
+
+  return merged;
+};
+
 // Merge extra translations into base
 const translations = Object.fromEntries(
   Object.keys(baseTranslations).map((lang) => [
     lang,
-    { ...baseTranslations[lang], ...(extraTranslations[lang] || {}) },
+    mergeTranslations(baseTranslations[lang], extraTranslations[lang] || {}),
   ])
 );
 
