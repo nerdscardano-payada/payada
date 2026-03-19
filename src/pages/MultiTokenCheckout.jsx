@@ -92,7 +92,7 @@ export default function MultiTokenCheckout() {
         key: `${token.policy_id}:${token.asset_name}`,
         type: "cnt",
         label: token.ticker,
-        description: "Realtime omgerekend vanaf ADA",
+        description: "Real-time conversion from ADA",
         amountLabel: estimatedAmount ? `${formatAmount(estimatedAmount, token.decimals ?? 6)} ${token.ticker}` : "Rate unavailable",
         secondaryLabel: priceInAda ? `1 ${token.ticker} ≈ ₳ ${formatAmount(priceInAda, 6)}` : null,
         disabled: !priceInAda,
