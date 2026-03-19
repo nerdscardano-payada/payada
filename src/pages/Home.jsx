@@ -123,14 +123,6 @@ export default function HomePage() {
               >
                 {t("home.hero_primary_cta")} <ArrowRight className="w-5 h-5" />
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => handleStartFlow("AccessLinks")}
-                className="border-2 gap-2 min-w-[240px]"
-              >
-                {t("home.hero_secondary_cta")}
-              </Button>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
               <Link to="/Demo">
