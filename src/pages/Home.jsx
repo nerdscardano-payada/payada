@@ -115,37 +115,66 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.10),transparent_35%)]" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-700 mb-6">
-              <span className="h-2 w-2 rounded-full bg-cyan-500" />
-              {t("home.hero_badge")}
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-tight">
-              {t("home.hero_title")}
-            </h1>
-            <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-8">
-              {t("home.hero_sub")}
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
-              <Button
-                size="lg"
-                onClick={() => handleStartFlow("PaymentLinks")}
-                className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white gap-2 min-w-[240px]"
-              >
-                {t("home.hero_primary_cta")} <ArrowRight className="w-5 h-5" />
-              </Button>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
-              <Link to="/Demo">
-                <Button size="lg" variant="outline" className="border-slate-200 bg-white/80 gap-2">
-                  ⚡ {t("home.demo_cta")}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 items-center mb-12">
+            <div className="max-w-4xl text-center lg:text-left mx-auto lg:mx-0">
+              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-700 mb-6">
+                <span className="h-2 w-2 rounded-full bg-cyan-500" />
+                {t("home.hero_badge")}
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-tight">
+                {t("home.hero_title")}
+              </h1>
+              <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto lg:mx-0 mb-8">
+                {t("home.hero_sub")}
+              </p>
+              <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 mb-4">
+                <Button
+                  size="lg"
+                  onClick={() => handleStartFlow("PaymentLinks")}
+                  className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white gap-2 min-w-[240px]"
+                >
+                  {t("home.hero_primary_cta")} <ArrowRight className="w-5 h-5" />
                 </Button>
-              </Link>
-              <Link to="/Documentation">
-                <Button size="lg" variant="outline" className="border-slate-200 bg-white/80 gap-2">
-                  📄 {t("home.docs_cta")}
-                </Button>
-              </Link>
+              </div>
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                <Link to="/Demo">
+                  <Button size="lg" variant="outline" className="border-slate-200 bg-white/80 gap-2">
+                    ⚡ {t("home.demo_cta")}
+                  </Button>
+                </Link>
+                <Link to="/Documentation">
+                  <Button size="lg" variant="outline" className="border-slate-200 bg-white/80 gap-2">
+                    📄 {t("home.docs_cta")}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="bg-gradient-to-br from-blue-500 to-cyan-400 rounded-[2rem] p-1 shadow-[0_30px_80px_rgba(14,165,233,0.22)]">
+                <div className="bg-[#050816] rounded-[1.7rem] p-8 md:p-10 border border-slate-800/80">
+                  <div className="space-y-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="text-slate-400 text-lg">{t("home.payment_received")}</p>
+                      </div>
+                      <CheckCircle2 className="w-6 h-6 text-emerald-400 mt-1" />
+                    </div>
+                    <div className="text-5xl md:text-6xl font-bold text-white tracking-tight">₳ 250</div>
+                    <div className="text-slate-400 text-xl">{t("home.confirmed")} • Block #8,234,567</div>
+                    <div className="border-t border-slate-700/80 pt-6 grid grid-cols-2 gap-8">
+                      <div>
+                        <p className="text-slate-500 text-base mb-2">{t("home.net_amount")}</p>
+                        <p className="text-white font-semibold text-3xl">₳ 246.25</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-500 text-base mb-2">{t("home.fee")}</p>
+                        <p className="text-white font-semibold text-3xl">₳ 3.75</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
