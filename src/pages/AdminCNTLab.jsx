@@ -194,8 +194,6 @@ export default function AdminCNTLab() {
   const [editingLink, setEditingLink] = useState(null);
   const queryClient = useQueryClient();
 
-  if (!isProfileComplete) return null;
-
   const { data: user } = useQuery({
     queryKey: ["current-user"],
     queryFn: () => base44.auth.me(),
