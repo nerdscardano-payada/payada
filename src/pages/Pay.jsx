@@ -6,6 +6,7 @@ import {
   ExternalLink, AlertCircle, Wallet, ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -15,6 +16,7 @@ import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 import WalletHealthCheck from "@/components/checkout/WalletHealthCheck";
 
 export default function Pay() {
+  const navigate = useNavigate();
   const [slug, setSlug] = useState("");
   const [cartItems, setCartItems] = useState([]);
   const [paymentLink, setPaymentLink] = useState(null);
@@ -127,8 +129,8 @@ export default function Pay() {
 
   useEffect(() => {
     if (!slug || !multiCntEnabled) return;
-    window.location.replace(`/MultiTokenCheckout?slug=${encodeURIComponent(slug)}`);
-  }, [slug, multiCntEnabled]);
+    navigate(`/MultiTokenCheckout?slug=${encodeURIComponent(slug)}`, { replace: true });
+  }, [slug, multiCntEnabled, navigate]);
 
   const handleStartCheckout = async () => {
     // Validate required fields

@@ -58,7 +58,7 @@ export default function MultiTokenCheckout() {
   const acceptedTokens = paymentLink?.accepted_cnt_tokens || [];
   const multiEnabled = !!paymentLink?.enable_multi_cnt_checkout && paymentLink?.amount_mode === "fixed_ada" && acceptedTokens.length > 0;
 
-  const { data: tokenRates, isLoading: ratesLoading } = useQuery({
+  const { data: tokenRates, isLoading: ratesLoading, isFetching: ratesFetching } = useQuery({
     queryKey: ["multi-token-rates", acceptedTokens.map((token) => token.ticker).join("|")],
     queryFn: async () => {
       const response = await base44.functions.invoke("getTokenExchangeRates", {
@@ -68,6 +68,8 @@ export default function MultiTokenCheckout() {
     },
     enabled: multiEnabled,
   });
+
+  const ratesPending = multiEnabled && (!tokenRates?.tokens || ratesLoading || ratesFetching);
 
   const paymentOptions = useMemo(() => {
     if (!paymentLink) return [];
@@ -309,7 +311,7 @@ export default function MultiTokenCheckout() {
             </div>
             <div className="mt-4">
               <p className="text-xs uppercase tracking-wider text-slate-500 mb-3">Choose payment method</p>
-              {ratesLoading ? (
+              {ratesPending ? (
                 <div className="flex items-center gap-2 text-sm text-slate-400">
                   <Loader2 className="w-4 h-4 animate-spin" /> Loading CNT rates...
                 </div>
