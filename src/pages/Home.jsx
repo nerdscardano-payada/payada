@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Zap, Lock, TrendingUp, Globe, CreditCard, Users, Ticket } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
+import ProductDemoSection from "@/components/home/ProductDemoSection";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import confetti from "canvas-confetti";
@@ -193,6 +194,15 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <ProductDemoSection
+        eyebrow={t("home.demo_section_eyebrow")}
+        title={t("home.demo_section_title")}
+        description={t("home.demo_section_description")}
+        ctaLabel={t("home.demo_section_cta")}
+        ctaTo={createPageUrl("PaymentLinks")}
+        videoUrl="https://video.twimg.com/amplify_video/2034541284552257536/vid/avc1/1888x866/ax3v4sHFu2PFZGRe.mp4?tag=21"
+      />
 
       {/* Why PayADA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
