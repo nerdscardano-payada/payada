@@ -221,7 +221,7 @@ export default function AdminCNTLab() {
     onSuccess: () => queryClient.invalidateQueries(["cnt-links"]),
   });
 
-
+  if (!isProfileComplete) return null;
 
   if (!user || user.role !== "admin") {
     return (
