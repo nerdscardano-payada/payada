@@ -163,6 +163,9 @@ export const extraTranslations = {
       demo_section_title: "See payment links in action",
       demo_section_description: "This promo video shows how quickly someone can open a payment link and complete checkout. Once you share the other videos, I can add matching demo blocks for access links and events too.",
       demo_section_cta: "Open payment links",
+      see_demo: "See Demo",
+      accepted_title: "Accept ADA by default — and support CNT payments too",
+      accepted_sub: "ADA is the standard payment option in PayADA, but you can also let customers pay with supported Cardano Native Tokens.",
     },
   },
   nl: {
@@ -304,6 +307,9 @@ export const extraTranslations = {
       demo_section_title: "Bekijk payment links in actie",
       demo_section_description: "Deze promovideo laat zien hoe snel iemand een payment link kan openen en afrekenen. Als je de andere video's deelt, kan ik ook voor access links en events zulke demo-blokken toevoegen.",
       demo_section_cta: "Open payment links",
+      see_demo: "Bekijk demo",
+      accepted_title: "Accepteer standaard ADA — en ondersteun ook CNT-betalingen",
+      accepted_sub: "ADA is de standaard betaaloptie in PayADA, maar je kan klanten ook laten betalen met ondersteunde Cardano Native Tokens.",
     },
   },
   de: {
@@ -436,6 +442,11 @@ export const extraTranslations = {
       cta_title: "Bereit für Cardano-Zahlungen?", cta_sub: "Händlern auf PayADA beitreten",
       cta_download: "Vollständiges Litepaper herunterladen", cta_start: "Loslegen",
     },
+    home: {
+      see_demo: "Demo ansehen",
+      accepted_title: "ADA standardmäßig akzeptieren — und auch CNT-Zahlungen unterstützen",
+      accepted_sub: "ADA ist die Standard-Zahlungsoption in PayADA, aber Sie können Kunden auch mit unterstützten Cardano Native Tokens bezahlen lassen.",
+    },
   },
   fr: {
     docs: {
@@ -565,6 +576,11 @@ export const extraTranslations = {
       roadmap_link: "Voir la feuille de route complète →",
       cta_title: "Prêt pour les paiements Cardano ?", cta_sub: "Rejoignez les marchands sur PayADA",
       cta_download: "Télécharger le Litepaper complet", cta_start: "Commencer",
+    },
+    home: {
+      see_demo: "Voir la démo",
+      accepted_title: "Acceptez ADA par défaut — et prenez aussi en charge les paiements CNT",
+      accepted_sub: "ADA est l'option de paiement standard dans PayADA, mais vous pouvez aussi permettre à vos clients de payer avec des Cardano Native Tokens pris en charge.",
     },
   },
   es: {
@@ -696,6 +712,11 @@ export const extraTranslations = {
       cta_title: "¿Listo para pagos Cardano?", cta_sub: "Únete a comerciantes en PayADA",
       cta_download: "Descargar Litepaper completo", cta_start: "Comenzar",
     },
+    home: {
+      see_demo: "Ver demo",
+      accepted_title: "Acepta ADA por defecto — y también admite pagos con CNT",
+      accepted_sub: "ADA es la opción de pago estándar en PayADA, pero también puedes permitir que los clientes paguen con Cardano Native Tokens compatibles.",
+    },
   },
   pt: {
     docs: {
@@ -826,6 +847,11 @@ export const extraTranslations = {
       cta_title: "Pronto para pagamentos Cardano?", cta_sub: "Junte-se a comerciantes na PayADA",
       cta_download: "Baixar Litepaper completo", cta_start: "Começar",
     },
+    home: {
+      see_demo: "Ver demo",
+      accepted_title: "Aceite ADA por padrão — e também ofereça suporte a pagamentos em CNT",
+      accepted_sub: "ADA é a opção de pagamento padrão na PayADA, mas você também pode permitir que clientes paguem com Cardano Native Tokens compatíveis.",
+    },
   },
   tr: {
     docs: {
@@ -955,6 +981,11 @@ export const extraTranslations = {
       roadmap_link: "Tam Yol Haritasını Gör →",
       cta_title: "Cardano ödemeleri için hazır mısınız?", cta_sub: "PayADA'da tüccarlara katılın",
       cta_download: "Tam Litepaper İndir", cta_start: "Başla",
+    },
+    home: {
+      see_demo: "Demoyu gör",
+      accepted_title: "Varsayılan olarak ADA kabul edin — ve CNT ödemelerini de destekleyin",
+      accepted_sub: "ADA, PayADA'daki standart ödeme seçeneğidir; ancak müşterilerin desteklenen Cardano Native Tokens ile de ödeme yapmasına izin verebilirsiniz.",
     },
   },
 };
