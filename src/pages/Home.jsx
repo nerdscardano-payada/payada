@@ -183,31 +183,30 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">{t("home.pathways_title")}</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">{t("home.pathways_sub")}</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {Array.isArray(pathways) && pathways.map((pathway, index) => {
-              const Icon = pathwayIcons[index];
-              return (
-                <div key={pathway.title} className="group rounded-3xl border border-slate-200 bg-white/90 backdrop-blur-sm p-4 md:p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center mb-5 shadow-lg shadow-cyan-100">
-                    <Icon className="w-7 h-7 text-white" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-14">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("home.usecases_title")}</h2>
+              <p className="text-lg text-slate-600 max-w-3xl mx-auto mb-6">{t("home.usecases_sub")}</p>
+              <Link to="/Demo">
+                <Button variant="outline" className="border-slate-200 bg-white gap-2">
+                  ⚡ {t("home.demo_cta")}
+                </Button>
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {Array.isArray(useCases) && useCases.map((item, index) => {
+                const Icon = pathwayIcons[index];
+                return (
+                  <div key={item.title} className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center mb-5">
+                      <Icon className="w-6 h-6 text-cyan-300" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-slate-900 mb-2">{item.title}</h3>
+                    <p className="text-slate-600">{item.description}</p>
                   </div>
-                  <h3 className="text-2xl font-semibold text-slate-900 mb-3">{pathway.title}</h3>
-                  <p className="text-slate-600 mb-6 min-h-[72px]">{pathway.description}</p>
-                  <Button
-                    variant="ghost"
-                    className="px-0 text-blue-600 hover:text-blue-700 hover:bg-transparent group-hover:translate-x-1 transition-transform"
-                    onClick={() => handlePreviewFlow(index)}
-                  >
-                    {pathway.cta} <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
@@ -224,30 +223,6 @@ export default function HomePage() {
           embedUrl={pathwayEmbeds[activeDemoIndex]}
         />
       </div>
-
-      {/* Use Cases */}
-      <section className="bg-slate-50 py-20 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("home.usecases_title")}</h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto">{t("home.usecases_sub")}</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {Array.isArray(useCases) && useCases.map((item, index) => {
-              const Icon = pathwayIcons[index];
-              return (
-                <div key={item.title} className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center mb-5">
-                    <Icon className="w-6 h-6 text-cyan-300" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-slate-900 mb-2">{item.title}</h3>
-                  <p className="text-slate-600">{item.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* Why PayADA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
