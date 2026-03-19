@@ -20,6 +20,12 @@ export default function StepSummary({ form }) {
       ? `${form.fiat_currency} ${form.amount_fiat || "—"}`
       : `${form.cnt_amount || "—"} ${form.cnt_ticker || "CNT"}`;
 
+  const checkoutMethods = form.amount_mode === "fixed_ada"
+    ? (form.accepted_cnt_tokens || []).length > 0
+      ? `ADA + ${(form.accepted_cnt_tokens || []).map((token) => token.ticker).join(", ")}`
+      : "ADA only"
+    : form.cnt_ticker || "CNT";
+
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-3 p-4 bg-green-50 rounded-lg border border-green-100">
@@ -33,6 +39,10 @@ export default function StepSummary({ form }) {
         <Row label="Slug" value={`/pay/${form.slug}`} />
         <Row label="Description" value={form.description} />
         <Row label="Amount" value={amountDisplay} />
+        <Row label="Checkout methods" value={checkoutMethods} />
+        {form.amount_mode === "fixed_ada" && (form.accepted_cnt_tokens || []).length > 0 && (
+          <Row label="Multi-token URL" value={`/MultiTokenCheckout?slug=${form.slug}`} />
+        )}
         <Row label="Receive address" value={form.receive_address ? `${form.receive_address.slice(0, 16)}…` : null} />
       </div>
 

@@ -310,14 +310,14 @@ Deno.serve(async (req) => {
      const divisor = Math.pow(10, cntDecimals);
      paymentData.cnt_policy_id = cntPolicyId;
      paymentData.cnt_asset_name = cntAssetName;
-     paymentData.cnt_ticker = cntTicker;
+     paymentData.cnt_ticker = cntPaymentConfig?.ticker || cntTicker;
      paymentData.cnt_decimals = cntDecimals;
-     paymentData.expected_amount_cnt = paymentLink?.cnt_amount || accessLink?.cnt_amount || null;
+     paymentData.expected_amount_cnt = expectedAmountCnt ?? paymentLink?.cnt_amount ?? accessLink?.cnt_amount ?? null;
      paymentData.received_amount_cnt = cntMerchantAmount / divisor;
      paymentData.cnt_fees = cntFeeAmount > 0 ? [{
        policy_id: cntPolicyId,
        asset_name: cntAssetName,
-       ticker: cntTicker,
+       ticker: cntPaymentConfig?.ticker || cntTicker,
        decimals: cntDecimals,
        amount: cntFeeAmount / divisor
      }] : null;
