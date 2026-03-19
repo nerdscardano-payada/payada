@@ -3,62 +3,35 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import {
   LayoutDashboard,
-  Link2,
   CreditCard,
   Users,
-  Webhook,
-  Key,
-  Receipt,
   ChevronLeft,
   ChevronRight,
   Hexagon,
   X,
-  Building2,
-  Code2,
   ShoppingCart,
-  Store,
-  Monitor,
   LogOut,
   ShieldCheck,
-  RefreshCw,
-  Bot,
-  Zap,
   FlaskConical,
   Rocket,
   Calendar,
-  Eye
+  Settings
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 import NotificationBell from "@/components/notifications/NotificationBell";
 
 const navItems = [
-  { type: "header", name: "Account" },
-  { name: "Merchant Profile", icon: Building2, page: "MerchantProfile" },
-
-  { type: "header", name: "Sales Tools" },
-  { name: "Payment Links", icon: Link2, page: "PaymentLinks" },
-  { name: "Access Links", icon: Users, page: "AccessLinks" },
-  { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
-  { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
-  { name: "Shop Generator", icon: ShoppingCart, page: "ShoppingPageGenerator" },
-  { name: "POS Terminal", icon: Zap, page: "POS" },
-  { name: "Events", icon: Calendar, page: "Events" },
-
-  { type: "header", name: "Overview" },
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
-  { name: "Payments", icon: CreditCard, page: "Payments" },
-  { name: "Transaction Audit", icon: Eye, page: "TransactionAudit" },
-  { name: "Customers", icon: Users, page: "Customers" },
-  { name: "Billing", icon: Receipt, page: "Billing" },
+  { name: "Ontvang betalingen", icon: CreditCard, page: "PaymentLinks" },
+  { name: "Verkoop", icon: ShoppingCart, page: "ShoppingPageGenerator" },
+  { name: "Community", icon: Users, page: "AccessLinks", badge: "NEW" },
+  { name: "Events", icon: Calendar, page: "Events", badge: "NEW" },
+  { name: "Klanten", icon: Users, page: "Customers" },
+];
 
-  { type: "header", name: "Plugins" },
-  { name: "Discord Gate", icon: Bot, page: "DiscordPlugin" },
-
-  { type: "header", name: "Developers" },
-  { name: "Webhooks", icon: Webhook, page: "Webhooks" },
-  { name: "Webhook Setup", icon: RefreshCw, page: "WebhookSetupWizard" },
-  { name: "API Keys", icon: Key, page: "ApiKeys" },
+const bottomItems = [
+  { name: "Instellingen", icon: Settings, page: "Settings" },
 ];
 
 export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
@@ -108,16 +81,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
-          {navItems.map((item, index) => {
-            if (item.type === "header") {
-              return !collapsed ? (
-                <div key={index} className="px-3 pt-4 pb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">{item.name}</span>
-                </div>
-              ) : (
-                <div key={index} className="border-t border-white/5 my-2" />
-              );
-            }
+          {navItems.map((item) => {
             const isActive = currentPage === item.page;
             return (
               <Link
@@ -135,7 +99,16 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
                    "w-[18px] h-[18px] flex-shrink-0",
                    isActive ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300"
                  )} />
-                {!collapsed && <span className="truncate">{item.name}</span>}
+                {!collapsed && (
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="truncate">{item.name}</span>
+                    {item.badge && (
+                      <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                )}
               </Link>
             );
           })}
@@ -200,8 +173,30 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
           )}
         </nav>
 
-        {/* Logout + Collapse toggle */}
+        {/* Bottom navigation + Logout + Collapse toggle */}
          <div className="flex flex-col p-3 border-t border-white/5 gap-1">
+           {bottomItems.map((item) => {
+             const isActive = currentPage === item.page;
+             return (
+               <Link
+                 key={item.page}
+                 to={createPageUrl(item.page)}
+                 onClick={() => setMobileOpen(false)}
+                 className={cn(
+                   "flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all group",
+                   isActive
+                     ? "bg-white/10 text-white"
+                     : "text-slate-400 hover:text-white hover:bg-white/5"
+                 )}
+               >
+                 <item.icon className={cn(
+                   "w-4 h-4 flex-shrink-0",
+                   isActive ? "text-white" : "text-slate-500 group-hover:text-slate-300"
+                 )} />
+                 {!collapsed && <span className="truncate">{item.name}</span>}
+               </Link>
+             );
+           })}
            <button
              onClick={() => base44.auth.logout(createPageUrl("Home"))}
              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
