@@ -694,7 +694,7 @@ export const translations = {
         { title: "🎟️ Tickets verkaufen", description: "Erstellen Sie Events und verwalten Sie Check-ins mit QR-Codes." }
       ],
       why_title: "Warum PayADA",
-      why_sub: "Gebaut, damit Sie schnell live gehen, flexibel blijven und auf Cardano wachsen können — ohne unnötige Komplexität.",
+      why_sub: "Gebaut, damit Sie schnell live gehen, flexibel bleiben und auf Cardano wachsen können — ohne unnötige Komplexität.",
       why_items: [
         "Unterstützt ADA + Cardano Native Tokens",
         "Keine Smart Contracts erforderlich",
