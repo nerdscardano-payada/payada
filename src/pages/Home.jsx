@@ -22,9 +22,9 @@ const pathwayVideos = [
   "https://video.twimg.com/amplify_video/2034541324985159680/vid/avc1/1912x870/X5Pi5tlwEuO3aCcV.mp4?tag=21"
 ];
 const pathwayEmbeds = [
-  "https://1drv.ms/v/c/c9babd2faa79be07/IQT1kxT9DnpKTLL1pYZ-zVPWAY3Q8f9Mg2TzOu1I_l6RP2k",
-  null,
-  null,
+  "https://1drv.ms/v/c/c9babd2faa79be07/IQT1kxT9DnpKTLL1pYZ-zVPWAY3Q8f9Mg2TzOu1I_l6RP2k?autoplay=1&muted=1",
+  "https://1drv.ms/v/c/c9babd2faa79be07/IQQLyBOcBK29QZUfjZCXL21lAdltf7y3dLhjH0bszbWDb3o?autoplay=1&muted=1",
+  "https://1drv.ms/v/c/c9babd2faa79be07/IQQvHwrDm-M8RKpKv_BpV30hAUWhNw91YfDv0N-JkGVHEDU?autoplay=1&muted=1",
 ];
 
 export default function HomePage() {

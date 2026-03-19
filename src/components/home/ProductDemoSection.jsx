@@ -26,6 +26,7 @@ export default function ProductDemoSection({ title, description, eyebrow, videoU
                 className="w-full h-full"
                 frameBorder="0"
                 scrolling="no"
+                allow="autoplay; fullscreen"
                 allowFullScreen
                 title={title}
               />
