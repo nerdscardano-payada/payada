@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Zap, Lock, TrendingUp, Globe, CreditCard, Users, Ticket } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
+import ProductDemoSection from "@/components/home/ProductDemoSection";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import confetti from "canvas-confetti";
@@ -22,6 +23,8 @@ const pathwayVideos = [
 
 export default function HomePage() {
   const { t, lang, setLang } = useTranslation();
+  const [activeDemoIndex, setActiveDemoIndex] = useState(0);
+  const demoSectionRef = useRef(null);
 
   useEffect(() => {
     base44.auth.isAuthenticated().then((loggedIn) => {
@@ -48,10 +51,15 @@ export default function HomePage() {
   const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   const handleLogin = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   const handleStartFlow = (pageName) => base44.auth.redirectToLogin(createPageUrl(pageName));
+  const handlePreviewFlow = (index) => {
+    setActiveDemoIndex(index);
+    demoSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
 
   const pathways = t("home.pathways");
   const useCases = t("home.usecases");
   const whyItems = t("home.why_items");
+  const activePathway = Array.isArray(pathways) ? pathways[activeDemoIndex] : null;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -168,7 +176,7 @@ export default function HomePage() {
                   <Button
                     variant="ghost"
                     className="px-0 text-blue-600 hover:text-blue-700 hover:bg-transparent group-hover:translate-x-1 transition-transform"
-                    onClick={() => handleStartFlow(pathwayPages[index])}
+                    onClick={() => handlePreviewFlow(index)}
                   >
                     {pathway.cta} <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
@@ -178,6 +186,17 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <div ref={demoSectionRef}>
+        <ProductDemoSection
+          eyebrow={t("home.demo_section_eyebrow")}
+          title={activePathway?.title || ""}
+          description={activePathway?.description || ""}
+          ctaLabel={activePathway?.cta || t("home.hero_primary_cta")}
+          ctaTo={createPageUrl(pathwayPages[activeDemoIndex] || "PaymentLinks")}
+          videoUrl={pathwayVideos[activeDemoIndex]}
+        />
+      </div>
 
       {/* Use Cases */}
       <section className="bg-slate-50 py-20 md:py-24">
