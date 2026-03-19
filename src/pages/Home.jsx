@@ -58,7 +58,7 @@ export default function HomePage() {
 
   const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   const handleLogin = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
-  const handleStartFlow = (pageName) => base44.auth.redirectToLogin(createPageUrl(pageName));
+  const handleStartFlow = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   const handlePreviewFlow = (index) => {
     setActiveDemoIndex(index);
     demoSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -218,7 +218,8 @@ export default function HomePage() {
           title={activePathway?.title || ""}
           description={activePathway?.description || ""}
           ctaLabel={activePathway?.cta || t("home.hero_primary_cta")}
-          ctaTo={createPageUrl(pathwayPages[activeDemoIndex] || "PaymentLinks")}
+          ctaTo={createPageUrl("Dashboard")}
+          onCtaClick={handleSignUp}
           videoUrl={pathwayVideos[activeDemoIndex]}
           embedUrl={pathwayEmbeds[activeDemoIndex]}
         />
