@@ -199,7 +199,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
           <div>
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("home.why_title")}</h2>
-            <p className="text-lg text-slate-600 max-w-2xl">{t("home.cta_sub")}</p>
+            <p className="text-lg text-slate-600 max-w-2xl">{t("home.why_sub")}</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {Array.isArray(whyItems) && whyItems.map((item, index) => {

@@ -43,6 +43,7 @@ export const translations = {
         { title: "🎟️ Sell tickets", description: "Create events and manage check-ins with QR codes." }
       ],
       why_title: "Why PayADA",
+      why_sub: "Built to help you launch fast, stay flexible, and grow on Cardano without unnecessary complexity.",
       why_items: [
         "Supports ADA + Cardano Native Tokens",
         "No smart contracts needed",
@@ -427,6 +428,7 @@ export const translations = {
         { title: "🎟️ Verkoop tickets", description: "Maak events aan en beheer check-ins met QR-codes." }
       ],
       why_title: "Waarom PayADA",
+      why_sub: "Gebouwd om je snel live te krijgen, flexibel te blijven en op Cardano te groeien zonder onnodige complexiteit.",
       why_items: [
         "Ondersteunt ADA + Cardano Native Tokens",
         "Geen smart contracts nodig",
@@ -692,6 +694,7 @@ export const translations = {
         { title: "🎟️ Tickets verkaufen", description: "Erstellen Sie Events und verwalten Sie Check-ins mit QR-Codes." }
       ],
       why_title: "Warum PayADA",
+      why_sub: "Gebaut, damit Sie schnell live gehen, flexibel blijven und auf Cardano wachsen können — ohne unnötige Komplexität.",
       why_items: [
         "Unterstützt ADA + Cardano Native Tokens",
         "Keine Smart Contracts erforderlich",
@@ -957,6 +960,7 @@ export const translations = {
         { title: "🎟️ Vendre des tickets", description: "Créez des événements et gérez les check-ins avec des QR codes." }
       ],
       why_title: "Pourquoi PayADA",
+      why_sub: "Conçu pour vous aider à aller vite, rester flexible et grandir sur Cardano sans complexité inutile.",
       why_items: [
         "Prend en charge ADA + Cardano Native Tokens",
         "Aucun smart contract nécessaire",
@@ -1222,6 +1226,7 @@ export const translations = {
         { title: "🎟️ Vende tickets", description: "Crea eventos y gestiona check-ins con códigos QR." }
       ],
       why_title: "Por qué PayADA",
+      why_sub: "Creado para ayudarte a lanzarte rápido, seguir flexible y crecer en Cardano sin complejidad innecesaria.",
       why_items: [
         "Compatible con ADA + Cardano Native Tokens",
         "No se necesitan smart contracts",
@@ -1487,6 +1492,7 @@ export const translations = {
         { title: "🎟️ Venda ingressos", description: "Crie eventos e gerencie check-ins com QR codes." }
       ],
       why_title: "Por que PayADA",
+      why_sub: "Feita para ajudar você a entrar no ar rápido, manter flexibilidade e crescer na Cardano sem complexidade desnecessária.",
       why_items: [
         "Suporta ADA + Cardano Native Tokens",
         "Sem necessidade de smart contracts",
@@ -1752,6 +1758,7 @@ export const translations = {
         { title: "🎟️ Bilet sat", description: "Etkinlikler oluştur ve check-in'leri QR kodlarla yönet." }
       ],
       why_title: "Neden PayADA",
+      why_sub: "Seni hızlı yayına almak, esnek kalmanı sağlamak ve gereksiz karmaşıklık olmadan Cardano üzerinde büyütmek için tasarlandı.",
       why_items: [
         "ADA + Cardano Native Tokens desteği",
         "Smart contract gerekmez",
