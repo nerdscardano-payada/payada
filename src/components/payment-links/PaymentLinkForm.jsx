@@ -40,6 +40,8 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     cnt_ticker: source.cnt_ticker || "",
     cnt_amount: source.cnt_amount || "",
     cnt_decimals: source.cnt_decimals ?? 0,
+    accepted_cnt_tokens: source.accepted_cnt_tokens || [],
+    enable_multi_cnt_checkout: source.enable_multi_cnt_checkout || false,
     confirmations_required: source.confirmations_required || 2,
     receive_address: link?.receive_address || "",
     success_redirect_url: source.success_redirect_url || "",
@@ -118,6 +120,8 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
       amount_fiat: form.amount_mode === "fixed_fiat" ? parseFloat(form.amount_fiat) || 0 : null,
       cnt_amount: form.amount_mode === "fixed_cnt" ? parseFloat(form.cnt_amount) || 0 : null,
       cnt_decimals: form.amount_mode === "fixed_cnt" ? parseInt(form.cnt_decimals) || 0 : null,
+      accepted_cnt_tokens: form.amount_mode === "fixed_ada" ? (form.accepted_cnt_tokens || []) : [],
+      enable_multi_cnt_checkout: form.amount_mode === "fixed_ada" && (form.accepted_cnt_tokens || []).length > 0,
       confirmations_required: parseInt(form.confirmations_required) || 2,
       expires_at: form.expires_at || null,
     };

@@ -15,6 +15,7 @@ import EventCheckout from './pages/EventCheckout';
 import EventEntry from './pages/EventEntry';
 import TransactionAudit from './pages/TransactionAudit';
 import Demo from './pages/Demo';
+import MultiTokenCheckout from './pages/MultiTokenCheckout';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -31,7 +32,7 @@ const ProtectedRoute = ({ children }) => {
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const location = useLocation();
-  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile", "Demo"];
+  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile", "Demo", "MultiTokenCheckout"];
   
   // Determine current page name from pathname
   const pathSegments = location.pathname.split('/').filter(Boolean);
@@ -91,6 +92,7 @@ const AuthenticatedApp = () => {
       <Route path="/EventEntry" element={<EventEntry />} />
       <Route path="/TransactionAudit" element={<ProtectedRoute currentPageName="TransactionAudit"><LayoutWrapper currentPageName="TransactionAudit"><TransactionAudit /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/Demo" element={<Demo />} />
+      <Route path="/MultiTokenCheckout" element={<MultiTokenCheckout />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
