@@ -29,7 +29,7 @@ const PAYADA_FEE_WALLET = Deno.env.get("PAYADA_FEE_WALLET");
 const PLATFORM_FEE_PERCENT = 1.75;
 const KNOWN_CNT_DECIMALS = {
   "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa:4e49474854": 6,
-  "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f:534e454b": 0,
+  "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3:534e454b": 0,
   "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6:4d494e": 6,
   "533bb94a8850ee3ccbe483106489399112b74c905342cb1792a797a0:494e4459": 6,
   "9a9693a9a37912a5097918f97918d15240c92ab729a0b7c4aa144d77:53554e444145": 6,
@@ -41,7 +41,7 @@ const KNOWN_CNT_DECIMALS = {
   "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114:494147": 6,
   "f13ac4d66b3ee19a6aa0f2a22298737bd907cc95121662fc971b5275:535452494b45": 6,
   "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489:4e4d4b52": 6,
-  "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481c235:484f534b59": 0,
+  "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0:484f534b59": 0,
   "8483844875ce4d61c2aa459240f277d32081ee08fe0ad16899a0f581:0014df10544954414e": 6,
   "da8c30857834c6ae7203935b89278c532b3995245295456f993e1d24:4c51": 6,
 };
@@ -140,7 +140,7 @@ function normalizeAddress(addr) {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName, payerDiscordUsername, shippingStreet, shippingCity, shippingPostalCode, shippingCountry, accessLinkId, cntPaymentConfig } = await req.json();
+    const { txHash, paymentLinkId, merchantId, payerAddress, payerEmail, payerName, payerDiscordUsername, shippingStreet, shippingCity, shippingPostalCode, shippingCountry, accessLinkId } = await req.json();
 
     console.log(`[recordWalletPayment] txHash=${txHash}, merchantId=${merchantId}, accessLinkId=${accessLinkId}`);
 
@@ -167,7 +167,6 @@ Deno.serve(async (req) => {
     let accessLink = null;
     let cntDecimals = 0;
     let cntTicker = null;
-    let expectedAmountCnt = null;
 
     if (paymentLinkId) {
       try {
@@ -195,16 +194,6 @@ Deno.serve(async (req) => {
           }
         }
       } catch { /* not found */ }
-    }
-
-    if (cntPaymentConfig?.policy_id && cntPaymentConfig?.asset_name) {
-      cntDecimals = getKnownCntDecimals(
-        cntPaymentConfig.policy_id,
-        cntPaymentConfig.asset_name,
-        cntPaymentConfig.decimals || cntDecimals || 0
-      );
-      cntTicker = cntPaymentConfig.ticker || cntTicker;
-      expectedAmountCnt = cntPaymentConfig.amount || null;
     }
 
     // Fetch blockchain data
@@ -310,14 +299,14 @@ Deno.serve(async (req) => {
      const divisor = Math.pow(10, cntDecimals);
      paymentData.cnt_policy_id = cntPolicyId;
      paymentData.cnt_asset_name = cntAssetName;
-     paymentData.cnt_ticker = cntPaymentConfig?.ticker || cntTicker;
+     paymentData.cnt_ticker = cntTicker;
      paymentData.cnt_decimals = cntDecimals;
-     paymentData.expected_amount_cnt = expectedAmountCnt ?? paymentLink?.cnt_amount ?? accessLink?.cnt_amount ?? null;
+     paymentData.expected_amount_cnt = paymentLink?.cnt_amount || accessLink?.cnt_amount || null;
      paymentData.received_amount_cnt = cntMerchantAmount / divisor;
      paymentData.cnt_fees = cntFeeAmount > 0 ? [{
        policy_id: cntPolicyId,
        asset_name: cntAssetName,
-       ticker: cntPaymentConfig?.ticker || cntTicker,
+       ticker: cntTicker,
        decimals: cntDecimals,
        amount: cntFeeAmount / divisor
      }] : null;

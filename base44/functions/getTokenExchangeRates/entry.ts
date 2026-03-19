@@ -1,7 +1,9 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+
 // Exact same token whitelist as AdminCNTLab
 const KNOWN_CNTS = [
   { ticker: "$NIGHT",  policy_id: "0691b2fecca1ac4f53cb6dfb00b7013e561d1f34403b957cbb5af1fa", asset_name: "4e49474854",                         decimals: 0 },
-  { ticker: "$Snek",   policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3f", asset_name: "534e454b",                           decimals: 0 },
+  { ticker: "$Snek",   policy_id: "279c909f348e533da5808898f87f9a14bb2c3dfbbacccd631d927a3",  asset_name: "534e454b",                           decimals: 0 },
   { ticker: "$MIN",    policy_id: "29d222ce763455e3d7a09a665ce554f00ac89d2e99a1a83d267170c6", asset_name: "4d494e",                             decimals: 6 },
   { ticker: "$INDY",   policy_id: "533bb94a8850ee3ccbe483106489399112b74c905342cb1792a797a0", asset_name: "494e4459",                           decimals: 6 },
   { ticker: "$SUNDAE", policy_id: "9a9693a9a37912a5097918f97918d15240c92ab729a0b7c4aa144d77", asset_name: "53554e444145",                       decimals: 6 },
@@ -10,7 +12,7 @@ const KNOWN_CNTS = [
   { ticker: "$IAG",    policy_id: "5d16cc1a177b5d9ba9cfa9793b07e60f1fb70fea1f8aef064415d114", asset_name: "494147",                             decimals: 6 },
   { ticker: "$STRIKE", policy_id: "f13ac4d66b3ee19a6aa0f2a22298737bd907cc95121662fc971b5275", asset_name: "535452494b45",                       decimals: 6 },
   { ticker: "$NMKR",   policy_id: "5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489", asset_name: "4e4d4b52",                           decimals: 6 },
-  { ticker: "$HOSKY",  policy_id: "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481c235", asset_name: "484f534b59",                         decimals: 0 },
+  { ticker: "$HOSKY",  policy_id: "a0028f350aaabe0545fdcb56b039bfb08e4bb4d8c4d7c3c7d481ef0", asset_name: "484f534b59",                         decimals: 0 },
   { ticker: "$TITAN",  policy_id: "8483844875ce4d61c2aa459240f277d32081ee08fe0ad16899a0f581", asset_name: "0014df10544954414e",                   decimals: 6 },
   // Stablecoins (USD-pegged)
   { ticker: "USDM",   policy_id: "c48cbb3d5e57ed56e276bc45f99ab39abe94e6cd7ac39fb402da47ad", asset_name: "0014df105553444d",       decimals: 6, is_stable_usd: true },
@@ -70,6 +72,12 @@ async function fetchMinSwapPrices() {
 
 Deno.serve(async (req) => {
   try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await req.json().catch(() => ({}));
 
     const requestedTickers = body.tickers
