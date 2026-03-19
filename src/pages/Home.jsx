@@ -160,7 +160,7 @@ export default function HomePage() {
                       </div>
                       <CheckCircle2 className="w-6 h-6 text-emerald-400 mt-1" />
                     </div>
-                    <div className="text-5xl md:text-6xl font-bold text-white tracking-tight">₳ 250</div>
+                    <div className="text-4xl md:text-6xl font-bold text-white tracking-tight">₳ 250</div>
                     <div className="text-slate-400 text-xl">{t("home.confirmed")} • Block #8,234,567</div>
                     <div className="border-t border-slate-700/80 pt-6 grid grid-cols-2 gap-8">
                       <div>
