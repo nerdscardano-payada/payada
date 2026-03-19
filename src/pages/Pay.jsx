@@ -39,6 +39,8 @@ export default function Pay() {
   const [txSubmitted, setTxSubmitted] = useState(false);
   const [walletHealth, setWalletHealth] = useState(null);
 
+  const multiCntEnabled = paymentLink?.enable_multi_cnt_checkout && paymentLink?.amount_mode === "fixed_ada" && (paymentLink?.accepted_cnt_tokens || []).length > 0;
+
   // Extract slug or cartItems from URL query params
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -122,6 +124,11 @@ export default function Pay() {
       setLoading(false);
     }
   }, [cartItems, cartLinks, cartLinksFetching]);
+
+  useEffect(() => {
+    if (!slug || !multiCntEnabled) return;
+    window.location.replace(`/MultiTokenCheckout?slug=${encodeURIComponent(slug)}`);
+  }, [slug, multiCntEnabled]);
 
   const handleStartCheckout = async () => {
     // Validate required fields
