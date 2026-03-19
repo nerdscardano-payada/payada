@@ -156,18 +156,6 @@ export default function HomePage() {
               const Icon = pathwayIcons[index];
               return (
                 <div key={pathway.title} className="group rounded-3xl border border-slate-200 bg-white/90 backdrop-blur-sm p-4 md:p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                  <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 mb-5">
-                    <video
-                      className="w-full aspect-video object-cover"
-                      src={pathwayVideos[index]}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      controls
-                      preload="metadata"
-                    />
-                  </div>
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center mb-5 shadow-lg shadow-cyan-100">
                     <Icon className="w-7 h-7 text-white" />
                   </div>
