@@ -199,7 +199,7 @@ export default function HomePage() {
                     <h3 className="text-xl font-semibold text-slate-900 mb-2">{item.title}</h3>
                     <p className="text-slate-600 mb-5">{item.description}</p>
                     <Button variant="outline" size="sm" className="border-slate-200 bg-white gap-2" onClick={() => handlePreviewFlow(index)}>
-                      ⚡ {t("home.demo_cta")}
+                      See Demo
                     </Button>
                   </div>
                 );
