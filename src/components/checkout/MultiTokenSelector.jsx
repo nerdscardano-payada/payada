@@ -42,7 +42,7 @@ export default function MultiTokenSelector({ options, selectedKey, onSelect }) {
               <p className="text-xs text-slate-500 mt-1">{option.secondaryLabel}</p>
             )}
             {option.disabled && (
-              <p className="text-xs text-amber-400 mt-2">Rate tijdelijk niet beschikbaar</p>
+              <p className="text-xs text-amber-400 mt-2">Rate temporarily unavailable</p>
             )}
           </div>
         </button>

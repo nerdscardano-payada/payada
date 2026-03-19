@@ -77,9 +77,9 @@ export default function MultiTokenCheckout() {
       key: "ADA",
       type: "ada",
       label: "ADA",
-      description: "Betaal rechtstreeks in ADA",
+      description: "Pay directly with ADA",
       amountLabel: `₳ ${formatAmount(adaAmount, 6)}`,
-      secondaryLabel: "Standaard checkout",
+      secondaryLabel: "Standard checkout",
       disabled: false,
     };
 
