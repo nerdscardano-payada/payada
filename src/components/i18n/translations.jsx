@@ -50,6 +50,8 @@ export const translations = {
         "Built for creators, communities & projects",
         "Live in minutes"
       ],
+      accepted_title: "Accept ADA by default — and support CNT payments too",
+      accepted_sub: "ADA is the standard payment option in PayADA, but you can also let customers pay with supported Cardano Native Tokens.",
       features_title: "Built for modern merchants",
       features_sub: "Everything you need to accept Cardano payments and manage your blockchain business.",
       steps_title: "Get started in 3 easy steps",
@@ -435,6 +437,8 @@ export const translations = {
         "Gebouwd voor creators, communities en projecten",
         "Live in enkele minuten"
       ],
+      accepted_title: "Accepteer standaard ADA — en ondersteun ook CNT-betalingen",
+      accepted_sub: "ADA is de standaard betaaloptie in PayADA, maar je kan klanten ook laten betalen met ondersteunde Cardano Native Tokens.",
       features_title: "Gebouwd voor moderne handelaren",
       features_sub: "Alles wat je nodig hebt om Cardano-betalingen te accepteren en je blockchain-bedrijf te beheren.",
       steps_title: "Start in 3 eenvoudige stappen",

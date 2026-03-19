@@ -243,6 +243,34 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 md:p-10 shadow-sm">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">{t("home.accepted_title")}</h2>
+            <p className="text-slate-600 max-w-3xl mx-auto">{t("home.accepted_sub")}</p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+            {[
+              { label: "ADA", className: "bg-blue-50 text-blue-700 border-blue-200" },
+              { label: "$SNEK", className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+              { label: "$MIN", className: "bg-violet-50 text-violet-700 border-violet-200" },
+              { label: "$IAG", className: "bg-cyan-50 text-cyan-700 border-cyan-200" },
+              { label: "$NMKR", className: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200" },
+              { label: "USDM", className: "bg-slate-50 text-slate-700 border-slate-200" },
+              { label: "USDA", className: "bg-amber-50 text-amber-700 border-amber-200" },
+              { label: "DJED", className: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+            ].map((token) => (
+              <div
+                key={token.label}
+                className={`rounded-full border px-4 py-2 text-sm font-semibold ${token.className}`}
+              >
+                {token.label}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
