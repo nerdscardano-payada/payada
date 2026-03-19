@@ -158,6 +158,12 @@ export const extraTranslations = {
       cta_sub: "Join merchants accepting ADA and Cardano Native Tokens on PayADA",
       cta_download: "Download Full Litepaper", cta_start: "Get Started",
     },
+    home: {
+      demo_section_eyebrow: "Product demo",
+      demo_section_title: "See payment links in action",
+      demo_section_description: "This promo video shows how quickly someone can open a payment link and complete checkout. Once you share the other videos, I can add matching demo blocks for access links and events too.",
+      demo_section_cta: "Open payment links",
+    },
   },
   nl: {
     docs: {
@@ -292,6 +298,12 @@ export const extraTranslations = {
       roadmap_link: "Bekijk volledige roadmap →",
       cta_title: "Klaar voor Cardano-betalingen?", cta_sub: "Sluit je aan bij handelaren op PayADA",
       cta_download: "Volledige litepaper downloaden", cta_start: "Aan de slag",
+    },
+    home: {
+      demo_section_eyebrow: "Productdemo",
+      demo_section_title: "Bekijk payment links in actie",
+      demo_section_description: "Deze promovideo laat zien hoe snel iemand een payment link kan openen en afrekenen. Als je de andere video's deelt, kan ik ook voor access links en events zulke demo-blokken toevoegen.",
+      demo_section_cta: "Open payment links",
     },
   },
   de: {
