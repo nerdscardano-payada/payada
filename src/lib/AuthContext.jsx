@@ -17,6 +17,8 @@ export const AuthProvider = ({ children }) => {
     checkAppState();
   }, []);
 
+  const publicPages = ["/", "/Home", "/Checkout", "/SubscriberPortal", "/Pay", "/PayTerminal", "/Features", "/Pricing", "/Security", "/Documentation", "/APIReference", "/Webhooks", "/About", "/Contact", "/PrivacyPolicy", "/TermsOfService", "/AcceptableUsePolicy", "/MerchantAgreement", "/Disclaimer", "/PaymentProof", "/Unlock", "/Store", "/Access", "/Roadmap", "/Litepaper", "/TokenSale", "/EventCheckout", "/EventEntry", "/MerchantProfile"];
+
   const checkAppState = async () => {
     try {
       setIsLoadingPublicSettings(true);
@@ -37,8 +39,10 @@ export const AuthProvider = ({ children }) => {
         const publicSettings = await appClient.get(`/prod/public-settings/by-id/${appParams.appId}`);
         setAppPublicSettings(publicSettings);
         
-        // If we got the app public settings successfully, check if user is authenticated
-        if (appParams.token) {
+        const isPublicPage = publicPages.includes(window.location.pathname);
+
+        // On public pages, skip eager auth validation to avoid unnecessary 401 calls
+        if (appParams.token && !isPublicPage) {
           await checkUserAuth();
         } else {
           setIsLoadingAuth(false);

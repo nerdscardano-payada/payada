@@ -6,6 +6,7 @@ import { ArrowRight, CheckCircle2, Zap, Lock, TrendingUp, Globe, CreditCard, Use
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
 import ProductDemoSection from "@/components/home/ProductDemoSection";
+import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import confetti from "canvas-confetti";
@@ -23,13 +24,15 @@ const pathwayVideos = [
 
 export default function HomePage() {
   const { t, lang, setLang } = useTranslation();
+  const { isAuthenticated } = useAuth();
   const [activeDemoIndex, setActiveDemoIndex] = useState(0);
   const demoSectionRef = useRef(null);
 
   useEffect(() => {
-    base44.auth.isAuthenticated().then((loggedIn) => {
-      if (loggedIn) window.location.href = createPageUrl("Dashboard");
-    });
+    if (isAuthenticated) {
+      window.location.href = createPageUrl("Dashboard");
+      return;
+    }
 
     const hasSeenLaunchCelebration = localStorage.getItem("payada_launch_2026");
     if (!hasSeenLaunchCelebration) {
@@ -46,7 +49,7 @@ export default function HomePage() {
 
       localStorage.setItem("payada_launch_2026", "true");
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   const handleLogin = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
