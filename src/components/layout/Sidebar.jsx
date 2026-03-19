@@ -16,11 +16,9 @@ import {
   Building2,
   Code2,
   ShoppingCart,
-  Store,
   Monitor,
   LogOut,
   ShieldCheck,
-  RefreshCw,
   Bot,
   Zap,
   FlaskConical,
@@ -33,32 +31,37 @@ import { base44 } from "@/api/base44Client";
 import NotificationBell from "@/components/notifications/NotificationBell";
 
 const navItems = [
-  { type: "header", name: "Account" },
-  { name: "Merchant Profile", icon: Building2, page: "MerchantProfile" },
-
-  { type: "header", name: "Sales Tools" },
-  { name: "Payment Links", icon: Link2, page: "PaymentLinks" },
-  { name: "Access Links", icon: Users, page: "AccessLinks" },
-  { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
-  { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
-  { name: "Shop Generator", icon: ShoppingCart, page: "ShoppingPageGenerator" },
-  { name: "POS Terminal", icon: Zap, page: "POS" },
-  { name: "Events", icon: Calendar, page: "Events" },
-
   { type: "header", name: "Overview" },
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
   { name: "Payments", icon: CreditCard, page: "Payments" },
-  { name: "Transaction Audit", icon: Eye, page: "TransactionAudit" },
-  { name: "Customers", icon: Users, page: "Customers" },
-  { name: "Billing", icon: Receipt, page: "Billing" },
+  { name: "Transactions", icon: Eye, page: "TransactionAudit" },
 
-  { type: "header", name: "Plugins" },
+  { type: "header", name: "Get Paid" },
+  { name: "Payment Links", icon: Link2, page: "PaymentLinks" },
+  { name: "POS Terminal", icon: Zap, page: "POS" },
+  { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
+  { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
+
+  { type: "header", name: "Sell" },
+  { name: "Shop Pages", icon: ShoppingCart, page: "ShoppingPageGenerator" },
+
+  { type: "header", name: "Community" },
+  { name: "Access Links", icon: Users, page: "AccessLinks" },
   { name: "Discord Gate", icon: Bot, page: "DiscordPlugin" },
 
-  { type: "header", name: "Developers" },
+  { type: "header", name: "Events" },
+  { name: "Events", icon: Calendar, page: "Events" },
+
+  { type: "header", name: "Customers" },
+  { name: "Customers", icon: Users, page: "Customers" },
+
+  { type: "header", name: "Integrations" },
   { name: "Webhooks", icon: Webhook, page: "Webhooks" },
-  { name: "Webhook Setup", icon: RefreshCw, page: "WebhookSetupWizard" },
   { name: "API Keys", icon: Key, page: "ApiKeys" },
+
+  { type: "header", name: "Settings" },
+  { name: "Merchant Profile", icon: Building2, page: "MerchantProfile" },
+  { name: "Billing", icon: Receipt, page: "Billing" },
 ];
 
 export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
