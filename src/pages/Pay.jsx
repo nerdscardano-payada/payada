@@ -276,6 +276,17 @@ export default function Pay() {
     );
   }
 
+  if (multiCntEnabled) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 text-indigo-400 animate-spin mx-auto mb-4" />
+          <p className="text-slate-400">Redirecting to multi-token checkout...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
