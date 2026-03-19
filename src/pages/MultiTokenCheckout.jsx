@@ -289,7 +289,7 @@ export default function MultiTokenCheckout() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-950 flex items-start justify-center p-4 sm:py-8 overflow-y-auto">
       <div className="w-full max-w-xl">
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center mx-auto mb-4">
