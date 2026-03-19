@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Zap, Lock, TrendingUp, Globe, CreditCard, Users, Ticket } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
-import ProductDemoSection from "@/components/home/ProductDemoSection";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import confetti from "canvas-confetti";
@@ -15,6 +14,11 @@ import { Toaster } from "sonner";
 const pathwayIcons = [CreditCard, Users, Ticket];
 const whyIcons = [Zap, Lock, Globe, TrendingUp];
 const pathwayPages = ["PaymentLinks", "AccessLinks", "Events"];
+const pathwayVideos = [
+  "https://video.twimg.com/amplify_video/2034541284552257536/vid/avc1/1888x866/ax3v4sHFu2PFZGRe.mp4?tag=21",
+  "https://video.twimg.com/amplify_video/2034541227027103745/vid/avc1/1910x860/nGxDLZO2Fg-iVhVU.mp4?tag=21",
+  "https://video.twimg.com/amplify_video/2034541324985159680/vid/avc1/1912x870/X5Pi5tlwEuO3aCcV.mp4?tag=21"
+];
 
 export default function HomePage() {
   const { t, lang, setLang } = useTranslation();
@@ -151,7 +155,19 @@ export default function HomePage() {
             {Array.isArray(pathways) && pathways.map((pathway, index) => {
               const Icon = pathwayIcons[index];
               return (
-                <div key={pathway.title} className="group rounded-3xl border border-slate-200 bg-white/90 backdrop-blur-sm p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div key={pathway.title} className="group rounded-3xl border border-slate-200 bg-white/90 backdrop-blur-sm p-4 md:p-5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                  <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-950 mb-5">
+                    <video
+                      className="w-full aspect-video object-cover"
+                      src={pathwayVideos[index]}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      controls
+                      preload="metadata"
+                    />
+                  </div>
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center mb-5 shadow-lg shadow-cyan-100">
                     <Icon className="w-7 h-7 text-white" />
                   </div>
@@ -194,15 +210,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <ProductDemoSection
-        eyebrow={t("home.demo_section_eyebrow")}
-        title={t("home.demo_section_title")}
-        description={t("home.demo_section_description")}
-        ctaLabel={t("home.demo_section_cta")}
-        ctaTo={createPageUrl("PaymentLinks")}
-        videoUrl="https://video.twimg.com/amplify_video/2034541284552257536/vid/avc1/1888x866/ax3v4sHFu2PFZGRe.mp4?tag=21"
-      />
 
       {/* Why PayADA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
