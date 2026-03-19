@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-export default function ProductDemoSection({ title, description, eyebrow, videoUrl, ctaLabel, ctaTo }) {
+export default function ProductDemoSection({ title, description, eyebrow, videoUrl, embedUrl, ctaLabel, ctaTo }) {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
       <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 items-center rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
@@ -19,17 +19,28 @@ export default function ProductDemoSection({ title, description, eyebrow, videoU
         </div>
 
         <div className="bg-slate-950 p-3 md:p-4">
-          <div className="overflow-hidden rounded-2xl border border-slate-800 bg-black shadow-2xl">
-            <video
-              className="w-full h-full aspect-video object-cover"
-              src={videoUrl}
-              autoPlay
-              muted
-              loop
-              playsInline
-              controls
-              preload="metadata"
-            />
+          <div className="overflow-hidden rounded-2xl border border-slate-800 bg-black shadow-2xl aspect-video">
+            {embedUrl ? (
+              <iframe
+                src={embedUrl}
+                className="w-full h-full"
+                frameBorder="0"
+                scrolling="no"
+                allowFullScreen
+                title={title}
+              />
+            ) : (
+              <video
+                className="w-full h-full object-cover"
+                src={videoUrl}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls
+                preload="metadata"
+              />
+            )}
           </div>
         </div>
       </div>

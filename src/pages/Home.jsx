@@ -21,6 +21,11 @@ const pathwayVideos = [
   "https://video.twimg.com/amplify_video/2034541227027103745/vid/avc1/1910x860/nGxDLZO2Fg-iVhVU.mp4?tag=21",
   "https://video.twimg.com/amplify_video/2034541324985159680/vid/avc1/1912x870/X5Pi5tlwEuO3aCcV.mp4?tag=21"
 ];
+const pathwayEmbeds = [
+  "https://1drv.ms/v/c/c9babd2faa79be07/IQT1kxT9DnpKTLL1pYZ-zVPWAY3Q8f9Mg2TzOu1I_l6RP2k",
+  null,
+  null,
+];
 
 export default function HomePage() {
   const { t, lang, setLang } = useTranslation();
@@ -215,6 +220,7 @@ export default function HomePage() {
           ctaLabel={activePathway?.cta || t("home.hero_primary_cta")}
           ctaTo={createPageUrl(pathwayPages[activeDemoIndex] || "PaymentLinks")}
           videoUrl={pathwayVideos[activeDemoIndex]}
+          embedUrl={pathwayEmbeds[activeDemoIndex]}
         />
       </div>
 
