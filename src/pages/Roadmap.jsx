@@ -1,17 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { CheckCircle2, Clock, Rocket, Zap, Link2, ShoppingCart, Monitor, Bot, Coins, RefreshCw, Code2, Globe, Lock, ArrowRight } from "lucide-react";
+import { CheckCircle2, Clock, Rocket, Zap, Link2, ShoppingCart, Monitor, Bot, Coins, RefreshCw, Code2, Globe, Lock, ArrowRight, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import SEOHead from "@/components/SEOHead";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-const launchedIcons = [Link2, Monitor, ShoppingCart, Zap, Code2, Bot, Globe, Lock];
-const upcomingIcons = [Coins, ShoppingCart, RefreshCw, Bot];
+const launchedIcons = [Link2, Monitor, ShoppingCart, Zap, Code2, Bot, Globe, Lock, Coins, Calendar];
+const upcomingIcons = [ShoppingCart, RefreshCw, Bot];
 const upcomingBadgeColors = [
-  "bg-purple-100 text-purple-700",
   "bg-amber-100 text-amber-700",
   "bg-amber-100 text-amber-700",
   "bg-blue-100 text-blue-700",
@@ -27,7 +26,7 @@ export default function RoadmapPage() {
     <div className="min-h-screen bg-white">
       <SEOHead
         title="Roadmap — PayADA Cardano Payment Platform"
-        description="PayADA is live with payment links, pay terminals, shop generator, Discord Gate, POS, button generator, access links, webhooks and REST API. Coming soon: CNT token payments, WooCommerce/Shopify plugins, fiat auto-conversion, and Telegram Gate."
+        description="PayADA is live with payment links, CNT payments, events, pay terminals, shop generator, Discord Gate, POS, button generator, access links, webhooks and REST API. Coming soon: WooCommerce/Shopify plugins, fiat auto-conversion, and Telegram Gate."
         canonical="https://payada.io/roadmap"
       />
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
