@@ -33,7 +33,7 @@ export default function ContactPage() {
 
     try {
       await base44.functions.invoke("sendContactEmail", formData);
-      toast.success("Message sent! We'll get back to you soon.");
+      toast.success("Your message has been sent successfully. We’ll reply within 48 hours.");
       setFormData({ name: "", email: "", subject: "", message: "" });
     } finally {
       setSending(false);
