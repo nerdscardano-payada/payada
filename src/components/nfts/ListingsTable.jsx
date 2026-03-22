@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Pencil, Trash2 } from "lucide-react";
 
-export default function ListingsTable({ listings, paymentLinksById, onEdit, onDelete, onCopy }) {
+export default function ListingsTable({ listings, paymentLinksById, onEdit, onDelete, onCopy, onPreview }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 p-5">
