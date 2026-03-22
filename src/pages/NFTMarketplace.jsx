@@ -117,6 +117,8 @@ export default function NFTMarketplace() {
       policy_id: asset.policy_id,
       asset_name_hex: asset.asset_name_hex,
       quantity: prev.quantity || 1,
+      image_url: prev.image_url || asset.image_url || "",
+      description: prev.description || asset.description || "",
     }));
   };
 

@@ -14,6 +14,33 @@ function decodeAssetLabel(assetNameHex) {
   }
 }
 
+function normalizeIpfsUrl(value) {
+  if (!value || typeof value !== 'string') return null;
+  if (value.startsWith('ipfs://')) return `https://ipfs.io/ipfs/${value.replace('ipfs://', '')}`;
+  if (value.startsWith('ipfs/')) return `https://ipfs.io/ipfs/${value.replace('ipfs/', '')}`;
+  return value;
+}
+
+function pickImageUrl(metadata) {
+  if (!metadata) return null;
+  const image = metadata.image || metadata.logo || metadata.mediaType;
+  if (Array.isArray(image)) return normalizeIpfsUrl(image.join(''));
+  return normalizeIpfsUrl(image);
+}
+
+function pickDescription(metadata) {
+  if (!metadata?.description) return '';
+  if (Array.isArray(metadata.description)) return metadata.description.join(' ');
+  if (typeof metadata.description === 'string') return metadata.description;
+  return '';
+}
+
+function pickDisplayName(metadata, fallback) {
+  if (!metadata) return fallback;
+  if (typeof metadata.name === 'string' && metadata.name.trim()) return metadata.name.trim();
+  return fallback;
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -36,7 +63,7 @@ Deno.serve(async (req) => {
     }
 
     const data = JSON.parse(text);
-    const assets = (data.amount || [])
+    const baseAssets = (data.amount || [])
       .filter((item) => item.unit !== 'lovelace')
       .map((item) => ({
         unit: item.unit,
@@ -46,6 +73,27 @@ Deno.serve(async (req) => {
         asset_label: decodeAssetLabel(item.unit.slice(56)),
       }))
       .filter((item) => item.quantity > 0);
+
+    const assets = await Promise.all(baseAssets.map(async (asset) => {
+      const metadataResponse = await fetch(`${BLOCKFROST_URL}/assets/${asset.unit}`, {
+        headers: { project_id: BLOCKFROST_API_KEY },
+      });
+
+      if (!metadataResponse.ok) {
+        return asset;
+      }
+
+      const metadataText = await metadataResponse.text();
+      const assetData = metadataText ? JSON.parse(metadataText) : {};
+      const metadata = assetData.onchain_metadata || assetData.metadata || null;
+
+      return {
+        ...asset,
+        asset_label: pickDisplayName(metadata, asset.asset_label),
+        image_url: pickImageUrl(metadata),
+        description: pickDescription(metadata),
+      };
+    }));
 
     return Response.json({ success: true, assets });
   } catch (error) {
