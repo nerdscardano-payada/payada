@@ -78,7 +78,7 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
       const hexAddr = addrs[0] || (await api.getUnusedAddresses())[0];
       if (!hexAddr) throw new Error("No address found");
       const addr = hexAddrToBech32(hexAddr);
-      onConnect(addr, api);
+      onConnect(addr, api, walletKey);
       setOpen(false);
     } catch (e) {
       setError(e.message || "Connection failed");
