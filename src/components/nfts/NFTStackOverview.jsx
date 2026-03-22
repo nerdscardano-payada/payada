@@ -4,19 +4,19 @@ import { CreditCard, ShieldCheck, Store } from "lucide-react";
 const items = [
   {
     title: "Checkout-native sales",
-    description: "NFT listings draaien bovenop bestaande PayADA payment links, waardoor prijs, checkout en conversie in dezelfde flow blijven.",
+    description: "NFT listings run on top of existing PayADA payment links, keeping pricing, checkout, and conversion inside the same flow.",
     icon: CreditCard,
     iconClass: "bg-blue-50 text-blue-700",
   },
   {
     title: "Secure holder access",
-    description: "Wallet-based gating maakt utility bruikbaar voor memberships, communities en premium pages zonder handmatige verificatie.",
+    description: "Wallet-based gating makes NFT utility usable for memberships, communities, and premium pages without manual verification.",
     icon: ShieldCheck,
     iconClass: "bg-emerald-50 text-emerald-700",
   },
   {
     title: "Merchant-owned storefronts",
-    description: "Met eigen storefronts, metadata en custodyless delivery verkoop je NFTs volledig binnen je eigen merkervaring.",
+    description: "With your own storefronts, metadata, and custodyless delivery, you can sell NFTs fully inside your own brand experience.",
     icon: Store,
     iconClass: "bg-amber-50 text-amber-700",
   },

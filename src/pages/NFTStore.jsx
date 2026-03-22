@@ -30,31 +30,31 @@ export default function NFTStore() {
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Store</p>
               <h1 className="mt-4 text-4xl font-semibold">{merchantName}</h1>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">Directe NFT listings met checkout via PayADA, zonder externe marketplace ertussen en met custodyless delivery via merchant signing.</p>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">Direct NFT listings with PayADA checkout, no external marketplace in between, and custodyless delivery through merchant signing.</p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <p className="text-xs uppercase tracking-wide text-slate-400">Live listings</p>
                 <p className="mt-2 text-3xl font-semibold text-white">{listings.length}</p>
-                <p className="mt-1 text-sm text-slate-300">Actieve items in deze storefront.</p>
+                <p className="mt-1 text-sm text-slate-300">Active items in this storefront.</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <p className="text-xs uppercase tracking-wide text-slate-400">Checkout</p>
                 <p className="mt-2 text-lg font-semibold text-white">PayADA native</p>
-                <p className="mt-1 text-sm text-slate-300">Snelle ADA checkout binnen dezelfde flow.</p>
+                <p className="mt-1 text-sm text-slate-300">Fast ADA checkout inside the same flow.</p>
               </div>
             </div>
           </div>
         </div>
 
         {!merchantId ? (
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">Geen merchant opgegeven voor deze storefront.</div>
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">No merchant specified for this storefront.</div>
         ) : isLoading ? (
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">Store laden...</div>
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">Loading store...</div>
         ) : listings.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-900">Nog geen actieve NFT listings</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-500">Deze storefront staat klaar, maar er zijn momenteel nog geen gepubliceerde items beschikbaar.</p>
+            <h2 className="text-lg font-semibold text-slate-900">No active NFT listings yet</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-500">This storefront is ready, but there are currently no published items available.</p>
           </div>
         ) : (
           <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -73,14 +73,14 @@ export default function NFTStore() {
                     </div>
                     <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">NFT</div>
                   </div>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{listing.description || "Deze listing gebruikt PayADA checkout en merchant-signed delivery."}</p>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">{listing.description || "This listing uses PayADA checkout and merchant-signed delivery."}</p>
                   <div className="mt-5 flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-xs uppercase tracking-wide text-slate-500">Prijs</p>
-                      <p className="text-lg font-semibold text-slate-900">{listing.price_ada ? `₳ ${Number(listing.price_ada).toFixed(2)}` : "Prijs via checkout"}</p>
+                      <p className="text-xs uppercase tracking-wide text-slate-500">Price</p>
+                      <p className="text-lg font-semibold text-slate-900">{listing.price_ada ? `₳ ${Number(listing.price_ada).toFixed(2)}` : "Price via checkout"}</p>
                     </div>
                     <Button asChild>
-                      <a href={`/Pay?slug=${listing.payment_link_slug}`}>Koop nu</a>
+                      <a href={`/Pay?slug=${listing.payment_link_slug}`}>Buy now</a>
                     </Button>
                   </div>
                 </div>

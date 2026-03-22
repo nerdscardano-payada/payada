@@ -7,11 +7,11 @@ export default function ListingsTable({ listings, paymentLinksById, onEdit, onDe
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 p-5">
         <h2 className="text-lg font-semibold text-slate-900">Listings</h2>
-        <p className="mt-1 text-sm text-slate-500">Beheer live storefront items, prijzen en gekoppelde checkout links.</p>
+        <p className="mt-1 text-sm text-slate-500">Manage live storefront items, pricing, and connected checkout links.</p>
       </div>
       <div className="divide-y divide-slate-100">
         {listings.length === 0 ? (
-          <div className="p-8 text-center text-sm text-slate-500">Nog geen NFT listings aangemaakt. Publiceer je eerste storefront item om je collectie live te zetten.</div>
+          <div className="p-8 text-center text-sm text-slate-500">No NFT listings created yet. Publish your first storefront item to put your collection live.</div>
         ) : listings.map((listing) => (
           <div key={listing.id} className="flex flex-col gap-4 p-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-4">
@@ -29,7 +29,7 @@ export default function ListingsTable({ listings, paymentLinksById, onEdit, onDe
                 </div>
                 <p className="mt-1 text-sm text-slate-500">/{listing.slug || "listing"}</p>
                 <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500">
-                  <span>{paymentLinksById[listing.payment_link_id]?.title || "Geen payment link"}</span>
+                  <span>{paymentLinksById[listing.payment_link_id]?.title || "No payment link"}</span>
                   {listing.price_ada ? <span>₳ {Number(listing.price_ada).toFixed(2)}</span> : null}
                   {listing.asset_label ? <span>{listing.asset_label}</span> : null}
                 </div>
@@ -37,8 +37,8 @@ export default function ListingsTable({ listings, paymentLinksById, onEdit, onDe
             </div>
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" onClick={() => onCopy(listing)}><Copy className="mr-2 h-4 w-4" />Storefront</Button>
-              <Button variant="outline" size="sm" onClick={() => onEdit(listing)}><Pencil className="mr-2 h-4 w-4" />Bewerk</Button>
-              <Button variant="outline" size="sm" onClick={() => onDelete(listing.id)}><Trash2 className="mr-2 h-4 w-4" />Verwijder</Button>
+              <Button variant="outline" size="sm" onClick={() => onEdit(listing)}><Pencil className="mr-2 h-4 w-4" />Edit</Button>
+              <Button variant="outline" size="sm" onClick={() => onDelete(listing.id)}><Trash2 className="mr-2 h-4 w-4" />Delete</Button>
             </div>
           </div>
         ))}

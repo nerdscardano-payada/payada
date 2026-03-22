@@ -11,10 +11,10 @@ export default function SubscriptionSummaryCards({ subscriptions }) {
     .reduce((sum, sub) => sum + (sub.amount_ada || 0), 0);
 
   const cards = [
-    { label: "Actieve abonnees", value: activeCount },
-    { label: "Betaling verwacht", value: dueCount },
-    { label: "Toegang blokkeren", value: lateCount },
-    { label: "Actieve ADA omzet", value: `₳ ${monthlyAda.toFixed(2)}` },
+    { label: "Active subscribers", value: activeCount },
+    { label: "Payment due", value: dueCount },
+    { label: "Access at risk", value: lateCount },
+    { label: "Active ADA revenue", value: `₳ ${monthlyAda.toFixed(2)}` },
   ];
 
   return (

@@ -38,7 +38,7 @@ export default function NFTGating() {
       queryClient.invalidateQueries({ queryKey: ["nft-gates"] });
       setFormData(initialForm);
       setEditingRule(null);
-      toast.success("NFT gate opgeslagen");
+      toast.success("NFT gate saved");
     },
   });
 
@@ -46,7 +46,7 @@ export default function NFTGating() {
     mutationFn: (id) => base44.entities.NftGateRule.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["nft-gates"] });
-      toast.success("NFT gate verwijderd");
+      toast.success("NFT gate deleted");
     },
   });
 
@@ -69,27 +69,27 @@ export default function NFTGating() {
 
   const copyGateLink = (slug) => {
     navigator.clipboard.writeText(`${window.location.origin}/NFTGate?slug=${slug}`);
-    toast.success("Gate link gekopieerd");
+    toast.success("Gate link copied");
   };
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Gating" subtitle="Wallet-based toegangscontrole voor communities, content en premium experiences." />
+      <PageHeader title="NFT Gating" subtitle="Wallet-based access control for communities, content, and premium experiences." />
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Actieve gates</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Active gates</p>
           <p className="mt-2 text-3xl font-semibold text-emerald-950">{activeRules}</p>
-          <p className="mt-1 text-sm text-emerald-900">Live rules die bezoekers meteen kunnen gebruiken.</p>
+          <p className="mt-1 text-sm text-emerald-900">Live rules visitors can use immediately.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Verification flow</p>
           <p className="mt-2 text-lg font-semibold text-slate-900">Wallet connect → verify → unlock</p>
-          <p className="mt-1 text-sm text-slate-600">Een duidelijke holder flow zonder handmatige checks.</p>
+          <p className="mt-1 text-sm text-slate-600">A clean holder journey without manual checks.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Shareable links</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900">Direct inzetbaar</p>
-          <p className="mt-1 text-sm text-slate-600">Elke gate heeft een eigen publieke link voor campagnes en communities.</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900">Ready to use</p>
+          <p className="mt-1 text-sm text-slate-600">Every gate gets its own public link for campaigns and communities.</p>
         </div>
       </div>
       <div className="grid gap-6 xl:grid-cols-[1.1fr_1.3fr]">

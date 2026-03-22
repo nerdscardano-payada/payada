@@ -71,7 +71,7 @@ export default function NFTDistribution() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["merchant-signer-wallet"] });
-      toast.success("Signer wallet opgeslagen");
+      toast.success("Signer wallet saved");
     },
   });
 
@@ -81,7 +81,7 @@ export default function NFTDistribution() {
       queryClient.invalidateQueries({ queryKey: ["nft-fulfillment-rules"] });
       setFormData(initialForm);
       setEditingRule(null);
-      toast.success("Fulfillment regel opgeslagen");
+      toast.success("Fulfillment rule saved");
     },
   });
 
@@ -89,7 +89,7 @@ export default function NFTDistribution() {
     mutationFn: (id) => base44.entities.NftFulfillmentRule.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["nft-fulfillment-rules"] });
-      toast.success("Fulfillment regel verwijderd");
+      toast.success("Fulfillment rule deleted");
     },
   });
 
@@ -127,7 +127,7 @@ export default function NFTDistribution() {
 
   const handleSignTransfer = async (log) => {
     if (!walletSession?.api || !walletSession?.address) {
-      toast.error("Verbind eerst je signer wallet");
+      toast.error("Connect your signer wallet first");
       return;
     }
 
@@ -144,9 +144,9 @@ export default function NFTDistribution() {
         witness_set_cbor: witnessSetCbor,
       });
       queryClient.invalidateQueries({ queryKey: ["nft-transfer-logs"] });
-      toast.success(`NFT transfer verzonden: ${submitResponse.data.txHash}`);
+      toast.success(`NFT transfer sent: ${submitResponse.data.txHash}`);
     } catch (error) {
-      toast.error(error?.response?.data?.error || error.message || "NFT signing mislukt");
+      toast.error(error?.response?.data?.error || error.message || "NFT signing failed");
     } finally {
       setSigningId(null);
     }
@@ -154,22 +154,22 @@ export default function NFTDistribution() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Distribution" subtitle="Operational NFT delivery flow met wallet signing, queueing en merchant control." />
+      <PageHeader title="NFT Distribution" subtitle="Operational NFT delivery flow with wallet signing, queueing, and merchant control." />
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">Actieve regels</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">Active rules</p>
           <p className="mt-2 text-3xl font-semibold text-blue-950">{activeRules}</p>
-          <p className="mt-1 text-sm text-blue-900">Payment links die automatisch NFT-delivery kunnen starten.</p>
+          <p className="mt-1 text-sm text-blue-900">Payment links that can trigger NFT delivery automatically.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Pending signatures</p>
           <p className="mt-2 text-3xl font-semibold text-slate-900">{pendingTransfers}</p>
-          <p className="mt-1 text-sm text-slate-600">Leveringen die klaarstaan om te signeren en te verzenden.</p>
+          <p className="mt-1 text-sm text-slate-600">Deliveries waiting to be signed and sent.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Signer wallet</p>
           <p className="mt-2 text-lg font-semibold text-slate-900">{signerStatus}</p>
-          <p className="mt-1 text-sm text-slate-600">Geen seed storage: de merchant ondertekent de finale transactie zelf.</p>
+          <p className="mt-1 text-sm text-slate-600">No seed storage: the merchant signs the final transaction directly.</p>
         </div>
       </div>
       <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">

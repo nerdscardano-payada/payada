@@ -2,7 +2,7 @@ import React from "react";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function WalletAssetSelect({ assets, value, onValueChange, label = "NFT uit wallet" }) {
+export default function WalletAssetSelect({ assets, value, onValueChange, label = "NFT from wallet" }) {
   const selectedAsset = assets.find((asset) => asset.unit === value);
 
   return (
@@ -11,7 +11,7 @@ export default function WalletAssetSelect({ assets, value, onValueChange, label 
         <Label>{label}</Label>
         <Select value={value || ""} onValueChange={onValueChange}>
           <SelectTrigger className="h-12">
-            <SelectValue placeholder="Selecteer asset uit verbonden wallet" />
+            <SelectValue placeholder="Select asset from connected wallet" />
           </SelectTrigger>
           <SelectContent>
             {assets.map((asset) => (
@@ -36,7 +36,7 @@ export default function WalletAssetSelect({ assets, value, onValueChange, label 
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-slate-900">{selectedAsset.asset_label}</p>
               <p className="mt-1 text-xs text-slate-500">Policy {selectedAsset.policy_id.slice(0, 16)}…</p>
-              <p className="mt-2 text-sm text-slate-600">Beschikbaar in wallet: {selectedAsset.quantity}</p>
+              <p className="mt-2 text-sm text-slate-600">Available in wallet: {selectedAsset.quantity}</p>
               {selectedAsset.description && <p className="mt-2 text-sm leading-6 text-slate-600">{selectedAsset.description}</p>}
             </div>
           </div>

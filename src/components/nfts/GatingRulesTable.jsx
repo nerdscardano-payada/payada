@@ -6,11 +6,11 @@ export default function GatingRulesTable({ rules, onEdit, onDelete, onToggle, on
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 p-5">
-        <h2 className="text-lg font-semibold text-slate-900">Actieve gates</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Active gates</h2>
       </div>
       <div className="divide-y divide-slate-100">
         {rules.length === 0 ? (
-          <div className="p-5 text-sm text-slate-500">Nog geen NFT gates ingesteld.</div>
+          <div className="p-5 text-sm text-slate-500">No NFT gates configured yet.</div>
         ) : rules.map((rule) => (
           <div key={rule.id} className="p-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -22,9 +22,9 @@ export default function GatingRulesTable({ rules, onEdit, onDelete, onToggle, on
             </div>
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" onClick={() => onCopy(rule.slug)}><Copy className="mr-2 h-4 w-4" />Link</Button>
-              <Button variant="outline" size="sm" onClick={() => onEdit(rule)}><Pencil className="mr-2 h-4 w-4" />Bewerk</Button>
-              <Button variant="outline" size="sm" onClick={() => onToggle(rule)}><Power className="mr-2 h-4 w-4" />{rule.status === "active" ? "Pauzeer" : "Activeer"}</Button>
-              <Button variant="outline" size="sm" onClick={() => onDelete(rule.id)}><Trash2 className="mr-2 h-4 w-4" />Verwijder</Button>
+              <Button variant="outline" size="sm" onClick={() => onEdit(rule)}><Pencil className="mr-2 h-4 w-4" />Edit</Button>
+              <Button variant="outline" size="sm" onClick={() => onToggle(rule)}><Power className="mr-2 h-4 w-4" />{rule.status === "active" ? "Pause" : "Activate"}</Button>
+              <Button variant="outline" size="sm" onClick={() => onDelete(rule.id)}><Trash2 className="mr-2 h-4 w-4" />Delete</Button>
             </div>
           </div>
         ))}

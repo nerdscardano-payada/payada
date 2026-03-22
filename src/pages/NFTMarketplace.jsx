@@ -61,7 +61,7 @@ export default function NFTMarketplace() {
       queryClient.invalidateQueries({ queryKey: ["nft-listings"] });
       setFormData(initialForm);
       setEditingListing(null);
-      toast.success("NFT listing opgeslagen");
+      toast.success("NFT listing saved");
     },
   });
 
@@ -74,7 +74,7 @@ export default function NFTMarketplace() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["merchant-signer-wallet"] });
-      toast.success("Signer wallet opgeslagen");
+      toast.success("Signer wallet saved");
     },
   });
 
@@ -82,7 +82,7 @@ export default function NFTMarketplace() {
     mutationFn: (id) => base44.entities.NftListing.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["nft-listings"] });
-      toast.success("NFT listing verwijderd");
+      toast.success("NFT listing deleted");
     },
   });
 
@@ -94,7 +94,7 @@ export default function NFTMarketplace() {
 
   const copyLink = () => {
     navigator.clipboard.writeText(`${window.location.origin}/NFTStore?merchant=${encodeURIComponent(user.email)}`);
-    toast.success("Storefront link gekopieerd");
+    toast.success("Storefront link copied");
   };
 
   const saveSignerWallet = () => {
@@ -127,22 +127,22 @@ export default function NFTMarketplace() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Marketplace" subtitle="Merchant-owned storefronts met PayADA checkout, metadata en custodyless delivery." />
+      <PageHeader title="NFT Marketplace" subtitle="Merchant-owned storefronts with PayADA checkout, metadata, and custodyless delivery." />
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Actieve listings</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Active listings</p>
           <p className="mt-2 text-3xl font-semibold text-amber-950">{activeListings}</p>
-          <p className="mt-1 text-sm text-amber-900">NFT's die live zichtbaar zijn in je storefront.</p>
+          <p className="mt-1 text-sm text-amber-900">NFTs currently visible in your storefront.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Draft pipeline</p>
           <p className="mt-2 text-3xl font-semibold text-slate-900">{draftListings}</p>
-          <p className="mt-1 text-sm text-slate-600">Listings die nog klaarstaan voor publicatie of prijscontrole.</p>
+          <p className="mt-1 text-sm text-slate-600">Listings waiting for publication or pricing review.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Signer wallet</p>
           <p className="mt-2 text-lg font-semibold text-slate-900">{signerStatus}</p>
-          <p className="mt-1 text-sm text-slate-600">Storefront en fulfilment blijven gekoppeld aan je eigen wallet flow.</p>
+          <p className="mt-1 text-sm text-slate-600">Storefront and fulfillment stay connected to your own wallet flow.</p>
         </div>
       </div>
       <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">

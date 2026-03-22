@@ -7,11 +7,11 @@ export default function TransferQueueTable({ logs, signingId, onSign }) {
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 p-5">
         <h2 className="text-lg font-semibold text-slate-900">Transfer queue</h2>
-        <p className="mt-1 text-sm text-slate-500">Pending leveringen worden hier door de merchant met wallet signing bevestigd.</p>
+        <p className="mt-1 text-sm text-slate-500">Pending deliveries are confirmed here by the merchant through wallet signing.</p>
       </div>
       <div className="divide-y divide-slate-100">
         {logs.length === 0 ? (
-          <div className="p-5 text-sm text-slate-500">Nog geen NFT transfer requests.</div>
+          <div className="p-5 text-sm text-slate-500">No NFT transfer requests yet.</div>
         ) : logs.map((log) => (
           <div key={log.id} className="p-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
