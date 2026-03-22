@@ -15,7 +15,7 @@ export default function DonationPageCard({ page, stats, onDelete }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
+    <div className="w-full xl:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 space-y-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
