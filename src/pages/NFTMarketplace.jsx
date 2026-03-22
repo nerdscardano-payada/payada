@@ -4,11 +4,13 @@ import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import ListingForm from "@/components/nfts/ListingForm";
 import ListingsTable from "@/components/nfts/ListingsTable";
+import MarketplaceSettingsForm from "@/components/nfts/MarketplaceSettingsForm";
 import SignerWalletSetupCard from "@/components/nfts/SignerWalletSetupCard";
 import { toast } from "sonner";
 
-const initialForm = { title: "", slug: "", description: "", image_url: "", payment_link_id: "", policy_id: "", asset_name_hex: "", asset_label: "", quantity: 1, price_ada: 0, status: "draft" };
-const createSlug = (value) => value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const initialForm = { title: "", slug: "", description: "", image_url: "", payment_link_id: "", policy_id: "", asset_name_hex: "", asset_label: "", collection_name: "", collection_slug: "", quantity: 1, price_ada: 0, status: "draft" };
+const initialStoreSettings = { nft_store_name: "", nft_store_slug: "", nft_store_description: "" };
+const createSlug = (value = "") => value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 export default function NFTMarketplace() {
   const [user, setUser] = React.useState(null);
@@ -16,9 +18,21 @@ export default function NFTMarketplace() {
   const [selectedAssetUnit, setSelectedAssetUnit] = React.useState("");
   const [formData, setFormData] = React.useState(initialForm);
   const [editingListing, setEditingListing] = React.useState(null);
+  const [storeSettings, setStoreSettings] = React.useState(initialStoreSettings);
   const queryClient = useQueryClient();
 
-  React.useEffect(() => { base44.auth.me().then(setUser); }, []);
+  React.useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
+
+  const { data: merchantProfile } = useQuery({
+    queryKey: ["merchant-profile", user?.email],
+    queryFn: async () => {
+      const profiles = await base44.entities.MerchantProfile.filter({ user_id: user.email }, "-created_date", 1);
+      return profiles[0] || null;
+    },
+    enabled: !!user?.email,
+  });
 
   const { data: paymentLinks = [] } = useQuery({
     queryKey: ["payment-links-marketplace", user?.email],
@@ -50,6 +64,17 @@ export default function NFTMarketplace() {
     enabled: !!walletSession?.address,
   });
 
+  React.useEffect(() => {
+    if (!user?.email) return;
+    setStoreSettings({
+      nft_store_name: merchantProfile?.nft_store_name || merchantProfile?.business_name || user.full_name || "",
+      nft_store_slug: merchantProfile?.nft_store_slug || createSlug(merchantProfile?.business_name || user.full_name || user.email.split("@")[0]),
+      nft_store_description: merchantProfile?.nft_store_description || "",
+    });
+  }, [merchantProfile?.id, user?.email]);
+
+  const resolvedStoreSlug = createSlug(storeSettings.nft_store_slug || merchantProfile?.nft_store_slug || merchantProfile?.business_name || user?.full_name || user?.email?.split("@")[0] || "nft-store");
+  const publicStorePath = `/nft/${resolvedStoreSlug}`;
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
   const activeListings = listings.filter((listing) => listing.status === "active").length;
   const draftListings = listings.filter((listing) => listing.status === "draft").length;
@@ -62,6 +87,23 @@ export default function NFTMarketplace() {
       setFormData(initialForm);
       setEditingListing(null);
       toast.success("NFT listing saved");
+    },
+  });
+
+  const settingsMutation = useMutation({
+    mutationFn: (payload) => {
+      if (merchantProfile?.id) {
+        return base44.entities.MerchantProfile.update(merchantProfile.id, payload);
+      }
+      return base44.entities.MerchantProfile.create({
+        user_id: user.email,
+        business_name: payload.nft_store_name || user.full_name || user.email.split("@")[0],
+        ...payload,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["merchant-profile"] });
+      toast.success("Marketplace settings saved");
     },
   });
 
@@ -89,12 +131,26 @@ export default function NFTMarketplace() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!user?.email) return;
-    saveMutation.mutate({ ...formData, merchant_id: user.email, slug: createSlug(formData.slug || formData.title) });
+    saveMutation.mutate({
+      ...formData,
+      merchant_id: user.email,
+      slug: createSlug(formData.slug || formData.title),
+      collection_slug: createSlug(formData.collection_name || ""),
+    });
   };
 
   const copyLink = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/NFTStore?merchant=${encodeURIComponent(user.email)}`);
+    navigator.clipboard.writeText(`${window.location.origin}${publicStorePath}`);
     toast.success("Storefront link copied");
+  };
+
+  const saveMarketplaceSettings = () => {
+    if (!user?.email) return;
+    settingsMutation.mutate({
+      nft_store_name: storeSettings.nft_store_name || merchantProfile?.business_name || user.full_name || "NFT Store",
+      nft_store_slug: resolvedStoreSlug,
+      nft_store_description: storeSettings.nft_store_description || "",
+    });
   };
 
   const saveSignerWallet = () => {
@@ -115,7 +171,7 @@ export default function NFTMarketplace() {
     setFormData((prev) => ({
       ...prev,
       title: prev.title || asset.asset_label,
-      slug: prev.slug || asset.asset_label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+      slug: prev.slug || createSlug(asset.asset_label),
       asset_label: asset.asset_label,
       policy_id: asset.policy_id,
       asset_name_hex: asset.asset_name_hex,
@@ -127,7 +183,7 @@ export default function NFTMarketplace() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Marketplace" subtitle="Merchant-owned storefronts with PayADA checkout, metadata, and custodyless delivery." />
+      <PageHeader title="NFT Marketplace" subtitle="Merchant-owned storefronts with your own branding, collections, and a clean public slug." />
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Active listings</p>
@@ -140,16 +196,17 @@ export default function NFTMarketplace() {
           <p className="mt-1 text-sm text-slate-600">Listings waiting for publication or pricing review.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Signer wallet</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900">{signerStatus}</p>
-          <p className="mt-1 text-sm text-slate-600">Storefront and fulfillment stay connected to your own wallet flow.</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Public slug</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900">/{resolvedStoreSlug}</p>
+          <p className="mt-1 text-sm text-slate-600">Used for your public marketplace link.</p>
         </div>
       </div>
-      <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
+      <div className="grid gap-6 xl:grid-cols-2">
         <SignerWalletSetupCard wallet={signerWallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={saveSignerWallet} isSaving={signerWalletMutation.isPending} />
-        <ListingForm formData={formData} setFormData={setFormData} paymentLinks={paymentLinks} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
+        <MarketplaceSettingsForm value={storeSettings} onChange={setStoreSettings} onSave={saveMarketplaceSettings} isSaving={settingsMutation.isPending} publicUrl={`${window.location.origin}${publicStorePath}`} />
       </div>
-      <ListingsTable listings={listings} paymentLinksById={paymentLinksById} onEdit={(listing) => { setEditingListing(listing); setFormData(listing); setSelectedAssetUnit(`${listing.policy_id}${listing.asset_name_hex || ""}`); }} onDelete={(id) => deleteMutation.mutate(id)} onCopy={copyLink} onPreview={() => window.open(`/NFTStore?merchant=${encodeURIComponent(user.email)}`, "_blank")} />
+      <ListingForm formData={formData} setFormData={setFormData} paymentLinks={paymentLinks} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
+      <ListingsTable listings={listings} paymentLinksById={paymentLinksById} onEdit={(listing) => { setEditingListing(listing); setFormData({ ...initialForm, ...listing }); setSelectedAssetUnit(`${listing.policy_id}${listing.asset_name_hex || ""}`); }} onDelete={(id) => deleteMutation.mutate(id)} onCopy={copyLink} onPreview={() => window.open(publicStorePath, "_blank")} />
     </div>
   );
 }

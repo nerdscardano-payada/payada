@@ -1,26 +1,43 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 
 export default function NFTStore() {
+  const { storeSlug } = useParams();
   const urlParams = new URLSearchParams(window.location.search);
   const merchantId = urlParams.get("merchant") || "";
+  const queryStoreSlug = urlParams.get("store") || "";
+  const resolvedStoreSlug = storeSlug || queryStoreSlug;
   const [data, setData] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (!merchantId) {
+    if (!resolvedStoreSlug && !merchantId) {
       setIsLoading(false);
       return;
     }
-    base44.functions.invoke("getPublicNftStore", { merchant_id: merchantId }).then((response) => {
+
+    setIsLoading(true);
+    base44.functions.invoke("getPublicNftStore", { store_slug: resolvedStoreSlug || null, merchant_id: merchantId || null }).then((response) => {
       setData(response.data);
       setIsLoading(false);
     }).catch(() => setIsLoading(false));
-  }, [merchantId]);
+  }, [resolvedStoreSlug, merchantId]);
 
   const listings = data?.listings || [];
-  const merchantName = data?.merchant?.business_name || "NFT Storefront";
+  const merchantName = data?.merchant?.nft_store_name || data?.merchant?.business_name || "NFT Storefront";
+  const storeDescription = data?.merchant?.nft_store_description || "Direct NFT listings with PayADA checkout, no external marketplace in between, and custodyless delivery through merchant signing.";
+  const collections = React.useMemo(() => {
+    const grouped = listings.reduce((result, listing) => {
+      const name = listing.collection_name || "Featured NFTs";
+      if (!result[name]) result[name] = [];
+      result[name].push(listing);
+      return result;
+    }, {});
+
+    return Object.entries(grouped).map(([name, items]) => ({ name, items }));
+  }, [listings]);
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -30,7 +47,7 @@ export default function NFTStore() {
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Store</p>
               <h1 className="mt-4 text-4xl font-semibold">{merchantName}</h1>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">Direct NFT listings with PayADA checkout, no external marketplace in between, and custodyless delivery through merchant signing.</p>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">{storeDescription}</p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
@@ -39,16 +56,16 @@ export default function NFTStore() {
                 <p className="mt-1 text-sm text-slate-300">Active items in this storefront.</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-400">Checkout</p>
-                <p className="mt-2 text-lg font-semibold text-white">PayADA native</p>
-                <p className="mt-1 text-sm text-slate-300">Fast ADA checkout inside the same flow.</p>
+                <p className="text-xs uppercase tracking-wide text-slate-400">Collections</p>
+                <p className="mt-2 text-3xl font-semibold text-white">{collections.length}</p>
+                <p className="mt-1 text-sm text-slate-300">Organized into separate NFT groups.</p>
               </div>
             </div>
           </div>
         </div>
 
-        {!merchantId ? (
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">No merchant specified for this storefront.</div>
+        {!resolvedStoreSlug && !merchantId ? (
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">No store slug specified for this storefront.</div>
         ) : isLoading ? (
           <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">Loading store...</div>
         ) : listings.length === 0 ? (
@@ -57,34 +74,48 @@ export default function NFTStore() {
             <p className="mt-2 text-sm leading-6 text-slate-500">This storefront is ready, but there are currently no published items available.</p>
           </div>
         ) : (
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {listings.map((listing) => (
-              <div key={listing.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-transform duration-200 hover:-translate-y-1">
-                {listing.image_url ? (
-                  <img src={listing.image_url} alt={listing.title} className="h-64 w-full object-cover" />
-                ) : (
-                  <div className="flex h-64 w-full items-center justify-center bg-slate-200 text-sm font-semibold text-slate-500">NFT preview</div>
+          <div className="mt-8 space-y-10">
+            {collections.map((collection) => (
+              <section key={collection.name} className="space-y-5">
+                {(collections.length > 1 || collection.name !== "Featured NFTs") && (
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">Collection</p>
+                    <h2 className="mt-2 text-2xl font-semibold text-slate-900">{collection.name}</h2>
+                  </div>
                 )}
-                <div className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h2 className="text-xl font-semibold text-slate-900">{listing.title}</h2>
-                      {listing.asset_label && <p className="mt-1 text-xs uppercase tracking-wide text-slate-500">{listing.asset_label}</p>}
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                  {collection.items.map((listing) => (
+                    <div key={listing.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-transform duration-200 hover:-translate-y-1">
+                      {listing.image_url ? (
+                        <div className="flex h-72 w-full items-center justify-center bg-slate-50 p-4">
+                          <img src={listing.image_url} alt={listing.title} className="max-h-full w-full object-contain" />
+                        </div>
+                      ) : (
+                        <div className="flex h-72 w-full items-center justify-center bg-slate-200 text-sm font-semibold text-slate-500">NFT preview</div>
+                      )}
+                      <div className="p-6">
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <h2 className="text-xl font-semibold text-slate-900">{listing.title}</h2>
+                            {listing.asset_label && <p className="mt-1 text-xs uppercase tracking-wide text-slate-500">{listing.asset_label}</p>}
+                          </div>
+                          <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">NFT</div>
+                        </div>
+                        <p className="mt-3 text-sm leading-6 text-slate-600">{listing.description || "This listing uses PayADA checkout and merchant-signed delivery."}</p>
+                        <div className="mt-5 flex items-center justify-between gap-4">
+                          <div>
+                            <p className="text-xs uppercase tracking-wide text-slate-500">Price</p>
+                            <p className="text-lg font-semibold text-slate-900">{listing.price_ada ? `₳ ${Number(listing.price_ada).toFixed(2)}` : "Price via checkout"}</p>
+                          </div>
+                          <Button asChild>
+                            <a href={`/Pay?slug=${listing.payment_link_slug}`}>Buy now</a>
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">NFT</div>
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{listing.description || "This listing uses PayADA checkout and merchant-signed delivery."}</p>
-                  <div className="mt-5 flex items-center justify-between gap-4">
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-slate-500">Price</p>
-                      <p className="text-lg font-semibold text-slate-900">{listing.price_ada ? `₳ ${Number(listing.price_ada).toFixed(2)}` : "Price via checkout"}</p>
-                    </div>
-                    <Button asChild>
-                      <a href={`/Pay?slug=${listing.payment_link_slug}`}>Buy now</a>
-                    </Button>
-                  </div>
+                  ))}
                 </div>
-              </div>
+              </section>
             ))}
           </div>
         )}
