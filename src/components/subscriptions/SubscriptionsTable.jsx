@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input";
 import { CheckCircle2, ListOrdered, XCircle } from "lucide-react";
 
 export default function SubscriptionsTable({ subscriptions, plansById, savingId, onCancel, onMarkPaid, onSaveGraceOverride }) {
-  const [values, setValues] = React.useState({});
+  const [values, setValues] = useState({});
 
-  React.useEffect(() => {
+  useEffect(() => {
     setValues(Object.fromEntries(subscriptions.map((sub) => [sub.id, String(sub.grace_days_override ?? plansById[sub.subscription_plan_id]?.grace_days ?? 5)])));
   }, [subscriptions, plansById]);
 

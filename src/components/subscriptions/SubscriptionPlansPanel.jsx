@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function SubscriptionPlansPanel({ plans, savingPlanId, onSaveGrace }) {
-  const [values, setValues] = React.useState({});
+  const [values, setValues] = useState({});
 
-  React.useEffect(() => {
+  useEffect(() => {
     setValues(Object.fromEntries(plans.map((plan) => [plan.id, String(plan.grace_days ?? 5)])));
   }, [plans]);
 

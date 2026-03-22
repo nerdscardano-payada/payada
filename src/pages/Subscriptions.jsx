@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProfileCheck } from "@/components/hooks/useProfileCheck";
@@ -12,12 +12,12 @@ import SubscriptionsTable from "@/components/subscriptions/SubscriptionsTable";
 
 export default function Subscriptions() {
   const { isProfileComplete, profile } = useProfileCheck();
-  const [user, setUser] = React.useState(null);
-  const [savingId, setSavingId] = React.useState(null);
-  const [savingPlanId, setSavingPlanId] = React.useState(null);
+  const [user, setUser] = useState(null);
+  const [savingId, setSavingId] = useState(null);
+  const [savingPlanId, setSavingPlanId] = useState(null);
   const queryClient = useQueryClient();
 
-  React.useEffect(() => {
+  useEffect(() => {
     base44.auth.me().then(setUser);
   }, []);
 
