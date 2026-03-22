@@ -145,11 +145,11 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
               <span className="text-white/40 text-xs">Install Eternl, Nami, or Lace to continue.</span>
             </div>
             {isInIframe && (
-              <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-left">
-                <p className="text-xs font-medium text-amber-300">Wallet extensions often do not load inside the preview iframe.</p>
+              <div className="rounded-xl border border-amber-300 bg-amber-100 p-3 text-left">
+                <p className="text-xs font-semibold text-amber-950">Wallet extensions often do not load inside the preview iframe.</p>
                 <button
                   onClick={() => window.open(window.location.href, "_blank", "noopener,noreferrer")}
-                  className="mt-2 inline-flex items-center gap-2 text-xs text-white/80 hover:text-white"
+                  className="mt-2 inline-flex items-center gap-2 text-xs font-semibold text-amber-950 hover:text-amber-800"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   Open this page in a new tab

@@ -16,7 +16,7 @@ export default function SignerWalletSetupCard({ wallet, connectedAddress, onConn
           onConnect={(address, api, walletKey) => onConnect({ address, api, walletKey })}
           onDisconnect={onDisconnect}
         />
-        <p className="text-xs leading-5 text-slate-500">
+        <p className="text-xs leading-5 font-medium text-slate-800">
           Als je in de preview geen wallet ziet, open deze pagina dan in een aparte tab. Browser wallet extensions blokkeren vaak injectie binnen een iframe.
         </p>
       </div>
