@@ -104,10 +104,9 @@ export default function Subscriptions() {
       <SubscriptionPlansPanel
         plans={plans}
         savingPlanId={savingPlanId}
-        onSaveGrace={async (planId, graceDays) => {
+        onSaveGrace={(planId, graceDays) => {
           setSavingPlanId(planId);
-          await updatePlanMutation.mutateAsync({ planId, graceDays });
-          setSavingPlanId(null);
+          updatePlanMutation.mutateAsync({ planId, graceDays }).finally(() => setSavingPlanId(null));
         }}
       />
 
@@ -126,15 +125,13 @@ export default function Subscriptions() {
             plansById={plansById}
             savingId={savingId}
             onCancel={(subscriptionId) => cancelMutation.mutate(subscriptionId)}
-            onMarkPaid={async (subscriptionId) => {
+            onMarkPaid={(subscriptionId) => {
               setSavingId(`${subscriptionId}-paid`);
-              await markPaidMutation.mutateAsync(subscriptionId);
-              setSavingId(null);
+              markPaidMutation.mutateAsync(subscriptionId).finally(() => setSavingId(null));
             }}
-            onSaveGraceOverride={async (subscriptionId, graceDays) => {
+            onSaveGraceOverride={(subscriptionId, graceDays) => {
               setSavingId(`${subscriptionId}-grace`);
-              await updateSubscriptionMutation.mutateAsync({ subscriptionId, graceDays });
-              setSavingId(null);
+              updateSubscriptionMutation.mutateAsync({ subscriptionId, graceDays }).finally(() => setSavingId(null));
             }}
           />
         )}

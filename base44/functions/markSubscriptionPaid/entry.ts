@@ -43,7 +43,6 @@ Deno.serve(async (req) => {
       next_due_date: nextDue.toISOString(),
       last_payment_date: now.toISOString(),
       reminders_sent: 0,
-      last_reminder_sent_at: null,
       started_at: subscription.started_at || now.toISOString(),
     });
 
