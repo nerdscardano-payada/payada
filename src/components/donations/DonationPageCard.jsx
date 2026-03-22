@@ -1,9 +1,9 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Heart, Trash2, Code2 } from "lucide-react";
+import { Copy, ExternalLink, Heart, Trash2, Code2, Pencil } from "lucide-react";
 import { toast } from "sonner";
 
-export default function DonationPageCard({ page, stats, onDelete }) {
+export default function DonationPageCard({ page, stats, onDelete, onEdit }) {
   const publicUrl = `${window.location.origin}/Donate?slug=${page.slug}`;
   const iframeSnippet = `<iframe src="${publicUrl}" title="${page.title}" width="100%" height="720" style="border:0;border-radius:16px;overflow:hidden;" loading="lazy"></iframe>`;
   const buttonSnippet = `<a href="${publicUrl}" target="_blank" rel="noopener noreferrer">${page.embed_button_label || "Support with ADA"}</a>`;
@@ -29,9 +29,14 @@ export default function DonationPageCard({ page, stats, onDelete }) {
           </div>
           {page.description && <p className="text-sm text-slate-600 max-w-xl">{page.description}</p>}
         </div>
-        <Button variant="outline" size="icon" className="shrink-0" onClick={() => onDelete(page)}>
-          <Trash2 className="w-4 h-4 text-red-500" />
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button variant="outline" size="icon" onClick={() => onEdit(page)}>
+            <Pencil className="w-4 h-4 text-slate-600" />
+          </Button>
+          <Button variant="outline" size="icon" onClick={() => onDelete(page)}>
+            <Trash2 className="w-4 h-4 text-red-500" />
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">

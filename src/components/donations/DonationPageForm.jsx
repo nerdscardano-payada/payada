@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Heart, Save } from "lucide-react";
 import { toast } from "sonner";
 
-export default function DonationPageForm({ onBack }) {
+export default function DonationPageForm({ onBack, donationPage }) {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [form, setForm] = useState({
@@ -35,6 +35,20 @@ export default function DonationPageForm({ onBack }) {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (!donationPage) return;
+    setForm({
+      title: donationPage.title || "",
+      slug: donationPage.slug?.replace(/^[^-]+-/, "") || "",
+      description: donationPage.description || "",
+      suggested_amounts: (donationPage.suggested_amounts || []).join(", "),
+      receive_address: donationPage.receive_address || "",
+      collect_name: donationPage.collect_name ?? true,
+      collect_email: donationPage.collect_email ?? false,
+      embed_button_label: donationPage.embed_button_label || "Support with ADA",
+    });
+  }, [donationPage]);
 
   const update = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
 
@@ -72,7 +86,7 @@ export default function DonationPageForm({ onBack }) {
         }))
       );
 
-      return base44.entities.DonationPage.create({
+      const payload = {
         merchant_id: user?.email,
         slug: baseSlug,
         title: form.title,
@@ -88,12 +102,19 @@ export default function DonationPageForm({ onBack }) {
         collect_email: form.collect_email,
         embed_button_label: form.embed_button_label,
         status: "active",
-      });
+      };
+
+      if (donationPage?.id) {
+        await Promise.allSettled((donationPage.payment_links || []).map((link) => base44.entities.PaymentLink.delete(link.payment_link_id)));
+        return base44.entities.DonationPage.update(donationPage.id, payload);
+      }
+
+      return base44.entities.DonationPage.create(payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["donationPages"] });
       queryClient.invalidateQueries({ queryKey: ["payments"] });
-      toast.success("Donation page created");
+      toast.success(donationPage?.id ? "Donation page updated" : "Donation page created");
       onBack();
     },
     onError: (error) => toast.error(error.message),
@@ -106,7 +127,7 @@ export default function DonationPageForm({ onBack }) {
       </button>
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">New donation page</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{donationPage?.id ? "Edit donation page" : "New donation page"}</h1>
         <p className="text-sm text-slate-500 mt-1">We’ll create one hosted donation page plus one PayADA checkout link per suggested amount.</p>
       </div>
 
@@ -168,7 +189,7 @@ export default function DonationPageForm({ onBack }) {
       <div className="flex justify-end mt-6">
         <Button className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2" onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !user}>
           <Save className="w-4 h-4" />
-          {createMutation.isPending ? "Creating..." : "Create donation page"}
+          {createMutation.isPending ? (donationPage?.id ? "Saving..." : "Creating...") : (donationPage?.id ? "Save changes" : "Create donation page")}
         </Button>
       </div>
     </div>

@@ -25,6 +25,7 @@ export default function DonationPages() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [editingPage, setEditingPage] = useState(null);
 
   useEffect(() => {
     base44.auth.me().then(setUser);
@@ -44,7 +45,7 @@ export default function DonationPages() {
 
   const deleteMutation = useMutation({
     mutationFn: async (page) => {
-      await Promise.all((page.payment_links || []).map((link) => base44.entities.PaymentLink.delete(link.payment_link_id)));
+      await Promise.allSettled((page.payment_links || []).map((link) => base44.entities.PaymentLink.delete(link.payment_link_id)));
       return base44.entities.DonationPage.delete(page.id);
     },
     onSuccess: () => {
@@ -52,10 +53,14 @@ export default function DonationPages() {
       queryClient.invalidateQueries({ queryKey: ["payments"] });
       toast.success("Donation page deleted");
     },
+    onError: (error) => toast.error(error.message),
   });
 
   if (showForm) {
-    return <DonationPageForm onBack={() => setShowForm(false)} />;
+    return <DonationPageForm donationPage={editingPage} onBack={() => {
+      setShowForm(false);
+      setEditingPage(null);
+    }} />;
   }
 
   return (
@@ -63,7 +68,10 @@ export default function DonationPages() {
       <PageHeader
         title="Donation Pages"
         subtitle="Create hosted ADA donation pages, share them anywhere, and track performance."
-        action={() => setShowForm(true)}
+        action={() => {
+          setEditingPage(null);
+          setShowForm(true);
+        }}
         actionLabel="New Donation Page"
         actionIcon={Plus}
       />
@@ -90,6 +98,10 @@ export default function DonationPages() {
               page={page}
               stats={getStatsForPage(page, payments)}
               onDelete={(currentPage) => deleteMutation.mutate(currentPage)}
+              onEdit={(currentPage) => {
+                setEditingPage(currentPage);
+                setShowForm(true);
+              }}
             />
           ))}
         </div>
