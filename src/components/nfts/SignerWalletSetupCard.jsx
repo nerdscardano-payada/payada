@@ -7,7 +7,7 @@ export default function SignerWalletSetupCard({ wallet, connectedAddress, onConn
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
       <div>
         <h2 className="text-lg font-semibold text-slate-900">Merchant signer wallet</h2>
-        <p className="text-sm text-slate-500">Geen mnemonic-opslag meer: de merchant tekent NFT-transfers met zijn eigen wallet wanneer er een pending levering klaarstaat.</p>
+        <p className="text-sm text-slate-500">Verbind hier de wallet die je wilt gebruiken voor het beheren en verzenden van je NFT's binnen PayADA.</p>
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
