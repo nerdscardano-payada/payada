@@ -119,6 +119,7 @@ export default function Subscriptions() {
               trial_days: formData.trial_days,
               grace_days: 5,
               confirmations_required: 2,
+              fee_model: formData.fee_model,
               status: "active",
               subscriber_count: 0,
             });

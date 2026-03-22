@@ -36,8 +36,27 @@ Deno.serve(async (req) => {
     }
 
     const feePercent = (merchant.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100;
-    const platformFeeLovelace = Math.floor(amountLovelace * feePercent);
-    const merchantAmountLovelace = amountLovelace - platformFeeLovelace;
+    const feeModel = plan.fee_model || 'merchant_pays';
+    const baseLovelace = amountLovelace;
+    const calculatedFeeLovelace = Math.floor(baseLovelace * feePercent);
+    const fullFeeLovelace = calculatedFeeLovelace > 0 ? Math.max(calculatedFeeLovelace, 1_000_000) : 0;
+    let platformFeeLovelace;
+    let merchantAmountLovelace;
+
+    if (feeModel === 'customer_pays') {
+      platformFeeLovelace = fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace;
+      amountLovelace = baseLovelace + fullFeeLovelace;
+    } else if (feeModel === 'split') {
+      const halfFee = Math.floor(fullFeeLovelace / 2);
+      platformFeeLovelace = fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace - halfFee;
+      amountLovelace = baseLovelace + halfFee;
+    } else {
+      platformFeeLovelace = fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace - fullFeeLovelace;
+    }
+
     const now = new Date();
     const firstDueDate = new Date(now);
     const hasTrial = (plan.trial_days || 0) > 0;
@@ -76,9 +95,12 @@ Deno.serve(async (req) => {
       subscription_status: subscription.status,
       amount_total_lovelace: amountLovelace,
       amount_total_ada: amountLovelace / 1_000_000,
+      base_amount_lovelace: baseLovelace,
+      base_amount_ada: baseLovelace / 1_000_000,
       platform_fee_lovelace: platformFeeLovelace,
       platform_fee_ada: platformFeeLovelace / 1_000_000,
       platform_fee_percent: merchant.platform_fee_percent || PLATFORM_FEE_PERCENT,
+      fee_model: feeModel,
       merchant_amount_lovelace: merchantAmountLovelace,
       merchant_amount_ada: merchantAmountLovelace / 1_000_000,
       merchant_address: merchant.default_receive_address || '',

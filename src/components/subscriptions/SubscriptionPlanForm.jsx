@@ -11,6 +11,7 @@ const initialForm = {
   amount_ada: "",
   interval_type: "monthly",
   trial_days: "0",
+  fee_model: "merchant_pays",
 };
 
 export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
@@ -27,6 +28,7 @@ export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
       interval_type: form.interval_type,
       interval_days: intervalDays,
       trial_days: Number(form.trial_days || 0),
+      fee_model: form.fee_model,
     });
     setForm(initialForm);
   };
@@ -72,8 +74,22 @@ export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
           <Input type="number" min="0" step="1" value={form.trial_days} onChange={(e) => setForm((current) => ({ ...current, trial_days: e.target.value }))} />
         </div>
 
-        <div className="rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
-          This plan renews every <span className="font-semibold text-slate-900">{intervalDays} days</span> and the checkout link is generated automatically after saving.
+        <div className="space-y-2 md:col-span-2">
+          <Label>Fee model</Label>
+          <Select value={form.fee_model} onValueChange={(value) => setForm((current) => ({ ...current, fee_model: value }))}>
+            <SelectTrigger>
+              <SelectValue placeholder="Choose fee model" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="merchant_pays">Merchant pays fee</SelectItem>
+              <SelectItem value="customer_pays">Customer pays fee</SelectItem>
+              <SelectItem value="split">Split fee 50/50</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="rounded-xl bg-slate-50 p-4 text-sm text-slate-600 md:col-span-2">
+          This plan renews every <span className="font-semibold text-slate-900">{intervalDays} days</span> and uses the same fee logic as payment links, including the minimum fee rule on low-value payments.
         </div>
       </div>
 

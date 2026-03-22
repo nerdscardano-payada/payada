@@ -158,6 +158,10 @@ export default function SubscriberPortal() {
             <div className="p-6 space-y-5">
               <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
                 <div className="flex justify-between">
+                  <span>Base price</span>
+                  <span className="text-white font-semibold">₳ {sessionData?.base_amount_ada?.toFixed(3)}</span>
+                </div>
+                <div className="flex justify-between">
                   <span>Total (first payment)</span>
                   <span className="text-white font-semibold">₳ {sessionData?.amount_total_ada?.toFixed(3)}</span>
                 </div>
@@ -165,10 +169,20 @@ export default function SubscriberPortal() {
                   <span>Platform fee ({sessionData?.platform_fee_percent}%)</span>
                   <span>₳ {sessionData?.platform_fee_ada?.toFixed(3)}</span>
                 </div>
+                <div className="flex justify-between text-slate-400">
+                  <span>Fee model</span>
+                  <span>{sessionData?.fee_model === "customer_pays" ? "Customer pays" : sessionData?.fee_model === "split" ? "Split 50/50" : "Merchant pays"}</span>
+                </div>
                 <div className="border-t border-slate-700 pt-1.5 flex justify-between">
                   <span>Merchant receives</span>
                   <span className="text-emerald-400 font-semibold">₳ {sessionData?.merchant_amount_ada?.toFixed(3)}</span>
                 </div>
+                {sessionData?.base_amount_ada < 60 && (
+                  <div className="border-t border-slate-700 pt-1.5 flex items-start gap-1.5 text-amber-400/80">
+                    <AlertCircle className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                    <span>For payments under ₳60, a minimum platform fee of ₳1 applies.</span>
+                  </div>
+                )}
               </div>
 
               <WalletConnect
