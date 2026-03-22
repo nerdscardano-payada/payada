@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Wallet, ChevronDown, Copy, LogOut } from "lucide-react";
+import { Wallet, ChevronDown, Copy, LogOut, RefreshCw, ExternalLink } from "lucide-react";
 
 function shortAddr(addr) {
   if (!addr) return "";
@@ -63,11 +63,25 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [wallets, setWallets] = useState([]);
 
-  const availableWallets = () => {
+  const scanWallets = () => {
     const w = window.cardano || {};
-    return Object.keys(w).filter(k => w[k]?.enable && w[k]?.name);
+    const detected = Object.keys(w).filter(k => w[k]?.enable && (w[k]?.name || w[k]?.icon));
+    setWallets(detected);
+    return detected;
   };
+
+  useEffect(() => {
+    const runScan = () => scanWallets();
+    runScan();
+    const timeout = setTimeout(runScan, 600);
+    window.addEventListener("focus", runScan);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("focus", runScan);
+    };
+  }, []);
 
   const connect = async (walletKey) => {
     setConnecting(true);
@@ -118,16 +132,37 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
     );
   }
 
-  const wallets = availableWallets();
+  const isInIframe = typeof window !== "undefined" && window.self !== window.top;
 
   if (open) {
     return (
       <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
         <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Select Wallet</p>
         {wallets.length === 0 ? (
-          <div className="text-white/60 text-sm text-center py-4">
-            No Cardano wallets detected.<br />
-            <span className="text-white/40 text-xs">Install Eternl, Nami, or Lace to continue.</span>
+          <div className="space-y-3 text-center py-4">
+            <div className="text-white/60 text-sm">
+              No Cardano wallets detected.<br />
+              <span className="text-white/40 text-xs">Install Eternl, Nami, or Lace to continue.</span>
+            </div>
+            {isInIframe && (
+              <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-left">
+                <p className="text-xs font-medium text-amber-300">Wallet extensions often do not load inside the preview iframe.</p>
+                <button
+                  onClick={() => window.open(window.location.href, "_blank", "noopener,noreferrer")}
+                  className="mt-2 inline-flex items-center gap-2 text-xs text-white/80 hover:text-white"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  Open this page in a new tab
+                </button>
+              </div>
+            )}
+            <button
+              onClick={scanWallets}
+              className="inline-flex items-center gap-2 text-xs text-indigo-300 hover:text-indigo-200 mx-auto"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              Scan again
+            </button>
           </div>
         ) : wallets.map(key => {
           const w = window.cardano[key];

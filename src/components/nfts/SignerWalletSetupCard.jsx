@@ -10,12 +10,15 @@ export default function SignerWalletSetupCard({ wallet, connectedAddress, onConn
         <p className="text-sm text-slate-500">Geen mnemonic-opslag meer: de merchant tekent NFT-transfers met zijn eigen wallet wanneer er een pending levering klaarstaat.</p>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
         <WalletConnectButton
           connectedAddress={connectedAddress}
           onConnect={(address, api, walletKey) => onConnect({ address, api, walletKey })}
           onDisconnect={onDisconnect}
         />
+        <p className="text-xs leading-5 text-slate-500">
+          Als je in de preview geen wallet ziet, open deze pagina dan in een aparte tab. Browser wallet extensions blokkeren vaak injectie binnen een iframe.
+        </p>
       </div>
 
       <div className="space-y-2 text-sm">
