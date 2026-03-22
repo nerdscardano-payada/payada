@@ -38,20 +38,26 @@ Deno.serve(async (req) => {
 
     const { wallet_address, mnemonic, wallet_name } = await req.json();
 
-    if (!wallet_address || !mnemonic) {
-      return Response.json({ error: 'wallet_address and mnemonic are required' }, { status: 400 });
+    if (!wallet_address) {
+      return Response.json({ error: 'wallet_address is required' }, { status: 400 });
     }
 
-    const encryptedWallet = await encryptMnemonic(String(mnemonic).trim(), encryptionSecret);
     const existing = await base44.asServiceRole.entities.MerchantHotWallet.filter({ merchant_id: user.email }, '-updated_date', 1);
+    const shouldUpdateMnemonic = Boolean(mnemonic && String(mnemonic).trim() && String(mnemonic).trim() !== 'keep-existing');
+
+    if (!shouldUpdateMnemonic && existing.length === 0) {
+      return Response.json({ error: 'mnemonic is required for the first wallet setup' }, { status: 400 });
+    }
+
+    const encryptedWallet = shouldUpdateMnemonic ? await encryptMnemonic(String(mnemonic).trim(), encryptionSecret) : null;
 
     let record;
     if (existing.length > 0) {
       record = await base44.asServiceRole.entities.MerchantHotWallet.update(existing[0].id, {
         wallet_name: wallet_name || existing[0].wallet_name || 'Primary NFT Wallet',
         wallet_address,
-        encrypted_seed: encryptedWallet.encrypted_seed,
-        encryption_iv: encryptedWallet.encryption_iv,
+        encrypted_seed: encryptedWallet?.encrypted_seed || existing[0].encrypted_seed,
+        encryption_iv: encryptedWallet?.encryption_iv || existing[0].encryption_iv,
         encryption_version: 'v1',
         status: 'active',
       });

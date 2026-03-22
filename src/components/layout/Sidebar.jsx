@@ -50,7 +50,10 @@ const navItems = [
   { name: "Shop Pages", icon: ShoppingCart, page: "ShoppingPageGenerator" },
 
   { type: "header", name: "NFT" },
-  { name: "NFTs", icon: Hexagon, page: "NFTs" },
+  { name: "NFT Overview", icon: Hexagon, page: "NFTs" },
+  { name: "NFT Gating", icon: Bot, page: "NFTGating" },
+  { name: "NFT Distribution", icon: RefreshCw, page: "NFTDistribution" },
+  { name: "NFT Marketplace", icon: ShoppingCart, page: "NFTMarketplace" },
 
   { type: "header", name: "Community" },
   { name: "Access Links", icon: Users, page: "AccessLinks" },

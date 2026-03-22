@@ -19,6 +19,11 @@ import MultiTokenCheckout from './pages/MultiTokenCheckout';
 import DonationPages from './pages/DonationPages';
 import Donate from './pages/Donate';
 import NFTs from './pages/NFTs';
+import NFTGating from './pages/NFTGating';
+import NFTGate from './pages/NFTGate';
+import NFTDistribution from './pages/NFTDistribution';
+import NFTMarketplace from './pages/NFTMarketplace';
+import NFTStore from './pages/NFTStore';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -35,7 +40,7 @@ const ProtectedRoute = ({ children }) => {
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const location = useLocation();
-  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile", "Demo", "MultiTokenCheckout", "Donate"];
+  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile", "Demo", "MultiTokenCheckout", "Donate", "NFTGate", "NFTStore"];
   
   // Determine current page name from pathname
   const pathSegments = location.pathname.split('/').filter(Boolean);
@@ -99,6 +104,11 @@ const AuthenticatedApp = () => {
       <Route path="/DonationPages" element={<ProtectedRoute currentPageName="DonationPages"><LayoutWrapper currentPageName="DonationPages"><DonationPages /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/Donate" element={<ProtectedRoute currentPageName="Donate"><LayoutWrapper currentPageName="Donate"><Donate /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/NFTs" element={<ProtectedRoute currentPageName="NFTs"><LayoutWrapper currentPageName="NFTs"><NFTs /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/NFTGating" element={<ProtectedRoute currentPageName="NFTGating"><LayoutWrapper currentPageName="NFTGating"><NFTGating /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/NFTDistribution" element={<ProtectedRoute currentPageName="NFTDistribution"><LayoutWrapper currentPageName="NFTDistribution"><NFTDistribution /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/NFTMarketplace" element={<ProtectedRoute currentPageName="NFTMarketplace"><LayoutWrapper currentPageName="NFTMarketplace"><NFTMarketplace /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/NFTGate" element={<ProtectedRoute currentPageName="NFTGate"><LayoutWrapper currentPageName="NFTGate"><NFTGate /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/NFTStore" element={<ProtectedRoute currentPageName="NFTStore"><LayoutWrapper currentPageName="NFTStore"><NFTStore /></LayoutWrapper></ProtectedRoute>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

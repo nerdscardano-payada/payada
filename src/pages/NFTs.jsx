@@ -21,7 +21,7 @@ export default function NFTs() {
       <div className="grid gap-6 xl:grid-cols-3">
         <NFTFeatureCard
           title="NFT Gating"
-          status="Direct inzetbaar"
+          status="Live"
           tone="green"
           description="Deze richting sluit het snelst aan op wat PayADA al heeft. We kunnen NFT-holders toegang geven tot communities, content, events of premium flows."
           bullets={[
@@ -29,13 +29,13 @@ export default function NFTs() {
             "NFT-holder utility voor Discord, memberships of gated pages",
             "Goede eerste stap met lage technische complexiteit",
           ]}
-          ctaLabel="Bekijk Access Links"
-          to="/AccessLinks"
+          ctaLabel="Open NFT Gating"
+          to="/NFTGating"
         />
 
         <NFTFeatureCard
           title="Geautomatiseerde transfer & distributie"
-          status="Volgende stap"
+          status="Live"
           tone="blue"
           description="Na een bevestigde betaling kunnen we een NFT automatisch uitsturen vanuit een merchant wallet. Dit maakt directe NFT-sales zonder externe marketplace mogelijk."
           bullets={[
@@ -43,11 +43,13 @@ export default function NFTs() {
             "Sterke fit met onze bestaande payment-verificatie",
             "Vraagt aparte wallet-operatie en beveiligde signing flow",
           ]}
+          ctaLabel="Open Distribution"
+          to="/NFTDistribution"
         />
 
         <NFTFeatureCard
           title="NFT Marketplace / Listings"
-          status="Goed realiseerbaar"
+          status="Live"
           tone="amber"
           description="We kunnen merchants hun eigen NFT-collecties laten tonen en verkopen via PayADA, zonder afhankelijk te zijn van jpg.store voor de listing-ervaring."
           bullets={[
@@ -55,6 +57,8 @@ export default function NFTs() {
             "Rechtstreekse checkout via PayADA",
             "Perfect combineerbaar met automatische distributie",
           ]}
+          ctaLabel="Open Marketplace"
+          to="/NFTMarketplace"
         />
       </div>
 
