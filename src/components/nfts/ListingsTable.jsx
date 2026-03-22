@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, Pencil, Trash2 } from "lucide-react";
+import { Copy, ExternalLink, Pencil, Trash2 } from "lucide-react";
 
 export default function ListingsTable({ listings, paymentLinksById, onEdit, onDelete, onCopy }) {
   return (
