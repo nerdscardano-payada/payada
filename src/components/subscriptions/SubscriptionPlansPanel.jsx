@@ -13,14 +13,14 @@ export default function SubscriptionPlansPanel({ plans, savingPlanId, onSaveGrac
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 p-5">
         <h2 className="text-lg font-semibold text-slate-900">Grace periods per plan</h2>
-        <p className="mt-1 text-sm text-slate-500">Bepaal hoeveel dagen te laat nog toegelaten zijn voor handmatige ADA betalingen.</p>
+        <p className="mt-1 text-sm text-slate-500">Set how many overdue days are allowed for manual ADA payments.</p>
       </div>
       <div className="divide-y divide-slate-100">
         {plans.map((plan) => (
           <div key={plan.id} className="flex flex-col gap-3 p-5 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="font-medium text-slate-900">{plan.name}</p>
-              <p className="text-sm text-slate-500">{plan.interval_type === "custom" ? `Elke ${plan.interval_days} dagen` : `Plan: ${plan.interval_type}`}</p>
+              <p className="text-sm text-slate-500">{plan.interval_type === "custom" ? `Every ${plan.interval_days} days` : `Plan: ${plan.interval_type}`}</p>
             </div>
             <div className="flex items-center gap-3">
               <Input
@@ -35,12 +35,12 @@ export default function SubscriptionPlansPanel({ plans, savingPlanId, onSaveGrac
                 disabled={savingPlanId === plan.id}
                 onClick={() => onSaveGrace(plan.id, Number(values[plan.id] || plan.grace_days || 0))}
               >
-                {savingPlanId === plan.id ? "Opslaan..." : "Bewaar"}
+                {savingPlanId === plan.id ? "Saving..." : "Save"}
               </Button>
             </div>
           </div>
         ))}
-        {plans.length === 0 && <div className="p-5 text-sm text-slate-500">Nog geen abonnementsplannen gevonden.</div>}
+        {plans.length === 0 && <div className="p-5 text-sm text-slate-500">No subscription plans found yet.</div>}
       </div>
     </div>
   );

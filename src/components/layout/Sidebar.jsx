@@ -40,6 +40,7 @@ const navItems = [
 
   { type: "header", name: "Get Paid" },
   { name: "Payment Links", icon: Link2, page: "PaymentLinks" },
+  { name: "Subscriptions", icon: RefreshCw, page: "Subscriptions" },
   { name: "Donations", icon: Heart, page: "DonationPages" },
   { name: "POS Terminal", icon: Zap, page: "POS" },
   { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
@@ -57,7 +58,6 @@ const navItems = [
 
   { type: "header", name: "Customers" },
   { name: "Customers", icon: Users, page: "Customers" },
-  { name: "Subscriptions", icon: RefreshCw, page: "Subscriptions" },
 
   { type: "header", name: "Integrations" },
   { name: "Webhooks", icon: Webhook, page: "Webhooks" },

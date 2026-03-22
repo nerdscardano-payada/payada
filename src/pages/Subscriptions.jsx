@@ -73,22 +73,22 @@ export default function Subscriptions() {
 
   const cancelMutation = useMutation({
     mutationFn: (id) => base44.entities.Subscription.update(id, { status: "cancelled", cancelled_at: new Date().toISOString() }),
-    onSuccess: () => refreshData("Abonnement geannuleerd"),
+    onSuccess: () => refreshData("Subscription cancelled"),
   });
 
   const markPaidMutation = useMutation({
     mutationFn: (subscriptionId) => base44.functions.invoke("markSubscriptionPaid", { subscriptionId }),
-    onSuccess: () => refreshData("Betaling bevestigd"),
+    onSuccess: () => refreshData("Payment confirmed"),
   });
 
   const updatePlanMutation = useMutation({
     mutationFn: ({ planId, graceDays }) => base44.entities.SubscriptionPlan.update(planId, { grace_days: graceDays }),
-    onSuccess: () => refreshData("Grace period bijgewerkt"),
+    onSuccess: () => refreshData("Grace period updated"),
   });
 
   const updateSubscriptionMutation = useMutation({
     mutationFn: ({ subscriptionId, graceDays }) => base44.entities.Subscription.update(subscriptionId, { grace_days_override: graceDays }),
-    onSuccess: () => refreshData("Subscriber grace period bijgewerkt"),
+    onSuccess: () => refreshData("Subscriber grace period updated"),
   });
 
   const plansById = Object.fromEntries(plans.map((plan) => [plan.id, plan]));

@@ -35,7 +35,7 @@ export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
     <form onSubmit={handleSubmit} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="mb-5">
         <h2 className="text-lg font-semibold text-slate-900">Create subscription plan</h2>
-        <p className="mt-1 text-sm text-slate-500">Maak een plan aan en krijg meteen een unieke checkout-link.</p>
+        <p className="mt-1 text-sm text-slate-500">Create a plan and get a unique checkout link instantly.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">

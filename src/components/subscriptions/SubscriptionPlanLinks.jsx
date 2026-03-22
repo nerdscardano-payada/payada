@@ -12,7 +12,7 @@ export default function SubscriptionPlanLinks({ plans }) {
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 p-5">
         <h2 className="text-lg font-semibold text-slate-900">Checkout links</h2>
-        <p className="mt-1 text-sm text-slate-500">Elke plan krijgt automatisch een unieke signup-link.</p>
+        <p className="mt-1 text-sm text-slate-500">Each plan gets a unique signup link automatically.</p>
       </div>
 
       <div className="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-3">
@@ -50,7 +50,7 @@ export default function SubscriptionPlanLinks({ plans }) {
           );
         })}
 
-        {plans.length === 0 && <div className="text-sm text-slate-500">Maak eerst een subscription plan aan.</div>}
+        {plans.length === 0 && <div className="text-sm text-slate-500">Create a subscription plan first.</div>}
       </div>
     </div>
   );
