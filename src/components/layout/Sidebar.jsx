@@ -25,7 +25,8 @@ import {
   Rocket,
   Calendar,
   Eye,
-  Heart
+  Heart,
+  RefreshCw
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
@@ -56,6 +57,7 @@ const navItems = [
 
   { type: "header", name: "Customers" },
   { name: "Customers", icon: Users, page: "Customers" },
+  { name: "Subscriptions", icon: RefreshCw, page: "Subscriptions" },
 
   { type: "header", name: "Integrations" },
   { name: "Webhooks", icon: Webhook, page: "Webhooks" },
