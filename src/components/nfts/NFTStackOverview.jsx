@@ -16,7 +16,7 @@ const items = [
   },
   {
     title: "Merchant-owned storefronts",
-    description: "Met eigen storefronts, metadata en custodyless delivery verkoop je NFTs in je eigen merkervaring, niet in een demo-omgeving.",
+    description: "Met eigen storefronts, metadata en custodyless delivery verkoop je NFTs volledig binnen je eigen merkervaring.",
     icon: Store,
     iconClass: "bg-amber-50 text-amber-700",
   },
