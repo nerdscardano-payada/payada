@@ -147,7 +147,7 @@ export default function SubscriberPortal() {
               </Button>
               {plan.grace_days > 0 && (
                 <p className="text-[11px] text-slate-500 text-center">
-                  {plan.grace_days} dagen respijtperiode bij te late betaling
+                  {plan.grace_days} grace days for late payment
                 </p>
               )}
             </div>
@@ -158,7 +158,7 @@ export default function SubscriberPortal() {
             <div className="p-6 space-y-5">
               <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
                 <div className="flex justify-between">
-                  <span>Totaal (eerste betaling)</span>
+                  <span>Total (first payment)</span>
                   <span className="text-white font-semibold">₳ {sessionData?.amount_total_ada?.toFixed(3)}</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
@@ -166,7 +166,7 @@ export default function SubscriberPortal() {
                   <span>₳ {sessionData?.platform_fee_ada?.toFixed(3)}</span>
                 </div>
                 <div className="border-t border-slate-700 pt-1.5 flex justify-between">
-                  <span>Merchant ontvangt</span>
+                  <span>Merchant receives</span>
                   <span className="text-emerald-400 font-semibold">₳ {sessionData?.merchant_amount_ada?.toFixed(3)}</span>
                 </div>
               </div>
@@ -183,9 +183,9 @@ export default function SubscriberPortal() {
                   className="w-full bg-indigo-600 hover:bg-indigo-700 h-12 text-base font-semibold gap-2"
                 >
                   {txLoading ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" /> Bezig…</>
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Processing…</>
                   ) : (
-                    <>Betaal ₳ {sessionData?.amount_total_ada?.toFixed(2)} & Activeer</>
+                    <>Pay ₳ {sessionData?.amount_total_ada?.toFixed(2)} & Activate</>
                   )}
                 </Button>
               )}
@@ -193,9 +193,9 @@ export default function SubscriberPortal() {
               {/* Manual fallback */}
               {!connectedWallet && (
                 <div className="space-y-2">
-                  <p className="text-xs text-slate-500 text-center">— of stuur handmatig —</p>
+                  <p className="text-xs text-slate-500 text-center">— or send manually —</p>
                   <div className="bg-slate-800 rounded-lg p-3">
-                    <p className="text-[11px] text-slate-400 mb-1">Stuur ₳ {sessionData?.amount_total_ada?.toFixed(3)} naar:</p>
+                    <p className="text-[11px] text-slate-400 mb-1">Send ₳ {sessionData?.amount_total_ada?.toFixed(3)} to:</p>
                     <code className="text-xs text-slate-300 font-mono break-all">{sessionData?.merchant_address}</code>
                   </div>
                 </div>
@@ -209,8 +209,8 @@ export default function SubscriberPortal() {
               <div className="flex items-center gap-3 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
                 <Clock className="w-5 h-5 text-amber-400 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-white">Wachten op betaling</p>
-                  <p className="text-xs text-slate-400 mt-0.5">Zodra je transactie bevestigd is, wordt je abonnement geactiveerd. Je ontvangt een e-mail op {email}.</p>
+                  <p className="text-sm font-semibold text-white">Waiting for payment</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Your subscription will be activated once your transaction is confirmed. You will receive an email at {email}.</p>
                 </div>
               </div>
             </div>
@@ -221,9 +221,9 @@ export default function SubscriberPortal() {
             <div className="p-6">
               <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6 text-center">
                 <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-                <p className="text-base font-semibold text-white">Abonnement actief!</p>
+                <p className="text-base font-semibold text-white">Subscription active!</p>
                 <p className="text-sm text-slate-400 mt-1">
-                  Je abonnement op <strong>{plan.name}</strong> is geactiveerd. Je ontvangt een betalingsverzoek voor de volgende termijn via e-mail.
+                  Your subscription to <strong>{plan.name}</strong> is active. You will receive a payment reminder for the next billing cycle by email.
                 </p>
               </div>
             </div>
@@ -231,14 +231,14 @@ export default function SubscriberPortal() {
         </div>
 
         <p className="text-center text-[11px] text-slate-600 mt-6">
-          Veilige Cardano ADA betaling · PayADA.io
+          Secure Cardano ADA payment · PayADA.io
         </p>
       </div>
     </div>
   );
 }
 
-function ErrorScreen({ message, title = "Ongeldige link" }) {
+function ErrorScreen({ message, title = "Invalid link" }) {
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center">
       <div className="text-center">
