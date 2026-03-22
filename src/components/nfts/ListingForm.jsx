@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import WalletAssetSelect from "@/components/nfts/WalletAssetSelect";
 
-export default function ListingForm({ formData, setFormData, paymentLinks, onSubmit, editingListing, isSubmitting, onCancel }) {
+export default function ListingForm({ formData, setFormData, paymentLinks, walletAssets, selectedAssetUnit, onSelectAsset, onSubmit, editingListing, isSubmitting, onCancel }) {
   const update = (field, value) => setFormData((prev) => ({ ...prev, [field]: value }));
 
   return (
@@ -17,6 +18,15 @@ export default function ListingForm({ formData, setFormData, paymentLinks, onSub
         </div>
         {editingListing && <Button type="button" variant="outline" onClick={onCancel}>Annuleer</Button>}
       </div>
+
+      {walletAssets?.length > 0 && (
+        <WalletAssetSelect
+          assets={walletAssets}
+          value={selectedAssetUnit}
+          onValueChange={onSelectAsset}
+          label="NFT uit verbonden wallet"
+        />
+      )}
 
       <div className="grid gap-4 md:grid-cols-2">
         <div><Label>Titel</Label><Input value={formData.title || ""} onChange={(e) => update("title", e.target.value)} required /></div>

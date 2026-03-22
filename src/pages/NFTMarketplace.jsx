@@ -13,6 +13,7 @@ const createSlug = (value) => value.toLowerCase().trim().replace(/[^a-z0-9]+/g, 
 export default function NFTMarketplace() {
   const [user, setUser] = React.useState(null);
   const [walletSession, setWalletSession] = React.useState(null);
+  const [selectedAssetUnit, setSelectedAssetUnit] = React.useState("");
   const [formData, setFormData] = React.useState(initialForm);
   const [editingListing, setEditingListing] = React.useState(null);
   const queryClient = useQueryClient();
@@ -38,6 +39,15 @@ export default function NFTMarketplace() {
       return wallets[0] || null;
     },
     enabled: !!user?.email,
+  });
+
+  const { data: walletAssets = [] } = useQuery({
+    queryKey: ["wallet-nfts", walletSession?.address],
+    queryFn: async () => {
+      const response = await base44.functions.invoke("getWalletNfts", { wallet_address: walletSession.address });
+      return response.data.assets || [];
+    },
+    enabled: !!walletSession?.address,
   });
 
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
@@ -95,15 +105,30 @@ export default function NFTMarketplace() {
     });
   };
 
+  const handleSelectAsset = (unit) => {
+    const asset = walletAssets.find((item) => item.unit === unit);
+    if (!asset) return;
+    setSelectedAssetUnit(unit);
+    setFormData((prev) => ({
+      ...prev,
+      title: prev.title || asset.asset_label,
+      slug: prev.slug || asset.asset_label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+      asset_label: asset.asset_label,
+      policy_id: asset.policy_id,
+      asset_name_hex: asset.asset_name_hex,
+      quantity: prev.quantity || 1,
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader title="NFT Marketplace" subtitle="Custodyless storefront: listings via PayADA checkout, levering daarna met merchant wallet signing." />
       <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">Gebruik een actieve payment link per listing; de storefront toont automatisch de juiste koopknop en de merchant tekent de NFT-transfer later vanuit de queue.</div>
       <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
-        <SignerWalletSetupCard wallet={signerWallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => setWalletSession(null)} onSave={saveSignerWallet} isSaving={signerWalletMutation.isPending} />
-        <ListingForm formData={formData} setFormData={setFormData} paymentLinks={paymentLinks} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); }} />
+        <SignerWalletSetupCard wallet={signerWallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={saveSignerWallet} isSaving={signerWalletMutation.isPending} />
+        <ListingForm formData={formData} setFormData={setFormData} paymentLinks={paymentLinks} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
       </div>
-      <ListingsTable listings={listings} paymentLinksById={paymentLinksById} onEdit={(listing) => { setEditingListing(listing); setFormData(listing); }} onDelete={(id) => deleteMutation.mutate(id)} onCopy={copyLink} />
+      <ListingsTable listings={listings} paymentLinksById={paymentLinksById} onEdit={(listing) => { setEditingListing(listing); setFormData(listing); setSelectedAssetUnit(`${listing.policy_id}${listing.asset_name_hex || ""}`); }} onDelete={(id) => deleteMutation.mutate(id)} onCopy={copyLink} />
     </div>
   );
 }

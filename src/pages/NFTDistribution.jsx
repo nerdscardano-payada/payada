@@ -13,6 +13,7 @@ const initialForm = { payment_link_id: "", asset_label: "", policy_id: "", asset
 export default function NFTDistribution() {
   const [user, setUser] = React.useState(null);
   const [walletSession, setWalletSession] = React.useState(null);
+  const [selectedAssetUnit, setSelectedAssetUnit] = React.useState("");
   const [signingId, setSigningId] = React.useState(null);
   const [formData, setFormData] = React.useState(initialForm);
   const [editingRule, setEditingRule] = React.useState(null);
@@ -45,6 +46,15 @@ export default function NFTDistribution() {
     queryKey: ["nft-transfer-logs", user?.email],
     queryFn: () => base44.entities.NftTransferLog.filter({ merchant_id: user.email }, "-created_date", 100),
     enabled: !!user?.email,
+  });
+
+  const { data: walletAssets = [] } = useQuery({
+    queryKey: ["wallet-nfts", walletSession?.address],
+    queryFn: async () => {
+      const response = await base44.functions.invoke("getWalletNfts", { wallet_address: walletSession.address });
+      return response.data.assets || [];
+    },
+    enabled: !!walletSession?.address,
   });
 
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
@@ -97,6 +107,19 @@ export default function NFTDistribution() {
     saveRuleMutation.mutate({ ...formData, merchant_id: user.email, status: editingRule?.status || "active" });
   };
 
+  const handleSelectAsset = (unit) => {
+    const asset = walletAssets.find((item) => item.unit === unit);
+    if (!asset) return;
+    setSelectedAssetUnit(unit);
+    setFormData((prev) => ({
+      ...prev,
+      asset_label: asset.asset_label,
+      policy_id: asset.policy_id,
+      asset_name_hex: asset.asset_name_hex,
+      quantity: prev.quantity || 1,
+    }));
+  };
+
   const toggleStatus = (rule) => base44.entities.NftFulfillmentRule.update(rule.id, { status: rule.status === "active" ? "disabled" : "active" }).then(() => queryClient.invalidateQueries({ queryKey: ["nft-fulfillment-rules"] }));
 
   const handleSignTransfer = async (log) => {
@@ -131,10 +154,10 @@ export default function NFTDistribution() {
       <PageHeader title="NFT Distribution" subtitle="Custodyless flow: confirmed betalingen maken een transfer request aan, daarna tekent de merchant met zijn eigen wallet." />
       <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5 text-sm text-blue-900">Geen mnemonic-opslag meer. De automation maakt pending NFT requests aan en de merchant ondertekent daarna de transfer met wallet signing.</div>
       <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
-        <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => setWalletSession(null)} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
-        <FulfillmentRuleForm formData={formData} setFormData={setFormData} paymentLinks={paymentLinks} onSubmit={handleRuleSubmit} editingRule={editingRule} isSubmitting={saveRuleMutation.isPending} onCancel={() => { setEditingRule(null); setFormData(initialForm); }} />
+        <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
+        <FulfillmentRuleForm formData={formData} setFormData={setFormData} paymentLinks={paymentLinks} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleRuleSubmit} editingRule={editingRule} isSubmitting={saveRuleMutation.isPending} onCancel={() => { setEditingRule(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
       </div>
-      <FulfillmentRulesTable rules={rules} paymentLinksById={paymentLinksById} onEdit={(rule) => { setEditingRule(rule); setFormData(rule); }} onDelete={(id) => deleteRuleMutation.mutate(id)} onToggle={toggleStatus} />
+      <FulfillmentRulesTable rules={rules} paymentLinksById={paymentLinksById} onEdit={(rule) => { setEditingRule(rule); setFormData(rule); setSelectedAssetUnit(`${rule.policy_id}${rule.asset_name_hex || ""}`); }} onDelete={(id) => deleteRuleMutation.mutate(id)} onToggle={toggleStatus} />
       <TransferQueueTable logs={transferLogs} signingId={signingId} onSign={handleSignTransfer} />
     </div>
   );
