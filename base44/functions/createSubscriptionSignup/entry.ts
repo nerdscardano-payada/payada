@@ -17,7 +17,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Plan not found or inactive' }, { status: 404 });
     }
 
-    const profiles = await base44.asServiceRole.entities.MerchantProfile.filter({ user_id: plan.merchant_id }, '-created_date', 1);
+    const merchantOwnerId = plan.merchant_id || plan.created_by;
+    const profiles = await base44.asServiceRole.entities.MerchantProfile.filter({ user_id: merchantOwnerId }, '-created_date', 1);
     const merchant = profiles[0];
     if (!merchant) {
       return Response.json({ error: 'Merchant not found' }, { status: 404 });
@@ -74,7 +75,7 @@ Deno.serve(async (req) => {
 
     if (!subscription || subscription.status === 'cancelled') {
       subscription = await base44.asServiceRole.entities.Subscription.create({
-        merchant_id: plan.merchant_id,
+        merchant_id: plan.merchant_id || merchant.user_id,
         subscription_plan_id: plan.id,
         plan_name: plan.name,
         customer_email: customerEmail,
