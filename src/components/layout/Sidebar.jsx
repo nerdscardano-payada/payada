@@ -49,6 +49,9 @@ const navItems = [
   { type: "header", name: "Sell" },
   { name: "Shop Pages", icon: ShoppingCart, page: "ShoppingPageGenerator" },
 
+  { type: "header", name: "NFT" },
+  { name: "NFTs", icon: Hexagon, page: "NFTs" },
+
   { type: "header", name: "Community" },
   { name: "Access Links", icon: Users, page: "AccessLinks" },
   { name: "Discord Gate", icon: Bot, page: "DiscordPlugin" },

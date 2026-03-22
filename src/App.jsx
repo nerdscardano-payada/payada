@@ -18,6 +18,7 @@ import Demo from './pages/Demo';
 import MultiTokenCheckout from './pages/MultiTokenCheckout';
 import DonationPages from './pages/DonationPages';
 import Donate from './pages/Donate';
+import NFTs from './pages/NFTs';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -97,6 +98,7 @@ const AuthenticatedApp = () => {
       <Route path="/MultiTokenCheckout" element={<MultiTokenCheckout />} />
       <Route path="/DonationPages" element={<ProtectedRoute currentPageName="DonationPages"><LayoutWrapper currentPageName="DonationPages"><DonationPages /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/Donate" element={<ProtectedRoute currentPageName="Donate"><LayoutWrapper currentPageName="Donate"><Donate /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/NFTs" element={<ProtectedRoute currentPageName="NFTs"><LayoutWrapper currentPageName="NFTs"><NFTs /></LayoutWrapper></ProtectedRoute>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
