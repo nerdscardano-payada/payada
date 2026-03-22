@@ -19,7 +19,7 @@ export default function SubscriptionPlanLinks({ plans }) {
         {plans.map((plan) => {
           const checkoutUrl = `${origin}/SubscriberPortal?slug=${plan.slug}`;
           return (
-            <div key={plan.id} className="rounded-2xl border border-slate-200 p-4">
+            <div key={plan.id} className="col-span-full rounded-2xl border border-slate-200 p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="font-semibold text-slate-900">{plan.name}</p>
