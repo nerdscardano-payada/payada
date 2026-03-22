@@ -1,21 +1,24 @@
 import React from "react";
-import { CreditCard, Bot, Link2 } from "lucide-react";
+import { CreditCard, ShieldCheck, Store } from "lucide-react";
 
 const items = [
   {
-    title: "Betalen met ADA of CNT",
-    description: "We hebben al checkout-logica, fee-models en payment links als basis voor NFT-sales.",
+    title: "Checkout-native sales",
+    description: "NFT listings draaien bovenop bestaande PayADA payment links, waardoor prijs, checkout en conversie in dezelfde flow blijven.",
     icon: CreditCard,
+    iconClass: "bg-blue-50 text-blue-700",
   },
   {
-    title: "Community & gating",
-    description: "Access Links en Discord Gate geven ons al een sterke basis voor utility rond NFT-holders.",
-    icon: Bot,
+    title: "Secure holder access",
+    description: "Wallet-based gating maakt utility bruikbaar voor memberships, communities en premium pages zonder handmatige verificatie.",
+    icon: ShieldCheck,
+    iconClass: "bg-emerald-50 text-emerald-700",
   },
   {
-    title: "Directe listings",
-    description: "We kunnen eigen NFT-listings opbouwen bovenop onze bestaande link- en checkout-flow.",
-    icon: Link2,
+    title: "Merchant-owned storefronts",
+    description: "Met eigen storefronts, metadata en custodyless delivery verkoop je NFTs in je eigen merkervaring, niet in een demo-omgeving.",
+    icon: Store,
+    iconClass: "bg-amber-50 text-amber-700",
   },
 ];
 
@@ -23,9 +26,9 @@ export default function NFTStackOverview() {
   return (
     <div className="grid gap-4 md:grid-cols-3">
       {items.map((item) => (
-        <div key={item.title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100">
-            <item.icon className="h-5 w-5 text-slate-700" />
+        <div key={item.title} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-2xl ${item.iconClass}`}>
+            <item.icon className="h-5 w-5" />
           </div>
           <h3 className="text-base font-semibold text-slate-900">{item.title}</h3>
           <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>

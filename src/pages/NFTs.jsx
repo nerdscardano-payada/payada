@@ -7,13 +7,39 @@ export default function NFTs() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="NFTs"
-        subtitle="Een aparte zone voor NFT utility binnen PayADA, zonder een nieuw minting-systeem toe te voegen."
+        title="NFT Suite"
+        subtitle="Production-ready NFT tools voor gating, distributie en storefronts binnen PayADA."
       />
 
-      <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-sm leading-6 text-indigo-950">
-        We focussen hier bewust op drie zaken: NFT gating, geautomatiseerde NFT transfer/distributie en eigen marketplace/listings.
-        Minting houden we buiten scope zodat deze module helder, haalbaar en commercieel bruikbaar blijft.
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-950 text-white shadow-sm">
+        <div className="grid gap-8 px-6 py-8 lg:grid-cols-[1.3fr_0.9fr] lg:px-8">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-300">Live on PayADA</p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight">Alles om NFTs commercieel inzetbaar te maken, zonder dat het als demo aanvoelt.</h2>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
+              De NFT-zone van PayADA is opgebouwd rond drie concrete use-cases: gated access, automatische distributie na betaling en een eigen custodyless storefront.
+              Geen losse experimenten, maar één samenhangende stack voor utility en sales op Cardano.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="text-xs uppercase tracking-wide text-slate-400">Modules</p>
+              <p className="mt-2 text-2xl font-semibold text-white">3 live</p>
+              <p className="mt-1 text-sm text-slate-300">Gating, distribution en marketplace.</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="text-xs uppercase tracking-wide text-slate-400">Delivery model</p>
+              <p className="mt-2 text-2xl font-semibold text-white">Custodyless</p>
+              <p className="mt-1 text-sm text-slate-300">De merchant tekent zelf de finale transfer.</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="text-xs uppercase tracking-wide text-slate-400">Asset sync</p>
+              <p className="mt-2 text-2xl font-semibold text-white">On-chain</p>
+              <p className="mt-1 text-sm text-slate-300">Metadata en afbeeldingen uit wallet-assets.</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <NFTStackOverview />
@@ -21,41 +47,41 @@ export default function NFTs() {
       <div className="grid gap-6 xl:grid-cols-3">
         <NFTFeatureCard
           title="NFT Gating"
-          status="Live"
+          status="Ready"
           tone="green"
-          description="Deze richting sluit het snelst aan op wat PayADA al heeft. We kunnen NFT-holders toegang geven tot communities, content, events of premium flows."
+          description="Bescherm communities, premium content en private flows door walletbezit live te verifiëren tegen policy ID en asset name."
           bullets={[
-            "Toegang koppelen aan specifieke policy ID en asset name",
-            "NFT-holder utility voor Discord, memberships of gated pages",
-            "Goede eerste stap met lage technische complexiteit",
+            "Shareable gate links voor holders en communities",
+            "Wallet-based verificatie zonder handmatig beheer",
+            "Geschikt voor memberships, Discord en premium pagina's",
           ]}
           ctaLabel="Open NFT Gating"
           to="/NFTGating"
         />
 
         <NFTFeatureCard
-          title="NFT distributie via wallet signing"
-          status="Live"
+          title="NFT Distribution"
+          status="Ready"
           tone="blue"
-          description="Na een bevestigde betaling maakt PayADA een pending transfer request aan, waarna de merchant de uiteindelijke NFT-transfer met zijn eigen wallet ondertekent."
+          description="Koppel bevestigde betalingen aan een transfer queue zodat NFT-levering operationeel en controleerbaar blijft, met merchant signing op het einde."
           bullets={[
-            "Geen mnemonic-opslag of server-side custody",
-            "Confirmed payments komen automatisch in een signing queue",
-            "Merchant tekent en verstuurt vanuit eigen wallet",
+            "Automatische queue na confirmed payments",
+            "Geen seed phrase of server-side custody nodig",
+            "Merchant houdt finale controle over ondertekening",
           ]}
           ctaLabel="Open Distribution"
           to="/NFTDistribution"
         />
 
         <NFTFeatureCard
-          title="NFT Marketplace / Listings"
-          status="Live"
+          title="NFT Marketplace"
+          status="Ready"
           tone="amber"
-          description="We kunnen merchants hun eigen NFT-collecties laten tonen en verkopen via PayADA, zonder afhankelijk te zijn van jpg.store voor de listing-ervaring."
+          description="Publiceer je eigen storefront met media, metadata en PayADA checkout, zodat je NFT's direct vanuit je eigen flow verkocht worden."
           bullets={[
-            "Eigen listingpagina's met prijs, media en metadata",
-            "Rechtstreekse checkout via PayADA",
-            "Custodyless levering via merchant wallet signing",
+            "Listingbeheer met prijs, image en beschrijving",
+            "Directe checkout via bestaande PayADA payment links",
+            "Storefront zonder externe marketplace afhankelijkheid",
           ]}
           ctaLabel="Open Marketplace"
           to="/NFTMarketplace"
@@ -63,22 +89,22 @@ export default function NFTs() {
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">Aanbevolen volgorde</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Hoe de NFT suite vandaag werkt</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
-          <div className="rounded-xl bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Fase 1</p>
-            <p className="mt-2 font-medium text-slate-900">NFT gating live zetten</p>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Snelste waarde: utility voor holders en communities.</p>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Stap 1</p>
+            <p className="mt-2 font-medium text-slate-900">Verbind je wallet en selecteer assets</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Wallet-assets worden automatisch ingeladen met label, metadata en beschikbare afbeelding.</p>
           </div>
-          <div className="rounded-xl bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Fase 2</p>
-            <p className="mt-2 font-medium text-slate-900">Automatische distributie toevoegen</p>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Van betaling naar levering in één flow.</p>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Stap 2</p>
+            <p className="mt-2 font-medium text-slate-900">Publiceer utility of verkoopflow</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Gebruik gates voor toegang of listings voor storefronts en checkout.</p>
           </div>
-          <div className="rounded-xl bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Fase 3</p>
-            <p className="mt-2 font-medium text-slate-900">Eigen marketplace/listings openen</p>
-            <p className="mt-2 text-sm leading-6 text-slate-600">De merchant krijgt een volledige directe verkoopervaring.</p>
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Stap 3</p>
+            <p className="mt-2 font-medium text-slate-900">Lever veilig af via signing queue</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Confirmed payments monden uit in een duidelijke operationele queue voor ondertekening en verzending.</p>
           </div>
         </div>
       </div>

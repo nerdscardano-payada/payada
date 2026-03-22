@@ -5,19 +5,38 @@ import { Copy, Pencil, Trash2 } from "lucide-react";
 export default function ListingsTable({ listings, paymentLinksById, onEdit, onDelete, onCopy }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <div className="border-b border-slate-100 p-5"><h2 className="text-lg font-semibold text-slate-900">Listings</h2></div>
+      <div className="border-b border-slate-100 p-5">
+        <h2 className="text-lg font-semibold text-slate-900">Listings</h2>
+        <p className="mt-1 text-sm text-slate-500">Beheer live storefront items, prijzen en gekoppelde checkout links.</p>
+      </div>
       <div className="divide-y divide-slate-100">
-        {listings.length === 0 ? <div className="p-5 text-sm text-slate-500">Nog geen NFT listings aangemaakt.</div> : listings.map((listing) => (
-          <div key={listing.id} className="p-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex gap-4 items-start">
-              {listing.image_url ? <img src={listing.image_url} alt={listing.title} className="h-16 w-16 rounded-xl object-cover border border-slate-200" /> : <div className="h-16 w-16 rounded-xl bg-slate-100" />}
+        {listings.length === 0 ? (
+          <div className="p-8 text-center text-sm text-slate-500">Nog geen NFT listings aangemaakt. Publiceer je eerste storefront item om je collectie live te zetten.</div>
+        ) : listings.map((listing) => (
+          <div key={listing.id} className="flex flex-col gap-4 p-5 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-start gap-4">
+              {listing.image_url ? (
+                <img src={listing.image_url} alt={listing.title} className="h-20 w-20 rounded-2xl border border-slate-200 object-cover" />
+              ) : (
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-400">
+                  NFT
+                </div>
+              )}
               <div>
-                <div className="flex items-center gap-2"><p className="font-medium text-slate-900">{listing.title}</p><span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${listing.status === "active" ? "bg-emerald-100 text-emerald-700" : listing.status === "draft" ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"}`}>{listing.status}</span></div>
-                <p className="mt-1 text-sm text-slate-500">{paymentLinksById[listing.payment_link_id]?.title || "Geen link"}{listing.price_ada ? ` · ₳ ${Number(listing.price_ada).toFixed(2)}` : ""}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="font-medium text-slate-900">{listing.title}</p>
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${listing.status === "active" ? "bg-emerald-100 text-emerald-700" : listing.status === "draft" ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-600"}`}>{listing.status}</span>
+                </div>
+                <p className="mt-1 text-sm text-slate-500">/{listing.slug || "listing"}</p>
+                <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500">
+                  <span>{paymentLinksById[listing.payment_link_id]?.title || "Geen payment link"}</span>
+                  {listing.price_ada ? <span>₳ {Number(listing.price_ada).toFixed(2)}</span> : null}
+                  {listing.asset_label ? <span>{listing.asset_label}</span> : null}
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" onClick={() => onCopy(listing)}><Copy className="mr-2 h-4 w-4" />Link</Button>
+              <Button variant="outline" size="sm" onClick={() => onCopy(listing)}><Copy className="mr-2 h-4 w-4" />Storefront</Button>
               <Button variant="outline" size="sm" onClick={() => onEdit(listing)}><Pencil className="mr-2 h-4 w-4" />Bewerk</Button>
               <Button variant="outline" size="sm" onClick={() => onDelete(listing.id)}><Trash2 className="mr-2 h-4 w-4" />Verwijder</Button>
             </div>
