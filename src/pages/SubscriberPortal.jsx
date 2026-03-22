@@ -31,7 +31,7 @@ export default function SubscriberPortal() {
   const plan = plans[0] || null;
 
   const handleStartSubscription = async () => {
-    if (!email) { toast.error("E-mail is verplicht"); return; }
+    if (!email) { toast.error("Email is required"); return; }
 
     // Create a one-time payment link for first payment via backend
     const res = await base44.functions.invoke("createSubscriptionSignup", {
@@ -41,7 +41,7 @@ export default function SubscriberPortal() {
     });
 
     if (!res?.data?.success) {
-      toast.error(res?.data?.error || "Er ging iets mis");
+      toast.error(res?.data?.error || "Something went wrong");
       return;
     }
 
@@ -64,10 +64,10 @@ export default function SubscriberPortal() {
       if (!buildRes?.data?.success) throw new Error(buildRes?.data?.error || "Build failed");
 
       // Instruct user — wallet sends the amount
-      toast.info(`Stuur ₳ ${sessionData.amount_total_ada?.toFixed(2)} vanuit je wallet naar het adres hieronder.`);
+      toast.info(`Send ₳ ${sessionData.amount_total_ada?.toFixed(2)} from your wallet to the address below.`);
       setStep("awaiting");
     } catch (err) {
-      toast.error(err?.message || "Transactie mislukt");
+      toast.error(err?.message || "Transaction failed");
     } finally {
       setTxLoading(false);
     }
@@ -76,14 +76,14 @@ export default function SubscriberPortal() {
   const intervalLabel = (plan) => {
     if (!plan) return "";
     if (plan.interval_type === "weekly") return "per week";
-    if (plan.interval_type === "monthly") return "per maand";
-    if (plan.interval_type === "yearly") return "per jaar";
-    return `elke ${plan.interval_days} dagen`;
+    if (plan.interval_type === "monthly") return "per month";
+    if (plan.interval_type === "yearly") return "per year";
+    return `every ${plan.interval_days} days`;
   };
 
-  if (!slug) return <ErrorScreen message="Geen abonnementslink gevonden." />;
+  if (!slug) return <ErrorScreen message="No subscription link found." />;
   if (isLoading) return <LoadingScreen />;
-  if (!plan) return <ErrorScreen title="Plan niet gevonden" message="Deze link is verlopen of ongeldig." />;
+  if (!plan) return <ErrorScreen title="Plan not found" message="This link has expired or is invalid." />;
 
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
@@ -101,7 +101,7 @@ export default function SubscriberPortal() {
           <div className="p-6 border-b border-slate-800">
             <div className="flex items-center gap-2 mb-1">
               <RefreshCw className="w-4 h-4 text-indigo-400" />
-              <span className="text-xs text-indigo-400 font-medium uppercase tracking-wider">Abonnement</span>
+              <span className="text-xs text-indigo-400 font-medium uppercase tracking-wider">Subscription</span>
             </div>
             <h1 className="text-xl font-bold text-white">{plan.name}</h1>
             {plan.description && <p className="text-sm text-slate-400 mt-2">{plan.description}</p>}
@@ -114,7 +114,7 @@ export default function SubscriberPortal() {
               <span className="text-sm text-slate-500">{intervalLabel(plan)}</span>
             </div>
             {plan.trial_days > 0 && (
-              <p className="text-xs text-emerald-400 mt-2">✓ {plan.trial_days} dagen gratis uitproberen</p>
+              <p className="text-xs text-emerald-400 mt-2">✓ {plan.trial_days} free trial days</p>
             )}
           </div>
 
@@ -122,20 +122,20 @@ export default function SubscriberPortal() {
           {step === "details" && (
             <div className="p-6 space-y-4">
               <div className="space-y-2">
-                <Label className="text-slate-300 text-xs">E-mail *</Label>
+                <Label className="text-slate-300 text-xs">Email *</Label>
                 <Input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="jouw@email.com"
+                  placeholder="your@email.com"
                   className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-slate-300 text-xs">Naam</Label>
+                <Label className="text-slate-300 text-xs">Name</Label>
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Jouw naam"
+                  placeholder="Your name"
                   className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500"
                 />
               </div>
@@ -143,7 +143,7 @@ export default function SubscriberPortal() {
                 onClick={handleStartSubscription}
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 text-base font-semibold"
               >
-                Abonnement starten
+                Start subscription
               </Button>
               {plan.grace_days > 0 && (
                 <p className="text-[11px] text-slate-500 text-center">
