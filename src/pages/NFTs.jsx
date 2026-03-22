@@ -34,14 +34,14 @@ export default function NFTs() {
         />
 
         <NFTFeatureCard
-          title="Geautomatiseerde transfer & distributie"
+          title="NFT distributie via wallet signing"
           status="Live"
           tone="blue"
-          description="Na een bevestigde betaling kunnen we een NFT automatisch uitsturen vanuit een merchant wallet. Dit maakt directe NFT-sales zonder externe marketplace mogelijk."
+          description="Na een bevestigde betaling maakt PayADA een pending transfer request aan, waarna de merchant de uiteindelijke NFT-transfer met zijn eigen wallet ondertekent."
           bullets={[
-            "Na confirmed payment automatisch NFT naar koper versturen",
-            "Sterke fit met onze bestaande payment-verificatie",
-            "Vraagt aparte wallet-operatie en beveiligde signing flow",
+            "Geen mnemonic-opslag of server-side custody",
+            "Confirmed payments komen automatisch in een signing queue",
+            "Merchant tekent en verstuurt vanuit eigen wallet",
           ]}
           ctaLabel="Open Distribution"
           to="/NFTDistribution"
@@ -55,7 +55,7 @@ export default function NFTs() {
           bullets={[
             "Eigen listingpagina's met prijs, media en metadata",
             "Rechtstreekse checkout via PayADA",
-            "Perfect combineerbaar met automatische distributie",
+            "Custodyless levering via merchant wallet signing",
           ]}
           ctaLabel="Open Marketplace"
           to="/NFTMarketplace"
