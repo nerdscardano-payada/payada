@@ -16,7 +16,7 @@ export default function ListingsTable({ listings, paymentLinksById, onEdit, onDe
           <div key={listing.id} className="flex flex-col gap-4 p-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-4">
               {listing.image_url ? (
-                <img src={listing.image_url} alt={listing.title} className="h-20 w-20 rounded-2xl border border-slate-200 object-cover" />
+                <img src={listing.image_url} alt={listing.title} className="h-20 w-20 rounded-2xl border border-slate-200 bg-slate-50 object-contain p-1" />
               ) : (
                 <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-400">
                   NFT
@@ -30,6 +30,7 @@ export default function ListingsTable({ listings, paymentLinksById, onEdit, onDe
                 <p className="mt-1 text-sm text-slate-500">/{listing.slug || "listing"}</p>
                 <div className="mt-2 flex flex-wrap gap-2 text-xs text-slate-500">
                   <span>{paymentLinksById[listing.payment_link_id]?.title || "No payment link"}</span>
+                  {listing.collection_name ? <span>{listing.collection_name}</span> : null}
                   {listing.price_ada ? <span>₳ {Number(listing.price_ada).toFixed(2)}</span> : null}
                   {listing.asset_label ? <span>{listing.asset_label}</span> : null}
                 </div>

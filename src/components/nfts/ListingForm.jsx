@@ -36,6 +36,7 @@ export default function ListingForm({ formData, setFormData, paymentLinks, walle
         <div><Label>Title</Label><Input value={formData.title || ""} onChange={(e) => update("title", e.target.value)} placeholder="Genesis Pass" required /></div>
         <div><Label>Slug</Label><Input value={formData.slug || ""} onChange={(e) => update("slug", e.target.value)} placeholder="genesis-pass" required /></div>
         <div><Label>Asset label</Label><Input value={formData.asset_label || ""} onChange={(e) => update("asset_label", e.target.value)} placeholder="Auto-filled from the wallet" /></div>
+        <div><Label>Collection</Label><Input value={formData.collection_name || ""} onChange={(e) => update("collection_name", e.target.value)} placeholder="Founder Passes" /></div>
         <div><Label>Price in ADA</Label><Input type="number" min="0" step="0.000001" value={formData.price_ada || ""} onChange={(e) => update("price_ada", Number(e.target.value) || 0)} placeholder="45" /></div>
         <div><Label>Policy ID</Label><Input value={formData.policy_id || ""} onChange={(e) => update("policy_id", e.target.value)} /></div>
         <div><Label>Asset name (hex)</Label><Input value={formData.asset_name_hex || ""} onChange={(e) => update("asset_name_hex", e.target.value)} /></div>
@@ -46,7 +47,9 @@ export default function ListingForm({ formData, setFormData, paymentLinks, walle
       {formData.image_url && (
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Image preview</p>
-          <img src={formData.image_url} alt={formData.title || "NFT preview"} className="mt-3 h-44 w-full rounded-2xl object-cover md:w-64" />
+          <div className="mt-3 flex h-56 items-center justify-center rounded-2xl bg-white p-4">
+            <img src={formData.image_url} alt={formData.title || "NFT preview"} className="max-h-full w-full rounded-2xl object-contain" />
+          </div>
         </div>
       )}
 

@@ -109,6 +109,7 @@ const AuthenticatedApp = () => {
       <Route path="/NFTMarketplace" element={<ProtectedRoute currentPageName="NFTMarketplace"><LayoutWrapper currentPageName="NFTMarketplace"><NFTMarketplace /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/NFTGate" element={<ProtectedRoute currentPageName="NFTGate"><LayoutWrapper currentPageName="NFTGate"><NFTGate /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/NFTStore" element={<ProtectedRoute currentPageName="NFTStore"><LayoutWrapper currentPageName="NFTStore"><NFTStore /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/nft/:storeSlug" element={<NFTStore />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
