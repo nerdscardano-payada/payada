@@ -15,7 +15,7 @@ export default function NFTs() {
         <div className="grid gap-8 px-6 py-8 lg:grid-cols-[1.3fr_0.9fr] lg:px-8">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-300">Live on PayADA</p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight">Alles om NFTs commercieel inzetbaar te maken, zonder dat het als demo aanvoelt.</h2>
+            <h2 className="mt-4 text-3xl font-semibold tracking-tight">Alles om NFTs commercieel inzetbaar te maken binnen één krachtige PayADA suite.</h2>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
               De NFT-zone van PayADA is opgebouwd rond drie concrete use-cases: gated access, automatische distributie na betaling en een eigen custodyless storefront.
               Geen losse experimenten, maar één samenhangende stack voor utility en sales op Cardano.
