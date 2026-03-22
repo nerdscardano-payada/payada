@@ -58,6 +58,9 @@ export default function NFTDistribution() {
   });
 
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
+  const activeRules = rules.filter((rule) => rule.status === "active").length;
+  const pendingTransfers = transferLogs.filter((log) => log.status === "pending").length;
+  const signerStatus = wallet?.wallet_address ? "Configured" : "Not configured";
 
   const walletMutation = useMutation({
     mutationFn: (payload) => {
@@ -151,8 +154,24 @@ export default function NFTDistribution() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Distribution" subtitle="Custodyless flow: confirmed betalingen maken een transfer request aan, daarna tekent de merchant met zijn eigen wallet." />
-      <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5 text-sm text-blue-900">Geen mnemonic-opslag meer. De automation maakt pending NFT requests aan en de merchant ondertekent daarna de transfer met wallet signing.</div>
+      <PageHeader title="NFT Distribution" subtitle="Operational NFT delivery flow met wallet signing, queueing en merchant control." />
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">Actieve regels</p>
+          <p className="mt-2 text-3xl font-semibold text-blue-950">{activeRules}</p>
+          <p className="mt-1 text-sm text-blue-900">Payment links die automatisch NFT-delivery kunnen starten.</p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Pending signatures</p>
+          <p className="mt-2 text-3xl font-semibold text-slate-900">{pendingTransfers}</p>
+          <p className="mt-1 text-sm text-slate-600">Leveringen die klaarstaan om te signeren en te verzenden.</p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Signer wallet</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900">{signerStatus}</p>
+          <p className="mt-1 text-sm text-slate-600">Geen seed storage: de merchant ondertekent de finale transactie zelf.</p>
+        </div>
+      </div>
       <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
         <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
         <FulfillmentRuleForm formData={formData} setFormData={setFormData} paymentLinks={paymentLinks} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleRuleSubmit} editingRule={editingRule} isSubmitting={saveRuleMutation.isPending} onCancel={() => { setEditingRule(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />

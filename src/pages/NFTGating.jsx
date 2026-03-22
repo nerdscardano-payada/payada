@@ -65,6 +65,8 @@ export default function NFTGating() {
     });
   };
 
+  const activeRules = rules.filter((rule) => rule.status === "active").length;
+
   const copyGateLink = (slug) => {
     navigator.clipboard.writeText(`${window.location.origin}/NFTGate?slug=${slug}`);
     toast.success("Gate link gekopieerd");
@@ -72,8 +74,24 @@ export default function NFTGating() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Gating" subtitle="Geef holders toegang tot communities, content en premium flows op basis van walletbezit." />
-      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">Maak een gate, deel de link en laat bezoekers hun wallet verifiëren om toegang vrij te geven.</div>
+      <PageHeader title="NFT Gating" subtitle="Wallet-based toegangscontrole voor communities, content en premium experiences." />
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Actieve gates</p>
+          <p className="mt-2 text-3xl font-semibold text-emerald-950">{activeRules}</p>
+          <p className="mt-1 text-sm text-emerald-900">Live rules die bezoekers meteen kunnen gebruiken.</p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Verification flow</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900">Wallet connect → verify → unlock</p>
+          <p className="mt-1 text-sm text-slate-600">Een duidelijke holder flow zonder handmatige checks.</p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Shareable links</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900">Direct inzetbaar</p>
+          <p className="mt-1 text-sm text-slate-600">Elke gate heeft een eigen publieke link voor campagnes en communities.</p>
+        </div>
+      </div>
       <div className="grid gap-6 xl:grid-cols-[1.1fr_1.3fr]">
         <GatingRuleForm formData={formData} setFormData={setFormData} onSubmit={handleSubmit} isSubmitting={saveMutation.isPending} editingRule={editingRule} onCancel={() => { setEditingRule(null); setFormData(initialForm); }} />
         <GatingRulesTable rules={rules} onEdit={(rule) => { setEditingRule(rule); setFormData(rule); }} onDelete={(id) => deleteMutation.mutate(id)} onToggle={toggleStatus} onCopy={copyGateLink} />
