@@ -241,7 +241,7 @@ export default function NFTDistribution() {
       )}
 
       <FulfillmentRulesTable rules={rules} paymentLinksById={paymentLinksById} onEdit={(rule) => { setEditingRule(rule); setFormData({ ...initialForm, ...rule, price_ada: paymentLinksById[rule.payment_link_id]?.amount_ada || 0 }); setSelectedAssetUnit(`${rule.policy_id}${rule.asset_name_hex || ""}`); }} onDelete={(rule) => deleteRuleMutation.mutate(rule)} onToggle={toggleStatus} />
-      <TransferQueueTable logs={transferLogs} signingId={signingId} onSign={handleSignTransfer} fulfillmentMode={fulfillmentMode} />
+      <TransferQueueTable logs={transferLogs} signingId={signingId} onSign={handleSignTransfer} fulfillmentMode={fulfillmentMode} rulesById={rulesById} />
     </div>
   );
 }
