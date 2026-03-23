@@ -104,6 +104,33 @@ function estimateFee(numInputs, numOutputs) {
   return 155381n + 44n * BigInt(txSize) + 400000n;
 }
 
+function addAssetsFromAmounts(target, amounts) {
+  for (const amount of amounts) {
+    if (amount.unit === 'lovelace') continue;
+    const policyId = amount.unit.slice(0, 56);
+    const assetName = amount.unit.slice(56);
+    if (!target.has(policyId)) target.set(policyId, new Map());
+    const policyAssets = target.get(policyId);
+    policyAssets.set(assetName, (policyAssets.get(assetName) || 0n) + BigInt(amount.quantity));
+  }
+}
+
+function subtractAsset(target, policyId, assetName, quantity) {
+  if (!target.has(policyId)) return;
+  const policyAssets = target.get(policyId);
+  const remaining = (policyAssets.get(assetName) || 0n) - quantity;
+
+  if (remaining > 0n) {
+    policyAssets.set(assetName, remaining);
+  } else {
+    policyAssets.delete(assetName);
+  }
+
+  if (policyAssets.size === 0) {
+    target.delete(policyId);
+  }
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -141,10 +168,12 @@ Deno.serve(async (req) => {
     let selectedQuantity = 0n;
     let selectedLovelace = 0n;
     const selectedUtxos = [];
+    const selectedAssets = new Map();
     const quantityNeeded = BigInt(log.quantity || 1);
 
     for (const utxo of tokenUtxos) {
       selectedUtxos.push(utxo);
+      addAssetsFromAmounts(selectedAssets, utxo.amount);
       for (const amount of utxo.amount) {
         if (amount.unit === 'lovelace') selectedLovelace += BigInt(amount.quantity);
         if (amount.unit === assetUnit) selectedQuantity += BigInt(amount.quantity);
@@ -162,13 +191,13 @@ Deno.serve(async (req) => {
         if (selectedLovelace >= adaNeeded) break;
         if (selectedUtxos.some((s) => s.tx_hash === utxo.tx_hash && s.tx_index === utxo.tx_index)) continue;
         selectedUtxos.push(utxo);
+        addAssetsFromAmounts(selectedAssets, utxo.amount);
         selectedLovelace += BigInt(utxo.amount[0].quantity);
       }
     }
 
     if (selectedLovelace < adaNeeded) return Response.json({ error: 'Insufficient ADA in signer wallet for fee and output' }, { status: 400 });
 
-    const tokenChange = selectedQuantity - quantityNeeded;
     const adaChange = selectedLovelace - MIN_TOKEN_OUTPUT_LOVELACE - txFee;
     const recipientAddrBytes = getAddrBytes(log.recipient_address);
     const senderAddrBytes = getAddrBytes(senderAddress);
@@ -177,8 +206,8 @@ Deno.serve(async (req) => {
     const outputsData = [];
     const transferAssets = new Map([[log.policy_id, new Map([[log.asset_name_hex || '', quantityNeeded]])]]);
     outputsData.push({ addrBytes: recipientAddrBytes, lovelace: MIN_TOKEN_OUTPUT_LOVELACE, assets: transferAssets });
-    const changeAssets = tokenChange > 0n ? new Map([[log.policy_id, new Map([[log.asset_name_hex || '', tokenChange]])]]) : new Map();
-    outputsData.push({ addrBytes: senderAddrBytes, lovelace: adaChange, assets: changeAssets });
+    subtractAsset(selectedAssets, log.policy_id, log.asset_name_hex || '', quantityNeeded);
+    outputsData.push({ addrBytes: senderAddrBytes, lovelace: adaChange, assets: selectedAssets });
 
     const inputs = selectedUtxos.map((utxo) => [hexToBytes(utxo.tx_hash), utxo.tx_index]);
     const sortedInputs = [...inputs].sort((a, b) => {
