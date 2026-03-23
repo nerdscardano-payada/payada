@@ -1,16 +1,16 @@
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { Link } from "react-router-dom";
 import PageHeader from "@/components/shared/PageHeader";
 import ListingForm from "@/components/nfts/ListingForm";
 import ListingsTable from "@/components/nfts/ListingsTable";
-import MarketplaceSettingsForm from "@/components/nfts/MarketplaceSettingsForm";
 import SignerWalletSetupCard from "@/components/nfts/SignerWalletSetupCard";
+import { Button } from "@/components/ui/button";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
 import { toast } from "sonner";
 
 const initialForm = { title: "", slug: "", description: "", image_url: "", payment_link_id: "", policy_id: "", asset_name_hex: "", asset_label: "", collection_name: "", collection_slug: "", quantity: 1, price_ada: 0, status: "draft" };
-const initialStoreSettings = { nft_store_name: "", nft_store_slug: "", nft_store_description: "" };
 const createSlug = (value = "") => value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 export default function NFTMarketplace() {
@@ -19,7 +19,6 @@ export default function NFTMarketplace() {
   const [selectedAssetUnit, setSelectedAssetUnit] = React.useState("");
   const [formData, setFormData] = React.useState(initialForm);
   const [editingListing, setEditingListing] = React.useState(null);
-  const [storeSettings, setStoreSettings] = React.useState(initialStoreSettings);
   const queryClient = useQueryClient();
 
   React.useEffect(() => {
@@ -65,16 +64,7 @@ export default function NFTMarketplace() {
     enabled: !!walletSession?.address,
   });
 
-  React.useEffect(() => {
-    if (!user?.email) return;
-    setStoreSettings({
-      nft_store_name: merchantProfile?.nft_store_name || merchantProfile?.business_name || user.full_name || "",
-      nft_store_slug: merchantProfile?.nft_store_slug || createSlug(merchantProfile?.business_name || user.full_name || user.email.split("@")[0]),
-      nft_store_description: merchantProfile?.nft_store_description || "",
-    });
-  }, [merchantProfile?.id, user?.email]);
-
-  const resolvedStoreSlug = createSlug(storeSettings.nft_store_slug || merchantProfile?.nft_store_slug || merchantProfile?.business_name || user?.full_name || user?.email?.split("@")[0] || "nft-store");
+  const resolvedStoreSlug = createSlug(merchantProfile?.nft_store_slug || merchantProfile?.business_name || user?.full_name || user?.email?.split("@")[0] || "nft-store");
   const publicStorePath = `/nft/${resolvedStoreSlug}`;
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
   const activeListings = listings.filter((listing) => listing.status === "active").length;
@@ -111,23 +101,6 @@ export default function NFTMarketplace() {
       toast.success("NFT listing saved");
     },
     onError: (error) => toast.error(error.message),
-  });
-
-  const settingsMutation = useMutation({
-    mutationFn: (payload) => {
-      if (merchantProfile?.id) {
-        return base44.entities.MerchantProfile.update(merchantProfile.id, payload);
-      }
-      return base44.entities.MerchantProfile.create({
-        user_id: user.email,
-        business_name: payload.nft_store_name || user.full_name || user.email.split("@")[0],
-        ...payload,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["merchant-profile"] });
-      toast.success("Marketplace settings saved");
-    },
   });
 
   const signerWalletMutation = useMutation({
@@ -182,15 +155,6 @@ export default function NFTMarketplace() {
     toast.success("Storefront link copied");
   };
 
-  const saveMarketplaceSettings = () => {
-    if (!user?.email) return;
-    settingsMutation.mutate({
-      nft_store_name: storeSettings.nft_store_name || merchantProfile?.business_name || user.full_name || "NFT Store",
-      nft_store_slug: resolvedStoreSlug,
-      nft_store_description: storeSettings.nft_store_description || "",
-    });
-  };
-
   const saveSignerWallet = () => {
     if (!user?.email || !walletSession?.address) return;
     signerWalletMutation.mutate({
@@ -221,7 +185,7 @@ export default function NFTMarketplace() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Marketplace" subtitle="Merchant-owned storefronts with your own branding, collections, and a clean public slug." />
+      <PageHeader title="NFT Marketplace" subtitle="Beheer hier je listings; gedeelde NFT instellingen en verkoopcijfers staan nu centraal op NFT Control." />
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Active listings</p>
@@ -241,7 +205,18 @@ export default function NFTMarketplace() {
       </div>
       <div className="grid gap-6 xl:grid-cols-2">
         <SignerWalletSetupCard wallet={signerWallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={saveSignerWallet} isSaving={signerWalletMutation.isPending} />
-        <MarketplaceSettingsForm value={storeSettings} onChange={setStoreSettings} onSave={saveMarketplaceSettings} isSaving={settingsMutation.isPending} publicUrl={`${window.location.origin}${publicStorePath}`} />
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-900">NFT Control</h2>
+          <p className="mt-1 text-sm text-slate-500">Marketplace instellingen, fulfillment methode en NFT sales dashboard zijn samengebracht op één centrale pagina.</p>
+          <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Public link</p>
+            <p className="mt-2 break-all text-sm text-slate-700">{`${window.location.origin}${publicStorePath}`}</p>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Button asChild><Link to="/NFTOperations">Open NFT Control</Link></Button>
+            <Button asChild variant="outline"><a href={`${window.location.origin}${publicStorePath}`} target="_blank" rel="noreferrer">Preview store</a></Button>
+          </div>
+        </div>
       </div>
       <ListingForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
       <ListingsTable listings={listings} paymentLinksById={paymentLinksById} onEdit={(listing) => { setEditingListing(listing); setFormData({ ...initialForm, ...listing, price_ada: listing.price_ada || paymentLinksById[listing.payment_link_id]?.amount_ada || 0 }); setSelectedAssetUnit(`${listing.policy_id}${listing.asset_name_hex || ""}`); }} onDelete={(listing) => deleteMutation.mutate(listing)} onCopy={copyLink} onPreview={() => window.open(publicStorePath, "_blank")} />

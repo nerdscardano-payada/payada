@@ -22,6 +22,7 @@ import NFTs from './pages/NFTs';
 import NFTGating from './pages/NFTGating';
 import NFTGate from './pages/NFTGate';
 import NFTDistribution from './pages/NFTDistribution';
+import NFTOperations from './pages/NFTOperations';
 import NFTMarketplace from './pages/NFTMarketplace';
 import NFTStore from './pages/NFTStore';
 
@@ -114,6 +115,7 @@ const AuthenticatedApp = () => {
       <Route path="/DonationPages" element={<ProtectedRoute currentPageName="DonationPages"><LayoutWrapper currentPageName="DonationPages"><DonationPages /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/Donate" element={<ProtectedRoute currentPageName="Donate"><LayoutWrapper currentPageName="Donate"><Donate /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/NFTs" element={<ProtectedRoute currentPageName="NFTs"><LayoutWrapper currentPageName="NFTs"><NFTs /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/NFTOperations" element={<ProtectedRoute currentPageName="NFTOperations"><LayoutWrapper currentPageName="NFTOperations"><NFTOperations /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/NFTGating" element={<ProtectedRoute currentPageName="NFTGating"><LayoutWrapper currentPageName="NFTGating"><NFTGating /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/NFTDistribution" element={<ProtectedRoute currentPageName="NFTDistribution"><LayoutWrapper currentPageName="NFTDistribution"><NFTDistribution /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/NFTMarketplace" element={<ProtectedRoute currentPageName="NFTMarketplace"><LayoutWrapper currentPageName="NFTMarketplace"><NFTMarketplace /></LayoutWrapper></ProtectedRoute>} />

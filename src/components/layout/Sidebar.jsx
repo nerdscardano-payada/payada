@@ -51,6 +51,7 @@ const navItems = [
 
   { type: "header", name: "NFT" },
   { name: "NFT Overview", icon: Hexagon, page: "NFTs" },
+  { name: "NFT Control", icon: LayoutDashboard, page: "NFTOperations" },
   { name: "NFT Gating", icon: Bot, page: "NFTGating" },
   { name: "NFT Distribution", icon: RefreshCw, page: "NFTDistribution" },
   { name: "NFT Marketplace", icon: ShoppingCart, page: "NFTMarketplace" },

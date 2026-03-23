@@ -1,16 +1,14 @@
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { Link } from "react-router-dom";
 import PageHeader from "@/components/shared/PageHeader";
 import SignerWalletSetupCard from "@/components/nfts/SignerWalletSetupCard";
 import HotWalletSetupCard from "@/components/nfts/HotWalletSetupCard";
-import FulfillmentModeSelector from "@/components/nfts/FulfillmentModeSelector";
 import FulfillmentRuleForm from "@/components/nfts/FulfillmentRuleForm";
 import FulfillmentRulesTable from "@/components/nfts/FulfillmentRulesTable";
 import TransferQueueTable from "@/components/nfts/TransferQueueTable";
-import DistributionOverviewCards from "@/components/nfts/DistributionOverviewCards";
-import TransferStatusChart from "@/components/nfts/TransferStatusChart";
-import TopFulfillmentRulesChart from "@/components/nfts/TopFulfillmentRulesChart";
+import { Button } from "@/components/ui/button";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
 import { toast } from "sonner";
 
@@ -83,56 +81,6 @@ export default function NFTDistribution() {
 
   const fulfillmentMode = merchantProfile?.nft_fulfillment_mode || "manual";
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
-  const activeRules = rules.filter((rule) => rule.status === "active").length;
-  const pendingTransfers = transferLogs.filter((log) => log.status === "pending").length;
-  const activeWalletStatus = fulfillmentMode === "automatic" ? (hotWallet?.wallet_address ? "Configured" : "Not configured") : (wallet?.wallet_address ? "Configured" : "Not configured");
-
-  const dashboardStats = React.useMemo(() => {
-    const successfulStatuses = new Set(["submitted", "confirmed"]);
-    const failedStatuses = new Set(["failed"]);
-    const rulesById = Object.fromEntries(rules.map((rule) => [rule.id, rule]));
-
-    const successfulCount = transferLogs.filter((log) => successfulStatuses.has(log.status)).length;
-    const failedCount = transferLogs.filter((log) => failedStatuses.has(log.status)).length;
-    const totalVolume = transferLogs.reduce((sum, log) => sum + Number(log.quantity || 1), 0);
-
-    const topRules = Object.values(
-      transferLogs.reduce((acc, log) => {
-        const key = log.nft_rule_id || `${log.policy_id}-${log.asset_name_hex || ""}`;
-        const rule = rulesById[log.nft_rule_id];
-        const fallbackName = paymentLinksById[rule?.payment_link_id]?.title || `${log.policy_id.slice(0, 10)}…`;
-
-        if (!acc[key]) {
-          acc[key] = {
-            name: rule?.asset_label || fallbackName,
-            transfers: 0,
-            volume: 0,
-          };
-        }
-
-        acc[key].transfers += 1;
-        acc[key].volume += Number(log.quantity || 1);
-        return acc;
-      }, {})
-    )
-      .sort((a, b) => b.volume - a.volume || b.transfers - a.transfers)
-      .slice(0, 5)
-      .map((item) => ({
-        ...item,
-        shortName: item.name.length > 14 ? `${item.name.slice(0, 14)}…` : item.name,
-      }));
-
-    return {
-      totalVolume,
-      successfulCount,
-      failedCount,
-      statusChartData: [
-        { name: "Successful", value: successfulCount },
-        { name: "Failed", value: failedCount },
-      ],
-      topRules,
-    };
-  }, [transferLogs, rules, paymentLinksById]);
 
   const walletMutation = useMutation({
     mutationFn: (payload) => {
@@ -154,25 +102,6 @@ export default function NFTDistribution() {
       toast.success("Hot wallet saved");
     },
     onError: (error) => toast.error(error?.response?.data?.error || error.message),
-  });
-
-  const fulfillmentModeMutation = useMutation({
-    mutationFn: (mode) => {
-      if (merchantProfile?.id) {
-        return base44.entities.MerchantProfile.update(merchantProfile.id, { nft_fulfillment_mode: mode });
-      }
-
-      return base44.entities.MerchantProfile.create({
-        user_id: user.email,
-        business_name: user.full_name || user.email,
-        nft_fulfillment_mode: mode,
-        status: "active",
-      });
-    },
-    onSuccess: (_, mode) => {
-      queryClient.invalidateQueries({ queryKey: ["merchant-profile-nft-distribution"] });
-      toast.success(mode === "automatic" ? "Automatische fulfillment geactiveerd" : "Manuele fulfillment geactiveerd");
-    },
   });
 
   const saveRuleMutation = useMutation({
@@ -298,42 +227,16 @@ export default function NFTDistribution() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Distribution" subtitle="Operational NFT delivery flow with wallet signing, queueing, and merchant control." />
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border border-blue-200 bg-blue-50 p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">Active rules</p>
-          <p className="mt-2 text-3xl font-semibold text-blue-950">{activeRules}</p>
-          <p className="mt-1 text-sm text-blue-900">Payment links that can trigger NFT delivery automatically.</p>
-        </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Openstaande transfers</p>
-          <p className="mt-2 text-3xl font-semibold text-slate-900">{pendingTransfers}</p>
-          <p className="mt-1 text-sm text-slate-600">{fulfillmentMode === "automatic" ? "Wachten op automatische verzending of extra controle." : "Wachten op handmatige ondertekening door de merchant."}</p>
-        </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Actieve methode</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900">{fulfillmentMode === "automatic" ? "Automatic hot wallet" : "Manual signer wallet"}</p>
-          <p className="mt-1 text-sm text-slate-600">Wallet status: {activeWalletStatus}</p>
+      <PageHeader title="NFT Distribution" subtitle="Operationele pagina voor wallet setup, fulfillment rules en de transfer queue." />
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">Dashboard & instellingen verhuisd</h2>
+            <p className="mt-1 text-sm text-slate-500">Je centrale NFT-overzicht, marketplace instellingen en fulfillment methode staan nu samen op NFT Control.</p>
+          </div>
+          <Button asChild variant="outline"><Link to="/NFTOperations">Open NFT Control</Link></Button>
         </div>
       </div>
-
-      <div className="space-y-4">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-900">Distribution dashboard</h2>
-          <p className="mt-1 text-sm text-slate-500">Track volume, outcomes, and your strongest NFT fulfillment rules at a glance.</p>
-        </div>
-        <DistributionOverviewCards
-          totalVolume={dashboardStats.totalVolume}
-          successfulCount={dashboardStats.successfulCount}
-          failedCount={dashboardStats.failedCount}
-        />
-        <div className="grid gap-4 xl:grid-cols-2">
-          <TransferStatusChart data={dashboardStats.statusChartData} />
-          <TopFulfillmentRulesChart data={dashboardStats.topRules} />
-        </div>
-      </div>
-
-      <FulfillmentModeSelector value={fulfillmentMode} onChange={(mode) => fulfillmentModeMutation.mutate(mode)} isSaving={fulfillmentModeMutation.isPending} />
 
       <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
         <div className="space-y-6">
