@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
+import NFTRaritySection from "@/components/nfts/NFTRaritySection";
 
 export default function NFTDetail() {
   const { storeSlug, listingId } = useParams();
@@ -49,7 +50,6 @@ export default function NFTDetail() {
   return (
     <div className="min-h-screen bg-slate-100">
       <div className="mx-auto max-w-6xl px-4 py-10">
-        {/* Header */}
         <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 px-8 py-10 text-white shadow-sm">
           <div className="flex flex-wrap items-center gap-3 text-sm">
             {data?.merchant?.logo_url && (
@@ -81,7 +81,6 @@ export default function NFTDetail() {
           </div>
         </div>
 
-        {/* Content */}
         <div className="mt-8 grid gap-8 lg:grid-cols-2">
           <div className="rounded-2xl border border-slate-200 bg-white p-4">
             {l.image_url ? (
@@ -102,19 +101,19 @@ export default function NFTDetail() {
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="rounded-lg bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Collection</p>
-                  <p className="mt-1 text-sm text-slate-900">{l.collection_name || '—'}</p>
+                  <p className="mt-1 text-sm text-slate-900">{l.collection_name || "—"}</p>
                 </div>
                 <div className="rounded-lg bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Price in ADA</p>
-                  <p className="mt-1 text-sm text-slate-900">{l.price_ada ? `₳ ${Number(l.price_ada).toFixed(2)}` : 'Via checkout'}</p>
+                  <p className="mt-1 text-sm text-slate-900">{l.price_ada ? `₳ ${Number(l.price_ada).toFixed(2)}` : "Via checkout"}</p>
                 </div>
                 <div className="rounded-lg bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Policy ID</p>
-                  <p className="mt-1 text-xs break-all text-slate-900">{l.policy_id || '—'}</p>
+                  <p className="mt-1 text-xs break-all text-slate-900">{l.policy_id || "—"}</p>
                 </div>
                 <div className="rounded-lg bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Asset name (hex)</p>
-                  <p className="mt-1 text-xs break-all text-slate-900">{l.asset_name_hex || '—'}</p>
+                  <p className="mt-1 text-xs break-all text-slate-900">{l.asset_name_hex || "—"}</p>
                 </div>
                 <div className="rounded-lg bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Quantity</p>
@@ -139,6 +138,8 @@ export default function NFTDetail() {
                 )}
               </div>
             </div>
+
+            <NFTRaritySection rarity={data.rarity} />
           </div>
         </div>
       </div>
