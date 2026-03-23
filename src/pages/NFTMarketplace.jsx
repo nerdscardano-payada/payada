@@ -157,7 +157,7 @@ export default function NFTMarketplace() {
     setSelectedAssetUnit(unit);
     setFormData((prev) => ({
       ...prev,
-      title: prev.title || asset.asset_label,
+      title: asset.asset_label,
       slug: prev.slug || createSlug(asset.asset_label),
       asset_label: asset.asset_label,
       policy_id: asset.policy_id,
