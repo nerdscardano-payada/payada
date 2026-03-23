@@ -40,7 +40,7 @@ export default function ListingsTable({ listings, paymentLinksById, onEdit, onDe
               <Button variant="outline" size="sm" onClick={() => onPreview?.(listing)}><ExternalLink className="mr-2 h-4 w-4" />Preview</Button>
               <Button variant="outline" size="sm" onClick={() => onCopy(listing)}><Copy className="mr-2 h-4 w-4" />Storefront</Button>
               <Button variant="outline" size="sm" onClick={() => onEdit(listing)}><Pencil className="mr-2 h-4 w-4" />Edit</Button>
-              <Button variant="outline" size="sm" onClick={() => onDelete(listing.id)}><Trash2 className="mr-2 h-4 w-4" />Delete</Button>
+              <Button variant="outline" size="sm" onClick={() => onDelete(listing)}><Trash2 className="mr-2 h-4 w-4" />Delete</Button>
             </div>
           </div>
         ))}

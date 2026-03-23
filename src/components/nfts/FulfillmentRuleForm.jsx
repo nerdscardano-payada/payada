@@ -2,10 +2,9 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import WalletAssetSelect from "@/components/nfts/WalletAssetSelect";
 
-export default function FulfillmentRuleForm({ formData, setFormData, paymentLinks, walletAssets, selectedAssetUnit, onSelectAsset, onSubmit, editingRule, isSubmitting, onCancel }) {
+export default function FulfillmentRuleForm({ formData, setFormData, walletAssets, selectedAssetUnit, onSelectAsset, onSubmit, editingRule, isSubmitting, onCancel }) {
   const update = (field, value) => setFormData((prev) => ({ ...prev, [field]: value }));
 
   return (
@@ -13,12 +12,12 @@ export default function FulfillmentRuleForm({ formData, setFormData, paymentLink
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold text-slate-900">{editingRule ? "Edit distribution rule" : "New distribution rule"}</h2>
-          <p className="text-sm text-slate-500">Link a payment link to the NFT that should be delivered.</p>
+          <p className="text-sm text-slate-500">Set a price and we’ll create the hidden payment link automatically.</p>
         </div>
         {editingRule && <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>}
       </div>
 
-      <div><Label>Payment link</Label><Select value={formData.payment_link_id || ""} onValueChange={(value) => update("payment_link_id", value)}><SelectTrigger><SelectValue placeholder="Select payment link" /></SelectTrigger><SelectContent>{paymentLinks.map((link) => <SelectItem key={link.id} value={link.id}>{link.title}</SelectItem>)}</SelectContent></Select></div>
+      <div><Label>Price in ADA</Label><Input type="number" min="0" step="0.000001" value={formData.price_ada || ""} onChange={(e) => update("price_ada", Number(e.target.value) || 0)} placeholder="45" required /></div>
       {walletAssets?.length > 0 && (
         <WalletAssetSelect
           assets={walletAssets}
@@ -33,7 +32,10 @@ export default function FulfillmentRuleForm({ formData, setFormData, paymentLink
         <div><Label>Policy ID</Label><Input value={formData.policy_id || ""} onChange={(e) => update("policy_id", e.target.value)} required /></div>
         <div><Label>Asset name (hex)</Label><Input value={formData.asset_name_hex || ""} onChange={(e) => update("asset_name_hex", e.target.value)} required /></div>
       </div>
-      <Button type="submit" disabled={isSubmitting || !formData.payment_link_id}>{isSubmitting ? "Saving..." : editingRule ? "Update rule" : "Create rule"}</Button>
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">
+        A hidden payment link will be generated from this ADA price.
+      </div>
+      <Button type="submit" disabled={isSubmitting || !Number(formData.price_ada)}>{isSubmitting ? "Saving..." : editingRule ? "Update rule" : "Create rule"}</Button>
     </form>
   );
 }

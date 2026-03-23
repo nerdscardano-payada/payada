@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import WalletAssetSelect from "@/components/nfts/WalletAssetSelect";
 
-export default function ListingForm({ formData, setFormData, paymentLinks, walletAssets, selectedAssetUnit, onSelectAsset, onSubmit, editingListing, isSubmitting, onCancel }) {
+export default function ListingForm({ formData, setFormData, walletAssets, selectedAssetUnit, onSelectAsset, onSubmit, editingListing, isSubmitting, onCancel }) {
   const update = (field, value) => setFormData((prev) => ({ ...prev, [field]: value }));
 
   return (
@@ -14,7 +14,7 @@ export default function ListingForm({ formData, setFormData, paymentLinks, walle
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold text-slate-900">{editingListing ? "Edit listing" : "New listing"}</h2>
-          <p className="text-sm text-slate-500">Publish a polished storefront listing with metadata, media, and direct checkout.</p>
+          <p className="text-sm text-slate-500">Publish a polished storefront listing with metadata, media, and an auto-created checkout link.</p>
         </div>
         {editingListing && <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>}
       </div>
@@ -37,7 +37,7 @@ export default function ListingForm({ formData, setFormData, paymentLinks, walle
         <div><Label>Slug</Label><Input value={formData.slug || ""} onChange={(e) => update("slug", e.target.value)} placeholder="genesis-pass" required /></div>
         <div><Label>Asset label</Label><Input value={formData.asset_label || ""} onChange={(e) => update("asset_label", e.target.value)} placeholder="Auto-filled from the wallet" /></div>
         <div><Label>Collection</Label><Input value={formData.collection_name || ""} onChange={(e) => update("collection_name", e.target.value)} placeholder="Founder Passes" /></div>
-        <div><Label>Price in ADA</Label><Input type="number" min="0" step="0.000001" value={formData.price_ada || ""} onChange={(e) => update("price_ada", Number(e.target.value) || 0)} placeholder="45" /></div>
+        <div><Label>Price in ADA</Label><Input type="number" min="0" step="0.000001" value={formData.price_ada || ""} onChange={(e) => update("price_ada", Number(e.target.value) || 0)} placeholder="45" required /></div>
         <div><Label>Policy ID</Label><Input value={formData.policy_id || ""} onChange={(e) => update("policy_id", e.target.value)} /></div>
         <div><Label>Asset name (hex)</Label><Input value={formData.asset_name_hex || ""} onChange={(e) => update("asset_name_hex", e.target.value)} /></div>
         <div><Label>Quantity</Label><Input type="number" min="1" value={formData.quantity || 1} onChange={(e) => update("quantity", Number(e.target.value) || 1)} /></div>
@@ -54,10 +54,12 @@ export default function ListingForm({ formData, setFormData, paymentLinks, walle
       )}
 
       <div><Label>Description</Label><Textarea value={formData.description || ""} onChange={(e) => update("description", e.target.value)} rows={4} placeholder="Describe the utility, delivery flow, and what the buyer receives." /></div>
-      <div><Label>Payment link</Label><Select value={formData.payment_link_id || ""} onValueChange={(value) => update("payment_link_id", value)}><SelectTrigger><SelectValue placeholder="Select payment link" /></SelectTrigger><SelectContent>{paymentLinks.map((link) => <SelectItem key={link.id} value={link.id}>{link.title}</SelectItem>)}</SelectContent></Select></div>
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">
+        A hidden payment link will be created automatically from this ADA price.
+      </div>
       <div><Label>Status</Label><Select value={formData.status || "draft"} onValueChange={(value) => update("status", value)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="draft">Draft</SelectItem><SelectItem value="active">Active</SelectItem><SelectItem value="disabled">Disabled</SelectItem></SelectContent></Select></div>
 
-      <Button type="submit" disabled={isSubmitting || !formData.payment_link_id}>{isSubmitting ? "Saving..." : editingListing ? "Update listing" : "Create listing"}</Button>
+      <Button type="submit" disabled={isSubmitting || !Number(formData.price_ada)}>{isSubmitting ? "Saving..." : editingListing ? "Update listing" : "Create listing"}</Button>
     </form>
   );
 }

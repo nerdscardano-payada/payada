@@ -6,6 +6,7 @@ import ListingForm from "@/components/nfts/ListingForm";
 import ListingsTable from "@/components/nfts/ListingsTable";
 import MarketplaceSettingsForm from "@/components/nfts/MarketplaceSettingsForm";
 import SignerWalletSetupCard from "@/components/nfts/SignerWalletSetupCard";
+import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
 import { toast } from "sonner";
 
 const initialForm = { title: "", slug: "", description: "", image_url: "", payment_link_id: "", policy_id: "", asset_name_hex: "", asset_label: "", collection_name: "", collection_slug: "", quantity: 1, price_ada: 0, status: "draft" };
@@ -81,13 +82,35 @@ export default function NFTMarketplace() {
   const signerStatus = signerWallet?.wallet_address ? "Configured" : "Not configured";
 
   const saveMutation = useMutation({
-    mutationFn: (payload) => editingListing ? base44.entities.NftListing.update(editingListing.id, payload) : base44.entities.NftListing.create(payload),
+    mutationFn: async (payload) => {
+      const existingPaymentLink = paymentLinksById[editingListing?.payment_link_id];
+      const paymentLink = await upsertHiddenNftPaymentLink({
+        existingLink: existingPaymentLink,
+        merchantId: user.email,
+        title: `${payload.title || payload.asset_label || "NFT listing"} • NFT purchase`,
+        amountAda: payload.price_ada,
+        receiveAddress: merchantProfile?.default_receive_address,
+        slugBase: `nft-market-${payload.slug || payload.title}`,
+      });
+
+      const listingPayload = {
+        ...payload,
+        payment_link_id: paymentLink.id,
+        price_ada: Number(payload.price_ada) || 0,
+      };
+
+      return editingListing
+        ? base44.entities.NftListing.update(editingListing.id, listingPayload)
+        : base44.entities.NftListing.create(listingPayload);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["nft-listings"] });
+      queryClient.invalidateQueries({ queryKey: ["payment-links-marketplace"] });
       setFormData(initialForm);
       setEditingListing(null);
       toast.success("NFT listing saved");
     },
+    onError: (error) => toast.error(error.message),
   });
 
   const settingsMutation = useMutation({
@@ -121,9 +144,16 @@ export default function NFTMarketplace() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.NftListing.delete(id),
+    mutationFn: async (listing) => {
+      const paymentLink = paymentLinksById[listing.payment_link_id];
+      if (paymentLink?.is_hidden) {
+        await base44.entities.PaymentLink.delete(paymentLink.id);
+      }
+      return base44.entities.NftListing.delete(listing.id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["nft-listings"] });
+      queryClient.invalidateQueries({ queryKey: ["payment-links-marketplace"] });
       toast.success("NFT listing deleted");
     },
   });
@@ -131,6 +161,14 @@ export default function NFTMarketplace() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!user?.email) return;
+    if (!merchantProfile?.default_receive_address) {
+      toast.error("Set eerst een standaard ontvangstadres in je merchant profiel");
+      return;
+    }
+    if (!Number(formData.price_ada) || Number(formData.price_ada) <= 0) {
+      toast.error("Voer een geldige ADA prijs in");
+      return;
+    }
     saveMutation.mutate({
       ...formData,
       merchant_id: user.email,
@@ -205,8 +243,8 @@ export default function NFTMarketplace() {
         <SignerWalletSetupCard wallet={signerWallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={saveSignerWallet} isSaving={signerWalletMutation.isPending} />
         <MarketplaceSettingsForm value={storeSettings} onChange={setStoreSettings} onSave={saveMarketplaceSettings} isSaving={settingsMutation.isPending} publicUrl={`${window.location.origin}${publicStorePath}`} />
       </div>
-      <ListingForm formData={formData} setFormData={setFormData} paymentLinks={paymentLinks} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
-      <ListingsTable listings={listings} paymentLinksById={paymentLinksById} onEdit={(listing) => { setEditingListing(listing); setFormData({ ...initialForm, ...listing }); setSelectedAssetUnit(`${listing.policy_id}${listing.asset_name_hex || ""}`); }} onDelete={(id) => deleteMutation.mutate(id)} onCopy={copyLink} onPreview={() => window.open(publicStorePath, "_blank")} />
+      <ListingForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
+      <ListingsTable listings={listings} paymentLinksById={paymentLinksById} onEdit={(listing) => { setEditingListing(listing); setFormData({ ...initialForm, ...listing, price_ada: listing.price_ada || paymentLinksById[listing.payment_link_id]?.amount_ada || 0 }); setSelectedAssetUnit(`${listing.policy_id}${listing.asset_name_hex || ""}`); }} onDelete={(listing) => deleteMutation.mutate(listing)} onCopy={copyLink} onPreview={() => window.open(publicStorePath, "_blank")} />
     </div>
   );
 }

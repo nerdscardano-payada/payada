@@ -32,7 +32,7 @@ export default function FulfillmentRulesTable({ rules, paymentLinksById, onEdit,
               )}
               <Button variant="outline" size="sm" onClick={() => onEdit(rule)}><Pencil className="mr-2 h-4 w-4" />Edit</Button>
               <Button variant="outline" size="sm" onClick={() => onToggle(rule)}><Power className="mr-2 h-4 w-4" />{rule.status === "active" ? "Pause" : "Activate"}</Button>
-              <Button variant="outline" size="sm" onClick={() => onDelete(rule.id)}><Trash2 className="mr-2 h-4 w-4" />Delete</Button>
+              <Button variant="outline" size="sm" onClick={() => onDelete(rule)}><Trash2 className="mr-2 h-4 w-4" />Delete</Button>
             </div>
           </div>
         )})}

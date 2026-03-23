@@ -6,9 +6,10 @@ import SignerWalletSetupCard from "@/components/nfts/SignerWalletSetupCard";
 import FulfillmentRuleForm from "@/components/nfts/FulfillmentRuleForm";
 import FulfillmentRulesTable from "@/components/nfts/FulfillmentRulesTable";
 import TransferQueueTable from "@/components/nfts/TransferQueueTable";
+import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
 import { toast } from "sonner";
 
-const initialForm = { payment_link_id: "", asset_label: "", policy_id: "", asset_name_hex: "", quantity: 1 };
+const initialForm = { payment_link_id: "", asset_label: "", policy_id: "", asset_name_hex: "", quantity: 1, price_ada: 0 };
 
 export default function NFTDistribution() {
   const [user, setUser] = React.useState(null);
@@ -26,6 +27,15 @@ export default function NFTDistribution() {
     queryFn: async () => {
       const wallets = await base44.entities.MerchantSignerWallet.filter({ merchant_id: user.email }, "-updated_date", 1);
       return wallets[0] || null;
+    },
+    enabled: !!user?.email,
+  });
+
+  const { data: merchantProfile } = useQuery({
+    queryKey: ["merchant-profile-nft-distribution", user?.email],
+    queryFn: async () => {
+      const profiles = await base44.entities.MerchantProfile.filter({ user_id: user.email }, "-created_date", 1);
+      return profiles[0] || null;
     },
     enabled: !!user?.email,
   });
@@ -76,19 +86,52 @@ export default function NFTDistribution() {
   });
 
   const saveRuleMutation = useMutation({
-    mutationFn: (payload) => editingRule ? base44.entities.NftFulfillmentRule.update(editingRule.id, payload) : base44.entities.NftFulfillmentRule.create(payload),
+    mutationFn: async (payload) => {
+      const existingPaymentLink = paymentLinksById[editingRule?.payment_link_id];
+      const paymentLink = await upsertHiddenNftPaymentLink({
+        existingLink: existingPaymentLink,
+        merchantId: user.email,
+        title: `${payload.asset_label || "NFT asset"} • NFT delivery`,
+        amountAda: payload.price_ada,
+        receiveAddress: merchantProfile?.default_receive_address,
+        slugBase: `nft-distribution-${payload.asset_label || payload.policy_id}`,
+      });
+
+      const rulePayload = {
+        merchant_id: payload.merchant_id,
+        payment_link_id: paymentLink.id,
+        asset_label: payload.asset_label,
+        policy_id: payload.policy_id,
+        asset_name_hex: payload.asset_name_hex,
+        quantity: payload.quantity,
+        status: payload.status,
+      };
+
+      return editingRule
+        ? base44.entities.NftFulfillmentRule.update(editingRule.id, rulePayload)
+        : base44.entities.NftFulfillmentRule.create(rulePayload);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["nft-fulfillment-rules"] });
+      queryClient.invalidateQueries({ queryKey: ["payment-links-for-nft"] });
       setFormData(initialForm);
       setEditingRule(null);
       toast.success("Fulfillment rule saved");
     },
+    onError: (error) => toast.error(error.message),
   });
 
   const deleteRuleMutation = useMutation({
-    mutationFn: (id) => base44.entities.NftFulfillmentRule.delete(id),
+    mutationFn: async (rule) => {
+      const paymentLink = paymentLinksById[rule.payment_link_id];
+      if (paymentLink?.is_hidden) {
+        await base44.entities.PaymentLink.delete(paymentLink.id);
+      }
+      return base44.entities.NftFulfillmentRule.delete(rule.id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["nft-fulfillment-rules"] });
+      queryClient.invalidateQueries({ queryKey: ["payment-links-for-nft"] });
       toast.success("Fulfillment rule deleted");
     },
   });
@@ -107,6 +150,14 @@ export default function NFTDistribution() {
   const handleRuleSubmit = (e) => {
     e.preventDefault();
     if (!user?.email) return;
+    if (!merchantProfile?.default_receive_address) {
+      toast.error("Set eerst een standaard ontvangstadres in je merchant profiel");
+      return;
+    }
+    if (!Number(formData.price_ada) || Number(formData.price_ada) <= 0) {
+      toast.error("Voer een geldige ADA prijs in");
+      return;
+    }
     saveRuleMutation.mutate({ ...formData, merchant_id: user.email, status: editingRule?.status || "active" });
   };
 
@@ -174,9 +225,9 @@ export default function NFTDistribution() {
       </div>
       <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
         <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
-        <FulfillmentRuleForm formData={formData} setFormData={setFormData} paymentLinks={paymentLinks} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleRuleSubmit} editingRule={editingRule} isSubmitting={saveRuleMutation.isPending} onCancel={() => { setEditingRule(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
+        <FulfillmentRuleForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleRuleSubmit} editingRule={editingRule} isSubmitting={saveRuleMutation.isPending} onCancel={() => { setEditingRule(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
       </div>
-      <FulfillmentRulesTable rules={rules} paymentLinksById={paymentLinksById} onEdit={(rule) => { setEditingRule(rule); setFormData(rule); setSelectedAssetUnit(`${rule.policy_id}${rule.asset_name_hex || ""}`); }} onDelete={(id) => deleteRuleMutation.mutate(id)} onToggle={toggleStatus} />
+      <FulfillmentRulesTable rules={rules} paymentLinksById={paymentLinksById} onEdit={(rule) => { setEditingRule(rule); setFormData({ ...initialForm, ...rule, price_ada: paymentLinksById[rule.payment_link_id]?.amount_ada || 0 }); setSelectedAssetUnit(`${rule.policy_id}${rule.asset_name_hex || ""}`); }} onDelete={(rule) => deleteRuleMutation.mutate(rule)} onToggle={toggleStatus} />
       <TransferQueueTable logs={transferLogs} signingId={signingId} onSign={handleSignTransfer} />
     </div>
   );
