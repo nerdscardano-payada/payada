@@ -48,6 +48,20 @@ export default function NFTStore() {
               <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Store</p>
               <h1 className="mt-4 text-4xl font-semibold">{merchantName}</h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">{storeDescription}</p>
+              <div className="mt-4 flex items-center gap-3 text-sm">
+                {data?.merchant?.logo_url && (
+                  <img src={data.merchant.logo_url} alt={merchantName} className="h-8 w-8 rounded" />
+                )}
+                <span className="text-slate-200 font-medium flex items-center gap-2">
+                  {merchantName}
+                  {data?.merchant?.verified_merchant && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-emerald-300 text-xs font-semibold">Verified</span>
+                  )}
+                </span>
+                {data?.merchant?.website_url && (
+                  <a href={data.merchant.website_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Website</a>
+                )}
+              </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">

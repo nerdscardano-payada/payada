@@ -6,6 +6,7 @@ import {
   ExternalLink, AlertCircle, Wallet, ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import MerchantHeader from "@/components/shared/MerchantHeader";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -294,6 +295,9 @@ export default function Pay() {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
+            {paymentLink?.merchant_id && (
+              <MerchantHeader merchantId={paymentLink.merchant_id} />
+            )}
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center mx-auto mb-4">
             <Hexagon className="w-6 h-6 text-white" />
           </div>

@@ -14,6 +14,8 @@ export default async function upsertHiddenNftPaymentLink({ existingLink, merchan
     status: "active",
     confirmations_required: 2,
     is_hidden: true,
+    collect_email: true,
+    collect_name: true,
   };
 
   if (existingLink?.is_hidden) {
