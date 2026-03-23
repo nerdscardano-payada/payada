@@ -269,11 +269,16 @@ export default function NFTDistribution() {
       <FulfillmentModeSelector value={fulfillmentMode} onChange={(mode) => fulfillmentModeMutation.mutate(mode)} isSaving={fulfillmentModeMutation.isPending} />
 
       <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
-        {fulfillmentMode === "automatic" ? (
-          <HotWalletSetupCard wallet={hotWallet} onSave={handleHotWalletSave} isSaving={hotWalletMutation.isPending} />
-        ) : (
-          <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
-        )}
+        <div className="space-y-6">
+          {fulfillmentMode === "automatic" ? (
+            <>
+              <HotWalletSetupCard wallet={hotWallet} onSave={handleHotWalletSave} isSaving={hotWalletMutation.isPending} />
+              <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
+            </>
+          ) : (
+            <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
+          )}
+        </div>
         <FulfillmentRuleForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleRuleSubmit} editingRule={editingRule} isSubmitting={saveRuleMutation.isPending} onCancel={() => { setEditingRule(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
       </div>
 
