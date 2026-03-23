@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 import * as CSL from 'npm:@emurgo/cardano-serialization-lib-nodejs@11.5.0';
-import { mnemonicToEntropySync } from 'npm:bip39@3.1.0';
+import bip39 from 'npm:bip39@3.1.0';
 
 const BLOCKFROST_API_KEY = Deno.env.get('BLOCKFROST_API_KEY');
 const BLOCKFROST_URL = 'https://cardano-mainnet.blockfrost.io/api/v0';
@@ -55,7 +55,7 @@ async function decryptMnemonic(encryptedSeed, iv, secret) {
 }
 
 function derivePaymentKeyFromMnemonic(mnemonic, networkId) {
-  const entropy = hexToBytes(mnemonicToEntropySync(mnemonic));
+  const entropy = hexToBytes(bip39.mnemonicToEntropy(mnemonic));
   const rootKey = CSL.Bip32PrivateKey.from_bip39_entropy(entropy, new Uint8Array());
   const accountKey = rootKey.derive(harden(1852)).derive(harden(1815)).derive(harden(0));
   const paymentKey = accountKey.derive(0).derive(0).to_raw_key();

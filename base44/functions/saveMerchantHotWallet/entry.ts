@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 import * as CSL from 'npm:@emurgo/cardano-serialization-lib-nodejs@11.5.0';
-import { mnemonicToEntropySync, validateMnemonic, wordlists } from 'npm:bip39@3.1.0';
+import bip39 from 'npm:bip39@3.1.0';
 
 function bytesToBase64(bytes) {
   return btoa(String.fromCharCode(...bytes));
@@ -21,7 +21,7 @@ function getNetworkId(address) {
 }
 
 function deriveAddressFromMnemonic(mnemonic, networkId) {
-  const entropy = hexToBytes(mnemonicToEntropySync(mnemonic));
+  const entropy = hexToBytes(bip39.mnemonicToEntropy(mnemonic));
   const rootKey = CSL.Bip32PrivateKey.from_bip39_entropy(entropy, new Uint8Array());
   const accountKey = rootKey.derive(harden(1852)).derive(harden(1815)).derive(harden(0));
   const paymentKey = accountKey.derive(0).derive(0).to_raw_key();
@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
     }
 
     if (shouldUpdateMnemonic) {
-      if (!validateMnemonic(normalizedMnemonic, wordlists.english)) {
+      if (!bip39.validateMnemonic(normalizedMnemonic, bip39.wordlists.english)) {
         return Response.json({ error: 'The recovery phrase is not a valid Cardano/BIP39 phrase.' }, { status: 400 });
       }
 
