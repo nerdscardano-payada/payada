@@ -81,7 +81,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
   React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
   const isAdmin = user?.role === "admin";
   const canAccessTemporaryPages = isAdmin || user?.email === "nerscardano@gmail.com";
-  const temporaryRestrictedPages = ["Subscriptions", "DonationPages", "NFTs"];
+  const temporaryRestrictedPages = ["Subscriptions", "NFTs"];
 
   return (
     <>
