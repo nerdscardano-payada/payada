@@ -98,43 +98,40 @@ function normalizeAddress(addr) {
   if (addr.startsWith('addr') || addr.startsWith('stake')) return addr;
   // Pure hex (no CBOR wrapper) — Cardano address is 29 or 57 bytes = 58 or 114 hex chars
   let hex = addr.toLowerCase();
+...
+  }
+}
 
-  // Strip CBOR byte string headers
-  if (hex.startsWith('5839') || hex.startsWith('5840') || hex.startsWith('5841') ||
-      hex.startsWith('5857') || hex.startsWith('5858') || hex.startsWith('5859') ||
-      hex.startsWith('585a') || hex.startsWith('585b') || hex.startsWith('585c')) {
-    // 58 xx = 1-byte length → 4 hex chars header
-    hex = hex.slice(4);
-  } else if (hex.startsWith('59')) {
-    // 59 xxxx = 2-byte length → 6 hex chars header
-    hex = hex.slice(6);
-  } else if (hex.startsWith('58')) {
-    // generic 58 xx
-    hex = hex.slice(4);
+function getOutputLovelace(output) {
+  return (output.amount || []).reduce((sum, item) => {
+    return item.unit === 'lovelace' ? sum + parseInt(item.quantity || '0') : sum;
+  }, 0);
+}
+
+function calculateAdaSplitFromCombinedTotal(totalLovelace, feeModel, feePercent) {
+  const MIN_FEE_OUTPUT = 1_000_000;
+  let feeLovelace = 0;
+
+  if (feeModel === 'customer_pays') {
+    const baseAmount = Math.floor(totalLovelace / (1 + feePercent));
+    feeLovelace = totalLovelace - baseAmount;
+  } else if (feeModel === 'split') {
+    const baseAmount = Math.floor(totalLovelace / (1 + feePercent / 2));
+    feeLovelace = Math.floor(baseAmount * feePercent);
   } else {
-    // Try stripping any single-byte CBOR header (4x range)
-    const firstByte = parseInt(hex.slice(0, 2), 16);
-    const majorType = firstByte >> 5;
-    if (majorType === 2) { // byte string
-      const addInfo = firstByte & 0x1f;
-      if (addInfo <= 23) {
-        // length encoded in same byte, strip 1 byte header
-        hex = hex.slice(2);
-      }
-    }
+    feeLovelace = Math.floor(totalLovelace * feePercent);
   }
 
-  try {
-    const bytes = hexToBytes(hex);
-    if (bytes.length < 28) return addr; // too short, not a valid address
-    const headerByte = bytes[0];
-    const networkId = headerByte & 0x0f;
-    const hrp = networkId === 1 ? 'addr' : 'addr_test';
-    return encodeBech32(hrp, Array.from(bytes));
-  } catch {
-    // Return raw hex as-is so we at least have something
-    return hex.length >= 56 ? hex : addr;
+  if (feeLovelace > 0 && feeLovelace < MIN_FEE_OUTPUT) {
+    feeLovelace = MIN_FEE_OUTPUT;
   }
+
+  feeLovelace = Math.min(feeLovelace, totalLovelace);
+
+  return {
+    feeLovelace,
+    merchantLovelace: Math.max(0, totalLovelace - feeLovelace),
+  };
 }
 
 Deno.serve(async (req) => {
@@ -188,13 +185,17 @@ Deno.serve(async (req) => {
           expectedAmountAda = accessLink.price_ada || 0;
           cntDecimals = getKnownCntDecimals(accessLink.cnt_policy_id, accessLink.cnt_asset_name, accessLink.cnt_decimals || 0);
           cntTicker = accessLink.cnt_ticker || null;
-          if (!receiveAddress) {
-            const profiles = await sr.entities.MerchantProfile.filter({ user_id: merchantId });
-            receiveAddress = profiles[0]?.default_receive_address;
-          }
         }
       } catch { /* not found */ }
     }
+
+    const merchantProfiles = await sr.entities.MerchantProfile.filter({ user_id: merchantId });
+    const merchantProfile = merchantProfiles[0] || null;
+    if (!receiveAddress) {
+      receiveAddress = merchantProfile?.default_receive_address || null;
+    }
+    const feePercent = (merchantProfile?.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100;
+    const feeModel = paymentLink?.fee_model || accessLink?.fee_model || 'merchant_pays';
 
     // Fetch blockchain data
     console.log(`[recordWalletPayment] Fetching blockchain data for txHash=${txHash}`);
@@ -209,13 +210,18 @@ Deno.serve(async (req) => {
     let cntAssetName = null;
     let cntMerchantAmount = 0;
     let cntFeeAmount = 0;
+    let combinedSameAddressLovelace = 0;
+    const merchantAndFeeSameAddress = !!(receiveAddress && PAYADA_FEE_WALLET && receiveAddress === PAYADA_FEE_WALLET);
 
     outputs.forEach(output => {
+      if (merchantAndFeeSameAddress && output.address === receiveAddress) {
+        combinedSameAddressLovelace += getOutputLovelace(output);
+      }
+
       if (receiveAddress && output.address === receiveAddress) {
         output.amount.forEach(a => {
           if (a.unit === 'lovelace') merchantLovelace += parseInt(a.quantity);
           else {
-            // CNT payment detected
             const policyId = a.unit.slice(0, 56);
             const assetName = a.unit.slice(56);
             cntPolicyId = policyId;
@@ -239,6 +245,13 @@ Deno.serve(async (req) => {
         });
       }
     });
+
+    if (merchantAndFeeSameAddress && combinedSameAddressLovelace > 0 && cntMerchantAmount === 0) {
+      const split = calculateAdaSplitFromCombinedTotal(combinedSameAddressLovelace, feeModel, feePercent);
+      merchantLovelace = split.merchantLovelace;
+      feeLovelace = split.feeLovelace;
+      console.log(`[recordWalletPayment] Merchant address matches fee wallet, derived split merchant=${merchantLovelace} fee=${feeLovelace}`);
+    }
 
     // If we couldn't match merchant output by address, sum all non-fee outputs
     if (merchantLovelace === 0 && !receiveAddress) {

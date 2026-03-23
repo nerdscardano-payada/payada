@@ -30,6 +30,38 @@ async function getLatestBlockHeight() {
   return data.height;
 }
 
+function getOutputLovelace(output) {
+  return (output.amount || []).reduce((sum, item) => {
+    return item.unit === 'lovelace' ? sum + parseInt(item.quantity || '0') : sum;
+  }, 0);
+}
+
+function calculateAdaSplitFromCombinedTotal(totalLovelace, feeModel, feePercent) {
+  const MIN_FEE_OUTPUT = 1_000_000;
+  let feeLovelace = 0;
+
+  if (feeModel === 'customer_pays') {
+    const baseAmount = Math.floor(totalLovelace / (1 + feePercent));
+    feeLovelace = totalLovelace - baseAmount;
+  } else if (feeModel === 'split') {
+    const baseAmount = Math.floor(totalLovelace / (1 + feePercent / 2));
+    feeLovelace = Math.floor(baseAmount * feePercent);
+  } else {
+    feeLovelace = Math.floor(totalLovelace * feePercent);
+  }
+
+  if (feeLovelace > 0 && feeLovelace < MIN_FEE_OUTPUT) {
+    feeLovelace = MIN_FEE_OUTPUT;
+  }
+
+  feeLovelace = Math.min(feeLovelace, totalLovelace);
+
+  return {
+    feeLovelace,
+    merchantLovelace: Math.max(0, totalLovelace - feeLovelace),
+  };
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -92,13 +124,20 @@ Deno.serve(async (req) => {
       expectedMerchantAmount = totalAmount - expectedFeeAmount;
     }
 
+    const sameAddressForMerchantAndFee = !!(paymentLink.receive_address && PAYADA_FEE_WALLET && paymentLink.receive_address === PAYADA_FEE_WALLET);
+
     // Validate merchant output
     let merchantOutputFound = false;
     let merchantOutputAmount = 0;
+    let combinedMatchedAmount = 0;
     outputs.forEach(output => {
       if (output.address === paymentLink.receive_address) {
         merchantOutputFound = true;
-        merchantOutputAmount += output.amount.reduce((sum, amt) => sum + parseInt(amt), 0);
+        const lovelace = getOutputLovelace(output);
+        merchantOutputAmount += lovelace;
+        if (sameAddressForMerchantAndFee) {
+          combinedMatchedAmount += lovelace;
+        }
       }
     });
 
@@ -108,13 +147,20 @@ Deno.serve(async (req) => {
     outputs.forEach(output => {
       if (output.address === PAYADA_FEE_WALLET) {
         feeOutputFound = true;
-        feeOutputAmount += output.amount.reduce((sum, amt) => sum + parseInt(amt), 0);
+        feeOutputAmount += getOutputLovelace(output);
       }
     });
 
-    const isValid = merchantOutputFound && feeOutputFound && 
-                   merchantOutputAmount >= expectedMerchantAmount && 
-                   feeOutputAmount >= expectedFeeAmount;
+    if (sameAddressForMerchantAndFee && combinedMatchedAmount > 0) {
+      const split = calculateAdaSplitFromCombinedTotal(combinedMatchedAmount, feeModel, feePercent);
+      merchantOutputAmount = split.merchantLovelace;
+      feeOutputAmount = split.feeLovelace;
+      feeOutputFound = split.feeLovelace > 0;
+    }
+
+    const isValid = sameAddressForMerchantAndFee
+      ? combinedMatchedAmount >= (expectedMerchantAmount + expectedFeeAmount)
+      : merchantOutputFound && feeOutputFound && merchantOutputAmount >= expectedMerchantAmount && feeOutputAmount >= expectedFeeAmount;
     const merchantAmountAda = merchantOutputAmount / 1000000;
     const feeAmountAda = feeOutputAmount / 1000000;
 
