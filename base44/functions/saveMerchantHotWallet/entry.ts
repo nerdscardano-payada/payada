@@ -1,7 +1,37 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
+import * as CSL from 'npm:@emurgo/cardano-serialization-lib-nodejs@11.5.0';
+import { mnemonicToEntropySync, validateMnemonic, wordlists } from 'npm:bip39@3.1.0';
 
 function bytesToBase64(bytes) {
   return btoa(String.fromCharCode(...bytes));
+}
+
+function hexToBytes(hex) {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) bytes[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+  return bytes;
+}
+
+function harden(index) {
+  return 0x80000000 + index;
+}
+
+function getNetworkId(address) {
+  return String(address).startsWith('addr_test') ? 0 : 1;
+}
+
+function deriveAddressFromMnemonic(mnemonic, networkId) {
+  const entropy = hexToBytes(mnemonicToEntropySync(mnemonic));
+  const rootKey = CSL.Bip32PrivateKey.from_bip39_entropy(entropy, new Uint8Array());
+  const accountKey = rootKey.derive(harden(1852)).derive(harden(1815)).derive(harden(0));
+  const paymentKey = accountKey.derive(0).derive(0).to_raw_key();
+  const stakeKey = accountKey.derive(2).derive(0).to_raw_key();
+
+  return CSL.BaseAddress.new(
+    networkId,
+    CSL.StakeCredential.from_keyhash(paymentKey.to_public().hash()),
+    CSL.StakeCredential.from_keyhash(stakeKey.to_public().hash())
+  ).to_address().to_bech32();
 }
 
 async function getEncryptionKey(secret) {
@@ -37,27 +67,45 @@ Deno.serve(async (req) => {
     }
 
     const { wallet_address, mnemonic, wallet_name } = await req.json();
+    const normalizedAddress = String(wallet_address || '').trim();
+    const normalizedMnemonic = String(mnemonic || '').trim().toLowerCase().replace(/\s+/g, ' ');
 
-    if (!wallet_address) {
+    if (!normalizedAddress) {
       return Response.json({ error: 'wallet_address is required' }, { status: 400 });
     }
 
     const existing = await base44.asServiceRole.entities.MerchantHotWallet.filter({ merchant_id: user.email }, '-updated_date', 1);
-    const shouldUpdateMnemonic = Boolean(mnemonic && String(mnemonic).trim() && String(mnemonic).trim() !== 'keep-existing');
+    const currentWallet = existing[0] || null;
+    const shouldUpdateMnemonic = Boolean(normalizedMnemonic);
 
-    if (!shouldUpdateMnemonic && existing.length === 0) {
+    if (!shouldUpdateMnemonic && !currentWallet) {
       return Response.json({ error: 'mnemonic is required for the first wallet setup' }, { status: 400 });
     }
 
-    const encryptedWallet = shouldUpdateMnemonic ? await encryptMnemonic(String(mnemonic).trim(), encryptionSecret) : null;
+    if (!shouldUpdateMnemonic && currentWallet && normalizedAddress !== currentWallet.wallet_address) {
+      return Response.json({ error: 'To change the wallet address, provide the matching recovery phrase as well.' }, { status: 400 });
+    }
+
+    if (shouldUpdateMnemonic) {
+      if (!validateMnemonic(normalizedMnemonic, wordlists.english)) {
+        return Response.json({ error: 'The recovery phrase is not a valid Cardano/BIP39 phrase.' }, { status: 400 });
+      }
+
+      const derivedAddress = deriveAddressFromMnemonic(normalizedMnemonic, getNetworkId(normalizedAddress));
+      if (derivedAddress !== normalizedAddress) {
+        return Response.json({ error: 'The wallet address does not match the entered recovery phrase.' }, { status: 400 });
+      }
+    }
+
+    const encryptedWallet = shouldUpdateMnemonic ? await encryptMnemonic(normalizedMnemonic, encryptionSecret) : null;
 
     let record;
-    if (existing.length > 0) {
-      record = await base44.asServiceRole.entities.MerchantHotWallet.update(existing[0].id, {
-        wallet_name: wallet_name || existing[0].wallet_name || 'Primary NFT Wallet',
-        wallet_address,
-        encrypted_seed: encryptedWallet?.encrypted_seed || existing[0].encrypted_seed,
-        encryption_iv: encryptedWallet?.encryption_iv || existing[0].encryption_iv,
+    if (currentWallet) {
+      record = await base44.asServiceRole.entities.MerchantHotWallet.update(currentWallet.id, {
+        wallet_name: wallet_name || currentWallet.wallet_name || 'Primary NFT Wallet',
+        wallet_address: normalizedAddress,
+        encrypted_seed: encryptedWallet?.encrypted_seed || currentWallet.encrypted_seed,
+        encryption_iv: encryptedWallet?.encryption_iv || currentWallet.encryption_iv,
         encryption_version: 'v1',
         status: 'active',
       });
@@ -65,7 +113,7 @@ Deno.serve(async (req) => {
       record = await base44.asServiceRole.entities.MerchantHotWallet.create({
         merchant_id: user.email,
         wallet_name: wallet_name || 'Primary NFT Wallet',
-        wallet_address,
+        wallet_address: normalizedAddress,
         encrypted_seed: encryptedWallet.encrypted_seed,
         encryption_iv: encryptedWallet.encryption_iv,
         encryption_version: 'v1',

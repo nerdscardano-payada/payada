@@ -2,12 +2,14 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { PenSquare } from "lucide-react";
 
-export default function TransferQueueTable({ logs, signingId, onSign }) {
+export default function TransferQueueTable({ logs, signingId, onSign, fulfillmentMode = "manual" }) {
+  const isManual = fulfillmentMode !== "automatic";
+
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 p-5">
         <h2 className="text-lg font-semibold text-slate-900">Transfer queue</h2>
-        <p className="mt-1 text-sm text-slate-500">Pending deliveries are confirmed here by the merchant through wallet signing.</p>
+        <p className="mt-1 text-sm text-slate-500">{isManual ? "Pending deliveries wachten hier op manuele wallet signing." : "Bevestigde betalingen worden hier opgevolgd en automatisch verstuurd vanuit de hot wallet."}</p>
       </div>
       <div className="divide-y divide-slate-100">
         {logs.length === 0 ? (
@@ -22,7 +24,7 @@ export default function TransferQueueTable({ logs, signingId, onSign }) {
               <p className="mt-1 text-xs font-mono text-slate-500">{log.recipient_address}</p>
               {log.error_message && <p className="mt-2 text-sm text-red-600">{log.error_message}</p>}
             </div>
-            {log.status === "pending" && (
+            {isManual && log.status === "pending" && (
               <Button onClick={() => onSign(log)} disabled={signingId === log.id}>
                 <PenSquare className="mr-2 h-4 w-4" />
                 {signingId === log.id ? "Signing..." : "Sign & send"}

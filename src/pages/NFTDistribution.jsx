@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import SignerWalletSetupCard from "@/components/nfts/SignerWalletSetupCard";
+import HotWalletSetupCard from "@/components/nfts/HotWalletSetupCard";
+import FulfillmentModeSelector from "@/components/nfts/FulfillmentModeSelector";
 import FulfillmentRuleForm from "@/components/nfts/FulfillmentRuleForm";
 import FulfillmentRulesTable from "@/components/nfts/FulfillmentRulesTable";
 import TransferQueueTable from "@/components/nfts/TransferQueueTable";
@@ -26,6 +28,15 @@ export default function NFTDistribution() {
     queryKey: ["merchant-signer-wallet", user?.email],
     queryFn: async () => {
       const wallets = await base44.entities.MerchantSignerWallet.filter({ merchant_id: user.email }, "-updated_date", 1);
+      return wallets[0] || null;
+    },
+    enabled: !!user?.email,
+  });
+
+  const { data: hotWallet } = useQuery({
+    queryKey: ["merchant-hot-wallet", user?.email],
+    queryFn: async () => {
+      const wallets = await base44.entities.MerchantHotWallet.filter({ merchant_id: user.email }, "-updated_date", 1);
       return wallets[0] || null;
     },
     enabled: !!user?.email,
@@ -67,10 +78,11 @@ export default function NFTDistribution() {
     enabled: !!walletSession?.address,
   });
 
+  const fulfillmentMode = merchantProfile?.nft_fulfillment_mode || "manual";
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
   const activeRules = rules.filter((rule) => rule.status === "active").length;
   const pendingTransfers = transferLogs.filter((log) => log.status === "pending").length;
-  const signerStatus = wallet?.wallet_address ? "Configured" : "Not configured";
+  const activeWalletStatus = fulfillmentMode === "automatic" ? (hotWallet?.wallet_address ? "Configured" : "Not configured") : (wallet?.wallet_address ? "Configured" : "Not configured");
 
   const walletMutation = useMutation({
     mutationFn: (payload) => {
@@ -82,6 +94,34 @@ export default function NFTDistribution() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["merchant-signer-wallet"] });
       toast.success("Signer wallet saved");
+    },
+  });
+
+  const hotWalletMutation = useMutation({
+    mutationFn: (payload) => base44.functions.invoke("saveMerchantHotWallet", payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["merchant-hot-wallet"] });
+      toast.success("Hot wallet saved");
+    },
+    onError: (error) => toast.error(error?.response?.data?.error || error.message),
+  });
+
+  const fulfillmentModeMutation = useMutation({
+    mutationFn: (mode) => {
+      if (merchantProfile?.id) {
+        return base44.entities.MerchantProfile.update(merchantProfile.id, { nft_fulfillment_mode: mode });
+      }
+
+      return base44.entities.MerchantProfile.create({
+        user_id: user.email,
+        business_name: user.full_name || user.email,
+        nft_fulfillment_mode: mode,
+        status: "active",
+      });
+    },
+    onSuccess: (_, mode) => {
+      queryClient.invalidateQueries({ queryKey: ["merchant-profile-nft-distribution"] });
+      toast.success(mode === "automatic" ? "Automatische fulfillment geactiveerd" : "Manuele fulfillment geactiveerd");
     },
   });
 
@@ -146,6 +186,8 @@ export default function NFTDistribution() {
       last_verified_at: new Date().toISOString(),
     });
   };
+
+  const handleHotWalletSave = (payload) => hotWalletMutation.mutate(payload);
 
   const handleRuleSubmit = (e) => {
     e.preventDefault();
@@ -213,22 +255,30 @@ export default function NFTDistribution() {
           <p className="mt-1 text-sm text-blue-900">Payment links that can trigger NFT delivery automatically.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Pending signatures</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Openstaande transfers</p>
           <p className="mt-2 text-3xl font-semibold text-slate-900">{pendingTransfers}</p>
-          <p className="mt-1 text-sm text-slate-600">Deliveries waiting to be signed and sent.</p>
+          <p className="mt-1 text-sm text-slate-600">{fulfillmentMode === "automatic" ? "Wachten op automatische verzending of extra controle." : "Wachten op handmatige ondertekening door de merchant."}</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Signer wallet</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900">{signerStatus}</p>
-          <p className="mt-1 text-sm text-slate-600">No seed storage: the merchant signs the final transaction directly.</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Actieve methode</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900">{fulfillmentMode === "automatic" ? "Automatic hot wallet" : "Manual signer wallet"}</p>
+          <p className="mt-1 text-sm text-slate-600">Wallet status: {activeWalletStatus}</p>
         </div>
       </div>
+
+      <FulfillmentModeSelector value={fulfillmentMode} onChange={(mode) => fulfillmentModeMutation.mutate(mode)} isSaving={fulfillmentModeMutation.isPending} />
+
       <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
-        <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
+        {fulfillmentMode === "automatic" ? (
+          <HotWalletSetupCard wallet={hotWallet} onSave={handleHotWalletSave} isSaving={hotWalletMutation.isPending} />
+        ) : (
+          <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
+        )}
         <FulfillmentRuleForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleRuleSubmit} editingRule={editingRule} isSubmitting={saveRuleMutation.isPending} onCancel={() => { setEditingRule(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
       </div>
+
       <FulfillmentRulesTable rules={rules} paymentLinksById={paymentLinksById} onEdit={(rule) => { setEditingRule(rule); setFormData({ ...initialForm, ...rule, price_ada: paymentLinksById[rule.payment_link_id]?.amount_ada || 0 }); setSelectedAssetUnit(`${rule.policy_id}${rule.asset_name_hex || ""}`); }} onDelete={(rule) => deleteRuleMutation.mutate(rule)} onToggle={toggleStatus} />
-      <TransferQueueTable logs={transferLogs} signingId={signingId} onSign={handleSignTransfer} />
+      <TransferQueueTable logs={transferLogs} signingId={signingId} onSign={handleSignTransfer} fulfillmentMode={fulfillmentMode} />
     </div>
   );
 }
