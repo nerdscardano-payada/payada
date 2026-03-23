@@ -236,9 +236,10 @@ export default function NFTDistribution() {
         tx_cbor: buildResponse.data.txCbor,
         witness_set_cbor: witnessSetCbor,
       });
-      queryClient.invalidateQueries({ queryKey: ["nft-transfer-logs"] });
+      await queryClient.refetchQueries({ queryKey: ["nft-transfer-logs", user?.email] });
       toast.success(`NFT transfer sent: ${submitResponse.data.txHash}`);
     } catch (error) {
+      await queryClient.refetchQueries({ queryKey: ["nft-transfer-logs", user?.email] });
       toast.error(error?.response?.data?.error || error.message || "NFT signing failed");
     } finally {
       setSigningId(null);

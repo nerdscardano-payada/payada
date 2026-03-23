@@ -5,9 +5,21 @@ const BLOCKFROST_API_KEY = Deno.env.get('BLOCKFROST_API_KEY');
 const BLOCKFROST_URL = 'https://cardano-mainnet.blockfrost.io/api/v0';
 
 function hexToBytes(hex) {
-  const result = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < hex.length; i += 2) result[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+  const normalized = hex.startsWith('0x') ? hex.slice(2) : hex;
+  const result = new Uint8Array(normalized.length / 2);
+  for (let i = 0; i < normalized.length; i += 2) result[i / 2] = parseInt(normalized.slice(i, i + 2), 16);
   return result;
+}
+
+function buildSignedTx(unsignedTx, signedPayloadHex) {
+  const signedBytes = hexToBytes(signedPayloadHex);
+
+  try {
+    const witnessSet = CSL.TransactionWitnessSet.from_bytes(signedBytes);
+    return CSL.Transaction.new(unsignedTx.body(), witnessSet, unsignedTx.auxiliary_data());
+  } catch {
+    return CSL.Transaction.from_bytes(signedBytes);
+  }
 }
 
 Deno.serve(async (req) => {
@@ -27,9 +39,14 @@ Deno.serve(async (req) => {
     if (!log) return Response.json({ error: 'Transfer log not found' }, { status: 404 });
     if (user.role !== 'admin' && user.email !== log.merchant_id) return Response.json({ error: 'Forbidden' }, { status: 403 });
 
+    if (!BLOCKFROST_API_KEY) {
+      return Response.json({ error: 'BLOCKFROST_API_KEY is not configured' }, { status: 500 });
+    }
+
     const unsignedTx = CSL.Transaction.from_bytes(hexToBytes(tx_cbor));
-    const witnessSet = CSL.TransactionWitnessSet.from_bytes(hexToBytes(witness_set_cbor));
-    const signedTx = CSL.Transaction.new(unsignedTx.body(), witnessSet, unsignedTx.auxiliary_data());
+    const signedTx = buildSignedTx(unsignedTx, witness_set_cbor);
+
+    console.log('Submitting NFT transfer', { transfer_log_id, merchant_id: log.merchant_id });
 
     const response = await fetch(`${BLOCKFROST_URL}/tx/submit`, {
       method: 'POST',
@@ -42,6 +59,10 @@ Deno.serve(async (req) => {
 
     const text = await response.text();
     if (!response.ok) {
+      await sr.entities.NftTransferLog.update(log.id, {
+        error_message: `Blockfrost submit failed: ${text}`,
+      });
+      console.error('NFT transfer submit failed', text);
       return Response.json({ error: `Blockfrost submit failed: ${text}` }, { status: 400 });
     }
 
