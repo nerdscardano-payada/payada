@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useProfileCheck } from "@/components/hooks/useProfileCheck";
-import QRCode from "qrcode.react";
+import QRCodeDisplay from "@/components/shared/QRCodeDisplay";
 import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 import { createPageUrl } from "@/utils";
 import {
@@ -188,11 +188,9 @@ export default function POS() {
               {paymentStatus !== "confirmed" && (
                 <div className="flex justify-center">
                   <div className="bg-white p-4 rounded-xl">
-                    <QRCode
+                    <QRCodeDisplay
                       value={qrUrl}
                       size={200}
-                      level="H"
-                      includeMargin={false}
                     />
                   </div>
                 </div>
