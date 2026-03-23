@@ -110,9 +110,11 @@ export default function NFTStore() {
           </div>
         </div>
 
-        <div className="mt-6">
-          <MarketplaceTrustNotice mode={fulfillmentMode} />
-        </div>
+        {data?.merchant && (
+          <div className="mt-6">
+            <MarketplaceTrustNotice mode={fulfillmentMode} />
+          </div>
+        )}
 
         {!resolvedStoreSlug && !merchantId ? (
           <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">No store slug specified for this storefront.</div>
