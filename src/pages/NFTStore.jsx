@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import FulfillmentMethodBadge from "@/components/nfts/FulfillmentMethodBadge";
-import MarketplaceTrustNotice from "@/components/nfts/MarketplaceTrustNotice";
+import DeliveryInfoDialog from "@/components/nfts/DeliveryInfoDialog";
 
 export default function NFTStore() {
   const { storeSlug } = useParams();
@@ -71,9 +71,6 @@ export default function NFTStore() {
               <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Store</p>
               <h1 className="mt-4 text-4xl font-semibold">{merchantName}</h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">{storeDescription}</p>
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <FulfillmentMethodBadge mode={fulfillmentMode} />
-              </div>
               <div className="mt-4 flex items-center gap-3 text-sm">
                 {data?.merchant?.logo_url && (
                   <img src={data.merchant.logo_url} alt={merchantName} className="h-8 w-8 rounded" />
@@ -93,6 +90,7 @@ export default function NFTStore() {
                 {receiveAddrUrl && (
                   <a href={receiveAddrUrl} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Owned by {receiveAddrShort}</a>
                 )}
+                <DeliveryInfoDialog mode={fulfillmentMode} />
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
@@ -105,16 +103,14 @@ export default function NFTStore() {
                 <p className="text-xs uppercase tracking-wide text-slate-400">Collections</p>
                 <p className="mt-2 text-3xl font-semibold text-white">{collections.length}</p>
                 <p className="mt-1 text-sm text-slate-300">Organized into separate NFT groups.</p>
+                <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm">
+                  <a href="/NFTMarketplaceFAQ" className="text-cyan-300 hover:underline">NFT Marketplace FAQ</a>
+                  <a href="/NFTMarketplaceTerms" className="text-cyan-300 hover:underline">Marketplace Terms</a>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        {data?.merchant && (
-          <div className="mt-6">
-            <MarketplaceTrustNotice mode={fulfillmentMode} />
-          </div>
-        )}
 
         {!resolvedStoreSlug && !merchantId ? (
           <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">No store slug specified for this storefront.</div>
