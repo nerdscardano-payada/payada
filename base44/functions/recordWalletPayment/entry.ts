@@ -98,7 +98,36 @@ function normalizeAddress(addr) {
   if (addr.startsWith('addr') || addr.startsWith('stake')) return addr;
   // Pure hex (no CBOR wrapper) — Cardano address is 29 or 57 bytes = 58 or 114 hex chars
   let hex = addr.toLowerCase();
-...
+
+  // Strip CBOR byte string headers
+  if (hex.startsWith('5839') || hex.startsWith('5840') || hex.startsWith('5841') ||
+      hex.startsWith('5857') || hex.startsWith('5858') || hex.startsWith('5859') ||
+      hex.startsWith('585a') || hex.startsWith('585b') || hex.startsWith('585c')) {
+    hex = hex.slice(4);
+  } else if (hex.startsWith('59')) {
+    hex = hex.slice(6);
+  } else if (hex.startsWith('58')) {
+    hex = hex.slice(4);
+  } else {
+    const firstByte = parseInt(hex.slice(0, 2), 16);
+    const majorType = firstByte >> 5;
+    if (majorType === 2) {
+      const addInfo = firstByte & 0x1f;
+      if (addInfo <= 23) {
+        hex = hex.slice(2);
+      }
+    }
+  }
+
+  try {
+    const bytes = hexToBytes(hex);
+    if (bytes.length < 28) return addr;
+    const headerByte = bytes[0];
+    const networkId = headerByte & 0x0f;
+    const hrp = networkId === 1 ? 'addr' : 'addr_test';
+    return encodeBech32(hrp, Array.from(bytes));
+  } catch {
+    return hex.length >= 56 ? hex : addr;
   }
 }
 
