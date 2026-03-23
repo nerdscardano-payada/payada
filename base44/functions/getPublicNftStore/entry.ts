@@ -1,5 +1,53 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
+const BLOCKFROST_API_KEY = Deno.env.get('BLOCKFROST_API_KEY');
+const BLOCKFROST_URL = 'https://cardano-mainnet.blockfrost.io/api/v0';
+
+async function getWalletInventory(walletAddress) {
+  if (!walletAddress) return null;
+
+  const response = await fetch(`${BLOCKFROST_URL}/addresses/${walletAddress}`, {
+    headers: { project_id: BLOCKFROST_API_KEY },
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = await response.json();
+  return (data.amount || []).reduce((result, item) => {
+    if (item.unit !== 'lovelace') {
+      result[item.unit] = Number(item.quantity || 0);
+    }
+    return result;
+  }, {});
+}
+
+function splitListingsByInventory(listings, inventory) {
+  if (!inventory) {
+    return { availableListings: listings, soldOutListings: [] };
+  }
+
+  const remainingInventory = { ...inventory };
+  const availableListings = [];
+  const soldOutListings = [];
+
+  for (const listing of listings) {
+    const unit = `${listing.policy_id || ''}${listing.asset_name_hex || ''}`;
+    const quantityNeeded = Number(listing.quantity || 1);
+    const quantityAvailable = Number(remainingInventory[unit] || 0);
+
+    if (unit && quantityAvailable >= quantityNeeded) {
+      availableListings.push(listing);
+      remainingInventory[unit] = quantityAvailable - quantityNeeded;
+    } else {
+      soldOutListings.push(listing);
+    }
+  }
+
+  return { availableListings, soldOutListings };
+}
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -23,19 +71,45 @@ Deno.serve(async (req) => {
       profile = profilesByMerchant[0] || null;
     }
 
-    const [listings, paymentLinks] = await Promise.all([
+    const configuredWallets = await Promise.all([
+      merchantProfile?.nft_fulfillment_mode === 'automatic'
+        ? base44.asServiceRole.entities.MerchantHotWallet.filter({ merchant_id: merchantId, status: 'active' }, '-updated_date', 1)
+        : Promise.resolve([]),
+      merchantProfile?.nft_fulfillment_mode !== 'automatic'
+        ? base44.asServiceRole.entities.MerchantSignerWallet.filter({ merchant_id: merchantId, status: 'active' }, '-updated_date', 1)
+        : Promise.resolve([]),
+    ]);
+
+    const inventoryWalletAddress = merchantProfile?.nft_fulfillment_mode === 'automatic'
+      ? configuredWallets[0]?.[0]?.wallet_address || null
+      : configuredWallets[1]?.[0]?.wallet_address || null;
+
+    const [listings, paymentLinks, inventory] = await Promise.all([
       base44.asServiceRole.entities.NftListing.filter({ merchant_id: merchantId, status: 'active' }, '-created_date', 100),
       base44.asServiceRole.entities.PaymentLink.filter({ merchant_id: merchantId }, '-created_date', 100),
+      getWalletInventory(inventoryWalletAddress),
     ]);
 
     const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
-    const activeListings = listings
+    const storefrontListings = listings
       .map((listing) => ({
         ...listing,
         payment_link_slug: paymentLinksById[listing.payment_link_id]?.slug || null,
         payment_link_status: paymentLinksById[listing.payment_link_id]?.status || null,
       }))
       .filter((listing) => listing.payment_link_slug && listing.payment_link_status === 'active');
+
+    const { availableListings, soldOutListings } = splitListingsByInventory(storefrontListings, inventory);
+
+    await Promise.all(soldOutListings.flatMap((listing) => {
+      const updates = [base44.asServiceRole.entities.NftListing.update(listing.id, { status: 'disabled' })];
+      if (listing.payment_link_id) {
+        updates.push(base44.asServiceRole.entities.PaymentLink.update(listing.payment_link_id, { status: 'disabled' }));
+      }
+      return updates;
+    }));
+
+    const activeListings = availableListings;
 
     return Response.json({
       merchant: {
