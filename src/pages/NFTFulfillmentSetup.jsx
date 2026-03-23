@@ -152,7 +152,7 @@ export default function NFTFulfillmentSetup() {
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Button onClick={() => saveMutation.mutate(selectedMode)} disabled={!selectedMode || saveMutation.isPending}>
-            Opslaan
+            Save
           </Button>
           <Button asChild variant="outline">
             <Link to="/NFTOperations">Back to NFT Dashboard</Link>
