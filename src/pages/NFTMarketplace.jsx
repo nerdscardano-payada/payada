@@ -14,7 +14,7 @@ const initialForm = { title: "", slug: "", description: "", image_url: "", payme
 const createSlug = (value = "") => value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 export default function NFTMarketplace() {
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState(undefined);
   const [selectedAssetUnit, setSelectedAssetUnit] = React.useState("");
   const [formData, setFormData] = React.useState(initialForm);
   const [editingListing, setEditingListing] = React.useState(null);
@@ -167,6 +167,10 @@ export default function NFTMarketplace() {
       description: prev.description || asset.description || "",
     }));
   };
+
+  if (user === undefined || (user?.email && isLoadingMerchantProfile)) {
+    return null;
+  }
 
   if (!isLoadingMerchantProfile && !isFulfillmentConfigured) {
     return (

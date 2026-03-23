@@ -15,7 +15,7 @@ import { toast } from "sonner";
 const initialForm = { payment_link_id: "", asset_label: "", policy_id: "", asset_name_hex: "", quantity: 1, price_ada: 0 };
 
 export default function NFTDistribution() {
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState(undefined);
   const [walletSession, setWalletSession] = React.useState(null);
   const [selectedAssetUnit, setSelectedAssetUnit] = React.useState("");
   const [signingId, setSigningId] = React.useState(null);
@@ -193,6 +193,10 @@ export default function NFTDistribution() {
       setSigningId(null);
     }
   };
+
+  if (user === undefined || (user?.email && isLoadingMerchantProfile)) {
+    return null;
+  }
 
   if (!isLoadingMerchantProfile && !isFulfillmentConfigured) {
     return (
