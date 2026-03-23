@@ -34,6 +34,18 @@ export default function NFTStore() {
     if (/^https?:\/\//i.test(websiteUrlRaw)) return websiteUrlRaw;
     return `https://${websiteUrlRaw.replace(/^\/+/, "")}`;
   }, [websiteUrlRaw]);
+  const receiveAddr = data?.merchant?.default_receive_address || "";
+  const receiveAddrShort = React.useMemo(() => {
+    if (!receiveAddr) return "";
+    return receiveAddr.length <= 12 ? receiveAddr : `${receiveAddr.slice(0, 6)}..${receiveAddr.slice(-6)}`;
+  }, [receiveAddr]);
+  const receiveAddrUrl = receiveAddr ? `https://cardanoscan.io/address/${encodeURIComponent(receiveAddr)}` : "";
+  const websiteUrlRaw = data?.merchant?.website_url || "";
+  const websiteUrl = React.useMemo(() => {
+    if (!websiteUrlRaw) return "";
+    if (/^https?:\/\//i.test(websiteUrlRaw)) return websiteUrlRaw;
+    return `https://${websiteUrlRaw.replace(/^\/+/, "")}`;
+  }, [websiteUrlRaw]);
   const collections = React.useMemo(() => {
     const grouped = listings.reduce((result, listing) => {
       const name = listing.collection_name || "Featured NFTs";
