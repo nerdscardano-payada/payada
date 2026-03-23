@@ -5,9 +5,10 @@ import { useProfileCheck } from "@/components/hooks/useProfileCheck";
 import PageHeader from "@/components/shared/PageHeader";
 import PaymentLinkForm from "@/components/payment-links/PaymentLinkForm";
 import PaymentLinksTable from "@/components/payment-links/PaymentLinksTable";
-import { Link2, Plus, BookTemplate } from "lucide-react";
+import { Link2, Plus, BookTemplate, Eye, EyeOff } from "lucide-react";
 import TemplateSelector from "@/components/payment-links/TemplateSelector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import MerchantProfileBanner from "@/components/shared/MerchantProfileBanner";
 
@@ -17,6 +18,7 @@ export default function PaymentLinks() {
   const [editingLink, setEditingLink] = useState(null);
   const [prefillFromTemplate, setPrefillFromTemplate] = useState(null);
   const [user, setUser] = useState(null);
+  const [showHiddenLinks, setShowHiddenLinks] = useState(false);
   const queryClient = useQueryClient();
 
   React.useEffect(() => {
@@ -118,15 +120,28 @@ export default function PaymentLinks() {
               onDelete={(id) => deleteMutation.mutate(id)}
             />
 
-            <PaymentLinksTable
-              title="Invisible payment links"
-              description="Auto-generated links from Donation Pages and POS are stored here so your main list stays clean."
-              links={hiddenLinks}
-              isLoading={isLoading || isLoadingDonationPages}
-              onCopy={copyCheckoutUrl}
-              onEdit={(link) => { setEditingLink(link); setShowForm(true); }}
-              onDelete={(id) => deleteMutation.mutate(id)}
-            />
+            <div className="rounded-xl border border-slate-200/60 bg-white overflow-hidden">
+              <div className="flex items-center justify-between gap-4 border-b border-slate-100 px-5 py-4">
+                <div>
+                  <h2 className="text-sm font-semibold text-slate-900">Invisible payment links</h2>
+                  <p className="mt-1 text-sm text-slate-500">Auto-generated links from Donation Pages, POS and NFT tools stay hidden until you open them.</p>
+                </div>
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => setShowHiddenLinks((value) => !value)}>
+                  {showHiddenLinks ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showHiddenLinks ? "Hide" : `Show (${hiddenLinks.length})`}
+                </Button>
+              </div>
+
+              {showHiddenLinks && (
+                <PaymentLinksTable
+                  links={hiddenLinks}
+                  isLoading={isLoading || isLoadingDonationPages}
+                  onCopy={copyCheckoutUrl}
+                  onEdit={(link) => { setEditingLink(link); setShowForm(true); }}
+                  onDelete={(id) => deleteMutation.mutate(id)}
+                />
+              )}
+            </div>
           </div>
         </TabsContent>
       </Tabs>

@@ -27,10 +27,12 @@ export default function PaymentLinksTable({
 }) {
   return (
     <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
-      <div className="border-b border-slate-100 px-5 py-4">
-        <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
-        {description && <p className="mt-1 text-sm text-slate-500">{description}</p>}
-      </div>
+      {(title || description) && (
+        <div className="border-b border-slate-100 px-5 py-4">
+          {title && <h2 className="text-sm font-semibold text-slate-900">{title}</h2>}
+          {description && <p className="mt-1 text-sm text-slate-500">{description}</p>}
+        </div>
+      )}
 
       {isLoading ? (
         <div className="p-5 space-y-3">
