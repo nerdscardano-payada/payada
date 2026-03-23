@@ -38,7 +38,7 @@ export default function MnemonicPhraseInput({ value, onChange, disabled }) {
       <div className="flex items-center justify-between gap-3">
         <Label>Recovery phrase</Label>
         <span className={`text-xs font-medium ${VALID_COUNTS.includes(enteredCount) ? "text-emerald-600" : "text-slate-500"}`}>
-          {enteredCount}/24 woorden
+          {enteredCount}/24 words
         </span>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -51,7 +51,7 @@ export default function MnemonicPhraseInput({ value, onChange, disabled }) {
               autoComplete="off"
               autoCapitalize="none"
               spellCheck={false}
-              placeholder={`woord ${index + 1}`}
+              placeholder={`word ${index + 1}`}
               onFocus={() => setActiveIndex(index)}
               onBlur={() => setTimeout(() => setActiveIndex(null), 120)}
               onChange={(e) => updateWord(index, e.target.value)}
@@ -77,7 +77,7 @@ export default function MnemonicPhraseInput({ value, onChange, disabled }) {
           </div>
         ))}
       </div>
-      <p className="text-xs leading-5 text-slate-500">Typ een beginletter en je krijgt Cardano/BIP39 woorden als suggestie. De phrase blijft zichtbaar tijdens het invullen en wordt pas na opslaan versleuteld bewaard.</p>
+      <p className="text-xs leading-5 text-slate-500">Type a starting letter to get Cardano/BIP39 word suggestions. The phrase stays visible while you enter it and is only stored encrypted after saving.</p>
     </div>
   );
 }
