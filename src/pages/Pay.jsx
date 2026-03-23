@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Hexagon, Copy, CheckCircle2, Clock, Loader2,
+  Hexagon, Copy, CheckCircle2, Clock, Loader2, Zap,
   ExternalLink, AlertCircle, Wallet, ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,32 @@ export default function Pay() {
   const [walletHealth, setWalletHealth] = useState(null);
 
   const multiCntEnabled = paymentLink?.enable_multi_cnt_checkout && paymentLink?.amount_mode === "fixed_ada" && (paymentLink?.accepted_cnt_tokens || []).length > 0;
+
+  // Detect NFT-related checkouts and merchant fulfillment mode
+  const { data: merchantProfiles = [] } = useQuery({
+    queryKey: ["merchant-profile-for-pay", paymentLink?.merchant_id],
+    queryFn: () => base44.entities.MerchantProfile.filter({ user_id: paymentLink.merchant_id }, "-created_date", 1),
+    enabled: !!paymentLink?.merchant_id,
+  });
+  const merchantProfile = merchantProfiles[0] || null;
+
+  const { data: relatedListings = [] } = useQuery({
+    queryKey: ["listing-by-payment-link", paymentLink?.id],
+    queryFn: () => base44.entities.NftListing.filter({ payment_link_id: paymentLink.id }, "-created_date", 1),
+    enabled: !!paymentLink?.id && !paymentLink.id.startsWith("cart-"),
+  });
+
+  const { data: relatedRules = [] } = useQuery({
+    queryKey: ["nft-rule-by-payment-link", paymentLink?.id],
+    queryFn: () => base44.entities.NftFulfillmentRule.filter({ payment_link_id: paymentLink.id }, "-created_date", 1),
+    enabled: !!paymentLink?.id && !paymentLink.id.startsWith("cart-"),
+  });
+
+  const isNftCheckout = (cartItems.length > 0) || (relatedListings.length > 0) || (relatedRules.length > 0);
+  const showNameInput = isNftCheckout || paymentLink?.collect_name;
+  const showEmailInput = isNftCheckout || paymentLink?.collect_email;
+  const requireName = isNftCheckout || paymentLink?.collect_name;
+  const requireEmail = !isNftCheckout && paymentLink?.collect_email;
 
   // Extract slug or cartItems from URL query params
   useEffect(() => {
@@ -135,11 +161,11 @@ export default function Pay() {
 
   const handleStartCheckout = async () => {
     // Validate required fields
-    if (paymentLink.collect_email && !payerEmail.trim()) {
+    if (requireEmail && !payerEmail.trim()) {
       toast.error("Please enter your email address");
       return;
     }
-    if (paymentLink.collect_name && !payerName.trim()) {
+    if (requireName && !payerName.trim()) {
       toast.error("Please enter your name");
       return;
     }
@@ -350,19 +376,35 @@ export default function Pay() {
                 </>
               )}
             </div>
+            {isNftCheckout && merchantProfile?.nft_fulfillment_mode && (
+              <div className={`mt-3 flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${merchantProfile.nft_fulfillment_mode === 'automatic' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-amber-500/10 border-amber-500/20 text-amber-300'}`}>
+                {merchantProfile.nft_fulfillment_mode === 'automatic' ? (
+                  <Zap className="w-3.5 h-3.5" />
+                ) : (
+                  <Clock className="w-3.5 h-3.5" />
+                )}
+                <span>
+                  {merchantProfile.nft_fulfillment_mode === 'automatic'
+                    ? 'Delivery: Instant — NFT is delivered automatically after confirmation'
+                    : 'Delivery: Manual — Merchant will transfer the NFT to your wallet after payment'}
+                </span>
+              </div>
+            )}
           </div>
 
           {!sessionStarted ? (
             <div className="p-6 space-y-4">
-              {paymentLink.collect_email && (
+              {showEmailInput && (
                 <div className="space-y-2">
-                   <Label htmlFor="payer-email" className="text-slate-300 text-xs">Email <span className="text-red-400">*</span></Label>
+                   <Label htmlFor="payer-email" className="text-slate-300 text-xs">
+                     Email {requireEmail ? <span className="text-red-400">*</span> : <span className="text-slate-500">(optional)</span>}
+                   </Label>
                    <Input id="payer-email" value={payerEmail} onChange={(e) => setPayerEmail(e.target.value)}
                     placeholder="your@email.com"
                     className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                 </div>
               )}
-              {paymentLink.collect_name && (
+              {showNameInput && (
                 <div className="space-y-2">
                    <Label htmlFor="payer-name" className="text-slate-300 text-xs">Name <span className="text-red-400">*</span></Label>
                    <Input id="payer-name" value={payerName} onChange={(e) => setPayerName(e.target.value)}
