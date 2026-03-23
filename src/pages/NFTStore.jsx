@@ -79,6 +79,9 @@ export default function NFTStore() {
                 {websiteUrl && (
                   <a href={websiteUrl} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Website</a>
                 )}
+                {receiveAddrUrl && (
+                  <a href={receiveAddrUrl} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Owned by {receiveAddrShort}</a>
+                )}
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
