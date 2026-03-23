@@ -2,7 +2,6 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import NFTRaritySection from "@/components/nfts/NFTRaritySection";
 
 export default function NFTDetail() {
   const { storeSlug, listingId } = useParams();
@@ -42,7 +41,7 @@ export default function NFTDetail() {
     return <div className="min-h-screen bg-slate-100 p-6">Loading NFT...</div>;
   }
   if (error || !data?.listing) {
-    return <div className="min-h-screen bg-slate-100 p-6">Listing niet gevonden.</div>;
+    return <div className="min-h-screen bg-slate-100 p-6">Listing not found.</div>;
   }
 
   const l = data.listing;
@@ -69,12 +68,12 @@ export default function NFTDetail() {
               <a href={receiveAddrUrl} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Owned by {receiveAddrShort}</a>
             )}
             <div className="ml-auto flex gap-2">
-              <Button variant="outline" asChild>
-                <a href={`/nft/${data.merchant.nft_store_slug}`}>Terug naar store</a>
+              <Button variant="outline" className="border-white/20 bg-white text-slate-900 hover:bg-slate-100 hover:text-slate-900" asChild>
+                <a href={`/nft/${data.merchant.nft_store_slug}`}>Back to store</a>
               </Button>
               {l.payment_link_slug && (
-                <Button asChild>
-                  <a href={`/Pay?slug=${l.payment_link_slug}`}>Koop nu</a>
+                <Button className="bg-cyan-400 text-slate-950 hover:bg-cyan-300" asChild>
+                  <a href={`/Pay?slug=${l.payment_link_slug}`}>Buy now</a>
                 </Button>
               )}
             </div>
@@ -96,7 +95,7 @@ export default function NFTDetail() {
             <div className="rounded-2xl border border-slate-200 bg-white p-6">
               <h1 className="text-2xl font-semibold text-slate-900">{l.title}</h1>
               {l.asset_label && <p className="mt-1 text-xs uppercase tracking-wide text-slate-500">{l.asset_label}</p>}
-              <p className="mt-4 text-sm leading-6 text-slate-600">{l.description || "Dit is een NFT listing met PayADA checkout en merchant-signed levering."}</p>
+              <p className="mt-4 text-sm leading-6 text-slate-600">{l.description || "This NFT listing includes PayADA checkout and merchant-signed delivery."}</p>
 
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="rounded-lg bg-slate-50 p-4">
@@ -105,7 +104,7 @@ export default function NFTDetail() {
                 </div>
                 <div className="rounded-lg bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Price in ADA</p>
-                  <p className="mt-1 text-sm text-slate-900">{l.price_ada ? `₳ ${Number(l.price_ada).toFixed(2)}` : "Via checkout"}</p>
+                  <p className="mt-1 text-sm text-slate-900">{l.price_ada ? `₳ ${Number(l.price_ada).toFixed(2)}` : "Available via checkout"}</p>
                 </div>
                 <div className="rounded-lg bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">Policy ID</p>
@@ -129,17 +128,16 @@ export default function NFTDetail() {
 
               <div className="mt-6 flex gap-2">
                 <Button variant="outline" asChild>
-                  <a href={`/nft/${data.merchant.nft_store_slug}`}>Terug naar store</a>
+                  <a href={`/nft/${data.merchant.nft_store_slug}`}>Back to store</a>
                 </Button>
                 {l.payment_link_slug && (
                   <Button asChild>
-                    <a href={`/Pay?slug=${l.payment_link_slug}`}>Koop nu</a>
+                    <a href={`/Pay?slug=${l.payment_link_slug}`}>Buy now</a>
                   </Button>
                 )}
               </div>
             </div>
 
-            <NFTRaritySection rarity={data.rarity} />
           </div>
         </div>
       </div>
