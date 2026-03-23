@@ -70,6 +70,7 @@ export default function NFTDistribution() {
     enabled: !!user?.email,
   });
 
+  const rulesById = Object.fromEntries(rules.map((rule) => [rule.id, rule]));
   const fulfillmentMode = merchantProfile?.nft_fulfillment_mode || null;
   const isFulfillmentConfigured = Boolean(merchantProfile?.nft_fulfillment_mode);
   const configuredAssetWalletAddress = fulfillmentMode === "automatic" ? hotWallet?.wallet_address : wallet?.wallet_address;

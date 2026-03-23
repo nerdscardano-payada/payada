@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { PenSquare } from "lucide-react";
 
-export default function TransferQueueTable({ logs, signingId, onSign, fulfillmentMode = "manual" }) {
+export default function TransferQueueTable({ logs, signingId, onSign, fulfillmentMode = "manual", rulesById = {} }) {
   const isManual = fulfillmentMode !== "automatic";
 
   return (
@@ -18,7 +18,10 @@ export default function TransferQueueTable({ logs, signingId, onSign, fulfillmen
           <div key={log.id} className="p-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <p className="font-medium text-slate-900">{log.policy_id.slice(0, 10)}… / qty {log.quantity || 1}</p>
+                <div className="flex flex-col">
+                <p className="font-medium text-slate-900">{(log.asset_label || (rulesById && rulesById[log.nft_rule_id]?.asset_label) || 'NFT Asset')} • qty {log.quantity || 1}</p>
+                <p className="text-xs font-mono text-slate-500 break-all">{log.policy_id}</p>
+              </div>
                 <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${log.status === "pending" ? "bg-amber-100 text-amber-700" : log.status === "submitted" ? "bg-blue-100 text-blue-700" : log.status === "failed" ? "bg-red-100 text-red-700" : "bg-slate-100 text-slate-600"}`}>{log.status}</span>
               </div>
               <p className="mt-1 text-xs font-mono text-slate-500">{log.recipient_address}</p>
