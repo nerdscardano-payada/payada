@@ -28,12 +28,7 @@ export default function NFTStore() {
   const listings = data?.listings || [];
   const merchantName = data?.merchant?.nft_store_name || data?.merchant?.business_name || "NFT Storefront";
   const storeDescription = data?.merchant?.nft_store_description || "Direct NFT listings with PayADA checkout, no external marketplace in between, and custodyless delivery through merchant signing.";
-  const websiteUrlRaw = data?.merchant?.website_url || "";
-  const websiteUrl = React.useMemo(() => {
-    if (!websiteUrlRaw) return "";
-    if (/^https?:\/\//i.test(websiteUrlRaw)) return websiteUrlRaw;
-    return `https://${websiteUrlRaw.replace(/^\/+/, "")}`;
-  }, [websiteUrlRaw]);
+
   const receiveAddr = data?.merchant?.default_receive_address || "";
   const receiveAddrShort = React.useMemo(() => {
     if (!receiveAddr) return "";
