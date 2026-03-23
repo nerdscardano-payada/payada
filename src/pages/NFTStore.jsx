@@ -30,7 +30,7 @@ export default function NFTStore() {
 
   const listings = data?.listings || [];
   const merchantName = data?.merchant?.nft_store_name || data?.merchant?.business_name || "NFT Storefront";
-  const storeDescription = data?.merchant?.nft_store_description || "Direct NFT listings with PayADA checkout, no external marketplace in between, and custodyless delivery through merchant signing.";
+  const storeDescription = data?.merchant?.nft_store_description || "Direct NFT listings with PayADA checkout and merchant-managed NFT delivery.";
   const fulfillmentMode = data?.merchant?.nft_fulfillment_mode || "manual";
   const websiteUrlRaw = data?.merchant?.website_url || "";
   const websiteUrl = React.useMemo(() => {
@@ -167,7 +167,7 @@ export default function NFTStore() {
                           </div>
                           <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">NFT</div>
                         </div>
-                        <p className="mt-3 text-sm leading-6 text-slate-600">{listing.description || "This listing uses PayADA checkout and merchant-signed delivery."}</p>
+                        <p className="mt-3 text-sm leading-6 text-slate-600">{listing.description || "This listing uses PayADA checkout and merchant-managed NFT delivery."}</p>
                         <div className="mt-5 flex items-center justify-between gap-4">
                           <div>
                             <p className="text-xs uppercase tracking-wide text-slate-500">Price</p>

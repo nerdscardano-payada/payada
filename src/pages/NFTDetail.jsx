@@ -101,7 +101,7 @@ export default function NFTDetail() {
                 <FulfillmentMethodBadge mode={fulfillmentMode} />
               </div>
               {l.asset_label && <p className="mt-1 text-xs uppercase tracking-wide text-slate-500">{l.asset_label}</p>}
-              <p className="mt-4 text-sm leading-6 text-slate-600">{l.description || "This NFT listing includes PayADA checkout and merchant-signed delivery."}</p>
+              <p className="mt-4 text-sm leading-6 text-slate-600">{l.description || "This NFT listing includes PayADA checkout and merchant-managed NFT delivery."}</p>
 
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="rounded-lg bg-slate-50 p-4">
