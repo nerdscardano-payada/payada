@@ -23,7 +23,7 @@ export default function FulfillmentRuleForm({ formData, setFormData, walletAsset
           assets={walletAssets}
           value={selectedAssetUnit}
           onValueChange={onSelectAsset}
-          label="NFT from connected wallet"
+          label="NFT from configured wallet"
         />
       )}
       <div className="grid gap-4 md:grid-cols-2">

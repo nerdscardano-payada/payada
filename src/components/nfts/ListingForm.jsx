@@ -24,11 +24,11 @@ export default function ListingForm({ formData, setFormData, walletAssets, selec
           assets={walletAssets}
           value={selectedAssetUnit}
           onValueChange={onSelectAsset}
-          label="NFT from connected wallet"
+          label="NFT from configured wallet"
         />
       ) : (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">
-          Connect your signer wallet first to load NFT assets and metadata directly from your wallet.
+          Configure first the correct wallet in NFT Fulfillment Setup to load NFT assets and metadata automatically here.
         </div>
       )}
 
