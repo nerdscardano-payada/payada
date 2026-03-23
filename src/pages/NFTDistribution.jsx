@@ -8,6 +8,9 @@ import FulfillmentModeSelector from "@/components/nfts/FulfillmentModeSelector";
 import FulfillmentRuleForm from "@/components/nfts/FulfillmentRuleForm";
 import FulfillmentRulesTable from "@/components/nfts/FulfillmentRulesTable";
 import TransferQueueTable from "@/components/nfts/TransferQueueTable";
+import DistributionOverviewCards from "@/components/nfts/DistributionOverviewCards";
+import TransferStatusChart from "@/components/nfts/TransferStatusChart";
+import TopFulfillmentRulesChart from "@/components/nfts/TopFulfillmentRulesChart";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
 import { toast } from "sonner";
 
@@ -83,6 +86,53 @@ export default function NFTDistribution() {
   const activeRules = rules.filter((rule) => rule.status === "active").length;
   const pendingTransfers = transferLogs.filter((log) => log.status === "pending").length;
   const activeWalletStatus = fulfillmentMode === "automatic" ? (hotWallet?.wallet_address ? "Configured" : "Not configured") : (wallet?.wallet_address ? "Configured" : "Not configured");
+
+  const dashboardStats = React.useMemo(() => {
+    const successfulStatuses = new Set(["submitted", "confirmed"]);
+    const failedStatuses = new Set(["failed"]);
+    const rulesById = Object.fromEntries(rules.map((rule) => [rule.id, rule]));
+
+    const successfulCount = transferLogs.filter((log) => successfulStatuses.has(log.status)).length;
+    const failedCount = transferLogs.filter((log) => failedStatuses.has(log.status)).length;
+    const totalVolume = transferLogs.reduce((sum, log) => sum + Number(log.quantity || 1), 0);
+
+    const topRules = Object.values(
+      transferLogs.reduce((acc, log) => {
+        const key = log.nft_rule_id || `${log.policy_id}-${log.asset_name_hex || ""}`;
+        const rule = rulesById[log.nft_rule_id];
+        const fallbackName = paymentLinksById[rule?.payment_link_id]?.title || `${log.policy_id.slice(0, 10)}…`;
+
+        if (!acc[key]) {
+          acc[key] = {
+            name: rule?.asset_label || fallbackName,
+            transfers: 0,
+            volume: 0,
+          };
+        }
+
+        acc[key].transfers += 1;
+        acc[key].volume += Number(log.quantity || 1);
+        return acc;
+      }, {})
+    )
+      .sort((a, b) => b.volume - a.volume || b.transfers - a.transfers)
+      .slice(0, 5)
+      .map((item) => ({
+        ...item,
+        shortName: item.name.length > 14 ? `${item.name.slice(0, 14)}…` : item.name,
+      }));
+
+    return {
+      totalVolume,
+      successfulCount,
+      failedCount,
+      statusChartData: [
+        { name: "Successful", value: successfulCount },
+        { name: "Failed", value: failedCount },
+      ],
+      topRules,
+    };
+  }, [transferLogs, rules, paymentLinksById]);
 
   const walletMutation = useMutation({
     mutationFn: (payload) => {
@@ -264,6 +314,22 @@ export default function NFTDistribution() {
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Actieve methode</p>
           <p className="mt-2 text-lg font-semibold text-slate-900">{fulfillmentMode === "automatic" ? "Automatic hot wallet" : "Manual signer wallet"}</p>
           <p className="mt-1 text-sm text-slate-600">Wallet status: {activeWalletStatus}</p>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-xl font-semibold text-slate-900">Distribution dashboard</h2>
+          <p className="mt-1 text-sm text-slate-500">Track volume, outcomes, and your strongest NFT fulfillment rules at a glance.</p>
+        </div>
+        <DistributionOverviewCards
+          totalVolume={dashboardStats.totalVolume}
+          successfulCount={dashboardStats.successfulCount}
+          failedCount={dashboardStats.failedCount}
+        />
+        <div className="grid gap-4 xl:grid-cols-2">
+          <TransferStatusChart data={dashboardStats.statusChartData} />
+          <TopFulfillmentRulesChart data={dashboardStats.topRules} />
         </div>
       </div>
 
