@@ -72,15 +72,15 @@ Deno.serve(async (req) => {
     }
 
     const configuredWallets = await Promise.all([
-      merchantProfile?.nft_fulfillment_mode === 'automatic'
+      profile?.nft_fulfillment_mode === 'automatic'
         ? base44.asServiceRole.entities.MerchantHotWallet.filter({ merchant_id: merchantId, status: 'active' }, '-updated_date', 1)
         : Promise.resolve([]),
-      merchantProfile?.nft_fulfillment_mode !== 'automatic'
+      profile?.nft_fulfillment_mode !== 'automatic'
         ? base44.asServiceRole.entities.MerchantSignerWallet.filter({ merchant_id: merchantId, status: 'active' }, '-updated_date', 1)
         : Promise.resolve([]),
     ]);
 
-    const inventoryWalletAddress = merchantProfile?.nft_fulfillment_mode === 'automatic'
+    const inventoryWalletAddress = profile?.nft_fulfillment_mode === 'automatic'
       ? configuredWallets[0]?.[0]?.wallet_address || null
       : configuredWallets[1]?.[0]?.wallet_address || null;
 
