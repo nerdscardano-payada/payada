@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { base44 } from "@/api/base44Client";
 
 const initialForm = {
   name: "",
@@ -12,10 +13,29 @@ const initialForm = {
   interval_type: "monthly",
   trial_days: "0",
   fee_model: "merchant_pays",
+  receive_address_override: "",
 };
 
 export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
   const [form, setForm] = useState(initialForm);
+  const [defaultReceiveAddress, setDefaultReceiveAddress] = useState("");
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user) {
+          const rows = await base44.entities.MerchantProfile.filter({ user_id: user.id });
+          if (mounted && Array.isArray(rows) && rows.length) {
+            setDefaultReceiveAddress(rows[0]?.default_receive_address || "");
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
 
   const intervalDays = useMemo(() => (form.interval_type === "yearly" ? 365 : 30), [form.interval_type]);
 
@@ -29,6 +49,7 @@ export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
       interval_days: intervalDays,
       trial_days: Number(form.trial_days || 0),
       fee_model: form.fee_model,
+      receive_address_override: (form.receive_address_override || "").trim(),
     });
     setForm(initialForm);
   };
@@ -86,6 +107,22 @@ export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
               <SelectItem value="split">Split fee 50/50</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Receive address */}
+        <div className="space-y-2 md:col-span-2">
+          <Label>Default receive address (from Merchant profile)</Label>
+          <Input value={defaultReceiveAddress} readOnly disabled placeholder="Not set in Merchant Profile" />
+          <p className="text-xs text-slate-500">Default wordt dit adres gebruikt; vul hieronder een override in om enkel voor dit plan een ander adres te gebruiken.</p>
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <Label>Receive address override (optional)</Label>
+          <Input
+            value={form.receive_address_override || ""}
+            onChange={(e) => setForm((c) => ({ ...c, receive_address_override: e.target.value }))}
+            placeholder="addr1q..."
+          />
         </div>
 
         <div className="rounded-xl bg-slate-50 p-4 text-sm text-slate-600 md:col-span-2">
