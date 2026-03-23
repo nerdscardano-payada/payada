@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 export default function NFTStore() {
   const { storeSlug } = useParams();
@@ -51,6 +52,12 @@ export default function NFTStore() {
 
     return Object.entries(grouped).map(([name, items]) => ({ name, items }));
   }, [listings]);
+
+  const [selectedCollection, setSelectedCollection] = React.useState("all");
+  const displayCollections = React.useMemo(() => {
+    if (selectedCollection === "all") return collections;
+    return collections.filter((c) => c.name === selectedCollection);
+  }, [collections, selectedCollection]);
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -108,7 +115,20 @@ export default function NFTStore() {
           </div>
         ) : (
           <div className="mt-8 space-y-10">
-            {collections.map((collection) => (
+            <div className="flex items-center justify-end gap-3">
+              <Select value={selectedCollection} onValueChange={setSelectedCollection}>
+                <SelectTrigger className="w-56">
+                  <SelectValue placeholder="Select collection" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All collections</SelectItem>
+                  {collections.map((c) => (
+                    <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {displayCollections.map((collection) => (
               <section key={collection.name} className="space-y-5">
                 {(collections.length > 1 || collection.name !== "Featured NFTs") && (
                   <div>
