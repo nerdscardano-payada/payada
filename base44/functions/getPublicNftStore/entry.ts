@@ -120,6 +120,8 @@ Deno.serve(async (req) => {
         nft_store_description: profile?.nft_store_description || null,
         logo_url: profile?.logo_url || null,
         website_url: profile?.website_url || null,
+        default_receive_address: profile?.default_receive_address || null,
+        verified_merchant: !!profile?.verified_merchant,
       },
       listings: activeListings,
     });
