@@ -78,6 +78,8 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
   const [user, setUser] = React.useState(null);
   React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
   const isAdmin = user?.role === "admin";
+  const canAccessTemporaryPages = isAdmin || user?.email === "nerscardano@gmail.com";
+  const temporaryRestrictedPages = ["Subscriptions", "DonationPages", "NFTs"];
 
   return (
     <>
@@ -130,6 +132,9 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
               ) : (
                 <div key={index} className="border-t border-white/5 my-2" />
               );
+            }
+            if (temporaryRestrictedPages.includes(item.page) && !canAccessTemporaryPages) {
+              return null;
             }
             const isActive = currentPage === item.page;
             return (
