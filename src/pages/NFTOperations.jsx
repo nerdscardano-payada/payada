@@ -178,7 +178,7 @@ export default function NFTOperations() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Control" subtitle="Eén centrale plek voor NFT verkoop, fulfillment en gedeelde instellingen." />
+      <PageHeader title="NFT Control" subtitle="Eén centrale plek voor NFT verkoop en gedeelde instellingen, met fulfillment via een aparte wizard." />
 
       <NftOperationsSummaryCards
         activeListings={dashboardStats.activeListings}

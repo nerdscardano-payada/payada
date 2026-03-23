@@ -243,7 +243,7 @@ export default function NFTDistribution() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">Dashboard & instellingen verhuisd</h2>
-            <p className="mt-1 text-sm text-slate-500">Je centrale NFT-overzicht, marketplace instellingen en fulfillment methode staan nu samen op NFT Control.</p>
+            <p className="mt-1 text-sm text-slate-500">Je centrale NFT-overzicht staat op NFT Control; fulfillment beheer je nu via de aparte wizardpagina.</p>
           </div>
           <Button asChild variant="outline"><Link to="/NFTOperations">Open NFT Control</Link></Button>
         </div>
