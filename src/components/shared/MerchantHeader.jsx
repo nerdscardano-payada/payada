@@ -20,6 +20,10 @@ export default function MerchantHeader({ merchantId }) {
     ? websiteUrlRaw
     : (websiteUrlRaw ? `https://${websiteUrlRaw.replace(/^\/+/, "")}` : "");
 
+  const receiveAddr = merchant.default_receive_address || "";
+  const receiveAddrShort = receiveAddr ? (receiveAddr.length <= 12 ? receiveAddr : `${receiveAddr.slice(0,6)}..${receiveAddr.slice(-6)}`) : "";
+  const receiveAddrUrl = receiveAddr ? `https://cardanoscan.io/address/${encodeURIComponent(receiveAddr)}` : "";
+
   return (
     <div className="flex items-center justify-center gap-3 mb-4">
       {merchant.logo_url && <img src={merchant.logo_url} alt={merchant.business_name} className="h-8 w-8 rounded" />}
@@ -31,6 +35,9 @@ export default function MerchantHeader({ merchantId }) {
       </span>
       {websiteUrl && (
         <a href={websiteUrl} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline text-xs">Website</a>
+      )}
+      {receiveAddrUrl && (
+        <a href={receiveAddrUrl} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline text-xs">Owned by {receiveAddrShort}</a>
       )}
     </div>
   );
