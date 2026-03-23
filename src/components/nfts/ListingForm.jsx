@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import WalletAssetSelect from "@/components/nfts/WalletAssetSelect";
+import CollectionAutocomplete from "@/components/nfts/CollectionAutocomplete";
 
 export default function ListingForm({ formData, setFormData, walletAssets, selectedAssetUnit, onSelectAsset, onSubmit, editingListing, isSubmitting, onCancel }) {
   const update = (field, value) => setFormData((prev) => ({ ...prev, [field]: value }));
@@ -36,7 +37,7 @@ export default function ListingForm({ formData, setFormData, walletAssets, selec
         <div><Label>Title</Label><Input value={formData.title || ""} onChange={(e) => update("title", e.target.value)} placeholder="Genesis Pass" required /></div>
         <div><Label>Slug</Label><Input value={formData.slug || ""} onChange={(e) => update("slug", e.target.value)} placeholder="genesis-pass" required /></div>
         <div><Label>Asset label</Label><Input value={formData.asset_label || ""} onChange={(e) => update("asset_label", e.target.value)} placeholder="Auto-filled from the wallet" /></div>
-        <div><Label>Collection</Label><Input value={formData.collection_name || ""} onChange={(e) => update("collection_name", e.target.value)} placeholder="Founder Passes" /></div>
+        <CollectionAutocomplete value={formData.collection_name || ""} onChange={(value) => update("collection_name", value)} />
         <div><Label>Price in ADA</Label><Input type="number" min="0" step="0.000001" value={formData.price_ada || ""} onChange={(e) => update("price_ada", Number(e.target.value) || 0)} placeholder="45" required /></div>
         <div><Label>Policy ID</Label><Input value={formData.policy_id || ""} onChange={(e) => update("policy_id", e.target.value)} /></div>
         <div><Label>Asset name (hex)</Label><Input value={formData.asset_name_hex || ""} onChange={(e) => update("asset_name_hex", e.target.value)} /></div>
