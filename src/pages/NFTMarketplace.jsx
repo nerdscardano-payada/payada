@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import PageHeader from "@/components/shared/PageHeader";
 import ListingForm from "@/components/nfts/ListingForm";
 import ListingsTable from "@/components/nfts/ListingsTable";
-import SignerWalletSetupCard from "@/components/nfts/SignerWalletSetupCard";
 import FulfillmentSetupRequiredCard from "@/components/nfts/FulfillmentSetupRequiredCard";
 import { Button } from "@/components/ui/button";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
@@ -16,7 +15,6 @@ const createSlug = (value = "") => value.toLowerCase().trim().replace(/[^a-z0-9]
 
 export default function NFTMarketplace() {
   const [user, setUser] = React.useState(null);
-  const [walletSession, setWalletSession] = React.useState(null);
   const [selectedAssetUnit, setSelectedAssetUnit] = React.useState("");
   const [formData, setFormData] = React.useState(initialForm);
   const [editingListing, setEditingListing] = React.useState(null);
@@ -56,22 +54,31 @@ export default function NFTMarketplace() {
     enabled: !!user?.email,
   });
 
-  const { data: walletAssets = [] } = useQuery({
-    queryKey: ["wallet-nfts", walletSession?.address],
+  const { data: hotWallet } = useQuery({
+    queryKey: ["merchant-hot-wallet", user?.email],
     queryFn: async () => {
-      const response = await base44.functions.invoke("getWalletNfts", { wallet_address: walletSession.address });
-      return response.data.assets || [];
+      const wallets = await base44.entities.MerchantHotWallet.filter({ merchant_id: user.email }, "-updated_date", 1);
+      return wallets[0] || null;
     },
-    enabled: !!walletSession?.address,
+    enabled: !!user?.email,
   });
 
   const isFulfillmentConfigured = Boolean(merchantProfile?.nft_fulfillment_mode);
+  const configuredAssetWalletAddress = merchantProfile?.nft_fulfillment_mode === "automatic" ? hotWallet?.wallet_address : signerWallet?.wallet_address;
+
+  const { data: walletAssets = [] } = useQuery({
+    queryKey: ["wallet-nfts", configuredAssetWalletAddress],
+    queryFn: async () => {
+      const response = await base44.functions.invoke("getWalletNfts", { wallet_address: configuredAssetWalletAddress });
+      return response.data.assets || [];
+    },
+    enabled: !!configuredAssetWalletAddress,
+  });
   const resolvedStoreSlug = createSlug(merchantProfile?.nft_store_slug || merchantProfile?.business_name || user?.full_name || user?.email?.split("@")[0] || "nft-store");
   const publicStorePath = `/nft/${resolvedStoreSlug}`;
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
   const activeListings = listings.filter((listing) => listing.status === "active").length;
   const draftListings = listings.filter((listing) => listing.status === "draft").length;
-  const signerStatus = signerWallet?.wallet_address ? "Configured" : "Not configured";
 
   const saveMutation = useMutation({
     mutationFn: async (payload) => {
@@ -103,19 +110,6 @@ export default function NFTMarketplace() {
       toast.success("NFT listing saved");
     },
     onError: (error) => toast.error(error.message),
-  });
-
-  const signerWalletMutation = useMutation({
-    mutationFn: (payload) => {
-      if (signerWallet?.id) {
-        return base44.entities.MerchantSignerWallet.update(signerWallet.id, payload);
-      }
-      return base44.entities.MerchantSignerWallet.create(payload);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["merchant-signer-wallet"] });
-      toast.success("Signer wallet saved");
-    },
   });
 
   const deleteMutation = useMutation({
@@ -157,17 +151,6 @@ export default function NFTMarketplace() {
     toast.success("Storefront link copied");
   };
 
-  const saveSignerWallet = () => {
-    if (!user?.email || !walletSession?.address) return;
-    signerWalletMutation.mutate({
-      merchant_id: user.email,
-      wallet_address: walletSession.address,
-      wallet_provider: walletSession.walletKey || null,
-      status: "active",
-      last_verified_at: new Date().toISOString(),
-    });
-  };
-
   const handleSelectAsset = (unit) => {
     const asset = walletAssets.find((item) => item.unit === unit);
     if (!asset) return;
@@ -196,7 +179,7 @@ export default function NFTMarketplace() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Marketplace" subtitle="Beheer hier je listings; gedeelde NFT instellingen en verkoopcijfers staan nu centraal op NFT Control." />
+      <PageHeader title="NFT Marketplace" subtitle="Beheer hier je listings met NFT’s uit je opgeslagen wallet, zonder extra wallet setup op deze pagina." />
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Active listings</p>
@@ -214,19 +197,23 @@ export default function NFTMarketplace() {
           <p className="mt-1 text-sm text-slate-600">Used for your public marketplace link.</p>
         </div>
       </div>
-      <div className="grid gap-6 xl:grid-cols-2">
-        <SignerWalletSetupCard wallet={signerWallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={saveSignerWallet} isSaving={signerWalletMutation.isPending} />
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">NFT instellingen</h2>
-          <p className="mt-1 text-sm text-slate-500">Fulfillment stel je nu één keer in via de wizard; je marketplace gebruikt daarna automatisch die opgeslagen keuze.</p>
-          <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Public link</p>
-            <p className="mt-2 break-all text-sm text-slate-700">{`${window.location.origin}${publicStorePath}`}</p>
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-slate-900">NFT instellingen</h2>
+        <p className="mt-1 text-sm text-slate-500">Fulfillment en wallet-koppeling gebeuren nu enkel op de wizardpagina; deze marketplace leest daarna automatisch je opgeslagen wallet.</p>
+        {!configuredAssetWalletAddress && (
+          <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+            {merchantProfile?.nft_fulfillment_mode === "automatic"
+              ? "Stel eerst je hot wallet in op NFT Fulfillment Setup zodat je marketplace NFT’s kan laden."
+              : "Stel eerst je signer wallet in op NFT Fulfillment Setup zodat je marketplace NFT’s kan laden."}
           </div>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <Button asChild><Link to="/NFTFulfillmentSetup">Open fulfillment wizard</Link></Button>
-            <Button asChild variant="outline"><a href={`${window.location.origin}${publicStorePath}`} target="_blank" rel="noreferrer">Preview store</a></Button>
-          </div>
+        )}
+        <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Public link</p>
+          <p className="mt-2 break-all text-sm text-slate-700">{`${window.location.origin}${publicStorePath}`}</p>
+        </div>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Button asChild><Link to="/NFTFulfillmentSetup">Open fulfillment wizard</Link></Button>
+          <Button asChild variant="outline"><a href={`${window.location.origin}${publicStorePath}`} target="_blank" rel="noreferrer">Preview store</a></Button>
         </div>
       </div>
       <ListingForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />

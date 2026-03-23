@@ -3,12 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Link } from "react-router-dom";
 import PageHeader from "@/components/shared/PageHeader";
-import SignerWalletSetupCard from "@/components/nfts/SignerWalletSetupCard";
-import HotWalletSetupCard from "@/components/nfts/HotWalletSetupCard";
 import FulfillmentRuleForm from "@/components/nfts/FulfillmentRuleForm";
 import FulfillmentRulesTable from "@/components/nfts/FulfillmentRulesTable";
 import TransferQueueTable from "@/components/nfts/TransferQueueTable";
 import FulfillmentSetupRequiredCard from "@/components/nfts/FulfillmentSetupRequiredCard";
+import ManualSigningCard from "@/components/nfts/ManualSigningCard";
 import { Button } from "@/components/ui/button";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
 import { toast } from "sonner";
@@ -71,40 +70,21 @@ export default function NFTDistribution() {
     enabled: !!user?.email,
   });
 
-  const { data: walletAssets = [] } = useQuery({
-    queryKey: ["wallet-nfts", walletSession?.address],
-    queryFn: async () => {
-      const response = await base44.functions.invoke("getWalletNfts", { wallet_address: walletSession.address });
-      return response.data.assets || [];
-    },
-    enabled: !!walletSession?.address,
-  });
-
   const fulfillmentMode = merchantProfile?.nft_fulfillment_mode || null;
   const isFulfillmentConfigured = Boolean(merchantProfile?.nft_fulfillment_mode);
+  const configuredAssetWalletAddress = fulfillmentMode === "automatic" ? hotWallet?.wallet_address : wallet?.wallet_address;
+  const isAssetWalletReady = Boolean(configuredAssetWalletAddress);
+
+  const { data: walletAssets = [] } = useQuery({
+    queryKey: ["wallet-nfts", configuredAssetWalletAddress],
+    queryFn: async () => {
+      const response = await base44.functions.invoke("getWalletNfts", { wallet_address: configuredAssetWalletAddress });
+      return response.data.assets || [];
+    },
+    enabled: !!configuredAssetWalletAddress,
+  });
+
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
-
-  const walletMutation = useMutation({
-    mutationFn: (payload) => {
-      if (wallet?.id) {
-        return base44.entities.MerchantSignerWallet.update(wallet.id, payload);
-      }
-      return base44.entities.MerchantSignerWallet.create(payload);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["merchant-signer-wallet"] });
-      toast.success("Signer wallet saved");
-    },
-  });
-
-  const hotWalletMutation = useMutation({
-    mutationFn: (payload) => base44.functions.invoke("saveMerchantHotWallet", payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["merchant-hot-wallet"] });
-      toast.success("Hot wallet saved");
-    },
-    onError: (error) => toast.error(error?.response?.data?.error || error.message),
-  });
 
   const saveRuleMutation = useMutation({
     mutationFn: async (payload) => {
@@ -156,19 +136,6 @@ export default function NFTDistribution() {
       toast.success("Fulfillment rule deleted");
     },
   });
-
-  const handleWalletSave = () => {
-    if (!user?.email || !walletSession?.address) return;
-    walletMutation.mutate({
-      merchant_id: user.email,
-      wallet_address: walletSession.address,
-      wallet_provider: walletSession.walletKey || null,
-      status: "active",
-      last_verified_at: new Date().toISOString(),
-    });
-  };
-
-  const handleHotWalletSave = (payload) => hotWalletMutation.mutate(payload);
 
   const handleRuleSubmit = (e) => {
     e.preventDefault();
@@ -238,7 +205,7 @@ export default function NFTDistribution() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Distribution" subtitle="Operationele pagina voor wallet setup, fulfillment rules en de transfer queue." />
+      <PageHeader title="NFT Distribution" subtitle="Kies hier gewoon NFT’s uit je opgeslagen wallet en beheer je distribution rules en transfer queue." />
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -249,19 +216,24 @@ export default function NFTDistribution() {
         </div>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1.05fr_1.35fr]">
-        <div className="space-y-6">
-          {fulfillmentMode === "automatic" ? (
-            <>
-              <HotWalletSetupCard wallet={hotWallet} onSave={handleHotWalletSave} isSaving={hotWalletMutation.isPending} />
-              <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
-            </>
-          ) : (
-            <SignerWalletSetupCard wallet={wallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={handleWalletSave} isSaving={walletMutation.isPending} />
-          )}
+      {!isAssetWalletReady && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
+          {fulfillmentMode === "automatic"
+            ? "Stel eerst je hot wallet in op NFT Fulfillment Setup zodat deze pagina automatisch je NFT’s kan laden."
+            : "Stel eerst je signer wallet in op NFT Fulfillment Setup zodat deze pagina automatisch je NFT’s kan laden."}
         </div>
-        <FulfillmentRuleForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleRuleSubmit} editingRule={editingRule} isSubmitting={saveRuleMutation.isPending} onCancel={() => { setEditingRule(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
-      </div>
+      )}
+
+      <FulfillmentRuleForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleRuleSubmit} editingRule={editingRule} isSubmitting={saveRuleMutation.isPending} onCancel={() => { setEditingRule(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
+
+      {fulfillmentMode !== "automatic" && (
+        <ManualSigningCard
+          configuredAddress={wallet?.wallet_address || null}
+          connectedAddress={walletSession?.address || null}
+          onConnect={setWalletSession}
+          onDisconnect={() => setWalletSession(null)}
+        />
+      )}
 
       <FulfillmentRulesTable rules={rules} paymentLinksById={paymentLinksById} onEdit={(rule) => { setEditingRule(rule); setFormData({ ...initialForm, ...rule, price_ada: paymentLinksById[rule.payment_link_id]?.amount_ada || 0 }); setSelectedAssetUnit(`${rule.policy_id}${rule.asset_name_hex || ""}`); }} onDelete={(rule) => deleteRuleMutation.mutate(rule)} onToggle={toggleStatus} />
       <TransferQueueTable logs={transferLogs} signingId={signingId} onSign={handleSignTransfer} fulfillmentMode={fulfillmentMode} />
