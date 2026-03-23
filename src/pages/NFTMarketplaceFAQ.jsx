@@ -29,6 +29,12 @@ const faqItems = [
 ];
 
 export default function NFTMarketplaceFAQ() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const storeSlug = urlParams.get("store") || "";
+  const merchantId = urlParams.get("merchant") || "";
+  const marketplaceHref = storeSlug ? `/nft/${storeSlug}` : merchantId ? `/NFTStore?merchant=${encodeURIComponent(merchantId)}` : "/";
+  const termsHref = `/NFTMarketplaceTerms${window.location.search || ""}`;
+
   return (
     <div className="min-h-screen bg-slate-100">
       <div className="mx-auto max-w-5xl px-4 py-12">
@@ -40,10 +46,10 @@ export default function NFTMarketplaceFAQ() {
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button variant="outline" className="border-white/20 bg-white text-slate-900 hover:bg-slate-100" asChild>
-              <a href="/">Back to home</a>
+              <a href={marketplaceHref}>Back to marketplace</a>
             </Button>
             <Button className="bg-cyan-400 text-slate-950 hover:bg-cyan-300" asChild>
-              <a href="/NFTMarketplaceTerms">Marketplace Terms</a>
+              <a href={termsHref}>Marketplace Terms</a>
             </Button>
           </div>
         </div>

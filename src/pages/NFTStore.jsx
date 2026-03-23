@@ -61,6 +61,13 @@ export default function NFTStore() {
     if (selectedCollection === "all") return collections;
     return collections.filter((c) => c.name === selectedCollection);
   }, [collections, selectedCollection]);
+  const marketplaceQuery = React.useMemo(() => {
+    const params = new URLSearchParams();
+    if (resolvedStoreSlug) params.set("store", resolvedStoreSlug);
+    if (merchantId) params.set("merchant", merchantId);
+    const query = params.toString();
+    return query ? `?${query}` : "";
+  }, [resolvedStoreSlug, merchantId]);
 
   return (
     <div className="min-h-screen bg-slate-100">
@@ -104,8 +111,8 @@ export default function NFTStore() {
                 <p className="mt-2 text-3xl font-semibold text-white">{collections.length}</p>
                 <p className="mt-1 text-sm text-slate-300">Organized into separate NFT groups.</p>
                 <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-sm">
-                  <a href="/NFTMarketplaceFAQ" className="text-cyan-300 hover:underline">NFT Marketplace FAQ</a>
-                  <a href="/NFTMarketplaceTerms" className="text-cyan-300 hover:underline">Marketplace Terms</a>
+                  <a href={`/NFTMarketplaceFAQ${marketplaceQuery}`} className="text-cyan-300 hover:underline">NFT Marketplace FAQ</a>
+                  <a href={`/NFTMarketplaceTerms${marketplaceQuery}`} className="text-cyan-300 hover:underline">Marketplace Terms</a>
                 </div>
               </div>
             </div>

@@ -37,6 +37,8 @@ const sections = [
 ];
 
 export default function NFTMarketplaceTerms() {
+  const faqHref = `/NFTMarketplaceFAQ${window.location.search || ""}`;
+
   return (
     <div className="min-h-screen bg-slate-100">
       <div className="mx-auto max-w-5xl px-4 py-12">
@@ -48,7 +50,7 @@ export default function NFTMarketplaceTerms() {
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button variant="outline" className="border-white/20 bg-white text-slate-900 hover:bg-slate-100" asChild>
-              <a href="/NFTMarketplaceFAQ">Back to FAQ</a>
+              <a href={faqHref}>Back to FAQ</a>
             </Button>
           </div>
         </div>
