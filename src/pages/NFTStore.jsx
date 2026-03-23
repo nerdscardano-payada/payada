@@ -28,6 +28,12 @@ export default function NFTStore() {
   const listings = data?.listings || [];
   const merchantName = data?.merchant?.nft_store_name || data?.merchant?.business_name || "NFT Storefront";
   const storeDescription = data?.merchant?.nft_store_description || "Direct NFT listings with PayADA checkout, no external marketplace in between, and custodyless delivery through merchant signing.";
+  const websiteUrlRaw = data?.merchant?.website_url || "";
+  const websiteUrl = React.useMemo(() => {
+    if (!websiteUrlRaw) return "";
+    if (/^https?:\/\//i.test(websiteUrlRaw)) return websiteUrlRaw;
+    return `https://${websiteUrlRaw.replace(/^\/+/, "")}`;
+  }, [websiteUrlRaw]);
   const collections = React.useMemo(() => {
     const grouped = listings.reduce((result, listing) => {
       const name = listing.collection_name || "Featured NFTs";
@@ -58,8 +64,8 @@ export default function NFTStore() {
                     <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-emerald-300 text-xs font-semibold">Verified</span>
                   )}
                 </span>
-                {data?.merchant?.website_url && (
-                  <a href={data.merchant.website_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Website</a>
+                {websiteUrl && (
+                  <a href={websiteUrl} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Website</a>
                 )}
               </div>
             </div>

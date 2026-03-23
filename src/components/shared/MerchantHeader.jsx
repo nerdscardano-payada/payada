@@ -15,6 +15,11 @@ export default function MerchantHeader({ merchantId }) {
 
   if (!merchant) return null;
 
+  const websiteUrlRaw = merchant.website_url || "";
+  const websiteUrl = /^https?:\/\//i.test(websiteUrlRaw)
+    ? websiteUrlRaw
+    : (websiteUrlRaw ? `https://${websiteUrlRaw.replace(/^\/+/, "")}` : "");
+
   return (
     <div className="flex items-center justify-center gap-3 mb-4">
       {merchant.logo_url && <img src={merchant.logo_url} alt={merchant.business_name} className="h-8 w-8 rounded" />}
@@ -24,8 +29,8 @@ export default function MerchantHeader({ merchantId }) {
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-emerald-300 text-[11px] font-semibold">Verified</span>
         )}
       </span>
-      {merchant.website_url && (
-        <a href={merchant.website_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline text-xs">Website</a>
+      {websiteUrl && (
+        <a href={websiteUrl} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline text-xs">Website</a>
       )}
     </div>
   );
