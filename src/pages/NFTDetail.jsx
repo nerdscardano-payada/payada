@@ -2,6 +2,8 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
+import FulfillmentMethodBadge from "@/components/nfts/FulfillmentMethodBadge";
+import MarketplaceTrustNotice from "@/components/nfts/MarketplaceTrustNotice";
 
 export default function NFTDetail() {
   const { storeSlug, listingId } = useParams();
@@ -36,6 +38,7 @@ export default function NFTDetail() {
     return receiveAddr.length <= 12 ? receiveAddr : `${receiveAddr.slice(0, 6)}..${receiveAddr.slice(-6)}`;
   }, [receiveAddr]);
   const receiveAddrUrl = receiveAddr ? `https://cardanoscan.io/address/${encodeURIComponent(receiveAddr)}` : "";
+  const fulfillmentMode = data?.merchant?.nft_fulfillment_mode || "manual";
 
   if (isLoading) {
     return <div className="min-h-screen bg-slate-100 p-6">Loading NFT...</div>;
@@ -93,7 +96,10 @@ export default function NFTDetail() {
 
           <div className="space-y-6">
             <div className="rounded-2xl border border-slate-200 bg-white p-6">
-              <h1 className="text-2xl font-semibold text-slate-900">{l.title}</h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl font-semibold text-slate-900">{l.title}</h1>
+                <FulfillmentMethodBadge mode={fulfillmentMode} />
+              </div>
               {l.asset_label && <p className="mt-1 text-xs uppercase tracking-wide text-slate-500">{l.asset_label}</p>}
               <p className="mt-4 text-sm leading-6 text-slate-600">{l.description || "This NFT listing includes PayADA checkout and merchant-signed delivery."}</p>
 
@@ -124,6 +130,10 @@ export default function NFTDetail() {
                     <a className="mt-1 block text-sm text-blue-600 hover:underline break-all" href={l.image_url} target="_blank" rel="noreferrer">Open image</a>
                   </div>
                 )}
+              </div>
+
+              <div className="mt-6">
+                <MarketplaceTrustNotice mode={fulfillmentMode} compact />
               </div>
 
               <div className="mt-6 flex gap-2">

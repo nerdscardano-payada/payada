@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import FulfillmentMethodBadge from "@/components/nfts/FulfillmentMethodBadge";
+import MarketplaceTrustNotice from "@/components/nfts/MarketplaceTrustNotice";
 
 export default function NFTStore() {
   const { storeSlug } = useParams();
@@ -29,6 +31,7 @@ export default function NFTStore() {
   const listings = data?.listings || [];
   const merchantName = data?.merchant?.nft_store_name || data?.merchant?.business_name || "NFT Storefront";
   const storeDescription = data?.merchant?.nft_store_description || "Direct NFT listings with PayADA checkout, no external marketplace in between, and custodyless delivery through merchant signing.";
+  const fulfillmentMode = data?.merchant?.nft_fulfillment_mode || "manual";
   const websiteUrlRaw = data?.merchant?.website_url || "";
   const websiteUrl = React.useMemo(() => {
     if (!websiteUrlRaw) return "";
@@ -68,6 +71,9 @@ export default function NFTStore() {
               <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Store</p>
               <h1 className="mt-4 text-4xl font-semibold">{merchantName}</h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">{storeDescription}</p>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <FulfillmentMethodBadge mode={fulfillmentMode} />
+              </div>
               <div className="mt-4 flex items-center gap-3 text-sm">
                 {data?.merchant?.logo_url && (
                   <img src={data.merchant.logo_url} alt={merchantName} className="h-8 w-8 rounded" />
@@ -102,6 +108,10 @@ export default function NFTStore() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="mt-6">
+          <MarketplaceTrustNotice mode={fulfillmentMode} />
         </div>
 
         {!resolvedStoreSlug && !merchantId ? (
@@ -151,6 +161,9 @@ export default function NFTStore() {
                           <div>
                             <h2 className="text-xl font-semibold text-slate-900">{listing.title}</h2>
                             {listing.asset_label && <p className="mt-1 text-xs uppercase tracking-wide text-slate-500">{listing.asset_label}</p>}
+                            <div className="mt-3">
+                              <FulfillmentMethodBadge mode={fulfillmentMode} />
+                            </div>
                           </div>
                           <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">NFT</div>
                         </div>

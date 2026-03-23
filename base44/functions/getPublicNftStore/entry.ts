@@ -121,6 +121,7 @@ Deno.serve(async (req) => {
         logo_url: profile?.logo_url || null,
         website_url: profile?.website_url || null,
         default_receive_address: profile?.default_receive_address || null,
+        nft_fulfillment_mode: profile?.nft_fulfillment_mode || 'manual',
         verified_merchant: !!profile?.verified_merchant,
       },
       listings: activeListings,
