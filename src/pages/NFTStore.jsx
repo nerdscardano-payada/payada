@@ -118,10 +118,10 @@ export default function NFTStore() {
             <div className="flex items-center justify-end gap-3">
               <Select value={selectedCollection} onValueChange={setSelectedCollection}>
                 <SelectTrigger className="w-56">
-                  <SelectValue placeholder="Select collection" />
+                  <SelectValue placeholder="Selecteer collectie" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All collections</SelectItem>
+                  <SelectItem value="all">Alle collecties</SelectItem>
                   {collections.map((c) => (
                     <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>
                   ))}
