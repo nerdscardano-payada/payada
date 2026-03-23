@@ -5,25 +5,25 @@ const cards = [
     key: "activeListings",
     label: "Active listings",
     tone: "border-amber-200 bg-amber-50 text-amber-950",
-    sub: "NFT's die live staan in je marketplace.",
+    sub: "NFTs currently live in your marketplace.",
   },
   {
     key: "confirmedSales",
     label: "Confirmed sales",
     tone: "border-emerald-200 bg-emerald-50 text-emerald-950",
-    sub: "Bevestigde betalingen voor NFT-verkoop.",
+    sub: "Confirmed payments for NFT sales.",
   },
   {
     key: "totalSalesAda",
-    label: "ADA omzet",
+    label: "ADA revenue",
     tone: "border-blue-200 bg-blue-50 text-blue-950",
-    sub: "Ontvangen ADA uit bevestigde NFT-betalingen.",
+    sub: "ADA received from confirmed NFT payments.",
   },
   {
     key: "pendingTransfers",
     label: "Pending transfers",
     tone: "border-slate-200 bg-white text-slate-950",
-    sub: "Leveringen die nog wachten op verwerking.",
+    sub: "Deliveries waiting for processing.",
   },
 ];
 

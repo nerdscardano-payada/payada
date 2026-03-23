@@ -30,24 +30,24 @@ export default function HotWalletSetupCard({ wallet, onSave, isSaving }) {
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
       <div>
         <h2 className="text-lg font-semibold text-slate-900">Merchant hot wallet</h2>
-        <p className="text-sm text-slate-500">Deze wallet verstuurt NFT’s automatisch na een bevestigde betaling.</p>
+        <p className="text-sm text-slate-500">This wallet sends NFTs automatically after a confirmed payment.</p>
       </div>
 
       <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-        De recovery phrase blijft zichtbaar tijdens het invullen, wordt bij opslaan versleuteld bewaard en kan daarna niet meer terug uitgelezen worden in PayADA.
+        The recovery phrase is visible while entering, is encrypted on save, and cannot be read back from PayADA later.
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div><Label>Wallet naam</Label><Input value={form.wallet_name} onChange={(e) => update("wallet_name", e.target.value)} /></div>
-        <div><Label>Wallet adres</Label><Input value={form.wallet_address} onChange={(e) => update("wallet_address", e.target.value)} placeholder="addr1..." /></div>
+        <div><Label>Wallet name</Label><Input value={form.wallet_name} onChange={(e) => update("wallet_name", e.target.value)} /></div>
+        <div><Label>Wallet address</Label><Input value={form.wallet_address} onChange={(e) => update("wallet_address", e.target.value)} placeholder="addr1..." /></div>
       </div>
 
       <MnemonicPhraseInput value={form.mnemonic} onChange={(value) => update("mnemonic", value)} disabled={isSaving} />
 
-      {wallet?.wallet_address && <p className="text-xs text-slate-500">Actieve hot wallet: {wallet.wallet_address}</p>}
+      {wallet?.wallet_address && <p className="text-xs text-slate-500">Active hot wallet: {wallet.wallet_address}</p>}
 
       <Button onClick={() => onSave(form)} disabled={isSaving || !form.wallet_address.trim() || !canSaveMnemonic}>
-        {isSaving ? "Opslaan..." : wallet ? "Hot wallet bijwerken" : "Hot wallet opslaan"}
+        {isSaving ? "Saving..." : wallet ? "Update hot wallet" : "Save hot wallet"}
       </Button>
     </div>
   );

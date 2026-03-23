@@ -3,13 +3,13 @@ import React from "react";
 const options = [
   {
     value: "manual",
-    title: "Manueel met signer wallet",
-    description: "Geen seed phrase opslag. Elke NFT-transfer wordt eerst door de merchant ondertekend.",
+    title: "Manual with signer wallet",
+    description: "No seed phrase stored. Each NFT transfer is signed by the merchant first.",
   },
   {
     value: "automatic",
-    title: "Automatisch met hot wallet",
-    description: "Versleutelde recovery phrase voor automatische NFT-transfers na bevestigde betaling.",
+    title: "Automatic with hot wallet",
+    description: "Encrypted recovery phrase for automatic NFT transfers after confirmed payment.",
   },
 ];
 
@@ -17,8 +17,8 @@ export default function FulfillmentModeSelector({ value, onChange, isSaving }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
       <div>
-        <h2 className="text-lg font-semibold text-slate-900">Fulfillment methode</h2>
-        <p className="text-sm text-slate-500">Kies per merchant of NFT’s manueel of automatisch verstuurd worden.</p>
+        <h2 className="text-lg font-semibold text-slate-900">Fulfillment method</h2>
+        <p className="text-sm text-slate-500">Choose per merchant whether NFTs are sent manually or automatically.</p>
       </div>
       <div className="grid gap-3 md:grid-cols-2">
         {options.map((option) => {

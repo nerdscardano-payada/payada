@@ -9,7 +9,7 @@ export default function TransferQueueTable({ logs, signingId, onSign, fulfillmen
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 p-5">
         <h2 className="text-lg font-semibold text-slate-900">Transfer queue</h2>
-        <p className="mt-1 text-sm text-slate-500">{isManual ? "Pending deliveries wachten hier op manuele wallet signing." : "Bevestigde betalingen worden hier opgevolgd en automatisch verstuurd vanuit de hot wallet."}</p>
+        <p className="mt-1 text-sm text-slate-500">{isManual ? "Pending deliveries wait here for manual wallet signing." : "Confirmed payments are tracked here and sent automatically from the hot wallet."}</p>
       </div>
       <div className="divide-y divide-slate-100">
         {logs.length === 0 ? (
