@@ -30,7 +30,9 @@ Deno.serve(async (req) => {
       amount_ada: parseFloat(amountAda),
       receive_address: receiveAddress,
       status: 'active',
-      confirmations_required: 2
+      confirmations_required: 2,
+      is_hidden: true,
+      creation_source: 'pos'
     });
 
     const amountLovelace = Math.floor(parseFloat(amountAda) * 1_000_000);

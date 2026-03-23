@@ -83,6 +83,8 @@ export default function DonationPageForm({ onBack, donationPage }) {
           collect_name: form.collect_name,
           collect_email: form.collect_email,
           status: "active",
+          is_hidden: true,
+          creation_source: "donation",
         }))
       );
 

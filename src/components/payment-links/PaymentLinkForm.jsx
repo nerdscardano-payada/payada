@@ -124,6 +124,8 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
       enable_multi_cnt_checkout: form.amount_mode === "fixed_ada" && (form.accepted_cnt_tokens || []).length > 0,
       confirmations_required: parseInt(form.confirmations_required) || 2,
       expires_at: form.expires_at || null,
+      is_hidden: link?.is_hidden ?? false,
+      creation_source: link?.creation_source || "manual",
     };
     mutation.mutate(data);
   };
