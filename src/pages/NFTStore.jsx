@@ -116,7 +116,7 @@ export default function NFTStore() {
                     <h2 className="mt-2 text-2xl font-semibold text-slate-900">{collection.name}</h2>
                   </div>
                 )}
-                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {collection.items.map((listing) => (
                     <div key={listing.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-transform duration-200 hover:-translate-y-1">
                       {listing.image_url ? (
