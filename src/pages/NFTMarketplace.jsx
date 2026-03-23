@@ -6,6 +6,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import ListingForm from "@/components/nfts/ListingForm";
 import ListingsTable from "@/components/nfts/ListingsTable";
 import SignerWalletSetupCard from "@/components/nfts/SignerWalletSetupCard";
+import FulfillmentSetupRequiredCard from "@/components/nfts/FulfillmentSetupRequiredCard";
 import { Button } from "@/components/ui/button";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
 import { toast } from "sonner";
@@ -25,7 +26,7 @@ export default function NFTMarketplace() {
     base44.auth.me().then(setUser);
   }, []);
 
-  const { data: merchantProfile } = useQuery({
+  const { data: merchantProfile, isLoading: isLoadingMerchantProfile } = useQuery({
     queryKey: ["merchant-profile", user?.email],
     queryFn: async () => {
       const profiles = await base44.entities.MerchantProfile.filter({ user_id: user.email }, "-created_date", 1);
@@ -64,6 +65,7 @@ export default function NFTMarketplace() {
     enabled: !!walletSession?.address,
   });
 
+  const isFulfillmentConfigured = Boolean(merchantProfile?.nft_fulfillment_mode);
   const resolvedStoreSlug = createSlug(merchantProfile?.nft_store_slug || merchantProfile?.business_name || user?.full_name || user?.email?.split("@")[0] || "nft-store");
   const publicStorePath = `/nft/${resolvedStoreSlug}`;
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
@@ -183,6 +185,15 @@ export default function NFTMarketplace() {
     }));
   };
 
+  if (!isLoadingMerchantProfile && !isFulfillmentConfigured) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="NFT Marketplace" subtitle="Stel eerst je fulfillment methode in voor je marketplace listings maakt." />
+        <FulfillmentSetupRequiredCard />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <PageHeader title="NFT Marketplace" subtitle="Beheer hier je listings; gedeelde NFT instellingen en verkoopcijfers staan nu centraal op NFT Control." />
@@ -206,14 +217,14 @@ export default function NFTMarketplace() {
       <div className="grid gap-6 xl:grid-cols-2">
         <SignerWalletSetupCard wallet={signerWallet} connectedAddress={walletSession?.address || null} onConnect={setWalletSession} onDisconnect={() => { setWalletSession(null); setSelectedAssetUnit(""); }} onSave={saveSignerWallet} isSaving={signerWalletMutation.isPending} />
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-slate-900">NFT Control</h2>
-          <p className="mt-1 text-sm text-slate-500">Marketplace instellingen, fulfillment methode en NFT sales dashboard zijn samengebracht op één centrale pagina.</p>
+          <h2 className="text-lg font-semibold text-slate-900">NFT instellingen</h2>
+          <p className="mt-1 text-sm text-slate-500">Fulfillment stel je nu één keer in via de wizard; je marketplace gebruikt daarna automatisch die opgeslagen keuze.</p>
           <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Public link</p>
             <p className="mt-2 break-all text-sm text-slate-700">{`${window.location.origin}${publicStorePath}`}</p>
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Button asChild><Link to="/NFTOperations">Open NFT Control</Link></Button>
+            <Button asChild><Link to="/NFTFulfillmentSetup">Open fulfillment wizard</Link></Button>
             <Button asChild variant="outline"><a href={`${window.location.origin}${publicStorePath}`} target="_blank" rel="noreferrer">Preview store</a></Button>
           </div>
         </div>

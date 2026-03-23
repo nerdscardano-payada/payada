@@ -8,6 +8,7 @@ import HotWalletSetupCard from "@/components/nfts/HotWalletSetupCard";
 import FulfillmentRuleForm from "@/components/nfts/FulfillmentRuleForm";
 import FulfillmentRulesTable from "@/components/nfts/FulfillmentRulesTable";
 import TransferQueueTable from "@/components/nfts/TransferQueueTable";
+import FulfillmentSetupRequiredCard from "@/components/nfts/FulfillmentSetupRequiredCard";
 import { Button } from "@/components/ui/button";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
 import { toast } from "sonner";
@@ -43,7 +44,7 @@ export default function NFTDistribution() {
     enabled: !!user?.email,
   });
 
-  const { data: merchantProfile } = useQuery({
+  const { data: merchantProfile, isLoading: isLoadingMerchantProfile } = useQuery({
     queryKey: ["merchant-profile-nft-distribution", user?.email],
     queryFn: async () => {
       const profiles = await base44.entities.MerchantProfile.filter({ user_id: user.email }, "-created_date", 1);
@@ -79,7 +80,8 @@ export default function NFTDistribution() {
     enabled: !!walletSession?.address,
   });
 
-  const fulfillmentMode = merchantProfile?.nft_fulfillment_mode || "manual";
+  const fulfillmentMode = merchantProfile?.nft_fulfillment_mode || null;
+  const isFulfillmentConfigured = Boolean(merchantProfile?.nft_fulfillment_mode);
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
 
   const walletMutation = useMutation({
@@ -224,6 +226,15 @@ export default function NFTDistribution() {
       setSigningId(null);
     }
   };
+
+  if (!isLoadingMerchantProfile && !isFulfillmentConfigured) {
+    return (
+      <div className="space-y-6">
+        <PageHeader title="NFT Distribution" subtitle="Stel eerst je fulfillment methode in voor je NFT-distributie configureert." />
+        <FulfillmentSetupRequiredCard />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

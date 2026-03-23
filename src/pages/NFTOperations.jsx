@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
-import FulfillmentModeSelector from "@/components/nfts/FulfillmentModeSelector";
 import MarketplaceSettingsForm from "@/components/nfts/MarketplaceSettingsForm";
 import DistributionOverviewCards from "@/components/nfts/DistributionOverviewCards";
 import TransferStatusChart from "@/components/nfts/TransferStatusChart";
@@ -91,7 +90,8 @@ export default function NFTOperations() {
     });
   }, [merchantProfile?.id, user?.email]);
 
-  const fulfillmentMode = merchantProfile?.nft_fulfillment_mode || "manual";
+  const fulfillmentMode = merchantProfile?.nft_fulfillment_mode || null;
+  const fulfillmentModeLabel = fulfillmentMode === "automatic" ? "Automatisch met hot wallet" : fulfillmentMode === "manual" ? "Manueel met signer wallet" : "Nog niet ingesteld";
   const resolvedStoreSlug = createSlug(storeSettings.nft_store_slug || merchantProfile?.nft_store_slug || merchantProfile?.business_name || user?.full_name || user?.email?.split("@")[0] || "nft-store");
   const publicStorePath = `/nft/${resolvedStoreSlug}`;
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
@@ -147,26 +147,6 @@ export default function NFTOperations() {
       topRules,
     };
   }, [listings, paymentLinksById, payments, rules, transferLogs]);
-
-  const fulfillmentModeMutation = useMutation({
-    mutationFn: (mode) => {
-      if (merchantProfile?.id) {
-        return base44.entities.MerchantProfile.update(merchantProfile.id, { nft_fulfillment_mode: mode });
-      }
-      return base44.entities.MerchantProfile.create({
-        user_id: user.email,
-        business_name: user.full_name || user.email,
-        nft_fulfillment_mode: mode,
-        status: "active",
-      });
-    },
-    onSuccess: (_, mode) => {
-      queryClient.invalidateQueries({ queryKey: ["merchant-profile-nft-operations"] });
-      queryClient.invalidateQueries({ queryKey: ["merchant-profile-nft-distribution"] });
-      queryClient.invalidateQueries({ queryKey: ["merchant-profile"] });
-      toast.success(mode === "automatic" ? "Automatische fulfillment geactiveerd" : "Manuele fulfillment geactiveerd");
-    },
-  });
 
   const settingsMutation = useMutation({
     mutationFn: (payload) => {
@@ -246,10 +226,18 @@ export default function NFTOperations() {
       <div className="grid gap-6 xl:grid-cols-2">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="mb-4">
-            <h2 className="text-lg font-semibold text-slate-900">Fulfillment methode</h2>
-            <p className="mt-1 text-sm text-slate-500">Deze instelling geldt nu centraal voor zowel marketplace-verkoop als distributie.</p>
+            <h2 className="text-lg font-semibold text-slate-900">Fulfillment wizard</h2>
+            <p className="mt-1 text-sm text-slate-500">Deze instelling staat nu op een aparte pagina en wordt daarna onthouden voor zowel marketplace als distributie.</p>
           </div>
-          <FulfillmentModeSelector value={fulfillmentMode} onChange={(mode) => fulfillmentModeMutation.mutate(mode)} isSaving={fulfillmentModeMutation.isPending} />
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Huidige status</p>
+            <p className="mt-2 text-lg font-semibold text-slate-900">{fulfillmentModeLabel}</p>
+            <p className="mt-1 text-sm text-slate-600">{fulfillmentMode ? "Je kan deze keuze altijd aanpassen via de wizard." : "Stel deze eerst in voor je NFT Distribution of Marketplace gebruikt."}</p>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Button asChild><Link to="/NFTFulfillmentSetup">Open fulfillment wizard</Link></Button>
+            <Button asChild variant="outline"><Link to="/NFTDistribution">Open distribution</Link></Button>
+          </div>
         </div>
         <MarketplaceSettingsForm
           value={storeSettings}
