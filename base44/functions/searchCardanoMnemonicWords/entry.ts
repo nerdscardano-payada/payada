@@ -2,7 +2,7 @@ const WORDLIST_URL = 'https://raw.githubusercontent.com/bitcoin/bips/master/bip-
 
 Deno.serve(async (req) => {
   try {
-    const { prefix = '' } = await req.json();
+    const { prefix = '' } = await req.json().catch(() => ({}));
     const normalized = String(prefix).trim().toLowerCase();
 
     if (!normalized) {

@@ -287,7 +287,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    const body = await req.json();
+    const body = await req.json().catch(() => ({}));
     const sr = base44.asServiceRole;
     const event = body?.event;
     const oldData = body?.old_data;
