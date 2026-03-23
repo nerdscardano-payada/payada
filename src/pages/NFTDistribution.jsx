@@ -141,11 +141,11 @@ export default function NFTDistribution() {
     e.preventDefault();
     if (!user?.email) return;
     if (!merchantProfile?.default_receive_address) {
-      toast.error("Set eerst een standaard ontvangstadres in je merchant profiel");
+      toast.error("Please set a default receive address in your merchant profile first");
       return;
     }
     if (!Number(formData.price_ada) || Number(formData.price_ada) <= 0) {
-      toast.error("Voer een geldige ADA prijs in");
+      toast.error("Enter a valid ADA price");
       return;
     }
     saveRuleMutation.mutate({ ...formData, merchant_id: user.email, status: editingRule?.status || "active" });
@@ -201,7 +201,7 @@ export default function NFTDistribution() {
   if (!isLoadingMerchantProfile && !isFulfillmentConfigured) {
     return (
       <div className="space-y-6">
-        <PageHeader title="NFT Distribution" subtitle="Stel eerst je fulfillment methode in voor je NFT-distributie configureert." />
+        <PageHeader title="NFT Distribution" subtitle="Set your fulfillment method first before configuring NFT distribution." />
         <FulfillmentSetupRequiredCard />
       </div>
     );
@@ -209,22 +209,22 @@ export default function NFTDistribution() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Distribution" subtitle="Kies hier gewoon NFT’s uit je opgeslagen wallet en beheer je distribution rules en transfer queue." />
+      <PageHeader title="NFT Distribution" subtitle="Pick NFTs from your saved wallet and manage distribution rules and the transfer queue." />
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Dashboard & instellingen verhuisd</h2>
-            <p className="mt-1 text-sm text-slate-500">Je centrale NFT-overzicht staat op NFT Control; fulfillment beheer je nu via de aparte wizardpagina.</p>
+            <h2 className="text-lg font-semibold text-slate-900">Dashboard & settings moved</h2>
+            <p className="mt-1 text-sm text-slate-500">Your central NFT overview is on the NFT Dashboard; fulfillment is managed via the separate wizard page.</p>
           </div>
-          <Button asChild variant="outline"><Link to="/NFTOperations">Open NFT Control</Link></Button>
+          <Button asChild variant="outline"><Link to="/NFTOperations">Open NFT Dashboard</Link></Button>
         </div>
       </div>
 
       {!isAssetWalletReady && (
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
           {fulfillmentMode === "automatic"
-            ? "Stel eerst je hot wallet in op NFT Fulfillment Setup zodat deze pagina automatisch je NFT’s kan laden."
-            : "Stel eerst je signer wallet in op NFT Fulfillment Setup zodat deze pagina automatisch je NFT’s kan laden."}
+            ? "First set up your hot wallet on NFT Fulfillment Setup so this page can load your NFTs automatically."
+            : "First set up your signer wallet on NFT Fulfillment Setup so this page can load your NFTs automatically."}
         </div>
       )}
 

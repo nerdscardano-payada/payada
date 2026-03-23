@@ -131,11 +131,11 @@ export default function NFTMarketplace() {
     e.preventDefault();
     if (!user?.email) return;
     if (!merchantProfile?.default_receive_address) {
-      toast.error("Set eerst een standaard ontvangstadres in je merchant profiel");
+      toast.error("Please set a default receive address in your merchant profile first");
       return;
     }
     if (!Number(formData.price_ada) || Number(formData.price_ada) <= 0) {
-      toast.error("Voer een geldige ADA prijs in");
+      toast.error("Enter a valid ADA price");
       return;
     }
     saveMutation.mutate({
@@ -175,7 +175,7 @@ export default function NFTMarketplace() {
   if (!isLoadingMerchantProfile && !isFulfillmentConfigured) {
     return (
       <div className="space-y-6">
-        <PageHeader title="NFT Marketplace" subtitle="Stel eerst je fulfillment methode in voor je marketplace listings maakt." />
+        <PageHeader title="NFT Marketplace" subtitle="Set your fulfillment method first before creating marketplace listings." />
         <FulfillmentSetupRequiredCard />
       </div>
     );
@@ -183,7 +183,7 @@ export default function NFTMarketplace() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Marketplace" subtitle="Beheer hier je listings met NFT’s uit je opgeslagen wallet, zonder extra wallet setup op deze pagina." />
+      <PageHeader title="NFT Marketplace" subtitle="Manage listings using NFTs from your saved wallet—no extra wallet setup on this page." />
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Active listings</p>
@@ -202,13 +202,13 @@ export default function NFTMarketplace() {
         </div>
       </div>
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">NFT instellingen</h2>
-        <p className="mt-1 text-sm text-slate-500">Fulfillment en wallet-koppeling gebeuren nu enkel op de wizardpagina; deze marketplace leest daarna automatisch je opgeslagen wallet.</p>
+        <h2 className="text-lg font-semibold text-slate-900">NFT settings</h2>
+        <p className="mt-1 text-sm text-slate-500">Fulfillment and wallet linking happen only on the wizard page; this marketplace then automatically reads your saved wallet.</p>
         {!configuredAssetWalletAddress && (
           <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
             {merchantProfile?.nft_fulfillment_mode === "automatic"
-              ? "Stel eerst je hot wallet in op NFT Fulfillment Setup zodat je marketplace NFT’s kan laden."
-              : "Stel eerst je signer wallet in op NFT Fulfillment Setup zodat je marketplace NFT’s kan laden."}
+              ? "First set up your hot wallet on NFT Fulfillment Setup so your marketplace can load NFTs."
+              : "First set up your signer wallet on NFT Fulfillment Setup so your marketplace can load NFTs."}
           </div>
         )}
         <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">

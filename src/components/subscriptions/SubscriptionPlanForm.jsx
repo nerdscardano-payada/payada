@@ -113,7 +113,7 @@ export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
         <div className="space-y-2 md:col-span-2">
           <Label>Default receive address (from Merchant profile)</Label>
           <Input value={defaultReceiveAddress} readOnly disabled placeholder="Not set in Merchant Profile" />
-          <p className="text-xs text-slate-500">Default wordt dit adres gebruikt; vul hieronder een override in om enkel voor dit plan een ander adres te gebruiken.</p>
+          <p className="text-xs text-slate-500">By default, this address is used; enter an override below to use a different address for this plan only.</p>
         </div>
 
         <div className="space-y-2 md:col-span-2">

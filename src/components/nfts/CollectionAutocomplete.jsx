@@ -95,7 +95,7 @@ export default function CollectionAutocomplete({ value, onChange }) {
         }}
         onFocus={() => setIsOpen(true)}
         onBlur={() => setTimeout(() => setIsOpen(false), 120)}
-        placeholder="Typ bv. House of Titans"
+        placeholder="Type e.g. House of Titans"
         autoComplete="off"
       />
       {isOpen && (suggestions.length > 0 || (!!value && !existsExact)) && (
@@ -120,7 +120,7 @@ export default function CollectionAutocomplete({ value, onChange }) {
               disabled={isSaving}
               className="block w-full px-3 py-2 text-left text-sm text-indigo-600 hover:bg-indigo-50 disabled:opacity-60"
             >
-              {isSaving ? "Toevoegen..." : `Toevoegen: "${value.trim()}"`}
+              {isSaving ? "Adding..." : `Add: "${value.trim()}"`}
             </button>
           )}
         </div>

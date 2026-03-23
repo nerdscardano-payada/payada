@@ -91,7 +91,7 @@ export default function NFTOperations() {
   }, [merchantProfile?.id, user?.email]);
 
   const fulfillmentMode = merchantProfile?.nft_fulfillment_mode || null;
-  const fulfillmentModeLabel = fulfillmentMode === "automatic" ? "Automatisch met hot wallet" : fulfillmentMode === "manual" ? "Manueel met signer wallet" : "Nog niet ingesteld";
+  const fulfillmentModeLabel = fulfillmentMode === "automatic" ? "Automatic with hot wallet" : fulfillmentMode === "manual" ? "Manual with signer wallet" : "Not configured yet";
   const resolvedStoreSlug = createSlug(storeSettings.nft_store_slug || merchantProfile?.nft_store_slug || merchantProfile?.business_name || user?.full_name || user?.email?.split("@")[0] || "nft-store");
   const publicStorePath = `/nft/${resolvedStoreSlug}`;
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
@@ -163,7 +163,7 @@ export default function NFTOperations() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["merchant-profile-nft-operations"] });
       queryClient.invalidateQueries({ queryKey: ["merchant-profile"] });
-      toast.success("NFT instellingen opgeslagen");
+      toast.success("NFT settings saved");
     },
   });
 
@@ -178,7 +178,7 @@ export default function NFTOperations() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Control" subtitle="Eén centrale plek voor NFT verkoop en gedeelde instellingen, met fulfillment via een aparte wizard." />
+      <PageHeader title="NFT Dashboard" subtitle="One central place for NFT sales and shared settings, with fulfillment managed via a separate wizard." />
 
       <NftOperationsSummaryCards
         activeListings={dashboardStats.activeListings}
@@ -196,8 +196,8 @@ export default function NFTOperations() {
         <TopFulfillmentRulesChart data={dashboardStats.topRules} />
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div>
-            <h3 className="text-base font-semibold text-slate-900">Wallets & snelle acties</h3>
-            <p className="mt-1 text-sm text-slate-500">Gebruik deze pagina als centraal overzicht en ga daarna gericht verder per workflow.</p>
+            <h3 className="text-base font-semibold text-slate-900">Wallets & quick actions</h3>
+            <p className="mt-1 text-sm text-slate-500">Use this page as a central overview and continue with a specific workflow.</p>
           </div>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -210,8 +210,8 @@ export default function NFTOperations() {
             </div>
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Button asChild variant="outline"><Link to="/NFTMarketplace">Marketplace beheren</Link></Button>
-            <Button asChild variant="outline"><Link to="/NFTDistribution">Transfers beheren</Link></Button>
+            <Button asChild variant="outline"><Link to="/NFTMarketplace">Manage marketplace</Link></Button>
+            <Button asChild variant="outline"><Link to="/NFTDistribution">Manage transfers</Link></Button>
             <Button asChild><a href={`${window.location.origin}${publicStorePath}`} target="_blank" rel="noreferrer">Open store</a></Button>
           </div>
         </div>
@@ -227,12 +227,12 @@ export default function NFTOperations() {
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="mb-4">
             <h2 className="text-lg font-semibold text-slate-900">Fulfillment wizard</h2>
-            <p className="mt-1 text-sm text-slate-500">Deze instelling staat nu op een aparte pagina en wordt daarna onthouden voor zowel marketplace als distributie.</p>
+            <p className="mt-1 text-sm text-slate-500">This setting now lives on a separate page and is remembered for both marketplace and distribution.</p>
           </div>
           <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Huidige status</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Current status</p>
             <p className="mt-2 text-lg font-semibold text-slate-900">{fulfillmentModeLabel}</p>
-            <p className="mt-1 text-sm text-slate-600">{fulfillmentMode ? "Je kan deze keuze altijd aanpassen via de wizard." : "Stel deze eerst in voor je NFT Distribution of Marketplace gebruikt."}</p>
+            <p className="mt-1 text-sm text-slate-600">{fulfillmentMode ? "You can change this choice anytime via the wizard." : "Configure this first before using NFT Distribution or Marketplace."}</p>
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
             <Button asChild><Link to="/NFTFulfillmentSetup">Open fulfillment wizard</Link></Button>

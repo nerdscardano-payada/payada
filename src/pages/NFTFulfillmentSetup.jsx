@@ -67,7 +67,7 @@ export default function NFTFulfillmentSetup() {
       queryClient.invalidateQueries({ queryKey: ["merchant-profile-nft-distribution"] });
       queryClient.invalidateQueries({ queryKey: ["merchant-profile"] });
       queryClient.invalidateQueries({ queryKey: ["merchant-profile-nft-operations"] });
-      toast.success(mode === "automatic" ? "Automatische fulfillment opgeslagen" : "Manuele fulfillment opgeslagen");
+      toast.success(mode === "automatic" ? "Automatic fulfillment saved" : "Manual fulfillment saved");
     },
   });
 
@@ -80,7 +80,7 @@ export default function NFTFulfillmentSetup() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["merchant-signer-wallet"] });
-      toast.success("Signer wallet opgeslagen");
+      toast.success("Signer wallet saved");
     },
   });
 
@@ -88,34 +88,34 @@ export default function NFTFulfillmentSetup() {
     mutationFn: (payload) => base44.functions.invoke("saveMerchantHotWallet", payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["merchant-hot-wallet"] });
-      toast.success("Hot wallet opgeslagen");
+      toast.success("Hot wallet saved");
     },
     onError: (error) => toast.error(error?.response?.data?.error || error.message),
   });
 
   const configuredMode = merchantProfile?.nft_fulfillment_mode || "";
   const activeMode = selectedMode || configuredMode;
-  const modeLabel = selectedMode === "automatic" ? "Automatisch met hot wallet" : "Manueel met signer wallet";
+  const modeLabel = selectedMode === "automatic" ? "Automatic with hot wallet" : "Manual with signer wallet";
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Fulfillment Wizard" subtitle="Stel eerst één keer je fulfillment methode in. Deze keuze wordt daarna onthouden voor NFT Distribution en NFT Marketplace." />
+      <PageHeader title="NFT Fulfillment Wizard" subtitle="Set up your fulfillment method once. This choice is remembered for NFT Distribution and NFT Marketplace." />
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Stap 1</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900">Kies je methode</p>
-          <p className="mt-1 text-sm text-slate-600">Bepaal of transfers manueel of automatisch verlopen.</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step 1</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900">Choose your method</p>
+          <p className="mt-1 text-sm text-slate-600">Decide whether transfers are manual or automatic.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Stap 2</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900">Sla op</p>
-          <p className="mt-1 text-sm text-slate-600">Je keuze wordt centraal bewaard op je merchant profiel.</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step 2</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900">Save</p>
+          <p className="mt-1 text-sm text-slate-600">Your choice is stored on your merchant profile.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Stap 3</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900">Ga verder</p>
-          <p className="mt-1 text-sm text-slate-600">Open daarna NFT Distribution of Marketplace zonder dit opnieuw in te vullen.</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step 3</p>
+          <p className="mt-2 text-lg font-semibold text-slate-900">Continue</p>
+          <p className="mt-1 text-sm text-slate-600">Then open NFT Distribution or Marketplace without needing to set this again.</p>
         </div>
       </div>
 
@@ -146,27 +146,27 @@ export default function NFTFulfillmentSetup() {
       )}
 
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">Bevestig je keuze</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Confirm your choice</h2>
         <p className="mt-1 text-sm text-slate-500">
-          Huidige opgeslagen keuze: {configuredMode ? (configuredMode === "automatic" ? "Automatisch met hot wallet" : "Manueel met signer wallet") : "Nog niet ingesteld"}
+          Current saved choice: {configuredMode ? (configuredMode === "automatic" ? "Automatic with hot wallet" : "Manual with signer wallet") : "Not configured yet"}
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Button onClick={() => saveMutation.mutate(selectedMode)} disabled={!selectedMode || saveMutation.isPending}>
             Opslaan
           </Button>
           <Button asChild variant="outline">
-            <Link to="/NFTOperations">Terug naar NFT Control</Link>
+            <Link to="/NFTOperations">Back to NFT Dashboard</Link>
           </Button>
         </div>
         <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Volgende stap</p>
-          <p className="mt-2 text-sm text-slate-700">Gekozen modus: {selectedMode ? modeLabel : "Kies eerst een fulfillment methode"}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Next step</p>
+          <p className="mt-2 text-sm text-slate-700">Selected mode: {selectedMode ? modeLabel : "Choose a fulfillment method first"}</p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button asChild variant="outline">
-              <Link to="/NFTDistribution">Ga naar NFT Distribution</Link>
+              <Link to="/NFTDistribution">Go to NFT Distribution</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link to="/NFTMarketplace">Ga naar NFT Marketplace</Link>
+              <Link to="/NFTMarketplace">Go to NFT Marketplace</Link>
             </Button>
           </div>
         </div>
