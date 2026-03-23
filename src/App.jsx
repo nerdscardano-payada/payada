@@ -26,6 +26,7 @@ import NFTOperations from './pages/NFTOperations';
 import NFTFulfillmentSetup from './pages/NFTFulfillmentSetup';
 import NFTMarketplace from './pages/NFTMarketplace';
 import NFTStore from './pages/NFTStore';
+import NFTDetail from './pages/NFTDetail';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -124,6 +125,7 @@ const AuthenticatedApp = () => {
       <Route path="/NFTGate" element={<ProtectedRoute currentPageName="NFTGate"><LayoutWrapper currentPageName="NFTGate"><NFTGate /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/NFTStore" element={<ProtectedRoute currentPageName="NFTStore"><LayoutWrapper currentPageName="NFTStore"><NFTStore /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/nft/:storeSlug" element={<NFTStore />} />
+      <Route path="/nft/:storeSlug/:listingId" element={<NFTDetail />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

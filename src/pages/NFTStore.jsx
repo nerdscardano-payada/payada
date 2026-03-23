@@ -140,9 +140,14 @@ export default function NFTStore() {
                             <p className="text-xs uppercase tracking-wide text-slate-500">Price</p>
                             <p className="text-lg font-semibold text-slate-900">{listing.price_ada ? `₳ ${Number(listing.price_ada).toFixed(2)}` : "Price via checkout"}</p>
                           </div>
-                          <Button asChild>
-                            <a href={`/Pay?slug=${listing.payment_link_slug}`}>Buy now</a>
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button variant="outline" asChild>
+                              <a href={`/nft/${(data?.merchant?.nft_store_slug || resolvedStoreSlug)}/${listing.id}`}>More info</a>
+                            </Button>
+                            <Button asChild>
+                              <a href={`/Pay?slug=${listing.payment_link_slug}`}>Buy now</a>
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
