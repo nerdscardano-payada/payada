@@ -1,8 +1,10 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { Button } from "@/components/ui/button";
 import PublicMarketplaceFilters from "@/components/nfts/PublicMarketplaceFilters";
 import PublicMarketplaceCard from "@/components/nfts/PublicMarketplaceCard";
+import PayadaLogo from "@/components/shared/PayadaLogo";
 
 export default function PublicNFTMarketplace() {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -68,11 +70,23 @@ export default function PublicNFTMarketplace() {
     <div className="min-h-screen bg-slate-100">
       <div className="mx-auto max-w-7xl px-4 py-10">
         <div className="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 px-8 py-10 text-white shadow-sm">
-          <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Marketplace</p>
-          <h1 className="mt-4 text-4xl font-semibold">All merchant NFT listings in one public marketplace</h1>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
-            Browse every active NFT listing across all registered merchant stores, search collections instantly, and jump directly into any merchant storefront.
-          </p>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <PayadaLogo />
+              <p className="mt-6 text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Marketplace</p>
+              <h1 className="mt-4 text-4xl font-semibold">All merchant NFT listings in one public marketplace</h1>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300">
+                Browse every active NFT listing across all registered merchant stores, search collections instantly, and jump directly into any merchant storefront.
+              </p>
+            </div>
+
+            <div className="flex shrink-0 items-start">
+              <Button className="bg-cyan-400 text-slate-950 hover:bg-cyan-300" asChild>
+                <a href="/NFTMarketplace">Maak je eigen NFT Store</a>
+              </Button>
+            </div>
+          </div>
+
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="text-xs uppercase tracking-wide text-slate-400">Live listings</p>
@@ -111,7 +125,12 @@ export default function PublicNFTMarketplace() {
             <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">Loading marketplace...</div>
           ) : filteredListings.length === 0 ? (
             <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500 shadow-sm">
-              No NFT listings match your current filters.
+              <p>No NFT listings match your current filters.</p>
+              <div className="mt-4">
+                <Button asChild>
+                  <a href="/NFTMarketplace">Maak je eigen NFT Store</a>
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
