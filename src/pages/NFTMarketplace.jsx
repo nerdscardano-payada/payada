@@ -139,6 +139,7 @@ export default function NFTMarketplace() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["merchant-profile", user?.email] });
+      toast.success("Preferred collection updated");
     },
   });
 
@@ -229,6 +230,37 @@ export default function NFTMarketplace() {
         <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Public link</p>
           <p className="mt-2 break-all text-sm text-slate-700">{`${window.location.origin}${publicStorePath}`}</p>
+        </div>
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Preferred collection first</p>
+            <p className="mt-1 text-sm text-slate-600">Choose which collection should always appear at the top of your public store.</p>
+            <div className="mt-3 max-w-sm">
+              <Select
+                value={merchantProfile?.preferred_collection_name || "none"}
+                onValueChange={(value) => updatePreferenceMutation.mutate(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose collection" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No preference</SelectItem>
+                  {collectionOptions.map((name) => (
+                    <SelectItem key={name} value={name}>{name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Verified merchant</p>
+            <div className="mt-3 flex items-center gap-2">
+              <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${merchantProfile?.verified_merchant ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-700"}`}>
+                {merchantProfile?.verified_merchant ? "Verified" : "Not verified"}
+              </span>
+            </div>
+            <p className="mt-2 text-sm text-slate-600">When verified, the badge is shown on your public NFT store and marketplace cards.</p>
+          </div>
         </div>
         <div className="mt-5 flex flex-wrap gap-3">
           <Button asChild><Link to="/NFTFulfillmentSetup">Open fulfillment wizard</Link></Button>
