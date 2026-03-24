@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import FulfillmentMethodBadge from "@/components/nfts/FulfillmentMethodBadge";
 import DeliveryInfoDialog from "@/components/nfts/DeliveryInfoDialog";
+import PayadaLogo from "@/components/shared/PayadaLogo";
 
 export default function NFTStore() {
   const { storeSlug } = useParams();
@@ -85,6 +86,12 @@ export default function NFTStore() {
               <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Store</p>
               <h1 className="mt-4 text-4xl font-semibold">{merchantName}</h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">{storeDescription}</p>
+              <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <PayadaLogo />
+                <Button asChild className="bg-white text-slate-950 hover:bg-slate-200">
+                  <a href="/NFTMarketplace">Create your own NFT store</a>
+                </Button>
+              </div>
               <div className="mt-4 flex items-center gap-3 text-sm">
                 {data?.merchant?.logo_url && (
                   <img src={data.merchant.logo_url} alt={merchantName} className="h-8 w-8 rounded" />
