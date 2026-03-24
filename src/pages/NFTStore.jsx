@@ -83,11 +83,8 @@ export default function NFTStore() {
         <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 px-8 py-10 text-white shadow-sm">
           <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
             <div>
-              <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mb-6">
                 <PayadaLogo />
-                <Button asChild className="bg-white text-slate-950 hover:bg-slate-200">
-                  <a href="/NFTMarketplace">Create your own NFT store</a>
-                </Button>
               </div>
               <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Store</p>
               <h1 className="mt-4 text-4xl font-semibold">{merchantName}</h1>
@@ -144,7 +141,10 @@ export default function NFTStore() {
           </div>
         ) : (
           <div className="mt-8 space-y-10">
-            <div className="flex items-center justify-end gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <Button asChild variant="outline" className="bg-white">
+                <a href="/NFTMarketplace">Create your own NFT store</a>
+              </Button>
               <Select value={selectedCollection} onValueChange={setSelectedCollection}>
                 <SelectTrigger className="w-56">
                   <SelectValue placeholder="Select collection" />
