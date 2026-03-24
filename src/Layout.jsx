@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "@/utils";
 
-const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "Demo", "MultiTokenCheckout", "Donate", "NFTGate", "NFTStore", "NFTMarketplaceFAQ", "NFTMarketplaceTerms"];
+const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "Demo", "MultiTokenCheckout", "Donate", "NFTGate", "NFTStore", "NFTMarketplaceFAQ", "NFTMarketplaceTerms", "Marketplace"];
 
 export default function Layout({ children, currentPageName }) {
   const [collapsed, setCollapsed] = useState(false);

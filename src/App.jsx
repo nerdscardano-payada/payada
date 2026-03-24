@@ -29,6 +29,7 @@ import NFTStore from './pages/NFTStore';
 import NFTDetail from './pages/NFTDetail';
 import NFTMarketplaceFAQ from './pages/NFTMarketplaceFAQ';
 import NFTMarketplaceTerms from './pages/NFTMarketplaceTerms';
+import PublicNFTMarketplace from './pages/PublicNFTMarketplace';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -55,7 +56,7 @@ const ProtectedRoute = ({ children, currentPageName }) => {
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const location = useLocation();
-  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile", "Demo", "MultiTokenCheckout", "Donate", "NFTGate", "NFTStore", "NFTMarketplaceFAQ", "NFTMarketplaceTerms"];
+  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile", "Demo", "MultiTokenCheckout", "Donate", "NFTGate", "NFTStore", "NFTMarketplaceFAQ", "NFTMarketplaceTerms", "Marketplace"];
   
   // Determine current page name from pathname
   const pathSegments = location.pathname.split('/').filter(Boolean);
@@ -130,6 +131,7 @@ const AuthenticatedApp = () => {
       <Route path="/nft/:storeSlug/:listingId" element={<NFTDetail />} />
       <Route path="/NFTMarketplaceFAQ" element={<LayoutWrapper currentPageName="NFTMarketplaceFAQ"><NFTMarketplaceFAQ /></LayoutWrapper>} />
       <Route path="/NFTMarketplaceTerms" element={<LayoutWrapper currentPageName="NFTMarketplaceTerms"><NFTMarketplaceTerms /></LayoutWrapper>} />
+      <Route path="/Marketplace" element={<LayoutWrapper currentPageName="Marketplace"><PublicNFTMarketplace /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
