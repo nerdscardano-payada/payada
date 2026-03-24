@@ -195,6 +195,7 @@ export default function NFTOperations() {
 
       {fulfillmentMode !== "automatic" && (
         <ManualSigningCard
+          id="manual-signing-wallet"
           configuredAddress={signerWallet?.wallet_address || null}
           connectedAddress={walletSession?.address || null}
           onConnect={setWalletSession}
@@ -206,6 +207,8 @@ export default function NFTOperations() {
         logs={actionableLogs}
         signingId={signingId}
         onSign={handleSignTransfer}
+        onPrepareSign={openSigningSetup}
+        canSign={!!walletSession?.api && !!walletSession?.address}
         fulfillmentMode={fulfillmentMode}
         rulesById={rulesById}
         listingsByPaymentLinkId={listingsByPaymentLinkId}

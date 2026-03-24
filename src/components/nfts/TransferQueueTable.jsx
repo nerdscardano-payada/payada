@@ -79,9 +79,9 @@ export default function TransferQueueTable({ logs, signingId, onSign, onPrepareS
                   </Button>
                 )}
                 {isManual && log.status === "pending" && (
-                  <Button onClick={() => onSign(log)} disabled={signingId === log.id}>
+                  <Button type="button" onClick={() => canSign ? onSign(log) : onPrepareSign?.()} disabled={canSign && signingId === log.id}>
                     <PenSquare className="mr-2 h-4 w-4" />
-                    {signingId === log.id ? "Signing..." : "Sign & send"}
+                    {canSign ? (signingId === log.id ? "Signing..." : "Sign & send") : "Connect wallet first"}
                   </Button>
                 )}
               </div>
