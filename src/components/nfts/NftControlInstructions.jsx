@@ -42,3 +42,5 @@ export default function NftControlInstructions({ fulfillmentMode = "manual", pen
         </div>
       </div>
     </div>
+  );
+}
