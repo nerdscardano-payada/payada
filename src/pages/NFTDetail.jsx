@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import FulfillmentMethodBadge from "@/components/nfts/FulfillmentMethodBadge";
 import MarketplaceTrustNotice from "@/components/nfts/MarketplaceTrustNotice";
+import { normalizeIpfsUrl } from "@/utils";
 
 export default function NFTDetail() {
   const { storeSlug, listingId } = useParams();
@@ -87,7 +88,7 @@ export default function NFTDetail() {
           <div className="rounded-2xl border border-slate-200 bg-white p-4">
             {l.image_url ? (
               <div className="flex h-[480px] w-full items-center justify-center bg-slate-50 p-4">
-                <img src={l.image_url} alt={l.title} className="max-h-full w-full object-contain" />
+                <img src={normalizeIpfsUrl(l.image_url)} alt={l.title} className="max-h-full w-full object-contain" />
               </div>
             ) : (
               <div className="flex h-[480px] w-full items-center justify-center bg-slate-200 text-sm font-semibold text-slate-500">NFT preview</div>

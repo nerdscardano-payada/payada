@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import FulfillmentMethodBadge from "@/components/nfts/FulfillmentMethodBadge";
+import { normalizeIpfsUrl } from "@/utils";
 
 export default function PublicMarketplaceCard({ listing }) {
   const storeName = listing.merchant?.nft_store_name || listing.merchant?.business_name || "Merchant store";
@@ -9,7 +10,7 @@ export default function PublicMarketplaceCard({ listing }) {
     <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-transform duration-200 hover:-translate-y-1">
       {listing.image_url ? (
         <div className="flex h-72 w-full items-center justify-center bg-slate-50 p-4">
-          <img src={listing.image_url} alt={listing.title} className="max-h-full w-full object-contain" />
+          <img src={normalizeIpfsUrl(listing.image_url)} alt={listing.title} className="max-h-full w-full object-contain" />
         </div>
       ) : (
         <div className="flex h-72 w-full items-center justify-center bg-slate-200 text-sm font-semibold text-slate-500">NFT preview</div>

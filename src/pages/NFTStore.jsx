@@ -6,6 +6,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import FulfillmentMethodBadge from "@/components/nfts/FulfillmentMethodBadge";
 import DeliveryInfoDialog from "@/components/nfts/DeliveryInfoDialog";
 import PayadaLogo from "@/components/shared/PayadaLogo";
+import { normalizeIpfsUrl } from "@/utils";
 
 export default function NFTStore() {
   const { storeSlug } = useParams();
@@ -170,7 +171,7 @@ export default function NFTStore() {
                     <div key={listing.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-transform duration-200 hover:-translate-y-1">
                       {listing.image_url ? (
                         <div className="flex h-72 w-full items-center justify-center bg-slate-50 p-4">
-                          <img src={listing.image_url} alt={listing.title} className="max-h-full w-full object-contain" />
+                          <img src={normalizeIpfsUrl(listing.image_url)} alt={listing.title} className="max-h-full w-full object-contain" />
                         </div>
                       ) : (
                         <div className="flex h-72 w-full items-center justify-center bg-slate-200 text-sm font-semibold text-slate-500">NFT preview</div>

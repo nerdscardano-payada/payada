@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import WalletAssetSelect from "@/components/nfts/WalletAssetSelect";
 import CollectionAutocomplete from "@/components/nfts/CollectionAutocomplete";
+import { normalizeIpfsUrl } from "@/utils";
 
 export default function ListingForm({ formData, setFormData, walletAssets, selectedAssetUnit, onSelectAsset, onSubmit, editingListing, isSubmitting, onCancel }) {
   const update = (field, value) => setFormData((prev) => ({ ...prev, [field]: value }));
@@ -49,7 +50,7 @@ export default function ListingForm({ formData, setFormData, walletAssets, selec
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Image preview</p>
           <div className="mt-3 flex h-56 items-center justify-center rounded-2xl bg-white p-4">
-            <img src={formData.image_url} alt={formData.title || "NFT preview"} className="max-h-full w-full rounded-2xl object-contain" />
+            <img src={normalizeIpfsUrl(formData.image_url)} alt={formData.title || "NFT preview"} className="max-h-full w-full rounded-2xl object-contain" />
           </div>
         </div>
       )}

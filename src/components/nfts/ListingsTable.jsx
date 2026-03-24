@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, ExternalLink, Pencil, Trash2 } from "lucide-react";
+import { normalizeIpfsUrl } from "@/utils";
 
 export default function ListingsTable({ listings, paymentLinksById, onEdit, onDelete, onCopy, onPreview }) {
   return (
@@ -16,7 +17,7 @@ export default function ListingsTable({ listings, paymentLinksById, onEdit, onDe
           <div key={listing.id} className="flex flex-col gap-4 p-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-start gap-4">
               {listing.image_url ? (
-                <img src={listing.image_url} alt={listing.title} className="h-20 w-20 rounded-2xl border border-slate-200 bg-slate-50 object-contain p-1" />
+                <img src={normalizeIpfsUrl(listing.image_url)} alt={listing.title} className="h-20 w-20 rounded-2xl border border-slate-200 bg-slate-50 object-contain p-1" />
               ) : (
                 <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-400">
                   NFT
