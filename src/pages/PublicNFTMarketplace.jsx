@@ -82,7 +82,7 @@ export default function PublicNFTMarketplace() {
 
             <div className="flex shrink-0 items-start">
               <Button className="bg-cyan-400 text-slate-950 hover:bg-cyan-300" asChild>
-                <a href="/NFTMarketplace">Maak je eigen NFT Store</a>
+                <a href="/NFTMarketplace">Create your own NFT store</a>
               </Button>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function PublicNFTMarketplace() {
               <p>No NFT listings match your current filters.</p>
               <div className="mt-4">
                 <Button asChild>
-                  <a href="/NFTMarketplace">Maak je eigen NFT Store</a>
+                  <a href="/NFTMarketplace">Create your own NFT store</a>
                 </Button>
               </div>
             </div>
