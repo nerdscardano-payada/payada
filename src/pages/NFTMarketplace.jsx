@@ -7,6 +7,7 @@ import ListingForm from "@/components/nfts/ListingForm";
 import ListingsTable from "@/components/nfts/ListingsTable";
 import FulfillmentSetupRequiredCard from "@/components/nfts/FulfillmentSetupRequiredCard";
 import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
 import { toast } from "sonner";
 
@@ -78,6 +79,9 @@ export default function NFTMarketplace() {
   const publicStorePath = `/nft/${resolvedStoreSlug}`;
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
   const activeListings = listings.filter((listing) => listing.status === "active").length;
+  const collectionOptions = React.useMemo(() => (
+    [...new Set(listings.map((l) => l.collection_name || "Featured NFTs"))].sort()
+  ), [listings]);
   const draftListings = listings.filter((listing) => listing.status === "draft").length;
 
   const saveMutation = useMutation({
@@ -124,6 +128,17 @@ export default function NFTMarketplace() {
       queryClient.invalidateQueries({ queryKey: ["nft-listings"] });
       queryClient.invalidateQueries({ queryKey: ["payment-links-marketplace"] });
       toast.success("NFT listing deleted");
+    },
+  });
+
+  const updatePreferenceMutation = useMutation({
+    mutationFn: async (value) => {
+      if (!merchantProfile?.id) return null;
+      const payload = { preferred_collection_name: value === 'none' ? null : value };
+      return base44.entities.MerchantProfile.update(merchantProfile.id, payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["merchant-profile", user?.email] });
     },
   });
 

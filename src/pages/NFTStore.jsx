@@ -47,6 +47,7 @@ export default function NFTStore() {
     return receiveAddr.length <= 12 ? receiveAddr : `${receiveAddr.slice(0, 6)}..${receiveAddr.slice(-6)}`;
   }, [receiveAddr]);
   const receiveAddrUrl = receiveAddr ? `https://cardanoscan.io/address/${encodeURIComponent(receiveAddr)}` : "";
+  const preferredCollection = data?.merchant?.preferred_collection_name || "";
   const collections = React.useMemo(() => {
     const grouped = listings.reduce((result, listing) => {
       const name = listing.collection_name || "Featured NFTs";
@@ -55,7 +56,7 @@ export default function NFTStore() {
       return result;
     }, {});
 
-    return Object.entries(grouped).map(([name, items]) => ({
+    const arr = Object.entries(grouped).map(([name, items]) => ({
       name,
       items: [...items].sort((a, b) => {
         const priceA = typeof a.price_ada === "number" ? a.price_ada : Number.POSITIVE_INFINITY;
@@ -63,7 +64,16 @@ export default function NFTStore() {
         return priceA - priceB;
       }),
     }));
-  }, [listings]);
+
+    if (preferredCollection) {
+      const idx = arr.findIndex((c) => c.name === preferredCollection);
+      if (idx > 0) {
+        const [fav] = arr.splice(idx, 1);
+        arr.unshift(fav);
+      }
+    }
+    return arr;
+  }, [listings, preferredCollection]);
 
   const [selectedCollection, setSelectedCollection] = React.useState("all");
   const displayCollections = React.useMemo(() => {
