@@ -53,7 +53,14 @@ export default function NFTStore() {
       return result;
     }, {});
 
-    return Object.entries(grouped).map(([name, items]) => ({ name, items }));
+    return Object.entries(grouped).map(([name, items]) => ({
+      name,
+      items: [...items].sort((a, b) => {
+        const priceA = typeof a.price_ada === "number" ? a.price_ada : Number.POSITIVE_INFINITY;
+        const priceB = typeof b.price_ada === "number" ? b.price_ada : Number.POSITIVE_INFINITY;
+        return priceA - priceB;
+      }),
+    }));
   }, [listings]);
 
   const [selectedCollection, setSelectedCollection] = React.useState("all");
