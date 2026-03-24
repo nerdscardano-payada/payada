@@ -5,8 +5,8 @@ export default function ManualSigningCard({ configuredAddress, connectedAddress,
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
       <div>
-        <h2 className="text-lg font-semibold text-slate-900">Manual signing</h2>
-        <p className="text-sm text-slate-500">Your signer wallet is already stored in NFT Fulfillment Setup. Only connect temporarily here when you want to sign a pending transfer.</p>
+        <h2 className="text-lg font-semibold text-slate-900">Manual signing wallet</h2>
+        <p className="text-sm text-slate-500">Use this only when a paid NFT order appears below. Connect the same signer wallet, review the buyer address, and sign the transfer.</p>
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
