@@ -255,7 +255,9 @@ export default function NFTMarketplace() {
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Verified merchant</p>
             <div className="mt-3 flex items-center gap-2">
-              <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${merchantProfile?.verified_merchant ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-700"}`}>
+              <span className={merchantProfile?.verified_merchant
+                ? "inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700"
+                : "inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700"}>
                 {merchantProfile?.verified_merchant ? "Verified" : "Not verified"}
               </span>
             </div>
