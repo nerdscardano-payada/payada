@@ -3,36 +3,36 @@ import React from "react";
 const cards = [
   {
     key: "activeListings",
-    label: "Active listings",
+    label: "Live listings",
     tone: "border-amber-200 bg-amber-50 text-amber-950",
-    sub: "NFTs currently live in your marketplace.",
+    sub: "NFTs currently available in your store.",
   },
   {
     key: "confirmedSales",
-    label: "Confirmed sales",
+    label: "Confirmed payments",
     tone: "border-emerald-200 bg-emerald-50 text-emerald-950",
-    sub: "Confirmed payments for NFT sales.",
-  },
-  {
-    key: "totalSalesAda",
-    label: "ADA revenue",
-    tone: "border-blue-200 bg-blue-50 text-blue-950",
-    sub: "ADA received from confirmed NFT payments.",
+    sub: "Paid NFT orders that reached confirmation.",
   },
   {
     key: "pendingTransfers",
-    label: "Pending transfers",
+    label: "Awaiting action",
+    tone: "border-blue-200 bg-blue-50 text-blue-950",
+    sub: "Orders still waiting to be sent.",
+  },
+  {
+    key: "successfulTransfers",
+    label: "Sent transfers",
     tone: "border-slate-200 bg-white text-slate-950",
-    sub: "Deliveries waiting for processing.",
+    sub: "Transfers already submitted on-chain.",
   },
 ];
 
-export default function NftOperationsSummaryCards({ activeListings, confirmedSales, totalSalesAda, pendingTransfers }) {
+export default function NftOperationsSummaryCards({ activeListings, confirmedSales, pendingTransfers, successfulTransfers }) {
   const values = {
     activeListings,
     confirmedSales,
-    totalSalesAda: `${Number(totalSalesAda || 0).toFixed(2)} ADA`,
     pendingTransfers,
+    successfulTransfers,
   };
 
   return (

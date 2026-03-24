@@ -4,11 +4,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import PageHeader from "@/components/shared/PageHeader";
 import MarketplaceSettingsForm from "@/components/nfts/MarketplaceSettingsForm";
-import DistributionOverviewCards from "@/components/nfts/DistributionOverviewCards";
-import TransferStatusChart from "@/components/nfts/TransferStatusChart";
-import TopFulfillmentRulesChart from "@/components/nfts/TopFulfillmentRulesChart";
 import NftOperationsSummaryCards from "@/components/nfts/NftOperationsSummaryCards";
-import NftPaymentsStatusChart from "@/components/nfts/NftPaymentsStatusChart";
+import NftControlInstructions from "@/components/nfts/NftControlInstructions";
+import TransferQueueTable from "@/components/nfts/TransferQueueTable";
+import ManualSigningCard from "@/components/nfts/ManualSigningCard";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -18,6 +17,8 @@ const createSlug = (value = "") => value.toLowerCase().trim().replace(/[^a-z0-9]
 export default function NFTOperations() {
   const [user, setUser] = React.useState(null);
   const [storeSettings, setStoreSettings] = React.useState(initialStoreSettings);
+  const [walletSession, setWalletSession] = React.useState(null);
+  const [signingId, setSigningId] = React.useState(null);
   const queryClient = useQueryClient();
 
   React.useEffect(() => {
@@ -95,58 +96,56 @@ export default function NFTOperations() {
   const resolvedStoreSlug = createSlug(storeSettings.nft_store_slug || merchantProfile?.nft_store_slug || merchantProfile?.business_name || user?.full_name || user?.email?.split("@")[0] || "nft-store");
   const publicStorePath = `/nft/${resolvedStoreSlug}`;
   const paymentLinksById = Object.fromEntries(paymentLinks.map((link) => [link.id, link]));
+  const rulesById = Object.fromEntries(rules.map((rule) => [rule.id, rule]));
+  const listingsByPaymentLinkId = Object.fromEntries(listings.filter((listing) => listing.payment_link_id).map((listing) => [listing.payment_link_id, listing]));
+  const paymentsById = Object.fromEntries(payments.map((payment) => [payment.id, payment]));
+  const actionableLogs = [...transferLogs]
+    .filter((log) => ["pending", "submitted", "failed"].includes(log.status))
+    .sort((a, b) => new Date(b.created_date || 0) - new Date(a.created_date || 0));
 
   const dashboardStats = React.useMemo(() => {
     const successfulStatuses = new Set(["submitted", "confirmed"]);
-    const failedStatuses = new Set(["failed"]);
-    const rulesById = Object.fromEntries(rules.map((rule) => [rule.id, rule]));
     const nftPaymentLinkIds = new Set([
       ...listings.map((listing) => listing.payment_link_id).filter(Boolean),
       ...rules.map((rule) => rule.payment_link_id).filter(Boolean),
     ]);
     const nftPayments = payments.filter((payment) => nftPaymentLinkIds.has(payment.payment_link_id));
-    const confirmedSales = nftPayments.filter((payment) => payment.status === "confirmed");
-
-    const topRules = Object.values(
-      transferLogs.reduce((acc, log) => {
-        const key = log.nft_rule_id || `${log.policy_id}-${log.asset_name_hex || ""}`;
-        const rule = rulesById[log.nft_rule_id];
-        const fallbackName = paymentLinksById[rule?.payment_link_id]?.title || `${log.policy_id.slice(0, 10)}…`;
-
-        if (!acc[key]) {
-          acc[key] = { name: rule?.asset_label || fallbackName, transfers: 0, volume: 0 };
-        }
-
-        acc[key].transfers += 1;
-        acc[key].volume += Number(log.quantity || 1);
-        return acc;
-      }, {})
-    )
-      .sort((a, b) => b.volume - a.volume || b.transfers - a.transfers)
-      .slice(0, 5)
-      .map((item) => ({ ...item, shortName: item.name.length > 14 ? `${item.name.slice(0, 14)}…` : item.name }));
 
     return {
       activeListings: listings.filter((listing) => listing.status === "active").length,
       pendingTransfers: transferLogs.filter((log) => log.status === "pending").length,
-      totalVolume: transferLogs.reduce((sum, log) => sum + Number(log.quantity || 1), 0),
-      successfulCount: transferLogs.filter((log) => successfulStatuses.has(log.status)).length,
-      failedCount: transferLogs.filter((log) => failedStatuses.has(log.status)).length,
-      confirmedSales: confirmedSales.length,
-      totalSalesAda: confirmedSales.reduce((sum, payment) => sum + Number(payment.received_amount_ada || payment.expected_amount_ada || 0), 0),
-      paymentStatusData: [
-        { name: "Confirmed", value: nftPayments.filter((payment) => payment.status === "confirmed").length },
-        { name: "Pending", value: nftPayments.filter((payment) => payment.status === "pending").length },
-        { name: "Detected", value: nftPayments.filter((payment) => payment.status === "detected").length },
-        { name: "Failed", value: nftPayments.filter((payment) => payment.status === "failed").length },
-      ],
-      transferStatusData: [
-        { name: "Successful", value: transferLogs.filter((log) => successfulStatuses.has(log.status)).length },
-        { name: "Failed", value: transferLogs.filter((log) => failedStatuses.has(log.status)).length },
-      ],
-      topRules,
+      successfulTransfers: transferLogs.filter((log) => successfulStatuses.has(log.status)).length,
+      confirmedSales: nftPayments.filter((payment) => payment.status === "confirmed").length,
     };
-  }, [listings, paymentLinksById, payments, rules, transferLogs]);
+  }, [listings, payments, rules, transferLogs]);
+
+  const handleSignTransfer = async (log) => {
+    if (!walletSession?.api || !walletSession?.address) {
+      toast.error("Connect your signer wallet first");
+      return;
+    }
+
+    setSigningId(log.id);
+    try {
+      const buildResponse = await base44.functions.invoke("buildNftTransferTx", {
+        transfer_log_id: log.id,
+        wallet_address: walletSession.address,
+      });
+      const witnessSetCbor = await walletSession.api.signTx(buildResponse.data.txCbor, true);
+      const submitResponse = await base44.functions.invoke("submitNftSignedTx", {
+        transfer_log_id: log.id,
+        tx_cbor: buildResponse.data.txCbor,
+        witness_set_cbor: witnessSetCbor,
+      });
+      await queryClient.invalidateQueries({ queryKey: ["nft-transfer-logs-operations"] });
+      toast.success(`NFT transfer sent: ${submitResponse.data.txHash}`);
+    } catch (error) {
+      await queryClient.invalidateQueries({ queryKey: ["nft-transfer-logs-operations"] });
+      toast.error(error?.response?.data?.error || error.message || "NFT signing failed");
+    } finally {
+      setSigningId(null);
+    }
+  };
 
   const settingsMutation = useMutation({
     mutationFn: (payload) => {
@@ -178,28 +177,51 @@ export default function NFTOperations() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="NFT Dashboard" subtitle="One central place for NFT sales and shared settings, with fulfillment managed via a separate wizard." />
+      <PageHeader title="NFT Control" subtitle="Track paid NFT orders and complete delivery from one place." />
 
       <NftOperationsSummaryCards
         activeListings={dashboardStats.activeListings}
         confirmedSales={dashboardStats.confirmedSales}
-        totalSalesAda={dashboardStats.totalSalesAda}
         pendingTransfers={dashboardStats.pendingTransfers}
+        successfulTransfers={dashboardStats.successfulTransfers}
       />
 
-      <div className="grid gap-4 xl:grid-cols-2">
-        <TransferStatusChart data={dashboardStats.transferStatusData} />
-        <NftPaymentsStatusChart data={dashboardStats.paymentStatusData} />
-      </div>
+      <NftControlInstructions fulfillmentMode={fulfillmentMode || "manual"} pendingTransfers={dashboardStats.pendingTransfers} />
 
-      <div className="grid gap-4 xl:grid-cols-2">
-        <TopFulfillmentRulesChart data={dashboardStats.topRules} />
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      {fulfillmentMode !== "automatic" && (
+        <ManualSigningCard
+          configuredAddress={signerWallet?.wallet_address || null}
+          connectedAddress={walletSession?.address || null}
+          onConnect={setWalletSession}
+          onDisconnect={() => setWalletSession(null)}
+        />
+      )}
+
+      <TransferQueueTable
+        logs={actionableLogs}
+        signingId={signingId}
+        onSign={handleSignTransfer}
+        fulfillmentMode={fulfillmentMode}
+        rulesById={rulesById}
+        listingsByPaymentLinkId={listingsByPaymentLinkId}
+        paymentsById={paymentsById}
+      />
+
+      <div className="grid gap-6 xl:grid-cols-2">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div>
-            <h3 className="text-base font-semibold text-slate-900">Wallets & quick actions</h3>
-            <p className="mt-1 text-sm text-slate-500">Use this page as a central overview and continue with a specific workflow.</p>
+            <h2 className="text-lg font-semibold text-slate-900">Current setup</h2>
+            <p className="mt-1 text-sm text-slate-500">Keep wallet setup and store access close to the delivery queue.</p>
           </div>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Fulfillment mode</p>
+              <p className="mt-2 text-lg font-semibold text-slate-900">{fulfillmentModeLabel}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Store link</p>
+              <p className="mt-2 text-sm font-semibold text-slate-900 break-all">{`${window.location.origin}${publicStorePath}`}</p>
+            </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Signer wallet</p>
               <p className="mt-2 text-lg font-semibold text-slate-900">{signerWallet?.wallet_address ? "Configured" : "Not configured"}</p>
@@ -210,35 +232,13 @@ export default function NFTOperations() {
             </div>
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
+            <Button asChild><Link to="/NFTFulfillmentSetup">Open fulfillment setup</Link></Button>
+            <Button asChild variant="outline"><Link to="/NFTDistribution">Manage delivery rules</Link></Button>
             <Button asChild variant="outline"><Link to="/NFTMarketplace">Manage marketplace</Link></Button>
-            <Button asChild variant="outline"><Link to="/NFTDistribution">Manage transfers</Link></Button>
-            <Button asChild><a href={`${window.location.origin}${publicStorePath}`} target="_blank" rel="noreferrer">Open store</a></Button>
+            <Button asChild variant="outline"><a href={`${window.location.origin}${publicStorePath}`} target="_blank" rel="noreferrer">Open store</a></Button>
           </div>
         </div>
-      </div>
 
-      <DistributionOverviewCards
-        totalVolume={dashboardStats.totalVolume}
-        successfulCount={dashboardStats.successfulCount}
-        failedCount={dashboardStats.failedCount}
-      />
-
-      <div className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold text-slate-900">Fulfillment wizard</h2>
-            <p className="mt-1 text-sm text-slate-500">This setting now lives on a separate page and is remembered for both marketplace and distribution.</p>
-          </div>
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Current status</p>
-            <p className="mt-2 text-lg font-semibold text-slate-900">{fulfillmentModeLabel}</p>
-            <p className="mt-1 text-sm text-slate-600">{fulfillmentMode ? "You can change this choice anytime via the wizard." : "Configure this first before using NFT Distribution or Marketplace."}</p>
-          </div>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <Button asChild><Link to="/NFTFulfillmentSetup">Open fulfillment wizard</Link></Button>
-            <Button asChild variant="outline"><Link to="/NFTDistribution">Open distribution</Link></Button>
-          </div>
-        </div>
         <MarketplaceSettingsForm
           value={storeSettings}
           onChange={setStoreSettings}

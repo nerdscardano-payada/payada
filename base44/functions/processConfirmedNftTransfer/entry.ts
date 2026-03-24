@@ -293,9 +293,14 @@ Deno.serve(async (req) => {
     const oldData = body?.old_data;
     let payment = body?.data;
 
+    if ((!payment || !payment.id) && body?.payment_id) {
+      const payments = await sr.entities.Payment.filter({ id: body.payment_id }, '-created_date', 1);
+      payment = payments[0] || null;
+    }
+
     if ((!payment || !payment.id) && body?.payload_too_large && event?.entity_id) {
       const payments = await sr.entities.Payment.filter({ id: event.entity_id }, '-created_date', 1);
-      payment = payments[0];
+      payment = payments[0] || null;
     }
 
     if (!payment?.id) {
@@ -320,9 +325,40 @@ Deno.serve(async (req) => {
       status: 'active',
     }, '-created_date', 25);
 
-    if (rules.length === 0) {
-      return Response.json({ success: true, skipped: true, reason: 'No active NFT fulfillment rules for this payment link' });
+    const listings = await sr.entities.NftListing.filter({
+      merchant_id: payment.merchant_id,
+      payment_link_id: payment.payment_link_id,
+    }, '-created_date', 1);
+    const listing = listings[0] || null;
+
+    if (rules.length === 0 && !listing) {
+      return Response.json({ success: true, skipped: true, reason: 'No active NFT delivery source found for this payment link' });
     }
+
+    const targets = rules.length > 0
+      ? rules.map((rule) => ({
+          lookup: { payment_id: payment.id, nft_rule_id: rule.id },
+          nft_rule_id: rule.id,
+          payment_link_id: rule.payment_link_id,
+          policy_id: rule.policy_id,
+          asset_name_hex: rule.asset_name_hex,
+          quantity: rule.quantity || 1,
+          label: rule.asset_label || 'NFT rule',
+        }))
+      : [{
+          lookup: {
+            payment_id: payment.id,
+            payment_link_id: listing.payment_link_id,
+            policy_id: listing.policy_id,
+            asset_name_hex: listing.asset_name_hex,
+          },
+          nft_rule_id: null,
+          payment_link_id: listing.payment_link_id,
+          policy_id: listing.policy_id,
+          asset_name_hex: listing.asset_name_hex,
+          quantity: 1,
+          label: listing.title || listing.asset_label || 'NFT listing',
+        }];
 
     const profiles = await sr.entities.MerchantProfile.filter({ user_id: payment.merchant_id }, '-created_date', 1);
     const merchantProfile = profiles[0] || null;
@@ -336,10 +372,10 @@ Deno.serve(async (req) => {
       : [];
     const hotWallet = hotWallets[0] || null;
 
-    for (const rule of rules) {
-      const existingLogs = await sr.entities.NftTransferLog.filter({ payment_id: payment.id, nft_rule_id: rule.id }, '-created_date', 1);
+    for (const target of targets) {
+      const existingLogs = await sr.entities.NftTransferLog.filter(target.lookup, '-created_date', 1);
       if (existingLogs.length > 0) {
-        results.push({ rule_id: rule.id, status: 'skipped', reason: 'Already queued' });
+        results.push({ label: target.label, status: 'skipped', reason: 'Already queued' });
         continue;
       }
 
@@ -347,24 +383,24 @@ Deno.serve(async (req) => {
       const log = await sr.entities.NftTransferLog.create({
         merchant_id: payment.merchant_id,
         payment_id: payment.id,
-        payment_link_id: payment.payment_link_id,
-        nft_rule_id: rule.id,
+        payment_link_id: target.payment_link_id,
+        nft_rule_id: target.nft_rule_id,
         recipient_address: recipientAddress,
-        policy_id: rule.policy_id,
-        asset_name_hex: rule.asset_name_hex,
-        quantity: rule.quantity || 1,
+        policy_id: target.policy_id,
+        asset_name_hex: target.asset_name_hex,
+        quantity: target.quantity,
         status,
         error_message: recipientAddress ? null : 'Missing customer wallet address on payment record',
         completed_at: recipientAddress ? null : now,
       });
 
       if (!recipientAddress) {
-        results.push({ rule_id: rule.id, status: 'failed', log_id: log.id, reason: 'Missing customer wallet address on payment record' });
+        results.push({ label: target.label, status: 'failed', log_id: log.id, reason: 'Missing customer wallet address on payment record' });
         continue;
       }
 
       if (fulfillmentMode !== 'automatic') {
-        results.push({ rule_id: rule.id, status: log.status, log_id: log.id });
+        results.push({ label: target.label, status: log.status, log_id: log.id });
         continue;
       }
 
@@ -374,7 +410,7 @@ Deno.serve(async (req) => {
           completed_at: new Date().toISOString(),
           error_message: 'Missing NFT_WALLET_ENCRYPTION_KEY secret',
         });
-        results.push({ rule_id: rule.id, status: 'failed', log_id: log.id, reason: 'Missing NFT_WALLET_ENCRYPTION_KEY secret' });
+        results.push({ label: target.label, status: 'failed', log_id: log.id, reason: 'Missing NFT_WALLET_ENCRYPTION_KEY secret' });
         continue;
       }
 
@@ -384,13 +420,13 @@ Deno.serve(async (req) => {
           completed_at: new Date().toISOString(),
           error_message: 'Automatic mode is enabled but no active hot wallet is configured',
         });
-        results.push({ rule_id: rule.id, status: 'failed', log_id: log.id, reason: 'Automatic mode is enabled but no active hot wallet is configured' });
+        results.push({ label: target.label, status: 'failed', log_id: log.id, reason: 'Automatic mode is enabled but no active hot wallet is configured' });
         continue;
       }
 
       try {
         const submitted = await autoSubmitTransfer(sr, log, hotWallet, encryptionSecret);
-        results.push({ rule_id: rule.id, status: submitted.status, log_id: log.id, tx_hash: submitted.tx_hash });
+        results.push({ label: target.label, status: submitted.status, log_id: log.id, tx_hash: submitted.tx_hash });
       } catch (error) {
         await sr.entities.NftTransferLog.update(log.id, {
           status: 'failed',
@@ -398,7 +434,7 @@ Deno.serve(async (req) => {
           completed_at: new Date().toISOString(),
           error_message: error.message,
         });
-        results.push({ rule_id: rule.id, status: 'failed', log_id: log.id, reason: error.message });
+        results.push({ label: target.label, status: 'failed', log_id: log.id, reason: error.message });
       }
     }
 
