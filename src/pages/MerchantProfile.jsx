@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertCircle, CheckCircle2, Edit2, Save, Upload, Link, Trash2, Coins } from "lucide-react";
+import { AlertCircle, CheckCircle2, Edit2, Save, Upload, Link, Trash2, Coins, ShieldCheck } from "lucide-react";
 import { KNOWN_CNTS } from "@/components/payment-links/wizard/knownCNTs";
 import {
   AlertDialog,
@@ -79,6 +79,21 @@ export default function MerchantProfilePage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['merchantProfile'] });
       setIsEditing(false);
+    },
+  });
+
+  const requestVerificationMutation = useMutation({
+    mutationFn: async () => {
+      if (!profile?.id) {
+        throw new Error("Save your merchant profile first");
+      }
+      return await base44.entities.MerchantProfile.update(profile.id, {
+        verification_requested: true,
+        verification_requested_at: new Date().toISOString(),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['merchantProfile'] });
     },
   });
 
@@ -155,6 +170,34 @@ export default function MerchantProfilePage() {
           <div className="text-sm text-green-800">Profile updated successfully!</div>
         </Card>
       )}
+
+      <Card className="p-8 border-sky-200 bg-sky-50/60">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-sky-600" />
+              Merchant Verification
+            </h3>
+            <p className="mt-1 text-sm text-slate-600">Ask an admin to review your merchant profile and enable the verified badge on your storefront.</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className={formData.verified_merchant ? "inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700" : "inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700"}>
+                {formData.verified_merchant ? "Verified merchant" : "Not verified yet"}
+              </span>
+              <span className={formData.verification_requested ? "inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700" : "inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700"}>
+                {formData.verification_requested ? "Request pending" : "No request sent"}
+              </span>
+            </div>
+          </div>
+          <Button
+            onClick={() => requestVerificationMutation.mutate()}
+            disabled={!profile?.id || formData.verified_merchant || formData.verification_requested || requestVerificationMutation.isPending}
+            className="gap-2"
+          >
+            <ShieldCheck className="w-4 h-4" />
+            {formData.verified_merchant ? "Already verified" : formData.verification_requested ? "Verification requested" : requestVerificationMutation.isPending ? "Sending request..." : "Request Verification"}
+          </Button>
+        </div>
+      </Card>
 
       <Card className="p-8">
         <div className="space-y-6">

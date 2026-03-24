@@ -5,6 +5,7 @@ import KeyMetrics from "@/components/admin/KeyMetrics";
 import SystemErrorLogs from "@/components/admin/SystemErrorLogs";
 import FeeRevenueStats from "@/components/admin/FeeRevenueStats";
 import MerchantOverview from "@/components/admin/MerchantOverview";
+import MerchantVerificationPanel from "@/components/admin/MerchantVerificationPanel";
 import TransactionTimeline from "@/components/admin/TransactionTimeline";
 import RevenueChart from "@/components/admin/RevenueChart";
 
@@ -87,6 +88,13 @@ export default function AdminDashboard() {
             💰 Financieel Overzicht
           </h2>
           <FeeRevenueStats />
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">
+            ✅ Merchant Verificatie
+          </h2>
+          <MerchantVerificationPanel />
         </section>
 
         {/* Merchant Management */}
