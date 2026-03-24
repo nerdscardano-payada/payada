@@ -28,7 +28,7 @@ export default function WalletAssetSelect({ assets, value, onValueChange, label 
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <div className="flex gap-4">
             {selectedAsset.image_url ? (
-              <img src={selectedAsset.image_url} alt={selectedAsset.asset_label} className="h-20 w-20 rounded-2xl border border-slate-200 object-cover" />
+              <img src={normalizeIpfsUrl(selectedAsset.image_url)} alt={selectedAsset.asset_label} className="h-20 w-20 rounded-2xl border border-slate-200 object-cover" />
             ) : (
               <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-slate-200 bg-white text-xs font-semibold text-slate-400">
                 NFT
