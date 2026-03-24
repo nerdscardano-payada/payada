@@ -58,12 +58,18 @@ function hexAddrToBech32(hex) {
   }
 }
 
-export default function WalletConnectButton({ onConnect, onDisconnect, connectedAddress }) {
+export default function WalletConnectButton({ onConnect, onDisconnect, connectedAddress, requiredAddress = null, persistKey = null }) {
   const [open, setOpen] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [wallets, setWallets] = useState([]);
+
+  const matchesRequiredAddress = (address) => !requiredAddress || (address || "").toLowerCase() === requiredAddress.toLowerCase();
+
+  const clearSavedConnection = () => {
+    if (persistKey) localStorage.removeItem(persistKey);
+  };
 
   const scanWallets = () => {
     const w = window.cardano || {};
@@ -92,6 +98,13 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
       const hexAddr = addrs[0] || (await api.getUnusedAddresses())[0];
       if (!hexAddr) throw new Error("No address found");
       const addr = hexAddrToBech32(hexAddr);
+      if (!matchesRequiredAddress(addr)) {
+        clearSavedConnection();
+        throw new Error("Deze wallet komt niet overeen met de ingestelde signer wallet");
+      }
+      if (persistKey) {
+        localStorage.setItem(persistKey, JSON.stringify({ walletKey, address: addr }));
+      }
       onConnect(addr, api, walletKey);
       setOpen(false);
     } catch (e) {
@@ -101,28 +114,62 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
     }
   };
 
+  useEffect(() => {
+    if (!persistKey || connectedAddress || wallets.length === 0) return;
+
+    const savedRaw = localStorage.getItem(persistKey);
+    if (!savedRaw) return;
+
+    try {
+      const saved = JSON.parse(savedRaw);
+      if (!saved?.walletKey || !saved?.address) {
+        clearSavedConnection();
+        return;
+      }
+      if (!matchesRequiredAddress(saved.address) || !window.cardano?.[saved.walletKey]?.enable) {
+        clearSavedConnection();
+        return;
+      }
+      connect(saved.walletKey);
+    } catch {
+      clearSavedConnection();
+    }
+  }, [persistKey, connectedAddress, wallets.length, requiredAddress]);
+
+  useEffect(() => {
+    if (!connectedAddress || matchesRequiredAddress(connectedAddress)) return;
+    clearSavedConnection();
+    onDisconnect?.();
+  }, [connectedAddress, requiredAddress]);
+
+  const handleDisconnect = () => {
+    clearSavedConnection();
+    onDisconnect?.();
+    setShowDropdown(false);
+  };
+
   if (connectedAddress) {
     return (
       <div className="relative">
         <button
           onClick={() => setShowDropdown(v => !v)}
-          className="flex items-center gap-2 bg-emerald-500/15 border border-emerald-500/30 rounded-xl px-4 py-2.5 text-emerald-300 text-sm hover:bg-emerald-500/20 transition-colors w-full"
+          className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-900 hover:bg-emerald-100 transition-colors w-full"
         >
           <div className="w-2 h-2 rounded-full bg-emerald-400" />
           <span className="font-mono flex-1 text-left">{shortAddr(connectedAddress)}</span>
           <ChevronDown className="w-3.5 h-3.5" />
         </button>
         {showDropdown && (
-          <div className="absolute top-full mt-1 right-0 bg-slate-900 border border-white/10 rounded-xl shadow-2xl z-50 w-full min-w-[200px]">
+          <div className="absolute top-full mt-1 right-0 z-50 w-full min-w-[200px] rounded-xl border border-slate-200 bg-white shadow-xl">
             <button
               onClick={() => { navigator.clipboard.writeText(connectedAddress); setShowDropdown(false); }}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm text-white/70 hover:text-white hover:bg-white/5 w-full rounded-t-xl"
+              className="flex w-full items-center gap-2 rounded-t-xl px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
             >
               <Copy className="w-3.5 h-3.5" /> Copy Address
             </button>
             <button
-              onClick={() => { onDisconnect(); setShowDropdown(false); }}
-              className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 w-full rounded-b-xl"
+              onClick={handleDisconnect}
+              className="flex w-full items-center gap-2 rounded-b-xl px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"
             >
               <LogOut className="w-3.5 h-3.5" /> Disconnect
             </button>
@@ -136,13 +183,13 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
 
   if (open) {
     return (
-      <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
-        <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Select Wallet</p>
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2">
+        <p className="mb-3 text-xs uppercase tracking-widest text-slate-500">Select Wallet</p>
         {wallets.length === 0 ? (
-          <div className="space-y-3 text-center py-4">
-            <div className="text-white/60 text-sm">
+          <div className="space-y-3 py-4 text-center">
+            <div className="text-sm text-slate-700">
               No Cardano wallets detected.<br />
-              <span className="text-white/40 text-xs">Install Eternl, Nami, or Lace to continue.</span>
+              <span className="text-xs text-slate-500">Install Eternl, Nami, or Lace to continue.</span>
             </div>
             {isInIframe && (
               <div className="rounded-xl border border-amber-300 bg-amber-100 p-3 text-left">
@@ -158,7 +205,7 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
             )}
             <button
               onClick={scanWallets}
-              className="inline-flex items-center gap-2 text-xs text-indigo-300 hover:text-indigo-200 mx-auto"
+              className="mx-auto inline-flex items-center gap-2 text-xs text-slate-700 hover:text-slate-900"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Scan again
@@ -168,14 +215,14 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
           const w = window.cardano[key];
           return (
             <button key={key} onClick={() => connect(key)} disabled={connecting}
-              className="flex items-center gap-3 w-full bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white text-sm transition-colors disabled:opacity-50">
+              className="flex w-full items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 transition-colors hover:bg-slate-50 disabled:opacity-50">
               {w.icon && <img src={w.icon} className="w-6 h-6 rounded" alt={w.name} />}
               <span className="capitalize">{w.name}</span>
             </button>
           );
         })}
-        {error && <p className="text-red-400 text-xs text-center pt-1">{error}</p>}
-        <button onClick={() => setOpen(false)} className="text-white/30 text-xs hover:text-white/50 w-full text-center pt-1">
+        {error && <p className="pt-1 text-center text-xs text-red-600">{error}</p>}
+        <button onClick={() => setOpen(false)} className="w-full pt-1 text-center text-xs text-slate-500 hover:text-slate-700">
           Cancel
         </button>
       </div>
@@ -185,7 +232,7 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
   return (
     <Button onClick={() => setOpen(true)}
       variant="outline"
-      className="w-full border-white/20 text-white bg-white/5 hover:bg-white/10 gap-2">
+      className="w-full gap-2 border-slate-300 bg-white text-slate-900 hover:bg-slate-50">
       <Wallet className="w-4 h-4" />
       Connect Wallet
     </Button>

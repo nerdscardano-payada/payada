@@ -16,6 +16,8 @@ export default function ManualSigningCard({ configuredAddress, connectedAddress,
         </div>
         <WalletConnectButton
           connectedAddress={connectedAddress}
+          requiredAddress={configuredAddress || null}
+          persistKey="nft-manual-signer-wallet"
           onConnect={(address, api, walletKey) => onConnect({ address, api, walletKey })}
           onDisconnect={onDisconnect}
         />
