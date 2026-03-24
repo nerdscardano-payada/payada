@@ -56,7 +56,7 @@ export default function NFTDetail() {
         <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 px-8 py-10 text-white shadow-sm">
           <div className="flex flex-wrap items-center gap-3 text-sm">
             {data?.merchant?.logo_url && (
-              <img src={data.merchant.logo_url} alt={data.merchant.nft_store_name} className="h-8 w-8 rounded" />
+              <img src={normalizeIpfsUrl(data.merchant.logo_url)} alt={data.merchant.nft_store_name} className="h-8 w-8 rounded" />
             )}
             <span className="text-slate-200 font-medium flex items-center gap-2">
               {data.merchant.nft_store_name}
@@ -128,7 +128,7 @@ export default function NFTDetail() {
                 {l.image_url && (
                   <div className="rounded-lg bg-slate-50 p-4">
                     <p className="text-xs uppercase tracking-wide text-slate-500">Image URL</p>
-                    <a className="mt-1 block text-sm text-blue-600 hover:underline break-all" href={l.image_url} target="_blank" rel="noreferrer">Open image</a>
+                    <a className="mt-1 block text-sm text-blue-600 hover:underline break-all" href={normalizeIpfsUrl(l.image_url)} target="_blank" rel="noreferrer">Open image</a>
                   </div>
                 )}
               </div>

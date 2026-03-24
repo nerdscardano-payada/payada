@@ -92,7 +92,7 @@ export default function NFTStore() {
               <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">{storeDescription}</p>
               <div className="mt-4 flex items-center gap-3 text-sm">
                 {data?.merchant?.logo_url && (
-                  <img src={data.merchant.logo_url} alt={merchantName} className="h-8 w-8 rounded" />
+                  <img src={normalizeIpfsUrl(data.merchant.logo_url)} alt={merchantName} className="h-8 w-8 rounded" />
                 )}
                 <span className="text-slate-200 font-medium flex items-center gap-2">
                   {merchantName}

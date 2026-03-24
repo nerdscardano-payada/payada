@@ -19,7 +19,7 @@ export default function PublicMarketplaceCard({ listing }) {
       <div className="space-y-4 p-6">
         <div className="flex items-center gap-3">
           {listing.merchant?.logo_url && (
-            <img src={listing.merchant.logo_url} alt={storeName} className="h-10 w-10 rounded-xl object-cover" />
+            <img src={normalizeIpfsUrl(listing.merchant.logo_url)} alt={storeName} className="h-10 w-10 rounded-xl object-cover" />
           )}
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-slate-900">{storeName}</p>
