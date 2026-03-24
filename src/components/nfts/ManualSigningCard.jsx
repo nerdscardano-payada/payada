@@ -1,9 +1,9 @@
 import React from "react";
 import WalletConnectButton from "@/components/token-sale/WalletConnectButton";
 
-export default function ManualSigningCard({ configuredAddress, connectedAddress, onConnect, onDisconnect }) {
+export default function ManualSigningCard({ configuredAddress, connectedAddress, onConnect, onDisconnect, id }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+    <div id={id} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
       <div>
         <h2 className="text-lg font-semibold text-slate-900">Manual signing wallet</h2>
         <p className="text-sm text-slate-500">Use this only when a paid NFT order appears below. Connect the same signer wallet, review the buyer address, and sign the transfer.</p>

@@ -119,9 +119,14 @@ export default function NFTOperations() {
     };
   }, [listings, payments, rules, transferLogs]);
 
+  const openSigningSetup = () => {
+    document.getElementById("manual-signing-wallet")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    toast.error("Connect your signer wallet first");
+  };
+
   const handleSignTransfer = async (log) => {
     if (!walletSession?.api || !walletSession?.address) {
-      toast.error("Connect your signer wallet first");
+      openSigningSetup();
       return;
     }
 

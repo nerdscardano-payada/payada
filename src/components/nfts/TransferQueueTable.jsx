@@ -7,7 +7,7 @@ function shortHash(value = "") {
   return value ? `${value.slice(0, 12)}…${value.slice(-8)}` : "";
 }
 
-export default function TransferQueueTable({ logs, signingId, onSign, fulfillmentMode = "manual", rulesById = {}, listingsByPaymentLinkId = {}, paymentsById = {} }) {
+export default function TransferQueueTable({ logs, signingId, onSign, onPrepareSign, canSign = false, fulfillmentMode = "manual", rulesById = {}, listingsByPaymentLinkId = {}, paymentsById = {} }) {
   const isManual = fulfillmentMode !== "automatic";
 
   const copyAddress = async (address) => {
