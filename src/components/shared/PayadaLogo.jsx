@@ -1,5 +1,7 @@
 import React from "react";
 
+const logoUrl = "https://media.base44.com/images/public/69999e4306b9e4632bd7d454/69c3a597d_be2b2b99e_1000069668.jpg";
+
 export default function PayadaLogo({ className = "" }) {
   return (
     <div className={`inline-flex items-center gap-3 ${className}`.trim()}>
