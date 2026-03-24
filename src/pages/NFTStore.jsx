@@ -83,15 +83,15 @@ export default function NFTStore() {
         <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950 px-8 py-10 text-white shadow-sm">
           <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
             <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Store</p>
-              <h1 className="mt-4 text-4xl font-semibold">{merchantName}</h1>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">{storeDescription}</p>
-              <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <PayadaLogo />
                 <Button asChild className="bg-white text-slate-950 hover:bg-slate-200">
                   <a href="/NFTMarketplace">Create your own NFT store</a>
                 </Button>
               </div>
+              <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">PayADA NFT Store</p>
+              <h1 className="mt-4 text-4xl font-semibold">{merchantName}</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">{storeDescription}</p>
               <div className="mt-4 flex items-center gap-3 text-sm">
                 {data?.merchant?.logo_url && (
                   <img src={data.merchant.logo_url} alt={merchantName} className="h-8 w-8 rounded" />
