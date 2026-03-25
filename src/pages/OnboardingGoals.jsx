@@ -29,6 +29,42 @@ const goals = [
       "Add donation pages, subscriptions, and other revenue streams that help your business scale over time.",
     to: "/DonationPages",
     cta: "Explore revenue tools"
+  },
+  {
+    icon: CreditCard,
+    eyebrow: "Sell online",
+    title: "Build Shop Pages",
+    description:
+      "Create branded shopping pages and checkout experiences for products, bundles, and simple online sales.",
+    to: "/ShoppingPageGenerator",
+    cta: "Create a shop page"
+  },
+  {
+    icon: Users,
+    eyebrow: "Host experiences",
+    title: "Run Events & Tickets",
+    description:
+      "Set up event pages, sell tickets, and manage attendee access for launches, meetups, and live experiences.",
+    to: "/Events",
+    cta: "Launch an event"
+  },
+  {
+    icon: TrendingUp,
+    eyebrow: "Move digital assets",
+    title: "NFT Distribution",
+    description:
+      "Distribute NFTs to buyers, supporters, or community members with guided fulfillment and tracking tools.",
+    to: "/NFTDistribution",
+    cta: "Set up NFT distribution"
+  },
+  {
+    icon: CreditCard,
+    eyebrow: "Sell collectibles",
+    title: "NFT Marketplace",
+    description:
+      "Create your own NFT storefront, publish listings, and manage a marketplace experience for your audience.",
+    to: "/NFTMarketplace",
+    cta: "Open NFT marketplace"
   }
 ];
 
