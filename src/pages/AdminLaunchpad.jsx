@@ -312,23 +312,23 @@ export default function AdminLaunchpad() {
   const [editingSale, setEditingSale] = useState(null);
   const queryClient = useQueryClient();
 
-  if (!isProfileComplete) return null;
-
   const { data: user } = useQuery({
     queryKey: ["current-user"],
     queryFn: () => base44.auth.me(),
+    enabled: isProfileComplete,
   });
 
   const { data: merchantProfile } = useQuery({
-    queryKey: ["merchant-profile"],
+    queryKey: ["merchant-profile", user?.email],
     queryFn: () => base44.entities.MerchantProfile.filter({ user_id: user?.email }),
-    enabled: !!user,
+    enabled: isProfileComplete && !!user,
     select: d => d[0],
   });
 
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ["token-sales"],
     queryFn: () => base44.entities.TokenSale.list("-created_date"),
+    enabled: isProfileComplete,
   });
 
   const deleteMutation = useMutation({
@@ -340,6 +340,8 @@ export default function AdminLaunchpad() {
     mutationFn: ({ id, status }) => base44.entities.TokenSale.update(id, { status }),
     onSuccess: () => queryClient.invalidateQueries(["token-sales"]),
   });
+
+  if (!isProfileComplete) return null;
 
   if (!user || user.role !== "admin") {
     return (
