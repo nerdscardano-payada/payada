@@ -38,7 +38,7 @@ export default function Demo() {
   const [createdLink, setCreatedLink] = useState(null);
 
   const createLinkMutation = useMutation({
-    mutationFn: async ({ amount, description, receiveAddress }) => {
+    mutationFn: async ({ amount, description, wallet }) => {
       const title = description || "Test payment";
       const slugBase = slugify(title) || "test-payment";
       const slug = `${slugBase}-${Math.random().toString(36).slice(2, 8)}`;
@@ -50,7 +50,7 @@ export default function Demo() {
         slug,
         amount_mode: "fixed_ada",
         amount_ada: Number(amount),
-        receive_address: receiveAddress,
+        receive_address: wallet.address,
         fee_model: "merchant_pays",
         confirmations_required: 2,
         status: "active",

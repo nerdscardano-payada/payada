@@ -9,23 +9,17 @@ import WalletConnect from "@/components/checkout/WalletConnect";
 export default function InstantLinkForm({ onGenerate, isPending }) {
   const [amount, setAmount] = useState("5");
   const [description, setDescription] = useState("Test payment");
-  const [receiveAddress, setReceiveAddress] = useState("");
   const [connectedWallet, setConnectedWallet] = useState(null);
 
-  const sameAsPayingWallet = Boolean(
-    connectedWallet?.address && receiveAddress.trim() && connectedWallet.address === receiveAddress.trim()
-  );
-
   const canGenerate = useMemo(() => {
-    return Boolean(connectedWallet?.address) && Number(amount) > 0 && Boolean(receiveAddress.trim()) && !sameAsPayingWallet;
-  }, [connectedWallet, amount, receiveAddress, sameAsPayingWallet]);
+    return Boolean(connectedWallet?.address) && Number(amount) > 0;
+  }, [connectedWallet, amount]);
 
   const handleGenerate = () => {
     if (!canGenerate) return;
     onGenerate({
       amount: Number(amount),
       description: description.trim(),
-      receiveAddress: receiveAddress.trim(),
       wallet: connectedWallet,
     });
   };
@@ -70,24 +64,6 @@ export default function InstantLinkForm({ onGenerate, isPending }) {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="demo-receive-address" className="text-slate-200">Receive wallet address</Label>
-          <Input
-            id="demo-receive-address"
-            value={receiveAddress}
-            onChange={(e) => setReceiveAddress(e.target.value)}
-            placeholder="addr1..."
-            className="border-slate-700 bg-slate-900 text-white"
-          />
-          <p className="text-xs text-slate-400">
-            Use a different receiving address than the wallet you will use to pay.
-          </p>
-          {sameAsPayingWallet && (
-            <p className="text-xs text-amber-300">
-              The receive address cannot be the same as the paying wallet.
-            </p>
-          )}
-        </div>
 
         <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
           <div className="mb-3 flex items-center gap-2 text-sm font-medium text-white">
@@ -98,6 +74,9 @@ export default function InstantLinkForm({ onGenerate, isPending }) {
             onConnected={setConnectedWallet}
             onDisconnected={() => setConnectedWallet(null)}
           />
+          <p className="mt-3 text-xs text-amber-300">
+            Note: you cannot pay from the same wallet address that receives the funds. Use a different wallet address to pay.
+          </p>
         </div>
 
         <Button
@@ -111,7 +90,7 @@ export default function InstantLinkForm({ onGenerate, isPending }) {
         <div className="grid gap-3 text-xs text-slate-400 sm:grid-cols-3">
           <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">Default setup: 5 ADA · Test payment</div>
           <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">Works without account creation</div>
-          <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">Use a separate receive address</div>
+          <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">Pay from a different wallet</div>
         </div>
       </div>
     </Card>
