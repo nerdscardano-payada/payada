@@ -80,7 +80,7 @@ export default function InstantLinkForm({ onGenerate, isPending }) {
           disabled={!canGenerate || isPending}
           className="h-12 w-full bg-cyan-400 font-semibold text-slate-950 hover:bg-cyan-300"
         >
-          {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Generating link...</> : "Generate payment link"}
+          {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Generating link...</> : "Generate link & continue"}
         </Button>
 
         <div className="grid gap-3 text-xs text-slate-400 sm:grid-cols-3">

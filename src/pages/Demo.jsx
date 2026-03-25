@@ -60,6 +60,9 @@ export default function Demo() {
     onSuccess: (link) => {
       setCreatedLink(link);
       toast.success("Your payment link is live.");
+      setTimeout(() => {
+        window.location.href = `/Pay?slug=${link.slug}`;
+      }, 400);
     },
     onError: () => {
       toast.error("Could not create the payment link.");
