@@ -84,7 +84,7 @@ export default function OnboardingGoals() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {goals.map((goal) => (
             <GoalTile key={goal.title} {...goal} />
           ))}
