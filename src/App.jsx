@@ -3,7 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
 import NavigationTracker from '@/lib/NavigationTracker'
 import { pagesConfig } from './pages.config'
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -30,6 +30,7 @@ import NFTDetail from './pages/NFTDetail';
 import NFTMarketplaceFAQ from './pages/NFTMarketplaceFAQ';
 import NFTMarketplaceTerms from './pages/NFTMarketplaceTerms';
 import PublicNFTMarketplace from './pages/PublicNFTMarketplace';
+import OnboardingGoals from './pages/OnboardingGoals';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -85,6 +86,10 @@ const AuthenticatedApp = () => {
     }
   }
 
+  if (user && currentPageName === "Home") {
+    return <Navigate to="/OnboardingGoals" replace />;
+  }
+
   // Render the main app
   return (
     <Routes>
@@ -132,6 +137,7 @@ const AuthenticatedApp = () => {
       <Route path="/NFTMarketplaceFAQ" element={<LayoutWrapper currentPageName="NFTMarketplaceFAQ"><NFTMarketplaceFAQ /></LayoutWrapper>} />
       <Route path="/NFTMarketplaceTerms" element={<LayoutWrapper currentPageName="NFTMarketplaceTerms"><NFTMarketplaceTerms /></LayoutWrapper>} />
       <Route path="/Marketplace" element={<LayoutWrapper currentPageName="Marketplace"><PublicNFTMarketplace /></LayoutWrapper>} />
+      <Route path="/OnboardingGoals" element={<ProtectedRoute currentPageName="OnboardingGoals"><LayoutWrapper currentPageName="OnboardingGoals"><OnboardingGoals /></LayoutWrapper></ProtectedRoute>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
