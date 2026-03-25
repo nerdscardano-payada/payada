@@ -65,6 +65,24 @@ const goals = [
       "Create your own NFT storefront, publish listings, and manage a marketplace experience for your audience.",
     to: "/NFTMarketplace",
     cta: "Open NFT marketplace"
+  },
+  {
+    icon: Users,
+    eyebrow: "Gate premium access",
+    title: "NFT Gating",
+    description:
+      "Unlock content, products, or experiences only for wallet holders that meet your NFT access rules.",
+    to: "/NFTGating",
+    cta: "Configure NFT gating"
+  },
+  {
+    icon: TrendingUp,
+    eyebrow: "Sell in person",
+    title: "Point of Sale",
+    description:
+      "Use a simple in-person checkout flow for pop-ups, retail counters, events, and face-to-face payments.",
+    to: "/POS",
+    cta: "Set up POS"
   }
 ];
 
