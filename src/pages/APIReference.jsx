@@ -88,6 +88,7 @@ export default function APIReferencePage() {
             Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
+            <Link to="/OnboardingGoals" className="text-sm font-medium text-blue-600 hover:text-blue-700">Onboarding</Link>
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
             <Link to={createPageUrl("Webhooks")} className="text-sm text-slate-600 hover:text-slate-900">Webhooks</Link>
             <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.security")}</Link>
