@@ -123,7 +123,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
            </div>
          </div>
 
-        <div className="px-2 pt-3">
+        <div className="px-2 pt-3 space-y-2">
           <Link
             to="/OnboardingGoals"
             onClick={() => setMobileOpen(false)}
@@ -139,6 +139,22 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
               currentPage === "OnboardingGoals" ? "text-cyan-400" : "text-cyan-300"
             )} />
             {!collapsed && <span className="truncate">Onboarding</span>}
+          </Link>
+          <Link
+            to="/Tutorials"
+            onClick={() => setMobileOpen(false)}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all group border border-blue-400/10",
+              currentPage === "Tutorials"
+                ? "bg-blue-500/15 text-blue-400"
+                : "bg-blue-500/5 text-blue-300 hover:bg-blue-500/10 hover:text-blue-200"
+            )}
+          >
+            <Code2 className={cn(
+              "w-[18px] h-[18px] flex-shrink-0",
+              currentPage === "Tutorials" ? "text-blue-400" : "text-blue-300"
+            )} />
+            {!collapsed && <span className="truncate">Tutorials</span>}
           </Link>
         </div>
 
