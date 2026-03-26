@@ -41,7 +41,7 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   <Layout currentPageName={currentPageName}>{children}</Layout>
   : <>{children}</>;
 
-const TEMP_RESTRICTED_PAGES = ["Subscriptions"];
+const TEMP_RESTRICTED_PAGES = [];
 const TEMP_ALLOWED_EMAIL = "nerscardano@gmail.com";
 
 const ProtectedRoute = ({ children, currentPageName }) => {

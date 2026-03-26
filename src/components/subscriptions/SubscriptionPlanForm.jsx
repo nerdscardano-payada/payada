@@ -37,7 +37,12 @@ export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
     return () => { mounted = false; };
   }, []);
 
-  const intervalDays = useMemo(() => (form.interval_type === "yearly" ? 365 : 30), [form.interval_type]);
+  const intervalDays = useMemo(() => {
+    if (form.interval_type === "quarterly") return 90;
+    if (form.interval_type === "semiannual") return 180;
+    if (form.interval_type === "yearly") return 365;
+    return 30;
+  }, [form.interval_type]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -85,6 +90,8 @@ export default function SubscriptionPlanForm({ isSubmitting, onSubmit }) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="quarterly">Every 3 months</SelectItem>
+              <SelectItem value="semiannual">Every 6 months</SelectItem>
               <SelectItem value="yearly">Yearly</SelectItem>
             </SelectContent>
           </Select>
