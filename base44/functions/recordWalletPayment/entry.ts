@@ -379,35 +379,48 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Upsert Customer record (identified by wallet address or email)
+    // Upsert Customer record (identified by email first, otherwise wallet, otherwise name)
     const normalizedWallet = normalizeAddress(payerAddress) || null;
-    const customerIdentifier = payerEmail || normalizedWallet;
+    const normalizedEmail = payerEmail?.trim() || null;
+    const normalizedName = payerName?.trim() || null;
+    const customerIdentifier = normalizedEmail || normalizedWallet || normalizedName;
     if (customerIdentifier) {
-      const filterKey = payerEmail
-        ? { merchant_id: merchantId, email: payerEmail }
-        : { merchant_id: merchantId, wallet_address: normalizedWallet };
-      const existingCustomers = await sr.entities.Customer.filter(filterKey);
+      let existingCustomers = [];
+
+      if (normalizedEmail) {
+        existingCustomers = await sr.entities.Customer.filter({ merchant_id: merchantId, email: normalizedEmail });
+      }
+
+      if (existingCustomers.length === 0 && normalizedWallet) {
+        existingCustomers = await sr.entities.Customer.filter({ merchant_id: merchantId, wallet_address: normalizedWallet });
+      }
+
+      if (existingCustomers.length === 0 && normalizedName) {
+        existingCustomers = await sr.entities.Customer.filter({ merchant_id: merchantId, name: normalizedName });
+      }
+
       if (existingCustomers.length > 0) {
         const existing = existingCustomers[0];
         const updateData = {
           total_paid_ada: isCntPayment ? (existing.total_paid_ada || 0) : (existing.total_paid_ada || 0) + receivedAmountAda,
+          total_merchant_ada: isCntPayment ? (existing.total_merchant_ada || 0) : (existing.total_merchant_ada || 0) + merchantAmountAda,
           payment_count: (existing.payment_count || 0) + 1,
           wallet_address: normalizedWallet || existing.wallet_address,
-          name: payerName || existing.name,
+          name: normalizedName || existing.name,
         };
-        if (payerEmail) updateData.email = payerEmail;
+        if (normalizedEmail) updateData.email = normalizedEmail;
         await sr.entities.Customer.update(existing.id, updateData);
       } else {
         const newCustomer = {
           merchant_id: merchantId,
-          name: payerName || "Anonymous",
+          name: normalizedName || "Anonymous",
           wallet_address: normalizedWallet || null,
           total_paid_ada: isCntPayment ? 0 : receivedAmountAda,
+          total_merchant_ada: isCntPayment ? 0 : merchantAmountAda,
           payment_count: 1,
           has_active_subscription: false,
         };
-        // Only set email if provided — avoids ValidationError on null email
-        if (payerEmail) newCustomer.email = payerEmail;
+        if (normalizedEmail) newCustomer.email = normalizedEmail;
         await sr.entities.Customer.create(newCustomer);
       }
     }
