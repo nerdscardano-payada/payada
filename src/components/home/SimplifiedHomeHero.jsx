@@ -6,24 +6,24 @@ import { ArrowRight, CreditCard, Users, Wallet } from "lucide-react";
 const items = [
   {
     title: "Accept payments",
-    description: "Create simple payment links and start receiving ADA fast.",
+    description: "Create real mainnet payment links directly from the homepage.",
     icon: CreditCard,
-    href: "/Demo",
-    cta: "Try payment flow"
+    href: "#mainnet-links",
+    cta: "Open payment flow"
   },
   {
     title: "Sell access",
-    description: "Turn a payment into access for communities, memberships or private offers.",
+    description: "Launch mainnet access links for communities, memberships or private offers.",
     icon: Users,
-    href: "/AccessLinks",
-    cta: "Open access tools"
+    href: "#mainnet-links",
+    cta: "Open access flow"
   },
   {
     title: "Wallet-first setup",
-    description: "Connect your wallet and keep your merchant flow focused on the essentials.",
+    description: "Connect wallet first, and only ask for login when users want tracking.",
     icon: Wallet,
-    href: "/OnboardingGoals",
-    cta: "Start onboarding"
+    href: "#mainnet-links",
+    cta: "See mainnet flow"
   }
 ];
 
@@ -43,9 +43,11 @@ export default function SimplifiedHomeHero({ onPrimaryClick }) {
             PayADA should feel simple: accept Cardano payments, unlock access, and guide merchants straight to the actions that matter.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Button size="lg" onClick={onPrimaryClick} className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white gap-2 min-w-[220px]">
-              Open dashboard <ArrowRight className="w-5 h-5" />
-            </Button>
+            <a href="#mainnet-links">
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white gap-2 min-w-[220px]">
+                Start on mainnet <ArrowRight className="w-5 h-5" />
+              </Button>
+            </a>
             <Link to="/Demo">
               <Button size="lg" variant="outline" className="border-slate-200 bg-white/80">
                 See live demo
@@ -64,11 +66,19 @@ export default function SimplifiedHomeHero({ onPrimaryClick }) {
                 </div>
                 <h3 className="text-xl font-semibold text-slate-900 mb-2">{item.title}</h3>
                 <p className="text-slate-600 mb-5">{item.description}</p>
-                <Link to={item.href}>
-                  <Button variant="outline" size="sm" className="border-slate-200 bg-white gap-2">
-                    {item.cta}
-                  </Button>
-                </Link>
+                {item.href.startsWith("#") ? (
+                  <a href={item.href}>
+                    <Button variant="outline" size="sm" className="border-slate-200 bg-white gap-2">
+                      {item.cta}
+                    </Button>
+                  </a>
+                ) : (
+                  <Link to={item.href}>
+                    <Button variant="outline" size="sm" className="border-slate-200 bg-white gap-2">
+                      {item.cta}
+                    </Button>
+                  </Link>
+                )}
               </div>
             );
           })}

@@ -7,6 +7,7 @@ import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
 import ProductDemoSection from "@/components/home/ProductDemoSection";
 import SimplifiedHomeHero from "@/components/home/SimplifiedHomeHero";
+import HomeMainnetLinksSection from "@/components/home/HomeMainnetLinksSection";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -118,6 +119,7 @@ export default function HomePage() {
       </nav>
 
       <SimplifiedHomeHero onPrimaryClick={handleSignUp} />
+      <HomeMainnetLinksSection />
 
       <div ref={demoSectionRef}>
         <ProductDemoSection
