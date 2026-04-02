@@ -5,25 +5,25 @@ import { ArrowRight, CreditCard, Users, Wallet } from "lucide-react";
 
 const items = [
   {
-    title: "Accept payments",
-    description: "Create real mainnet payment links directly from the homepage.",
+    title: "💸 Get paid",
+    description: "Create payment links and start accepting ADA + CNTs instantly.",
     icon: CreditCard,
-    href: "#mainnet-links",
-    cta: "Open payment flow"
+    href: "#product-demo",
+    cta: "See Demo"
   },
   {
-    title: "Sell access",
-    description: "Launch mainnet access links for communities, memberships or private offers.",
+    title: "💬 Monetize communities",
+    description: "Sell Discord / Telegram access with automated role assignment.",
     icon: Users,
-    href: "#mainnet-links",
-    cta: "Open access flow"
+    href: "#product-demo",
+    cta: "See Demo"
   },
   {
-    title: "Wallet-first setup",
-    description: "Connect wallet first, and only ask for login when users want tracking.",
+    title: "🎟️ Sell tickets",
+    description: "Create events and manage check-ins with QR codes.",
     icon: Wallet,
-    href: "#mainnet-links",
-    cta: "See mainnet flow"
+    href: "#product-demo",
+    cta: "See Demo"
   }
 ];
 
@@ -34,23 +34,29 @@ export default function SimplifiedHomeHero({ onPrimaryClick }) {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
         <div className="max-w-4xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-700 mb-6">
-            Payments + Access
+            <span className="h-2 w-2 rounded-full bg-cyan-500"></span>
+            Cardano-native payment infrastructure
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 mb-6 leading-tight">
-            Turn payments into access.
+            Accept Cardano payments effortlessly
           </h1>
           <p className="text-lg md:text-xl text-slate-600 max-w-3xl mb-8">
-            PayADA should feel simple: accept Cardano payments, unlock access, and guide merchants straight to the actions that matter.
+            PayADA.io makes it simple for merchants to accept ADA payments with payment links, a shop generator, pay terminals, and more — no technical knowledge required.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <a href="#mainnet-links">
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white gap-2 min-w-[220px]">
-                Start on mainnet <ArrowRight className="w-5 h-5" />
-              </Button>
-            </a>
+          <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4 mb-4">
+            <Button onClick={onPrimaryClick} size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white gap-2 min-w-[240px]">
+              Start accepting payments <ArrowRight className="w-5 h-5" />
+            </Button>
+          </div>
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
             <Link to="/Demo">
-              <Button size="lg" variant="outline" className="border-slate-200 bg-white/80">
-                See live demo
+              <Button size="lg" variant="outline" className="border-slate-200 bg-white/80 gap-2">
+                ⚡ Try Demo
+              </Button>
+            </Link>
+            <Link to="/Documentation">
+              <Button size="lg" variant="outline" className="border-slate-200 bg-white/80 gap-2">
+                📄 Docs
               </Button>
             </Link>
           </div>

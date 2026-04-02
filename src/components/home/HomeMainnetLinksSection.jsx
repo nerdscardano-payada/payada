@@ -5,19 +5,11 @@ import { Button } from "@/components/ui/button";
 const cards = [
   {
     icon: CreditCard,
-    badge: "Mainnet payment links",
-    title: "Create payment links on mainnet",
-    description: "Connect your Cardano wallet and start creating real payment links immediately. Login is only needed later for tracking and dashboard access.",
+    badge: "Product demo",
+    title: "Accept payments",
+    description: "Create a payment link in minutes and start getting paid in ADA or Cardano Native Tokens.",
     button: "Create payment link",
     href: "/Demo"
-  },
-  {
-    icon: LockKeyhole,
-    badge: "Mainnet access links",
-    title: "Create access links on mainnet",
-    description: "Sell access to private communities, downloads or pages with the same low-friction wallet-first flow.",
-    button: "Create access link",
-    href: "/AccessLinks"
   }
 ];
 
@@ -34,31 +26,27 @@ export default function HomeMainnetLinksSection() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-semibold text-cyan-300">
               <Sparkles className="h-3.5 w-3.5" />
-              Mainnet wallet-first flow
+              Product demo
             </div>
             <h2 className="mt-5 text-3xl font-black tracking-tight text-white md:text-5xl">
-              Start on the homepage.
+              Accept payments
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300 md:text-lg">
-              Let visitors connect their wallet right away and choose between a payment link or an access link. Ask for login only when they want tracking and dashboard features.
+              Create a payment link in minutes and start getting paid in ADA or Cardano Native Tokens.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button onClick={scrollToDemo} size="lg" className="bg-cyan-400 text-slate-950 hover:bg-cyan-300 gap-2 font-semibold">
-                Explore mainnet flows
+                Create payment link
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
-                <Wallet className="h-4 w-4 text-cyan-300" />
-                Wallet first, login later
-              </div>
             </div>
           </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+          <div className="mt-10 grid gap-6 lg:grid-cols-1">
             {cards.map((card) => {
               const CardIcon = card.icon;
               return (
-                <div key={card.title} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div key={card.title} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm max-w-2xl">
                   <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
                       <CardIcon className="h-5 w-5 text-cyan-300" />

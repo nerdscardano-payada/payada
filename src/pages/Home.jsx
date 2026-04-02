@@ -93,35 +93,10 @@ export default function HomePage() {
         canonical="https://payada.io/"
         structuredData={structuredData}
       />
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69999e4306b9e4632bd7d454/1b4bc7fb6_be2b2b99e_1000069668.jpg" alt="PayADA Logo" className="w-8 h-8 rounded-lg" />
-            <span className="text-lg font-bold text-slate-900">
-              Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
-            </span>
-          </div>
-          <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Features")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.features")}</Link>
-            <Link to={createPageUrl("Pricing")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.pricing")}</Link>
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
-            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.contact")}</Link>
-          </div>
-          <div className="flex items-center gap-2">
-            <LanguageSwitcher lang={lang} setLang={setLang} />
-            <Button variant="ghost" size="sm" onClick={handleLogin}>{t("nav.sign_in")}</Button>
-            <Button onClick={handleSignUp} className="hidden sm:inline-flex bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white">
-              {t("nav.get_started")}
-            </Button>
-          </div>
-        </div>
-      </nav>
-
       <SimplifiedHomeHero onPrimaryClick={handleSignUp} />
       <HomeMainnetLinksSection />
 
-      <div ref={demoSectionRef}>
+      <div id="product-demo" ref={demoSectionRef}>
         <ProductDemoSection
           eyebrow="See it in action"
           title="One platform for payments, access and events"
