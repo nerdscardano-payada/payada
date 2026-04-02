@@ -9,8 +9,8 @@ const goals = [
     title: "Connect Wallet",
     description:
       "Connect your Cardano wallet first so you can create links and get paid with the simplest possible setup.",
-    to: "/PaymentLinks",
-    cta: "Start with wallet connect"
+    to: "/MerchantProfile",
+    cta: "Connect your wallet"
   },
   {
     icon: CreditCard,

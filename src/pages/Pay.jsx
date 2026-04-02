@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import GlobalWalletConnect from "@/components/wallet/GlobalWalletConnect";
+import WalletConnect from "@/components/checkout/WalletConnect";
 import WalletPayButton from "@/components/checkout/WalletPayButton";
 import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 import WalletHealthCheck from "@/components/checkout/WalletHealthCheck";
@@ -547,12 +547,9 @@ export default function Pay() {
                         <p className="text-[11px] text-slate-500 text-center">
                           Wallet connect checkout · Supported: Nami · Eternl · Lace · Typhon · GeroWallet · Yoroi · Vespr
                         </p>
-                        <GlobalWalletConnect
+                        <WalletConnect
                           onConnected={(w) => setConnectedWallet(w)}
                           onDisconnected={() => setConnectedWallet(null)}
-                          title="Connect wallet to pay"
-                          description="Connect your Cardano wallet here to set up the payment address and sign the transaction without creating an account."
-                          className="border-slate-800 bg-slate-900/40"
                         />
                         {connectedWallet && (
                           <>

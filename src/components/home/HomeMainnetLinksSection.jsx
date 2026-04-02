@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { ArrowRight, CreditCard, LockKeyhole, Wallet, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import GlobalWalletConnect from "@/components/wallet/GlobalWalletConnect";
 
 const cards = [
   {
@@ -10,7 +9,7 @@ const cards = [
     title: "Create payment links on mainnet",
     description: "Connect your Cardano wallet and start creating real payment links immediately. Login is only needed later for tracking and dashboard access.",
     button: "Create payment link",
-    href: "/PaymentLinks"
+    href: "/Demo"
   },
   {
     icon: LockKeyhole,
@@ -23,8 +22,6 @@ const cards = [
 ];
 
 export default function HomeMainnetLinksSection() {
-  const [connectedWallet, setConnectedWallet] = useState(null);
-
   const scrollToDemo = () => {
     document.getElementById("mainnet-links")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -57,39 +54,30 @@ export default function HomeMainnetLinksSection() {
             </div>
           </div>
 
-          <div className="mt-10 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="grid gap-6 md:grid-cols-2">
-              {cards.map((card) => {
-                const CardIcon = card.icon;
-                return (
-                  <div key={card.title} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
-                        <CardIcon className="h-5 w-5 text-cyan-300" />
-                      </div>
-                      <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300">
-                        {card.badge}
-                      </div>
+          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            {cards.map((card) => {
+              const CardIcon = card.icon;
+              return (
+                <div key={card.title} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
+                      <CardIcon className="h-5 w-5 text-cyan-300" />
                     </div>
-                    <h3 className="mt-5 text-2xl font-bold text-white">{card.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-300">{card.description}</p>
-                    <a href={card.href}>
-                      <Button className="mt-6 gap-2 bg-white text-slate-950 hover:bg-slate-100">
-                        {card.button}
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </a>
+                    <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300">
+                      {card.badge}
+                    </div>
                   </div>
-                );
-              })}
-            </div>
-
-            <GlobalWalletConnect
-              onConnected={setConnectedWallet}
-              onDisconnected={() => setConnectedWallet(null)}
-              title={connectedWallet ? "Wallet connected" : "Connect wallet from homepage"}
-              description={connectedWallet?.address ? `Connected: ${connectedWallet.address.slice(0, 18)}...` : "Users can connect Nami, Eternl or Lace right here before creating a payment or access flow."}
-            />
+                  <h3 className="mt-5 text-2xl font-bold text-white">{card.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-300">{card.description}</p>
+                  <a href={card.href}>
+                    <Button className="mt-6 gap-2 bg-white text-slate-950 hover:bg-slate-100">
+                      {card.button}
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </a>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
