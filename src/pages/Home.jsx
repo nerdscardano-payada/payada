@@ -105,8 +105,8 @@ export default function HomePage() {
           <div className="hidden md:flex items-center gap-8">
             <Link to={createPageUrl("Features")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.features")}</Link>
             <Link to={createPageUrl("Pricing")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.pricing")}</Link>
-            <Link to={createPageUrl("Roadmap")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.roadmap")}</Link>
             <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.contact")}</Link>
           </div>
           <div className="flex items-center gap-2">
             <LanguageSwitcher lang={lang} setLang={setLang} />
@@ -123,10 +123,10 @@ export default function HomePage() {
 
       <div ref={demoSectionRef}>
         <ProductDemoSection
-          eyebrow="Wallet-first flow"
-          title="One platform for payments and access"
-          description="Guide merchants to the shortest path: connect wallet, create a payment flow, unlock access, and expand only when they need more."
-          ctaLabel="Open dashboard"
+          eyebrow="See it in action"
+          title="One platform for payments, access and events"
+          description="Create ADA payment links, sell access, and launch paid event checkouts from one clean dashboard."
+          ctaLabel="Get started"
           ctaTo={createPageUrl("Dashboard")}
           onCtaClick={handleSignUp}
           videoUrl={pathwayVideos[activeDemoIndex]}

@@ -108,33 +108,17 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
          </div>
 
         <div className="px-2 pt-3 space-y-2">
-         {user?.email && (
-           <div className={cn(
-             "rounded-xl border px-3 py-2 text-[11px]",
-             profile?.connected_wallet_address
-               ? "border-emerald-400/20 bg-emerald-500/10 text-emerald-200"
-               : "border-amber-400/20 bg-amber-500/10 text-amber-200"
-           )}>
-             <div className="font-semibold">Wallet status</div>
-             <div className="truncate opacity-80">{profile?.connected_wallet_address ? 'Wallet connected' : 'Connect wallet to start'}</div>
-           </div>
-         )}
-          <Link
-            to="/OnboardingGoals"
-            onClick={() => setMobileOpen(false)}
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all group border border-cyan-400/10",
-              currentPage === "OnboardingGoals"
-                ? "bg-cyan-500/15 text-cyan-400"
-                : "bg-cyan-500/5 text-cyan-300 hover:bg-cyan-500/10 hover:text-cyan-200"
-            )}
-          >
-            <Rocket className={cn(
-              "w-[18px] h-[18px] flex-shrink-0",
-              currentPage === "OnboardingGoals" ? "text-cyan-400" : "text-cyan-300"
-            )} />
-            {!collapsed && <span className="truncate">Onboarding</span>}
-          </Link>
+          {user?.email && (
+            <div className={cn(
+              "rounded-xl border px-3 py-2 text-[11px]",
+              profile?.connected_wallet_address
+                ? "border-emerald-400/20 bg-emerald-500/10 text-emerald-200"
+                : "border-amber-400/20 bg-amber-500/10 text-amber-200"
+            )}>
+              <div className="font-semibold">Wallet status</div>
+              <div className="truncate opacity-80">{profile?.connected_wallet_address ? 'Wallet connected' : 'Connect wallet to start'}</div>
+            </div>
+          )}
           <Link
             to="/Tutorials"
             onClick={() => setMobileOpen(false)}
