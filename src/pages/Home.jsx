@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
-import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/components/i18n/useTranslation";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
@@ -17,15 +16,9 @@ import { homeHighlights, homePrimaryActions, homeWorkspaceSections } from "@/com
 
 export default function HomePage() {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
   const [connectedWallet, setConnectedWallet] = useState(null);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      window.location.href = createPageUrl("Dashboard");
-      return;
-    }
-
     const hasSeenLaunchCelebration = localStorage.getItem("payada_launch_2026");
     if (!hasSeenLaunchCelebration) {
       confetti({
@@ -41,7 +34,7 @@ export default function HomePage() {
 
       localStorage.setItem("payada_launch_2026", "true");
     }
-  }, [isAuthenticated]);
+  }, [t]);
 
   const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   const handleLogin = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
