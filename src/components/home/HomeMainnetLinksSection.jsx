@@ -10,7 +10,7 @@ const cards = [
     title: "Create payment links on mainnet",
     description: "Connect your Cardano wallet and start creating real payment links immediately. Login is only needed later for tracking and dashboard access.",
     button: "Create payment link",
-    href: "/Demo"
+    href: "/PaymentLinks"
   },
   {
     icon: LockKeyhole,
