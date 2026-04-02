@@ -4,10 +4,11 @@ import WalletConnect from "@/components/checkout/WalletConnect";
 import WalletPayButton from "@/components/checkout/WalletPayButton";
 import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 import { getKnownCntDecimals } from "@/components/payment-links/wizard/knownCNTs";
-import { CheckCircle, Users, ExternalLink, Loader2, ShieldCheck, Clock } from "lucide-react";
+import { CheckCircle, ExternalLink, Loader2, ShieldCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import SimpleAccessSummaryCard from "@/components/access/SimpleAccessSummaryCard";
 
 const PLATFORM_ICONS = {
   discord: "🎮",
@@ -298,38 +299,18 @@ export default function Access() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-4">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 md:p-8">
+      <div className="max-w-xl w-full space-y-4">
 
-        {/* Header card */}
-        <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-6 text-center space-y-3">
-          {accessLink.logo_url ? (
-            <img src={accessLink.logo_url} alt={accessLink.title} className="w-16 h-16 rounded-full mx-auto object-cover" />
-          ) : (
-            <div className="w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center mx-auto text-2xl">
-              {PLATFORM_ICONS[accessLink.platform]}
-            </div>
-          )}
-          <div>
-            <h1 className="text-2xl font-bold text-white">{accessLink.title}</h1>
-            <p className="text-indigo-300 text-sm mt-0.5">{PLATFORM_LABELS[accessLink.platform]}</p>
-          </div>
-          {accessLink.description && (
-            <p className="text-slate-300 text-sm leading-relaxed">{accessLink.description}</p>
-          )}
-          <div className="pt-2 border-t border-white/10">
-            {isCnt ? (
-              <p className="text-3xl font-bold text-white">{formatCntAmount(totalCnt, cntDecimals)} <span className="text-lg text-purple-400">{accessLink.cnt_ticker}</span></p>
-            ) : (
-              <p className="text-3xl font-bold text-white">₳ {totalAda.toFixed(2)}</p>
-            )}
-            <p className="text-slate-400 text-xs mt-1">One-time access fee</p>
-          </div>
-          {!isCnt && <AdaRatePreview adaAmount={totalAda} />}
-        </div>
+        <SimpleAccessSummaryCard accessLink={accessLink} />
 
-        {/* Member info fields */}
-        <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4 space-y-3">
+        {!isCnt && (
+          <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
+            <AdaRatePreview adaAmount={totalAda} />
+          </div>
+        )}
+
+        <div className="bg-white rounded-3xl border border-slate-200 p-4 space-y-3 shadow-sm">
           <div className="space-y-1.5">
             <Label className="text-slate-300 text-sm">Your Name / Username <span className="text-red-400">*</span></Label>
             <Input
@@ -363,8 +344,7 @@ export default function Access() {
           )}
         </div>
 
-        {/* Wallet section */}
-        <div className="bg-white/5 backdrop-blur border border-white/10 rounded-2xl p-4 space-y-3">
+        <div className="bg-white rounded-3xl border border-slate-200 p-4 space-y-3 shadow-sm">
           <WalletConnect
             onConnected={(walletData) => setConnectedWallet(walletData)}
             onDisconnected={() => setConnectedWallet(null)}
@@ -386,7 +366,6 @@ export default function Access() {
           )}
         </div>
 
-        {/* Fee info */}
         <div className="flex items-center justify-between text-xs text-slate-500 px-1">
           {isCnt ? (
             <span>Platform fee ({feePercent}%): {formatCntAmount(feeCnt, cntDecimals)} {accessLink.cnt_ticker}</span>

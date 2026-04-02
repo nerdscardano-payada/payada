@@ -9,10 +9,10 @@ import { useTranslation } from "@/components/i18n/useTranslation";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
-import HomeWalletHero from "@/components/home/HomeWalletHero";
 import HomeActionGrid from "@/components/home/HomeActionGrid";
 import HomeHighlights from "@/components/home/HomeHighlights";
 import HomePublicLinksSection from "@/components/home/HomePublicLinksSection";
+import HomeInlineCreator from "@/components/home/HomeInlineCreator";
 import { homeHighlights, homePrimaryActions, homeWorkspaceSections } from "@/components/home/homeData";
 
 export default function HomePage() {
@@ -62,7 +62,12 @@ export default function HomePage() {
         canonical="https://payada.io/"
         structuredData={structuredData}
       />
-      <HomeWalletHero onLogin={handleLogin} onWalletConnected={setConnectedWallet} />
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.10),transparent_35%)]" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+          <HomeInlineCreator onWalletConnected={setConnectedWallet} />
+        </div>
+      </section>
 
       <HomeHighlights items={homeHighlights} />
 
@@ -70,7 +75,7 @@ export default function HomePage() {
 
       <HomeActionGrid
         title="More tools after checkout"
-        description="Na de directe publieke links kunnen bezoekers en merchants verder naar de bredere tools en workspace."
+        description="Na je snelle link-creatie kan je nog altijd verder met de bestaande tools en systemen."
         items={homePrimaryActions}
       />
 
