@@ -1,39 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Zap, Lock, TrendingUp, Globe, CreditCard, Users, Ticket } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
-import ProductDemoSection from "@/components/home/ProductDemoSection";
-import SimplifiedHomeHero from "@/components/home/SimplifiedHomeHero";
-import HomeMainnetLinksSection from "@/components/home/HomeMainnetLinksSection";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "@/components/i18n/useTranslation";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
-
-const pathwayIcons = [CreditCard, Users, Ticket];
-const whyIcons = [Zap, Lock, Globe, TrendingUp];
-const pathwayPages = ["PaymentLinks", "AccessLinks", "Events"];
-const pathwayVideos = [
-  "https://video.twimg.com/amplify_video/2034541284552257536/vid/avc1/1888x866/ax3v4sHFu2PFZGRe.mp4?tag=21",
-  "https://video.twimg.com/amplify_video/2034541227027103745/vid/avc1/1910x860/nGxDLZO2Fg-iVhVU.mp4?tag=21",
-  "https://video.twimg.com/amplify_video/2034541324985159680/vid/avc1/1912x870/X5Pi5tlwEuO3aCcV.mp4?tag=21"
-];
-const pathwayEmbeds = [
-  "https://1drv.ms/v/c/c9babd2faa79be07/IQQLyBOcBK29QZUfjZCXL21lAdltf7y3dLhjH0bszbWDb3o?autoplay=1&muted=1",
-  "https://1drv.ms/v/c/c9babd2faa79be07/IQQvHwrDm-M8RKpKv_BpV30hAUWhNw91YfDv0N-JkGVHEDU?autoplay=1&muted=1",
-  "https://1drv.ms/v/c/c9babd2faa79be07/IQT1kxT9DnpKTLL1pYZ-zVPWAY3Q8f9Mg2TzOu1I_l6RP2k?autoplay=1&muted=1",
-];
+import HomeWalletHero from "@/components/home/HomeWalletHero";
+import HomeActionGrid from "@/components/home/HomeActionGrid";
+import HomeHighlights from "@/components/home/HomeHighlights";
+import { homeHighlights, homePrimaryActions, homeWorkspaceSections } from "@/components/home/homeData";
 
 export default function HomePage() {
-  const { t, lang, setLang } = useTranslation();
+  const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
-  const [activeDemoIndex, setActiveDemoIndex] = useState(0);
-  const demoSectionRef = useRef(null);
+  const [connectedWallet, setConnectedWallet] = useState(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -60,16 +45,6 @@ export default function HomePage() {
 
   const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
   const handleLogin = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
-  const handleStartFlow = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
-  const handlePreviewFlow = (index) => {
-    setActiveDemoIndex(index);
-    demoSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
-
-  const pathways = t("home.pathways");
-  const useCases = t("home.usecases");
-  const whyItems = t("home.why_items");
-  const activePathway = Array.isArray(pathways) ? pathways[activeDemoIndex] : null;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -93,92 +68,46 @@ export default function HomePage() {
         canonical="https://payada.io/"
         structuredData={structuredData}
       />
-      <SimplifiedHomeHero onPrimaryClick={handleSignUp} />
-      <HomeMainnetLinksSection />
+      <HomeWalletHero onLogin={handleLogin} onWalletConnected={setConnectedWallet} />
 
-      <div id="product-demo" ref={demoSectionRef}>
-        <ProductDemoSection
-          eyebrow="See it in action"
-          title="One platform for payments, access and events"
-          description="Create ADA payment links, sell access, and launch paid event checkouts from one clean dashboard."
-          ctaLabel="Get started"
-          ctaTo={createPageUrl("Dashboard")}
-          onCtaClick={handleSignUp}
-          videoUrl={pathwayVideos[activeDemoIndex]}
-          embedUrl={pathwayEmbeds[activeDemoIndex]}
-        />
-      </div>
+      <HomeHighlights items={homeHighlights} />
 
-      {/* Why PayADA */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("home.why_title")}</h2>
-            <p className="text-lg text-slate-600 max-w-2xl">{t("home.why_sub")}</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {Array.isArray(whyItems) && whyItems.map((item, index) => {
-              const Icon = whyIcons[index] || CheckCircle2;
-              return (
-                <div key={item} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                  <Icon className="w-5 h-5 text-blue-600 mb-3" />
-                  <p className="font-medium text-slate-900">{item}</p>
-                </div>
-              );
-            })}
+      <HomeActionGrid
+        title="Start here"
+        description="The homepage now surfaces the main actions merchants normally discover in the sidebar, so new visitors can understand the product immediately."
+        items={homePrimaryActions}
+      />
+
+      <section id="workspace-overview" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+        <div className="rounded-[2rem] bg-slate-950 text-white p-8 md:p-10">
+          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Workspace overview</p>
+              <h2 className="mt-3 text-3xl md:text-4xl font-bold">Everything from the sidebar, now explained on the homepage.</h2>
+              <p className="mt-4 max-w-3xl text-slate-300 text-lg">
+                From payment flows to customer tracking, merchant profile, webhooks, API keys and billing, this homepage now introduces the same core areas before users enter the dashboard.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-sm text-slate-200">
+              {connectedWallet?.address ? `Connected wallet: ${connectedWallet.address.slice(0, 12)}…${connectedWallet.address.slice(-8)}` : "No wallet connected yet"}
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 md:p-10 shadow-sm">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">{t("home.accepted_title")}</h2>
-            <p className="text-slate-600 max-w-3xl mx-auto">{t("home.accepted_sub")}</p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
-            {[
-              { label: "ADA", className: "bg-blue-50 text-blue-700 border-blue-200" },
-              { label: "$NIGHT", className: "bg-slate-50 text-slate-700 border-slate-200" },
-              { label: "$SNEK", className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-              { label: "$MIN", className: "bg-violet-50 text-violet-700 border-violet-200" },
-              { label: "$INDY", className: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-              { label: "$SUNDAE", className: "bg-pink-50 text-pink-700 border-pink-200" },
-              { label: "$WMTX", className: "bg-sky-50 text-sky-700 border-sky-200" },
-              { label: "$VYFI", className: "bg-teal-50 text-teal-700 border-teal-200" },
-              { label: "$AGIX", className: "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200" },
-              { label: "$FET", className: "bg-cyan-50 text-cyan-700 border-cyan-200" },
-              { label: "$NTX", className: "bg-lime-50 text-lime-700 border-lime-200" },
-              { label: "$IAG", className: "bg-blue-50 text-blue-700 border-blue-200" },
-              { label: "$STRIKE", className: "bg-orange-50 text-orange-700 border-orange-200" },
-              { label: "$NMKR", className: "bg-purple-50 text-purple-700 border-purple-200" },
-              { label: "$HOSKY", className: "bg-rose-50 text-rose-700 border-rose-200" },
-              { label: "$TITAN", className: "bg-red-50 text-red-700 border-red-200" },
-              { label: "$LQ", className: "bg-amber-50 text-amber-700 border-amber-200" },
-              { label: "USDM", className: "bg-slate-50 text-slate-700 border-slate-200" },
-              { label: "USDA", className: "bg-yellow-50 text-yellow-700 border-yellow-200" },
-              { label: "DJED", className: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-              { label: "iUSD", className: "bg-neutral-50 text-neutral-700 border-neutral-200" },
-              { label: "USDCx", className: "bg-green-50 text-green-700 border-green-200" },
-            ].map((token) => (
-              <div
-                key={token.label}
-                className={`rounded-full border px-4 py-2 text-sm font-semibold ${token.className}`}
-              >
-                {token.label}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HomeActionGrid
+        title="Merchant workspace sections"
+        description="Each section below matches the tools merchants use most once they enter PayADA."
+        items={homeWorkspaceSections}
+      />
 
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">{t("home.cta_title")}</h2>
-          <p className="text-xl text-blue-50 mb-8 max-w-2xl mx-auto">{t("home.cta_sub")}</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to move from homepage to dashboard?</h2>
+          <p className="text-xl text-blue-50 mb-8 max-w-2xl mx-auto">Login, connect your wallet, and continue with payment links, access links, customers, webhooks and billing.</p>
           <Button size="lg" onClick={handleSignUp} className="bg-white text-blue-600 hover:bg-blue-50 gap-2">
-            {t("home.cta_button")} <ArrowRight className="w-5 h-5" />
+            Go to dashboard <ArrowRight className="w-5 h-5" />
           </Button>
         </div>
       </section>
