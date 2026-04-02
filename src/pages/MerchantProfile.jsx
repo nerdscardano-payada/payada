@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, CheckCircle2, Edit2, Save, Upload, Link, Trash2, Coins, ShieldCheck } from "lucide-react";
+import WalletDashboardGate from "@/components/wallet/WalletDashboardGate";
 import { KNOWN_CNTS } from "@/components/payment-links/wizard/knownCNTs";
 import {
   AlertDialog,
@@ -123,6 +124,10 @@ export default function MerchantProfilePage() {
     await base44.auth.logout('/');
   };
 
+  const handleWalletLinked = () => {
+    queryClient.invalidateQueries({ queryKey: ['merchantProfile'] });
+  };
+
   if (userLoading || profileLoading) {
     return (
       <div className="space-y-6">
@@ -171,6 +176,8 @@ export default function MerchantProfilePage() {
         </Card>
       )}
 
+      <WalletDashboardGate profile={profile || formData} onLinked={handleWalletLinked} />
+
       <Card className="p-8 border-sky-200 bg-sky-50/60">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -208,6 +215,11 @@ export default function MerchantProfilePage() {
               <div>
                 <Label className="text-sm font-medium text-slate-700">Email Address</Label>
                 <Input disabled value={user?.email || ""} className="mt-1 text-slate-500" />
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium text-slate-700">Connected Wallet</Label>
+                <Input disabled value={formData.connected_wallet_address || "Not connected yet"} className="mt-1 text-slate-500 font-mono text-xs" />
               </div>
 
               <div>

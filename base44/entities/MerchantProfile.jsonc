@@ -1,0 +1,109 @@
+{
+  "name": "MerchantProfile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "business_name": {
+      "type": "string"
+    },
+    "website_url": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "UTC"
+    },
+    "default_receive_address": {
+      "type": "string",
+      "description": "Default Cardano wallet address"
+    },
+    "platform_fee_percent": {
+      "type": "number",
+      "default": 1.75,
+      "description": "Platform fee percentage (1.75% default, can vary for enterprise)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "suspended",
+        "blocked"
+      ],
+      "default": "active"
+    },
+    "nft_store_name": {
+      "type": "string",
+      "description": "Public name of the merchant NFT marketplace"
+    },
+    "nft_store_slug": {
+      "type": "string",
+      "description": "Public slug used in the NFT marketplace URL"
+    },
+    "nft_store_description": {
+      "type": "string",
+      "description": "Short intro text shown on the public NFT marketplace"
+    },
+    "nft_fulfillment_mode": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "automatic"
+      ],
+      "default": "manual",
+      "description": "How NFT transfers are fulfilled for this merchant"
+    },
+    "whitelisted_cnt_tokens": {
+      "type": "array",
+      "description": "Admin-only: CNT tokens this merchant is whitelisted to accept (for future use)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "policy_id": {
+            "type": "string"
+          },
+          "asset_name": {
+            "type": "string"
+          },
+          "ticker": {
+            "type": "string"
+          },
+          "decimals": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "verified_merchant": {
+      "type": "boolean",
+      "default": false,
+      "description": "Shows a verified badge on store and checkout when true"
+    },
+    "verification_requested": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the merchant has asked for manual verification review"
+    },
+    "verification_requested_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the merchant requested verification"
+    },
+    "preferred_collection_name": {
+      "type": "string",
+      "description": "If set, this collection is shown first on the merchant storefront"
+    },
+    "connected_wallet_address": {
+      "type": "string",
+      "description": "Primary connected Cardano wallet for wallet-first dashboard flow"
+    }
+  },
+  "required": [
+    "user_id",
+    "business_name"
+  ]
+}

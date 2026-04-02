@@ -78,7 +78,16 @@ const navItems = [
 
 export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
   const [user, setUser] = React.useState(null);
-  React.useEffect(() => { base44.auth.me().then(setUser).catch(() => {}); }, []);
+  const [profile, setProfile] = React.useState(null);
+  React.useEffect(() => {
+    base44.auth.me().then(async (me) => {
+      setUser(me);
+      if (me?.email) {
+        const profiles = await base44.entities.MerchantProfile.filter({ user_id: me.email });
+        setProfile(profiles[0] || null);
+      }
+    }).catch(() => {});
+  }, []);
   const isAdmin = user?.role === "admin";
   const canAccessTemporaryPages = isAdmin || user?.email === "nerscardano@gmail.com";
   const temporaryRestrictedPages = ["NFTs"];
@@ -124,6 +133,15 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
          </div>
 
         <div className="px-2 pt-3 space-y-2">
+         {user?.email && (
+           <div className={cn(
+             "rounded-xl border px-3 py-2 text-[11px]",
+             "border-cyan-400/10 bg-cyan-500/5 text-cyan-200"
+           )}>
+             <div className="font-semibold">Dashboard</div>
+             <div className="truncate text-cyan-100/80">{profile?.connected_wallet_address ? 'Wallet connected' : user.email}</div>
+           </div>
+         )}
           <Link
             to="/OnboardingGoals"
             onClick={() => setMobileOpen(false)}
