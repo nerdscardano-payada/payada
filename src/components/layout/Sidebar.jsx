@@ -6,6 +6,7 @@ import {
   Link2,
   CreditCard,
   Users,
+  Wallet,
   Webhook,
   Key,
   Receipt,
@@ -40,27 +41,13 @@ const navItems = [
   { name: "Payments", icon: CreditCard, page: "Payments" },
   { name: "Customers", icon: Users, page: "Customers" },
 
-  { type: "header", name: "Advanced" },
-  { name: "Transactions", icon: Eye, page: "TransactionAudit" },
-  { name: "Subscriptions", icon: RefreshCw, page: "Subscriptions" },
-  { name: "Donations", icon: Heart, page: "DonationPages" },
-  { name: "POS Terminal", icon: Zap, page: "POS" },
-  { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
-  { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
-  { name: "Shop Pages", icon: ShoppingCart, page: "ShoppingPageGenerator" },
-  { name: "NFT Overview", icon: Hexagon, page: "NFTs" },
-  { name: "NFT Control", icon: LayoutDashboard, page: "NFTOperations" },
-  { name: "NFT Fulfillment", icon: Zap, page: "NFTFulfillmentSetup" },
-  { name: "NFT Gating", icon: Bot, page: "NFTGating" },
-  { name: "NFT Distribution", icon: RefreshCw, page: "NFTDistribution" },
-  { name: "NFT Marketplace", icon: ShoppingCart, page: "NFTMarketplace" },
-  { name: "Discord Gate", icon: Bot, page: "DiscordPlugin" },
-  { name: "Events", icon: Calendar, page: "Events" },
-  { name: "Webhooks", icon: Webhook, page: "Webhooks" },
-  { name: "API Keys", icon: Key, page: "ApiKeys" },
+  { type: "header", name: "Wallet" },
+  { name: "Merchant Profile", icon: Wallet, page: "MerchantProfile" },
 
   { type: "header", name: "Settings" },
-  { name: "Merchant Profile", icon: Building2, page: "MerchantProfile" },
+  { name: "Transactions", icon: Eye, page: "TransactionAudit" },
+  { name: "Webhooks", icon: Webhook, page: "Webhooks" },
+  { name: "API Keys", icon: Key, page: "ApiKeys" },
   { name: "Billing", icon: Receipt, page: "Billing" },
 ];
 
@@ -124,10 +111,12 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
          {user?.email && (
            <div className={cn(
              "rounded-xl border px-3 py-2 text-[11px]",
-             "border-cyan-400/10 bg-cyan-500/5 text-cyan-200"
+             profile?.connected_wallet_address
+               ? "border-emerald-400/20 bg-emerald-500/10 text-emerald-200"
+               : "border-amber-400/20 bg-amber-500/10 text-amber-200"
            )}>
-             <div className="font-semibold">Dashboard</div>
-             <div className="truncate text-cyan-100/80">{profile?.connected_wallet_address ? 'Wallet connected' : user.email}</div>
+             <div className="font-semibold">Wallet status</div>
+             <div className="truncate opacity-80">{profile?.connected_wallet_address ? 'Wallet connected' : 'Connect wallet to start'}</div>
            </div>
          )}
           <Link

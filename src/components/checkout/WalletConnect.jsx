@@ -254,7 +254,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
           >
             <div className="flex items-center gap-2">
               {connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wallet className="w-4 h-4" />}
-              {connecting ? "Connecting…" : "Connect Wallet"}
+              {connecting ? "Connecting…" : "Connect Cardano Wallet"}
             </div>
             <ChevronDown className="w-3.5 h-3.5 opacity-50" />
           </Button>

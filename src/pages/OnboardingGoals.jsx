@@ -1,88 +1,34 @@
 import React from "react";
-import { CreditCard, Users, TrendingUp } from "lucide-react";
+import { CreditCard, Users, Wallet } from "lucide-react";
 import GoalTile from "@/components/onboarding/GoalTile";
 
 const goals = [
   {
+    icon: Wallet,
+    eyebrow: "Wallet-first start",
+    title: "Connect Wallet",
+    description:
+      "Connect your Cardano wallet first so you can create links and get paid with the simplest possible setup.",
+    to: "/MerchantProfile",
+    cta: "Connect your wallet"
+  },
+  {
     icon: CreditCard,
     eyebrow: "Get paid fast",
-    title: "Collect Payments",
+    title: "Payment Links",
     description:
-      "Create simple payment links for products, services, invoices, or one-off requests in just a few clicks.",
+      "Create simple Cardano payment links for products, services, invoices, and one-off requests.",
     to: "/PaymentLinks",
     cta: "Start with payment links"
   },
   {
     icon: Users,
-    eyebrow: "Build your audience",
-    title: "Engage Communities",
+    eyebrow: "Unlock after payment",
+    title: "Access Links",
     description:
-      "Launch access flows for members, gated experiences, and community offers around your brand or project.",
+      "Sell access to private content, downloads, communities, or hidden pages with one simple flow.",
     to: "/AccessLinks",
-    cta: "Set up community access"
-  },
-  {
-    icon: TrendingUp,
-    eyebrow: "Grow recurring revenue",
-    title: "Grow Revenue",
-    description:
-      "Add donation pages, subscriptions, and other revenue streams that help your business scale over time.",
-    to: "/DonationPages",
-    cta: "Explore revenue tools"
-  },
-  {
-    icon: CreditCard,
-    eyebrow: "Sell online",
-    title: "Build Shop Pages",
-    description:
-      "Create branded shopping pages and checkout experiences for products, bundles, and simple online sales.",
-    to: "/ShoppingPageGenerator",
-    cta: "Create a shop page"
-  },
-  {
-    icon: Users,
-    eyebrow: "Host experiences",
-    title: "Run Events & Tickets",
-    description:
-      "Set up event pages, sell tickets, and manage attendee access for launches, meetups, and live experiences.",
-    to: "/Events",
-    cta: "Launch an event"
-  },
-  {
-    icon: TrendingUp,
-    eyebrow: "Move digital assets",
-    title: "NFT Distribution",
-    description:
-      "Distribute NFTs to buyers, supporters, or community members with guided fulfillment and tracking tools.",
-    to: "/NFTDistribution",
-    cta: "Set up NFT distribution"
-  },
-  {
-    icon: CreditCard,
-    eyebrow: "Sell collectibles",
-    title: "NFT Marketplace",
-    description:
-      "Create your own NFT storefront, publish listings, and manage a marketplace experience for your audience.",
-    to: "/NFTMarketplace",
-    cta: "Open NFT marketplace"
-  },
-  {
-    icon: Users,
-    eyebrow: "Gate premium access",
-    title: "NFT Gating",
-    description:
-      "Unlock content, products, or experiences only for wallet holders that meet your NFT access rules.",
-    to: "/NFTGating",
-    cta: "Configure NFT gating"
-  },
-  {
-    icon: TrendingUp,
-    eyebrow: "Sell in person",
-    title: "Point of Sale",
-    description:
-      "Use a simple in-person checkout flow for pop-ups, retail counters, events, and face-to-face payments.",
-    to: "/POS",
-    cta: "Set up POS"
+    cta: "Create access links"
   }
 ];
 
@@ -92,13 +38,13 @@ export default function OnboardingGoals() {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-flex rounded-full border border-cyan-100 bg-cyan-50 px-4 py-1 text-sm font-medium text-cyan-700">
-            Welcome to PayADA
+            Wallet-first PayADA
           </span>
           <h1 className="mt-6 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-            What do you want to achieve first?
+            Start with wallet, payment links, or access links
           </h1>
           <p className="mt-4 text-lg leading-8 text-slate-600">
-            Pick a goal and we’ll guide you into the right part of the platform.
+            We’ve simplified the platform so you can focus on the two core flows first.
           </p>
         </div>
 

@@ -30,10 +30,10 @@ export default function WalletDashboardGate({ profile, onLinked }) {
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-slate-900 font-semibold">
             <Wallet className="w-5 h-5 text-indigo-600" />
-            Wallet-first dashboard access
+            Connect your Cardano wallet
           </div>
           <p className="text-sm text-slate-600">
-            Verbind je Cardano wallet om je dashboard eenvoudiger te gebruiken.
+            Start eenvoudig: koppel je wallet om payment links en access links te beheren.
           </p>
           {isLinked && (
             <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">

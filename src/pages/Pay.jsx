@@ -487,7 +487,7 @@ export default function Pay() {
                     {paymentStatus === "pending" ? "Awaiting payment" : `Confirming on-chain…`}
                   </p>
                   <p className="text-[11px] text-slate-500">
-                    {paymentStatus === "pending" ? "Connect your Cardano wallet to pay" : "Your transaction was submitted."}
+                    {paymentStatus === "pending" ? "Connect your Cardano wallet and complete payment in one flow" : "Your transaction was submitted."}
                   </p>
                 </div>
               </div>
@@ -545,7 +545,7 @@ export default function Pay() {
                       {/* Wallet flow only */}
                       <div className="space-y-3">
                         <p className="text-[11px] text-slate-500 text-center">
-                          Supported: Nami · Eternl · Lace · Typhon · GeroWallet · Yoroi · Vespr
+                          Wallet connect checkout · Supported: Nami · Eternl · Lace · Typhon · GeroWallet · Yoroi · Vespr
                         </p>
                         <WalletConnect
                           onConnected={(w) => setConnectedWallet(w)}
