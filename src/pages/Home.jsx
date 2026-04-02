@@ -12,6 +12,7 @@ import { Toaster } from "sonner";
 import HomeWalletHero from "@/components/home/HomeWalletHero";
 import HomeActionGrid from "@/components/home/HomeActionGrid";
 import HomeHighlights from "@/components/home/HomeHighlights";
+import HomePublicLinksSection from "@/components/home/HomePublicLinksSection";
 import { homeHighlights, homePrimaryActions, homeWorkspaceSections } from "@/components/home/homeData";
 
 export default function HomePage() {
@@ -65,9 +66,11 @@ export default function HomePage() {
 
       <HomeHighlights items={homeHighlights} />
 
+      <HomePublicLinksSection />
+
       <HomeActionGrid
-        title="Start here"
-        description="The homepage now surfaces the main actions merchants normally discover in the sidebar, so new visitors can understand the product immediately."
+        title="More tools after checkout"
+        description="Na de directe publieke links kunnen bezoekers en merchants verder naar de bredere tools en workspace."
         items={homePrimaryActions}
       />
 
