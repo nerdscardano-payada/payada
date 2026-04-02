@@ -58,7 +58,7 @@ const ProtectedRoute = ({ children, currentPageName }) => {
 const AuthenticatedApp = () => {
   const { user, isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
   const location = useLocation();
-  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile", "Demo", "MultiTokenCheckout", "Donate", "NFTGate", "NFTStore", "NFTMarketplaceFAQ", "NFTMarketplaceTerms", "Marketplace", "Tutorials"];
+  const publicPages = ["Checkout", "SubscriberPortal", "Home", "Pay", "PayTerminal", "Features", "Pricing", "Security", "Documentation", "APIReference", "Webhooks", "About", "Contact", "PrivacyPolicy", "TermsOfService", "AcceptableUsePolicy", "MerchantAgreement", "Disclaimer", "PaymentProof", "Unlock", "Store", "Access", "Roadmap", "Litepaper", "TokenSale", "EventCheckout", "EventEntry", "MerchantProfile", "Demo", "MultiTokenCheckout", "Donate", "NFTGate", "NFTStore", "NFTMarketplaceFAQ", "NFTMarketplaceTerms", "Marketplace", "Tutorials", "OnboardingGoals", "PaymentLinks", "AccessLinks"];
   
   // Determine current page name from pathname
   const pathSegments = location.pathname.split('/').filter(Boolean);
