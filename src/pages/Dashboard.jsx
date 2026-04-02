@@ -22,6 +22,7 @@ import { subDays } from "date-fns";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import MerchantProfileBanner from "@/components/shared/MerchantProfileBanner";
+import CoreActionCard from "@/components/dashboard/CoreActionCard";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -157,10 +158,31 @@ export default function Dashboard() {
     <div>
       <PageHeader
         title="Dashboard"
-        subtitle="Overview of your PayADA merchant account"
+        subtitle="Your core payments and access overview"
       />
 
       {profileIncomplete && <MerchantProfileBanner />}
+
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <CoreActionCard
+          title="Create a payment link"
+          description="Start with the fastest way to accept ADA payments."
+          icon={Link2}
+          href={createPageUrl("PaymentLinks")}
+        />
+        <CoreActionCard
+          title="Sell community access"
+          description="Turn a payment into access for Discord, Telegram or private groups."
+          icon={Users}
+          href={createPageUrl("AccessLinks")}
+        />
+        <CoreActionCard
+          title="Review incoming payments"
+          description="See confirmed payments and keep track of customer activity."
+          icon={CreditCard}
+          href={createPageUrl("Payments")}
+        />
+      </div>
 
       {/* Tabs for ADA/CNT */}
       <div className="mb-8 flex gap-2 border-b border-slate-200">

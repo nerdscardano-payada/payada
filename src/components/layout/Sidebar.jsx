@@ -33,41 +33,29 @@ import { base44 } from "@/api/base44Client";
 import NotificationBell from "@/components/notifications/NotificationBell";
 
 const navItems = [
-  { type: "header", name: "Overview" },
+  { type: "header", name: "Core" },
   { name: "Dashboard", icon: LayoutDashboard, page: "Dashboard" },
-  { name: "Payments", icon: CreditCard, page: "Payments" },
-  { name: "Transactions", icon: Eye, page: "TransactionAudit" },
-
-  { type: "header", name: "Get Paid" },
   { name: "Payment Links", icon: Link2, page: "PaymentLinks" },
+  { name: "Access Links", icon: Users, page: "AccessLinks" },
+  { name: "Payments", icon: CreditCard, page: "Payments" },
+  { name: "Customers", icon: Users, page: "Customers" },
+
+  { type: "header", name: "Advanced" },
+  { name: "Transactions", icon: Eye, page: "TransactionAudit" },
   { name: "Subscriptions", icon: RefreshCw, page: "Subscriptions" },
   { name: "Donations", icon: Heart, page: "DonationPages" },
   { name: "POS Terminal", icon: Zap, page: "POS" },
   { name: "Pay Terminals", icon: Monitor, page: "PayTerminals" },
   { name: "Button Generator", icon: Code2, page: "ButtonGenerator" },
-
-  { type: "header", name: "Sell" },
   { name: "Shop Pages", icon: ShoppingCart, page: "ShoppingPageGenerator" },
-
-  { type: "header", name: "NFT" },
   { name: "NFT Overview", icon: Hexagon, page: "NFTs" },
   { name: "NFT Control", icon: LayoutDashboard, page: "NFTOperations" },
   { name: "NFT Fulfillment", icon: Zap, page: "NFTFulfillmentSetup" },
   { name: "NFT Gating", icon: Bot, page: "NFTGating" },
   { name: "NFT Distribution", icon: RefreshCw, page: "NFTDistribution" },
   { name: "NFT Marketplace", icon: ShoppingCart, page: "NFTMarketplace" },
-
-  { type: "header", name: "Community" },
-  { name: "Access Links", icon: Users, page: "AccessLinks" },
   { name: "Discord Gate", icon: Bot, page: "DiscordPlugin" },
-
-  { type: "header", name: "Events" },
   { name: "Events", icon: Calendar, page: "Events" },
-
-  { type: "header", name: "Customers" },
-  { name: "Customers", icon: Users, page: "Customers" },
-
-  { type: "header", name: "Integrations" },
   { name: "Webhooks", icon: Webhook, page: "Webhooks" },
   { name: "API Keys", icon: Key, page: "ApiKeys" },
 
