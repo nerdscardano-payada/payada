@@ -37,7 +37,7 @@ export default function Layout({ children, currentPageName }) {
   if (!authChecked) return null;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background">
       <Sidebar
         currentPage={currentPageName}
         collapsed={collapsed}
@@ -51,15 +51,15 @@ export default function Layout({ children, currentPageName }) {
         collapsed ? "lg:ml-[68px]" : "lg:ml-[240px]"
       )}>
         {/* Top bar (mobile) */}
-        <header className="lg:hidden sticky top-0 z-30 h-14 bg-white border-b border-slate-200 flex items-center px-4">
+        <header className="lg:hidden sticky top-0 z-30 h-14 bg-card/95 backdrop-blur border-b border-border flex items-center px-4">
           <button
             onClick={() => setMobileOpen(true)}
-            className="p-2 -ml-2 rounded-lg hover:bg-slate-100"
+            className="p-2 -ml-2 rounded-lg hover:bg-secondary"
           >
-            <Menu className="w-5 h-5 text-slate-600" />
+            <Menu className="w-5 h-5 text-foreground" />
           </button>
-          <span className="ml-3 font-semibold text-slate-900 text-sm">
-            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
+          <span className="ml-3 font-semibold text-foreground text-sm tracking-tight">
+            Pay<span className="text-accent">ADA</span>
           </span>
         </header>
 

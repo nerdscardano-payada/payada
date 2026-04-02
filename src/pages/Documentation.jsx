@@ -83,14 +83,14 @@ export default function DocumentationPage() {
   const completedCount = Object.values(checkedSteps).filter(Boolean).length;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title="Documentation — PayADA Cardano Payment Integration"
         description="Get started with PayADA in under 5 minutes: create a payment link, make a test payment, set up webhooks, and explore the REST API. Includes guides for CNT tokens, Discord Gate, POS terminal, shop generator and button embedding."
         canonical="https://payada.io/documentation"
       />
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
             Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>

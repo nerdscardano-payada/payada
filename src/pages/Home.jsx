@@ -121,10 +121,10 @@ export default function HomePage() {
 
       <div ref={demoSectionRef}>
         <ProductDemoSection
-          eyebrow={t("home.demo_section_eyebrow")}
-          title={activePathway?.title || ""}
-          description={activePathway?.description || ""}
-          ctaLabel={activePathway?.cta || t("home.hero_primary_cta")}
+          eyebrow="Wallet-first flow"
+          title="One platform for payments and access"
+          description="Guide merchants to the shortest path: connect wallet, create a payment flow, unlock access, and expand only when they need more."
+          ctaLabel="Open dashboard"
           ctaTo={createPageUrl("Dashboard")}
           onCtaClick={handleSignUp}
           videoUrl={pathwayVideos[activeDemoIndex]}
