@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
-import { Link2, Copy, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import PaymentLinkQRCodeDialog from "@/components/payment-links/PaymentLinkQRCodeDialog";
+import { Link2, Copy, MoreHorizontal, Pencil, Trash2, QrCode } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +26,10 @@ export default function PaymentLinksTable({
   onEdit,
   onDelete,
 }) {
+  const [qrLink, setQrLink] = useState(null);
+
   return (
+    <>
     <div className="bg-white rounded-xl border border-slate-200/60 overflow-hidden">
       {(title || description) && (
         <div className="border-b border-slate-100 px-5 py-4">
@@ -99,6 +103,14 @@ export default function PaymentLinksTable({
                       >
                         <Copy className="w-3.5 h-3.5" />
                       </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => setQrLink(link)}
+                      >
+                        <QrCode className="w-3.5 h-3.5" />
+                      </Button>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -113,6 +125,10 @@ export default function PaymentLinksTable({
                           <DropdownMenuItem onClick={() => onCopy(link.slug)}>
                             <Copy className="w-3.5 h-3.5 mr-2" />
                             Copy URL
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setQrLink(link)}>
+                            <QrCode className="w-3.5 h-3.5 mr-2" />
+                            Show QR code
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-red-600"
@@ -132,5 +148,7 @@ export default function PaymentLinksTable({
         </div>
       )}
     </div>
+    <PaymentLinkQRCodeDialog open={!!qrLink} onOpenChange={(open) => !open && setQrLink(null)} link={qrLink} />
+    </>
   );
 }
