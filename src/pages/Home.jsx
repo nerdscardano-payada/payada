@@ -78,22 +78,6 @@ export default function HomePage() {
         items={homePrimaryActions}
       />
 
-      <section id="workspace-overview" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
-        <div className="rounded-[2rem] bg-slate-950 text-white p-8 md:p-10">
-          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Workspace overview</p>
-              <h2 className="mt-3 text-3xl md:text-4xl font-bold">Everything from the sidebar, now explained on the homepage.</h2>
-              <p className="mt-4 max-w-3xl text-slate-300 text-lg">
-                From payment flows to customer tracking, merchant profile, webhooks, API keys and billing, this homepage now introduces the same core areas before users enter the dashboard.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-sm text-slate-200">
-              {connectedWallet?.address ? `Connected wallet: ${connectedWallet.address.slice(0, 12)}…${connectedWallet.address.slice(-8)}` : "No wallet connected yet"}
-            </div>
-          </div>
-        </div>
-      </section>
 
       <HomeActionGrid
         title="Merchant workspace sections"
