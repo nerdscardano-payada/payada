@@ -55,7 +55,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background text-foreground">
       <Toaster position="top-right" />
       <SEOHead
         title="PayADA — Accept Cardano (ADA) Payments Easily"
@@ -63,18 +63,18 @@ export default function HomePage() {
         canonical="https://payada.io/"
         structuredData={structuredData}
       />
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-3">
             <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69999e4306b9e4632bd7d454/1b4bc7fb6_be2b2b99e_1000069668.jpg" alt="PayADA Logo" className="h-9 w-9 rounded-xl" />
-            <span className="text-lg font-bold text-slate-900">PayADA</span>
+            <span className="text-lg font-bold text-foreground">PayADA</span>
           </Link>
 
           <nav className="hidden items-center gap-6 md:flex">
-            <Link to={createPageUrl("Features")} className="text-sm font-medium text-slate-600 transition hover:text-slate-900">Features</Link>
-            <Link to={createPageUrl("Pricing")} className="text-sm font-medium text-slate-600 transition hover:text-slate-900">Pricing</Link>
-            <Link to={createPageUrl("Documentation")} className="text-sm font-medium text-slate-600 transition hover:text-slate-900">Documentation</Link>
-            <Link to={createPageUrl("Contact")} className="text-sm font-medium text-slate-600 transition hover:text-slate-900">Contact</Link>
+            <Link to={createPageUrl("Features")} className="text-sm font-medium text-muted-foreground transition hover:text-foreground">Features</Link>
+            <Link to={createPageUrl("Pricing")} className="text-sm font-medium text-muted-foreground transition hover:text-foreground">Pricing</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm font-medium text-muted-foreground transition hover:text-foreground">Documentation</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm font-medium text-muted-foreground transition hover:text-foreground">Contact</Link>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -84,7 +84,7 @@ export default function HomePage() {
           </div>
         </div>
       </header>
-      <section className="relative overflow-hidden pt-20 pb-16 px-4 sm:px-6 bg-white">
+      <section className="relative overflow-hidden pt-20 pb-16 px-4 sm:px-6 bg-background">
         <div className="relative max-w-5xl mx-auto">
           <HomeInlineCreator onWalletConnected={setConnectedWallet} />
         </div>

@@ -23,12 +23,12 @@ export default function HomePublicLinkCard({ item, type }) {
     : `/Access?slug=${encodeURIComponent(item.slug)}`;
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="text-xl font-semibold text-slate-900">{item.title}</h3>
+          <h3 className="text-xl font-semibold text-foreground">{item.title}</h3>
           {item.description && (
-            <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.description}</p>
           )}
         </div>
         <div className="rounded-2xl bg-slate-950 px-4 py-3 text-right text-white">
@@ -37,8 +37,8 @@ export default function HomePublicLinkCard({ item, type }) {
         </div>
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-4 border-t border-slate-100 pt-4">
-        <div className="flex items-center gap-2 text-xs text-slate-500">
+      <div className="mt-5 flex items-center justify-between gap-4 border-t border-border pt-4">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <ShieldCheck className="h-3.5 w-3.5" />
           <span>Vereenvoudigde checkout zonder formulierstart</span>
         </div>

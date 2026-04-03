@@ -135,7 +135,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           Simple Cardano payments,<br />
           built to feel clear and trustworthy.
         </h1>
-        <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed text-left">
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed text-left">
           Create payment links for ADA and native tokens, share access links, and give people a cleaner way to pay or unlock content.
         </p>
       </div>
@@ -143,15 +143,15 @@ export default function HomeInlineCreator({ onWalletConnected }) {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl">
         <div className="rounded-2xl border border-border bg-background/70 px-4 py-3 text-left backdrop-blur-sm">
           <div className="flex items-center gap-2 text-foreground font-medium text-sm"><Coins className="w-4 h-4 text-primary" /> ADA + native tokens</div>
-          <p className="text-sm text-slate-600 mt-1">Made for Cardano wallets, shareable links, and straightforward payments.</p>
+          <p className="text-sm text-muted-foreground mt-1">Made for Cardano wallets, shareable links, and straightforward payments.</p>
         </div>
         <div className="rounded-2xl border border-border bg-background/70 px-4 py-3 text-left backdrop-blur-sm">
           <div className="flex items-center gap-2 text-foreground font-medium text-sm"><LockKeyhole className="w-4 h-4 text-primary" /> Access when needed</div>
-          <p className="text-sm text-slate-600 mt-1">Protect pages or resources and send people exactly where they need to go.</p>
+          <p className="text-sm text-muted-foreground mt-1">Protect pages or resources and send people exactly where they need to go.</p>
         </div>
         <div className="rounded-2xl border border-border bg-background/70 px-4 py-3 text-left backdrop-blur-sm">
           <div className="flex items-center gap-2 text-foreground font-medium text-sm"><ArrowRight className="w-4 h-4 text-primary" /> Easy to launch</div>
-          <p className="text-sm text-slate-600 mt-1">Start from the homepage without adding extra steps for visitors.</p>
+          <p className="text-sm text-muted-foreground mt-1">Start from the homepage without adding extra steps for visitors.</p>
         </div>
       </div>
 
@@ -212,7 +212,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-white p-5 sm:p-6 space-y-5 shadow-sm">
+        <div className="rounded-2xl border border-border bg-card p-5 sm:p-6 space-y-5 shadow-sm">
           <div>
             <p className="text-sm text-muted-foreground">Launch flow</p>
             <h2 className="text-2xl font-semibold text-foreground mt-1">
@@ -236,8 +236,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             <div className="space-y-2">
               <Label>Payment token</Label>
               <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={() => setCurrency("ADA")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "ADA" ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700"}`}>ADA · Cardano</button>
-                <button type="button" onClick={() => setCurrency("CNT")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "CNT" ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700"}`}>Custom token</button>
+                <button type="button" onClick={() => setCurrency("ADA")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "ADA" ? "border-foreground bg-foreground text-background" : "border-border bg-card text-foreground"}`}>ADA · Cardano</button>
+                <button type="button" onClick={() => setCurrency("CNT")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "CNT" ? "border-foreground bg-foreground text-background" : "border-border bg-card text-foreground"}`}>Custom token</button>
               </div>
             </div>
             {currency === "CNT" && (
@@ -269,7 +269,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             </div>
           </div>
 
-          <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
+          <div className="rounded-[1.5rem] border border-border bg-muted p-5">
             <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
           </div>
 
