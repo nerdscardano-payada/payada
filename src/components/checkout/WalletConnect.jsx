@@ -237,21 +237,21 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   return (
     <div className="relative">
       {installedWallets.length === 0 ? (
-        <div className="text-center py-4 px-3 bg-slate-800/50 rounded-xl border border-slate-700">
-          <Wallet className="w-5 h-5 text-slate-500 mx-auto mb-1.5" />
-          <p className="text-xs text-slate-400">No Cardano wallet detected.</p>
-          <p className="text-[11px] text-slate-500 mt-0.5">
+        <div className="text-center py-4 px-3 bg-slate-900/90 rounded-xl border border-slate-700">
+          <Wallet className="w-5 h-5 text-slate-300 mx-auto mb-1.5" />
+          <p className="text-xs text-slate-300">No Cardano wallet detected.</p>
+          <p className="text-[11px] text-slate-400 mt-0.5">
             Install{" "}
-            <a href="https://namiwallet.io" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Nami</a>,{" "}
-            <a href="https://eternl.io" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Eternl</a>, or{" "}
-            <a href="https://www.lace.io" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">Lace</a>
+            <a href="https://namiwallet.io" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">Nami</a>,{" "}
+            <a href="https://eternl.io" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">Eternl</a>, or{" "}
+            <a href="https://www.lace.io" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">Lace</a>
           </p>
         </div>
       ) : (
         <>
           <Button
             variant="outline"
-            className="w-full border-slate-700 text-slate-300 hover:text-white hover:border-indigo-500 gap-2 justify-between"
+            className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2 justify-between"
             onClick={() => setShowPicker((p) => !p)}
             disabled={connecting}
           >
@@ -263,12 +263,12 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
           </Button>
 
           {showPicker && (
-            <div className="absolute top-full mt-2 left-0 right-0 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-50 overflow-y-auto max-h-60">
+            <div className="absolute top-full mt-2 left-0 right-0 bg-slate-900 border border-slate-700 rounded-xl shadow-xl z-50 overflow-y-auto max-h-60">
               {installedWallets.map((w) => (
                 <button
                   key={w.id}
                   onClick={() => connectWallet(w.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-700 transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-800 transition-colors text-left"
                 >
                   {w.icon ? (
                     <img src={w.icon} alt={w.name} className="w-6 h-6 rounded" />
