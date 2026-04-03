@@ -90,7 +90,7 @@ export default function FeeSelector({ form, update }) {
       </div>
 
       {(form.fee_model || "customer_pays") === "split" && (
-        <div className="rounded-[1.35rem] border border-cyan-400/20 bg-slate-900/45 p-4 space-y-3">
+        <div className="rounded-[1.35rem] border border-slate-700 bg-slate-900/90 p-4 space-y-3">
           <div className="space-y-1">
             <Label className="text-slate-200">Split ratio</Label>
             <p className="text-xs text-slate-400">How much of the fee is paid by the customer.</p>
@@ -102,7 +102,7 @@ export default function FeeSelector({ form, update }) {
             step="0.1"
             value={splitRatio}
             onChange={(e) => update("fee_split_ratio", Number(e.target.value))}
-            className="h-10"
+            className="h-10 border-slate-700 bg-slate-800 text-slate-200"
           />
           <p className="text-sm font-medium text-slate-200">
             Customer: {Math.round(splitRatio * 100)}% · Merchant: {Math.round((1 - splitRatio) * 100)}%
