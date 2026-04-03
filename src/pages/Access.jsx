@@ -312,32 +312,32 @@ export default function Access() {
 
         <div className="bg-white rounded-3xl border border-slate-200 p-4 space-y-3 shadow-sm">
           <div className="space-y-1.5">
-            <Label className="text-slate-300 text-sm">Your Name / Username <span className="text-red-400">*</span></Label>
+            <Label className="text-slate-700 text-sm">Your Name / Username <span className="text-red-500">*</span></Label>
             <Input
               value={memberName}
               onChange={e => setMemberName(e.target.value)}
               placeholder="Full name or username"
-              className="bg-white/10 border-white/20 text-white placeholder:text-slate-500"
+              className="border-slate-200 text-slate-900 placeholder:text-slate-400"
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-slate-300 text-sm">Email Address <span className="text-slate-500 font-normal">(optional)</span></Label>
+            <Label className="text-slate-700 text-sm">Email Address <span className="text-slate-400 font-normal">(optional)</span></Label>
             <Input
               type="email"
               value={memberEmail}
               onChange={e => setMemberEmail(e.target.value)}
               placeholder="your@email.com"
-              className="bg-white/10 border-white/20 text-white placeholder:text-slate-500"
+              className="border-slate-200 text-slate-900 placeholder:text-slate-400"
             />
           </div>
           {accessLink.platform === "discord" && accessLink.discord_bot_token && (
             <div className="space-y-1.5">
-              <Label className="text-slate-300 text-sm">Discord Username <span className="text-red-400">*</span></Label>
+              <Label className="text-slate-700 text-sm">Discord Username <span className="text-red-500">*</span></Label>
               <Input
                 value={discordUsername}
                 onChange={e => setDiscordUsername(e.target.value)}
                 placeholder="yourname (no @ needed)"
-                className="bg-white/10 border-white/20 text-white placeholder:text-slate-500"
+                className="border-slate-200 text-slate-900 placeholder:text-slate-400"
               />
               <p className="text-xs text-slate-500">Required for automatic role assignment</p>
             </div>

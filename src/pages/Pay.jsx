@@ -337,20 +337,20 @@ export default function Pay() {
             <div className="p-6 space-y-4">
               {showEmailInput && (
                 <div className="space-y-2">
-                   <Label htmlFor="payer-email" className="text-slate-300 text-xs">
-                     Email {requireEmail ? <span className="text-red-400">*</span> : <span className="text-slate-500">(optional)</span>}
+                   <Label htmlFor="payer-email" className="text-slate-700 text-xs">
+                     Email {requireEmail ? <span className="text-red-500">*</span> : <span className="text-slate-400">(optional)</span>}
                    </Label>
                    <Input id="payer-email" value={payerEmail} onChange={(e) => setPayerEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                    className="border-slate-200 text-slate-900 placeholder:text-slate-400" />
                 </div>
               )}
               {showNameInput && (
                 <div className="space-y-2">
-                   <Label htmlFor="payer-name" className="text-slate-300 text-xs">Name <span className="text-red-400">*</span></Label>
+                   <Label htmlFor="payer-name" className="text-slate-700 text-xs">Name <span className="text-red-500">*</span></Label>
                    <Input id="payer-name" value={payerName} onChange={(e) => setPayerName(e.target.value)}
                     placeholder="Your name"
-                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
+                    className="border-slate-200 text-slate-900 placeholder:text-slate-400" />
                 </div>
               )}
               {paymentLink.collect_shipping && (

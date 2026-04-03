@@ -1,15 +1,108 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
 import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import WalletConnect from "@/components/checkout/WalletConnect";
 import FeeSelector from "@/components/payment-links/FeeSelector";
+import { toast } from "sonner";
 
 export default function HomeInlineCreator({ onWalletConnected }) {
+  const navigate = useNavigate();
   const [type, setType] = React.useState("payment");
   const [currency, setCurrency] = React.useState("ADA");
+  const [submitting, setSubmitting] = React.useState(false);
+  const [form, setForm] = React.useState({
+    title: "",
+    amount: "",
+    receive_address: "",
+    access_url: "",
+    redirect_url: "",
+  });
   const [feePreview, setFeePreview] = React.useState({ fee_model: "customer_pays", fee_split_ratio: 0.5 });
+
+  const updateForm = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
+
+  const normalizeSlug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+  const buildUniqueSlug = () => {
+    const base = normalizeSlug(form.title || (type === "payment" ? "payment-link" : "access-link")) || (type === "payment" ? "payment-link" : "access-link");
+    return `${base}-${Date.now().toString().slice(-6)}`;
+  };
+
+  const handleGenerate = async () => {
+    if (!form.title.trim()) {
+      toast.error(type === "payment" ? "Voer in waarvoor de betaling is." : "Voer in wat mensen ontgrendelen.");
+      return;
+    }
+    if (!form.amount || Number(form.amount) <= 0) {
+      toast.error("Voer een geldig bedrag in.");
+      return;
+    }
+    if (!form.receive_address.trim()) {
+      toast.error("Voer een Cardano adres in.");
+      return;
+    }
+    if (type === "access" && !form.access_url.trim()) {
+      toast.error("Voer een access URL in.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const slug = buildUniqueSlug();
+
+      if (type === "payment") {
+        await base44.entities.PaymentLink.create({
+          merchant_id: "public_homepage",
+          slug,
+          title: form.title,
+          description: "Created from public homepage flow",
+          amount_mode: currency === "ADA" ? "fixed_ada" : "fixed_cnt",
+          amount_ada: currency === "ADA" ? Number(form.amount) : null,
+          cnt_amount: currency === "CNT" ? Number(form.amount) : null,
+          cnt_ticker: currency === "CNT" ? "CNT" : null,
+          cnt_policy_id: currency === "CNT" ? "public-homepage-token" : null,
+          cnt_asset_name: currency === "CNT" ? "PUBLIC" : null,
+          cnt_decimals: currency === "CNT" ? 0 : null,
+          fee_model: feePreview.fee_model,
+          fee_split_ratio: feePreview.fee_split_ratio,
+          success_redirect_url: form.redirect_url || null,
+          receive_address: form.receive_address,
+          status: "active",
+          collect_email: false,
+          collect_name: false,
+          collect_shipping: false,
+        });
+        navigate(`/Pay?slug=${encodeURIComponent(slug)}`);
+        return;
+      }
+
+      await base44.entities.CommunityAccessLink.create({
+        merchant_id: "public_homepage",
+        slug,
+        title: form.title,
+        description: "Created from public homepage flow",
+        payment_type: currency === "ADA" ? "ada" : "cnt",
+        price_ada: currency === "ADA" ? Number(form.amount) : 0,
+        cnt_amount: currency === "CNT" ? Number(form.amount) : null,
+        cnt_ticker: currency === "CNT" ? "CNT" : null,
+        cnt_policy_id: currency === "CNT" ? "public-homepage-token" : null,
+        cnt_asset_name: currency === "CNT" ? "PUBLIC" : null,
+        cnt_decimals: currency === "CNT" ? 0 : null,
+        fee_model: feePreview.fee_model,
+        platform: "website",
+        invite_link: form.access_url,
+        receive_address: form.receive_address,
+        status: "active",
+      });
+      navigate(`/Access?slug=${encodeURIComponent(slug)}`);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="space-y-10">
@@ -107,15 +200,15 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2 md:col-span-2">
               <Label>{type === "payment" ? "What's this payment for?" : "What are people unlocking?"}</Label>
-              <Input placeholder={type === "payment" ? "Premium membership" : "Private Discord access"} className="h-12 rounded-xl" />
+              <Input value={form.title} onChange={(e) => updateForm("title", e.target.value)} placeholder={type === "payment" ? "Premium membership" : "Private Discord access"} className="h-12 rounded-xl" />
             </div>
             <div className="space-y-2">
               <Label>{currency === "ADA" ? "Amount (ADA)" : "Amount (Token)"}</Label>
-              <Input placeholder={currency === "ADA" ? "10" : "50"} className="h-12 rounded-xl" />
+              <Input type="number" value={form.amount} onChange={(e) => updateForm("amount", e.target.value)} placeholder={currency === "ADA" ? "10" : "50"} className="h-12 rounded-xl" />
             </div>
             <div className="space-y-2">
               <Label>Your Cardano address</Label>
-              <Input placeholder="addr1..." className="h-12 rounded-xl" />
+              <Input value={form.receive_address} onChange={(e) => updateForm("receive_address", e.target.value)} placeholder="addr1..." className="h-12 rounded-xl" />
             </div>
             <div className="space-y-2">
               <Label>Payment token</Label>
@@ -127,12 +220,12 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             {type === "access" && (
               <div className="space-y-2">
                 <Label>Access URL</Label>
-                <Input placeholder="https://your-community-link.com" className="h-12 rounded-xl" />
+                <Input value={form.access_url} onChange={(e) => updateForm("access_url", e.target.value)} placeholder="https://your-community-link.com" className="h-12 rounded-xl" />
               </div>
             )}
             <div className="space-y-2 md:col-span-2">
               <Label>{type === "payment" ? "Redirect URL after payment (optional)" : "Redirect URL after unlock (optional)"}</Label>
-              <Input placeholder="https://your-site.com/thanks" className="h-12 rounded-xl" />
+              <Input value={form.redirect_url} onChange={(e) => updateForm("redirect_url", e.target.value)} placeholder="https://your-site.com/thanks" className="h-12 rounded-xl" />
             </div>
           </div>
 
@@ -141,7 +234,9 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button size="lg" className="h-12 rounded-xl px-6">{type === "payment" ? "Generate Payment Link" : "Generate Access Link"}</Button>
+            <Button size="lg" className="h-12 rounded-xl px-6" onClick={handleGenerate} disabled={submitting}>
+              {submitting ? "Creating..." : type === "payment" ? "Generate Payment Link" : "Generate Access Link"}
+            </Button>
           </div>
         </div>
       </div>
