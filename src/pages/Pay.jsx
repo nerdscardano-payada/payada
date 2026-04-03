@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import MerchantHeader from "@/components/shared/MerchantHeader";
+import PayadaLogo from "@/components/shared/PayadaLogo";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -323,7 +324,9 @@ export default function Pay() {
       <div className="w-full max-w-xl">
         <div className="text-center mb-6">
           {paymentLink?.merchant_id && <MerchantHeader merchantId={paymentLink.merchant_id} />}
-          <p className="text-xs text-slate-400 uppercase tracking-widest">Powered by PayADA</p>
+          <div className="mt-3 flex justify-center">
+            <PayadaLogo className="gap-2 [&_img]:h-8 [&_img]:w-8 [&_p:first-child]:text-[10px] [&_p:last-child]:text-sm" />
+          </div>
         </div>
 
         <SimplePaySummaryCard paymentLink={paymentLink} sessionData={sessionData} />
