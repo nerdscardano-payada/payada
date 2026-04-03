@@ -333,6 +333,11 @@ export default function Pay() {
         <div className="mt-4">
           <FeeBreakdownCard paymentLink={paymentLink} sessionData={sessionData} />
         </div>
+        {paymentLink?.amount_mode !== "fixed_cnt" && (
+          <div className="mt-4">
+            <AdaRatePreview adaAmount={sessionData?.amount_total_ada || paymentLink?.amount_ada} />
+          </div>
+        )}
 
         <div className="mt-4 bg-slate-900 rounded-3xl border border-slate-800 shadow-xl shadow-black/20">
 
