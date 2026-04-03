@@ -5,8 +5,10 @@ import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History } from
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import WalletConnect from "@/components/checkout/WalletConnect";
 import FeeSelector from "@/components/payment-links/FeeSelector";
+import { KNOWN_CNTS } from "@/components/payment-links/wizard/knownCNTs";
 import { toast } from "sonner";
 
 export default function HomeInlineCreator({ onWalletConnected }) {
@@ -22,6 +24,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
     redirect_url: "",
   });
   const [feePreview, setFeePreview] = React.useState({ fee_model: "customer_pays", fee_split_ratio: 0.5 });
+  const [selectedCntKey, setSelectedCntKey] = React.useState("");
 
   useEffect(() => {
     const savedAddress = localStorage.getItem("payada_connected_wallet_address");
@@ -31,6 +34,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   }, []);
 
   const updateForm = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
+
+  const handleCntSelect = (value) => {
+    setSelectedCntKey(value);
+  };
 
   const normalizeSlug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
@@ -48,6 +55,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
       toast.error("Voer een geldig bedrag in.");
       return;
     }
+    if (currency === "CNT" && !selectedCntKey) {
+      toast.error("Kies een CNT uit de lijst.");
+      return;
+    }
     if (!form.receive_address.trim()) {
       toast.error("Voer een Cardano adres in.");
       return;
@@ -62,6 +73,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
       const slug = buildUniqueSlug();
 
       if (type === "payment") {
+        const selectedCnt = KNOWN_CNTS.find((cnt) => `${cnt.policy_id}:${cnt.asset_name}` === selectedCntKey);
+
         await base44.entities.PaymentLink.create({
           merchant_id: "public_homepage",
           slug,
@@ -70,10 +83,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           amount_mode: currency === "ADA" ? "fixed_ada" : "fixed_cnt",
           amount_ada: currency === "ADA" ? Number(form.amount) : null,
           cnt_amount: currency === "CNT" ? Number(form.amount) : null,
-          cnt_ticker: currency === "CNT" ? "CNT" : null,
-          cnt_policy_id: currency === "CNT" ? "public-homepage-token" : null,
-          cnt_asset_name: currency === "CNT" ? "PUBLIC" : null,
-          cnt_decimals: currency === "CNT" ? 0 : null,
+          cnt_ticker: currency === "CNT" ? selectedCnt?.ticker || null : null,
+          cnt_policy_id: currency === "CNT" ? selectedCnt?.policy_id || null : null,
+          cnt_asset_name: currency === "CNT" ? selectedCnt?.asset_name || null : null,
+          cnt_decimals: currency === "CNT" ? selectedCnt?.decimals ?? null : null,
           fee_model: feePreview.fee_model,
           fee_split_ratio: feePreview.fee_split_ratio,
           success_redirect_url: form.redirect_url || null,
@@ -87,6 +100,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
         return;
       }
 
+      const selectedCnt = KNOWN_CNTS.find((cnt) => `${cnt.policy_id}:${cnt.asset_name}` === selectedCntKey);
+
       await base44.entities.CommunityAccessLink.create({
         merchant_id: "public_homepage",
         slug,
@@ -95,10 +110,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
         payment_type: currency === "ADA" ? "ada" : "cnt",
         price_ada: currency === "ADA" ? Number(form.amount) : 0,
         cnt_amount: currency === "CNT" ? Number(form.amount) : null,
-        cnt_ticker: currency === "CNT" ? "CNT" : null,
-        cnt_policy_id: currency === "CNT" ? "public-homepage-token" : null,
-        cnt_asset_name: currency === "CNT" ? "PUBLIC" : null,
-        cnt_decimals: currency === "CNT" ? 0 : null,
+        cnt_ticker: currency === "CNT" ? selectedCnt?.ticker || null : null,
+        cnt_policy_id: currency === "CNT" ? selectedCnt?.policy_id || null : null,
+        cnt_asset_name: currency === "CNT" ? selectedCnt?.asset_name || null : null,
+        cnt_decimals: currency === "CNT" ? selectedCnt?.decimals ?? null : null,
         fee_model: feePreview.fee_model,
         platform: "website",
         invite_link: form.access_url,
@@ -227,6 +242,23 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                 <button type="button" onClick={() => setCurrency("CNT")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "CNT" ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700"}`}>Custom token</button>
               </div>
             </div>
+            {currency === "CNT" && (
+              <div className="space-y-2">
+                <Label>Select CNT</Label>
+                <Select value={selectedCntKey} onValueChange={handleCntSelect}>
+                  <SelectTrigger className="h-12 rounded-xl">
+                    <SelectValue placeholder="Kies een CNT" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {KNOWN_CNTS.map((cnt) => (
+                      <SelectItem key={`${cnt.policy_id}:${cnt.asset_name}`} value={`${cnt.policy_id}:${cnt.asset_name}`}>
+                        {cnt.ticker}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             {type === "access" && (
               <div className="space-y-2">
                 <Label>Access URL</Label>
