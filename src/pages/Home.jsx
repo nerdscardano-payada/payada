@@ -62,7 +62,27 @@ export default function HomePage() {
         canonical="https://payada.io/"
         structuredData={structuredData}
       />
-      <section className="relative overflow-hidden pt-32 pb-16 px-4 sm:px-6 bg-white">
+      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <Link to="/" className="flex items-center gap-3">
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69999e4306b9e4632bd7d454/1b4bc7fb6_be2b2b99e_1000069668.jpg" alt="PayADA Logo" className="h-9 w-9 rounded-xl" />
+            <span className="text-lg font-bold text-slate-900">PayADA</span>
+          </Link>
+
+          <nav className="hidden items-center gap-6 md:flex">
+            <Link to={createPageUrl("Features")} className="text-sm font-medium text-slate-600 transition hover:text-slate-900">Features</Link>
+            <Link to={createPageUrl("Pricing")} className="text-sm font-medium text-slate-600 transition hover:text-slate-900">Pricing</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm font-medium text-slate-600 transition hover:text-slate-900">Documentation</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm font-medium text-slate-600 transition hover:text-slate-900">Contact</Link>
+          </nav>
+
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" onClick={handleLogin} className="hidden sm:inline-flex">Inloggen</Button>
+            <Button onClick={handleSignUp}>Dashboard</Button>
+          </div>
+        </div>
+      </header>
+      <section className="relative overflow-hidden pt-20 pb-16 px-4 sm:px-6 bg-white">
         <div className="relative max-w-5xl mx-auto">
           <HomeInlineCreator onWalletConnected={setConnectedWallet} />
         </div>
