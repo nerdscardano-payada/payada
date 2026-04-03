@@ -14,6 +14,7 @@ import HomeActionGrid from "@/components/home/HomeActionGrid";
 import HomeHighlights from "@/components/home/HomeHighlights";
 import HomePublicLinksSection from "@/components/home/HomePublicLinksSection";
 import HomeInlineCreator from "@/components/home/HomeInlineCreator";
+import HomeWalletLinksManager from "@/components/home/HomeWalletLinksManager";
 import { homeHighlights, homePrimaryActions, homeWorkspaceSections } from "@/components/home/homeData";
 
 export default function HomePage() {
@@ -85,8 +86,9 @@ export default function HomePage() {
         </div>
       </header>
       <section className="relative overflow-hidden pt-20 pb-16 px-4 sm:px-6 bg-background">
-        <div className="relative max-w-5xl mx-auto">
+        <div className="relative max-w-5xl mx-auto space-y-6">
           <HomeInlineCreator onWalletConnected={setConnectedWallet} />
+          <HomeWalletLinksManager walletAddress={connectedWallet?.address || localStorage.getItem("payada_connected_wallet_address") || ""} />
         </div>
       </section>
 
