@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Coins, Link2, LockKeyhole, Wallet } from "lucide-react";
+import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,90 +12,136 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   const [feePreview, setFeePreview] = React.useState({ fee_model: "customer_pays", fee_split_ratio: 0.5 });
 
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 md:p-8 shadow-xl shadow-slate-200/60">
-      <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
-            <Coins className="h-4 w-4" />
-            Start hier, zonder dashboard
-          </div>
-          <h1 className="mt-5 text-4xl md:text-6xl font-bold tracking-tight text-slate-900">
-            Get paid in ADA or any token. Instantly.
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-slate-600">
-            Create payment or access links. Accept Cardano native tokens. No banks.
-          </p>
+    <div className="space-y-10">
+      <div className="max-w-3xl space-y-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-background/80 text-muted-foreground text-xs sm:text-sm">
+          <Sparkles className="w-3.5 h-3.5" />
+          Cardano payment links and access flows
+        </div>
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.02] text-left text-foreground">
+          Simple Cardano payments,<br />
+          built to feel clear and trustworthy.
+        </h1>
+        <p className="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed text-left">
+          Create payment links for ADA and native tokens, share access links, and give people a cleaner way to pay or unlock content.
+        </p>
+      </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <button
-              type="button"
-              onClick={() => setType("payment")}
-              className={`rounded-2xl border p-4 text-left transition ${type === "payment" ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-slate-50 text-slate-900"}`}
-            >
-              <div className="flex items-center gap-2 text-sm font-semibold"><Link2 className="h-4 w-4" /> Payment only</div>
-              <p className={`mt-2 text-sm ${type === "payment" ? "text-slate-300" : "text-slate-600"}`}>Maak een directe betaal-link voor ADA of CNT.</p>
-            </button>
-            <button
-              type="button"
-              onClick={() => setType("access")}
-              className={`rounded-2xl border p-4 text-left transition ${type === "access" ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-slate-50 text-slate-900"}`}
-            >
-              <div className="flex items-center gap-2 text-sm font-semibold"><LockKeyhole className="h-4 w-4" /> Payment + Access</div>
-              <p className={`mt-2 text-sm ${type === "access" ? "text-slate-300" : "text-slate-600"}`}>Ontgrendel content of community toegang na betaling.</p>
-            </button>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl">
+        <div className="rounded-2xl border border-border bg-background/70 px-4 py-3 text-left backdrop-blur-sm">
+          <div className="flex items-center gap-2 text-foreground font-medium text-sm"><Coins className="w-4 h-4 text-primary" /> ADA + native tokens</div>
+          <p className="text-sm text-slate-600 mt-1">Made for Cardano wallets, shareable links, and straightforward payments.</p>
+        </div>
+        <div className="rounded-2xl border border-border bg-background/70 px-4 py-3 text-left backdrop-blur-sm">
+          <div className="flex items-center gap-2 text-foreground font-medium text-sm"><LockKeyhole className="w-4 h-4 text-primary" /> Access when needed</div>
+          <p className="text-sm text-slate-600 mt-1">Protect pages or resources and send people exactly where they need to go.</p>
+        </div>
+        <div className="rounded-2xl border border-border bg-background/70 px-4 py-3 text-left backdrop-blur-sm">
+          <div className="flex items-center gap-2 text-foreground font-medium text-sm"><ArrowRight className="w-4 h-4 text-primary" /> Easy to launch</div>
+          <p className="text-sm text-slate-600 mt-1">Start from the homepage without adding extra steps for visitors.</p>
+        </div>
+      </div>
+
+      <div className="max-w-4xl">
+        <div className="flex rounded-xl border border-sky-400/30 bg-card/50 p-1 mb-4">
+          <button
+            type="button"
+            onClick={() => setType("payment")}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${type === "payment" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            💳 Payment Link
+          </button>
+          <button
+            type="button"
+            onClick={() => setType("access")}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${type === "access" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            🔐 Access Link
+          </button>
+        </div>
+
+        <div className="space-y-4 mb-6">
+          <div className="rounded-2xl border border-sky-400/30 bg-card/60 p-5 space-y-4">
+            <div>
+              <p className="text-sm font-semibold">Wallet connect</p>
+              <p className="text-sm text-muted-foreground">Use your Cardano wallet without logging in.</p>
+            </div>
+            <div className="mt-5">
+              <WalletConnect onConnected={onWalletConnected} />
+            </div>
           </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Product naam</Label>
-              <Input placeholder="Bijv. Premium guide" className="h-12 rounded-xl" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><Wallet className="w-5 h-5 text-primary" /></div>
+              <div>
+                <h3 className="font-medium">Autofill wallet</h3>
+                <p className="text-sm text-muted-foreground mt-1">Use your connected wallet address directly in your links.</p>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><History className="w-5 h-5 text-primary" /></div>
+              <div>
+                <h3 className="font-medium">Recent links</h3>
+                <p className="text-sm text-muted-foreground mt-1">See the latest links created in this browser right away.</p>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><Link2 className="w-5 h-5 text-primary" /></div>
+              <div>
+                <h3 className="font-medium">Frictionless flow</h3>
+                <p className="text-sm text-muted-foreground mt-1">Create links on the homepage, and only log in for the dashboard and tracking.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-white p-5 sm:p-6 space-y-5 shadow-sm">
+          <div>
+            <p className="text-sm text-muted-foreground">Launch flow</p>
+            <h2 className="text-2xl font-semibold text-foreground mt-1">
+              {type === "payment" ? "Create a payment link" : "Create an access link"}
+            </h2>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2 md:col-span-2">
+              <Label>{type === "payment" ? "What's this payment for?" : "What are people unlocking?"}</Label>
+              <Input placeholder={type === "payment" ? "Premium membership" : "Private Discord access"} className="h-12 rounded-xl" />
             </div>
             <div className="space-y-2">
-              <Label>{currency === "ADA" ? "Prijs in ADA" : "Prijs in token"}</Label>
+              <Label>{currency === "ADA" ? "Amount (ADA)" : "Amount (Token)"}</Label>
               <Input placeholder={currency === "ADA" ? "10" : "50"} className="h-12 rounded-xl" />
             </div>
             <div className="space-y-2">
-              <Label>Currency</Label>
+              <Label>Your Cardano address</Label>
+              <Input placeholder="addr1..." className="h-12 rounded-xl" />
+            </div>
+            <div className="space-y-2">
+              <Label>Payment token</Label>
               <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={() => setCurrency("ADA")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "ADA" ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700"}`}>ADA</button>
+                <button type="button" onClick={() => setCurrency("ADA")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "ADA" ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700"}`}>ADA · Cardano</button>
                 <button type="button" onClick={() => setCurrency("CNT")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "CNT" ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white text-slate-700"}`}>Custom token</button>
               </div>
             </div>
             {type === "access" && (
               <div className="space-y-2">
                 <Label>Access URL</Label>
-                <Input placeholder="https://notion.so/..." className="h-12 rounded-xl" />
+                <Input placeholder="https://your-community-link.com" className="h-12 rounded-xl" />
               </div>
             )}
+            <div className="space-y-2 md:col-span-2">
+              <Label>{type === "payment" ? "Redirect URL after payment (optional)" : "Redirect URL after unlock (optional)"}</Label>
+              <Input placeholder="https://your-site.com/thanks" className="h-12 rounded-xl" />
+            </div>
           </div>
 
-          <div className="mt-8 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
+          <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
             <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button size="lg" className="h-12 rounded-xl px-6">Create Payment Link</Button>
-            <Button size="lg" variant="outline" className="h-12 rounded-xl px-6">Create Access Link</Button>
-          </div>
-          <p className="mt-3 text-sm text-slate-500">Simpelere V2 flow: maak je link snel aan, met transparante fee-keuze vanaf het begin.</p>
-        </div>
-
-        <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
-          <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-            <Wallet className="h-4 w-4" />
-            Connect wallet
-          </div>
-          <p className="mt-2 text-sm text-slate-600">Connect Nami, Eternl, Lace of een andere Cardano wallet om direct door te gaan.</p>
-          <div className="mt-5">
-            <WalletConnect onConnected={onWalletConnected} />
-          </div>
-          <div className="mt-5 rounded-2xl bg-white p-4 text-sm text-slate-600 border border-slate-200">
-            <p className="font-semibold text-slate-900">Hoe dit uitbreidbaar blijft</p>
-            <ul className="mt-2 space-y-2 list-disc pl-5">
-              <li>ADA blijft standaard</li>
-              <li>CNT blijft ondersteund</li>
-              <li>Bestaande checkout en detectie blijven bruikbaar</li>
-            </ul>
+          <div className="flex flex-wrap gap-3">
+            <Button size="lg" className="h-12 rounded-xl px-6">{type === "payment" ? "Generate Payment Link" : "Generate Access Link"}</Button>
           </div>
         </div>
       </div>

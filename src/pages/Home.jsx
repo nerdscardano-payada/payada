@@ -62,9 +62,8 @@ export default function HomePage() {
         canonical="https://payada.io/"
         structuredData={structuredData}
       />
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.12),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.10),transparent_35%)]" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <section className="relative overflow-hidden pt-32 pb-16 px-4 sm:px-6 bg-white">
+        <div className="relative max-w-5xl mx-auto">
           <HomeInlineCreator onWalletConnected={setConnectedWallet} />
         </div>
       </section>
