@@ -48,33 +48,5 @@ export default function HomePublicLinksSection() {
     initialData: [],
   });
 
-  return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-      <div className="mb-8 md:mb-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Publieke links die meteen werken</h2>
-        <p className="mt-3 max-w-3xl text-lg text-slate-600">
-          Bezoekers zien eerst je echte payment links en access links, eenvoudig en direct bruikbaar. De fee blijft gewoon correct in de checkoutflow zitten.
-        </p>
-      </div>
-
-      <div className="grid gap-6 xl:grid-cols-2">
-        <SectionBlock
-          title="Payment links"
-          description="Rechtstreeks naar de publieke betaalflow voor producten, invoices of snelle ADA/CNT checkout."
-          icon={Link2}
-          items={paymentLinks}
-          type="payment"
-          loading={loadingPayments}
-        />
-        <SectionBlock
-          title="Access links"
-          description="Laat bezoekers meteen memberships, communities of gated access openen via de publieke flow."
-          icon={Users}
-          items={accessLinks}
-          type="access"
-          loading={loadingAccess}
-        />
-      </div>
-    </section>
-  );
+  return null;
 }
