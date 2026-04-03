@@ -16,10 +16,10 @@ export default function FeeBreakdownCard({ paymentLink, sessionData }) {
   const customerFee = feeMode === "split" ? fee * splitRatio : feeMode === "customer_pays" ? fee : 0;
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Fee transparency</p>
+    <div className="rounded-3xl border border-slate-800 bg-slate-900 p-5 shadow-xl shadow-black/20">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Fee transparency</p>
 
-      <div className="mt-4 space-y-3 text-sm text-slate-700">
+      <div className="mt-4 space-y-3 text-sm text-slate-200">
         {feeMode === "merchant_pays" && (
           <>
             <div className="flex items-center justify-between"><span>Customer pays</span><span className="font-semibold">{formatAda(baseAmount)}</span></div>
@@ -32,7 +32,7 @@ export default function FeeBreakdownCard({ paymentLink, sessionData }) {
           <>
             <div className="flex items-center justify-between"><span>Base amount</span><span className="font-semibold">{formatAda(baseAmount)}</span></div>
             <div className="flex items-center justify-between"><span>Service fee</span><span className="font-semibold">{formatAda(fee)}</span></div>
-            <div className="flex items-center justify-between border-t border-slate-200 pt-3"><span>Total</span><span className="font-semibold">{formatAda(total)}</span></div>
+            <div className="flex items-center justify-between border-t border-slate-800 pt-3"><span>Total</span><span className="font-semibold">{formatAda(total)}</span></div>
           </>
         )}
 
