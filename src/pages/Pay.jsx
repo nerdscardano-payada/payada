@@ -319,11 +319,11 @@ export default function Pay() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 md:p-8">
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 md:p-8">
       <div className="w-full max-w-xl">
         <div className="text-center mb-6">
           {paymentLink?.merchant_id && <MerchantHeader merchantId={paymentLink.merchant_id} />}
-          <p className="text-xs text-slate-500 uppercase tracking-widest">Powered by PayADA</p>
+          <p className="text-xs text-slate-400 uppercase tracking-widest">Powered by PayADA</p>
         </div>
 
         <SimplePaySummaryCard paymentLink={paymentLink} sessionData={sessionData} />
@@ -331,26 +331,26 @@ export default function Pay() {
           <FeeBreakdownCard paymentLink={paymentLink} sessionData={sessionData} />
         </div>
 
-        <div className="mt-4 bg-white rounded-3xl border border-slate-200 shadow-sm">
+        <div className="mt-4 bg-slate-900 rounded-3xl border border-slate-800 shadow-xl shadow-black/20">
 
           {!sessionStarted ? (
             <div className="p-6 space-y-4">
               {showEmailInput && (
                 <div className="space-y-2">
-                   <Label htmlFor="payer-email" className="text-slate-700 text-xs">
-                     Email {requireEmail ? <span className="text-red-500">*</span> : <span className="text-slate-400">(optional)</span>}
+                   <Label htmlFor="payer-email" className="text-slate-300 text-xs">
+                     Email {requireEmail ? <span className="text-red-400">*</span> : <span className="text-slate-500">(optional)</span>}
                    </Label>
                    <Input id="payer-email" value={payerEmail} onChange={(e) => setPayerEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="border-slate-200 text-slate-900 placeholder:text-slate-400" />
+                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                 </div>
               )}
               {showNameInput && (
                 <div className="space-y-2">
-                   <Label htmlFor="payer-name" className="text-slate-700 text-xs">Name <span className="text-red-500">*</span></Label>
+                   <Label htmlFor="payer-name" className="text-slate-300 text-xs">Name <span className="text-red-400">*</span></Label>
                    <Input id="payer-name" value={payerName} onChange={(e) => setPayerName(e.target.value)}
                     placeholder="Your name"
-                    className="border-slate-200 text-slate-900 placeholder:text-slate-400" />
+                    className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500" />
                 </div>
               )}
               {paymentLink.collect_shipping && (
@@ -523,7 +523,7 @@ export default function Pay() {
           )}
         </div>
 
-        <p className="text-center text-[11px] text-slate-600 mt-6">
+        <p className="text-center text-[11px] text-slate-500 mt-6">
           {paymentLink?.amount_mode === "fixed_cnt"
             ? `Secure Cardano Native Token payment · PayADA.io`
             : `Secure Cardano ADA payment · PayADA.io`}
