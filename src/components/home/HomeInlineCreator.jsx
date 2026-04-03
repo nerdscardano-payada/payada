@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History } from "lucide-react";
@@ -22,6 +22,13 @@ export default function HomeInlineCreator({ onWalletConnected }) {
     redirect_url: "",
   });
   const [feePreview, setFeePreview] = React.useState({ fee_model: "customer_pays", fee_split_ratio: 0.5 });
+
+  useEffect(() => {
+    const savedAddress = localStorage.getItem("payada_connected_wallet_address");
+    if (savedAddress) {
+      setForm((prev) => ({ ...prev, receive_address: prev.receive_address || savedAddress }));
+    }
+  }, []);
 
   const updateForm = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
 
@@ -160,7 +167,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
               <p className="text-sm text-muted-foreground">Use your Cardano wallet without logging in.</p>
             </div>
             <div className="mt-5">
-              <WalletConnect onConnected={onWalletConnected} />
+              <WalletConnect onConnected={({ address, ...walletData }) => {
+                updateForm("receive_address", address || "");
+                onWalletConnected?.({ address, ...walletData });
+              }} />
             </div>
           </div>
 

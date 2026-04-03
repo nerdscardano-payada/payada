@@ -182,6 +182,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
 
       const adaBalance = lovelace / 1_000_000;
 
+      localStorage.setItem("payada_connected_wallet_address", address);
+
       setWalletInstance({ api, walletId });
       setWalletName(walletId.charAt(0).toUpperCase() + walletId.slice(1));
       setWalletAddress(address);
@@ -197,6 +199,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   };
 
   const disconnect = () => {
+    localStorage.removeItem("payada_connected_wallet_address");
     setConnected(false);
     setWalletInstance(null);
     setWalletName(null);
