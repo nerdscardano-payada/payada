@@ -85,16 +85,6 @@ export default function HomePage() {
         items={homeWorkspaceSections}
       />
 
-      {/* CTA Section */}
-      <section className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to move from homepage to dashboard?</h2>
-          <p className="text-xl text-blue-50 mb-8 max-w-2xl mx-auto">Login, connect your wallet, and continue with payment links, access links, customers, webhooks and billing.</p>
-          <Button size="lg" onClick={handleSignUp} className="bg-white text-blue-600 hover:bg-blue-50 gap-2">
-            Go to dashboard <ArrowRight className="w-5 h-5" />
-          </Button>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="bg-slate-900 text-slate-400">
