@@ -75,12 +75,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/PaymentLinks">
-              <Button size="lg" className="h-12 rounded-xl px-6">Create Payment Link</Button>
-            </Link>
-            <Link to="/AccessLinks">
-              <Button size="lg" variant="outline" className="h-12 rounded-xl px-6">Create Access Link</Button>
-            </Link>
+            <Button size="lg" className="h-12 rounded-xl px-6">Create Payment Link</Button>
+            <Button size="lg" variant="outline" className="h-12 rounded-xl px-6">Create Access Link</Button>
           </div>
           <p className="mt-3 text-sm text-slate-500">Simpelere V2 flow: maak je link snel aan, met transparante fee-keuze vanaf het begin.</p>
         </div>
