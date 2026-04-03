@@ -16,6 +16,7 @@ import WalletPayButton from "@/components/checkout/WalletPayButton";
 import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 import WalletHealthCheck from "@/components/checkout/WalletHealthCheck";
 import SimplePaySummaryCard from "@/components/pay/SimplePaySummaryCard";
+import FeeBreakdownCard from "@/components/pay/FeeBreakdownCard";
 
 export default function Pay() {
   const navigate = useNavigate();
@@ -326,6 +327,9 @@ export default function Pay() {
         </div>
 
         <SimplePaySummaryCard paymentLink={paymentLink} sessionData={sessionData} />
+        <div className="mt-4">
+          <FeeBreakdownCard paymentLink={paymentLink} sessionData={sessionData} />
+        </div>
 
         <div className="mt-4 bg-white rounded-3xl border border-slate-200 shadow-sm">
 

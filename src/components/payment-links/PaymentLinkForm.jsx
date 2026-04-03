@@ -11,6 +11,8 @@ import StepBasic from "./wizard/StepBasic";
 import StepOptions from "./wizard/StepOptions";
 import StepSummary from "./wizard/StepSummary";
 
+const DEFAULT_FEE_PERCENTAGE = 1.75;
+
 const STEPS = [
   { id: 1, label: "Basic info" },
   { id: 2, label: "Options" },
@@ -51,7 +53,9 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
     collect_shipping: source.collect_shipping || false,
     expires_at: link?.expires_at || "",
     status: link?.status || "active",
-    fee_model: source.fee_model || "merchant_pays",
+    fee_model: source.fee_model || "customer_pays",
+    fee_percentage: source.fee_percentage || DEFAULT_FEE_PERCENTAGE,
+    fee_split_ratio: source.fee_split_ratio ?? 0.5,
     _userEmail: "",
   });
 
@@ -123,6 +127,8 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
       accepted_cnt_tokens: form.amount_mode === "fixed_ada" ? (form.accepted_cnt_tokens || []) : [],
       enable_multi_cnt_checkout: form.amount_mode === "fixed_ada" && (form.accepted_cnt_tokens || []).length > 0,
       confirmations_required: parseInt(form.confirmations_required) || 2,
+      fee_percentage: Number(form.fee_percentage || DEFAULT_FEE_PERCENTAGE),
+      fee_split_ratio: Number(form.fee_split_ratio ?? 0.5),
       expires_at: form.expires_at || null,
       is_hidden: link?.is_hidden ?? false,
       creation_source: link?.creation_source || "manual",

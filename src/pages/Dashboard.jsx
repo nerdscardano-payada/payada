@@ -23,6 +23,7 @@ import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import MerchantProfileBanner from "@/components/shared/MerchantProfileBanner";
 import CoreActionCard from "@/components/dashboard/CoreActionCard";
+import FeeMetricsCard from "@/components/dashboard/FeeMetricsCard";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -147,6 +148,8 @@ export default function Dashboard() {
   const confirmedPaymentsCount = filteredConfirmedAda.length;
   const activeLinks = paymentLinks.filter(l => l.status === "active").length;
   const activeSubs = subscriptions.filter(s => s.status === "active" || s.status === "trial").length;
+  const totalPlatformFeesAda = filteredConfirmedAda.reduce((sum, p) => sum + (p.fee_amount_ada || 0), 0);
+  const totalMerchantReceivedAda = filteredConfirmedAda.reduce((sum, p) => sum + (p.merchant_amount_ada || 0), 0);
 
   const isLoading = loadingPayments || loadingLinks || loadingSubs || loadingCustomers;
 
@@ -182,6 +185,11 @@ export default function Dashboard() {
           icon={CreditCard}
           href={createPageUrl("Payments")}
         />
+      </div>
+
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FeeMetricsCard title="Merchant received" value={`₳ ${totalMerchantReceivedAda.toFixed(2)}`} subtitle="Net amount received after fee logic" />
+        <FeeMetricsCard title="Platform fees collected" value={`₳ ${totalPlatformFeesAda.toFixed(2)}`} subtitle="Across confirmed ADA payments" />
       </div>
 
       {/* Tabs for ADA/CNT */}

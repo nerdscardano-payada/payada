@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import WalletConnect from "@/components/checkout/WalletConnect";
+import FeeSelector from "@/components/payment-links/FeeSelector";
 
 export default function HomeInlineCreator({ onWalletConnected }) {
   const [type, setType] = React.useState("payment");
   const [currency, setCurrency] = React.useState("ADA");
+  const [feePreview, setFeePreview] = React.useState({ fee_model: "customer_pays", fee_split_ratio: 0.5 });
 
   return (
     <div className="rounded-[2rem] border border-slate-200 bg-white p-6 md:p-8 shadow-xl shadow-slate-200/60">
@@ -68,6 +70,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             )}
           </div>
 
+          <div className="mt-8 rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
+            <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
+          </div>
+
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/PaymentLinks">
               <Button size="lg" className="h-12 rounded-xl px-6">Create Payment Link</Button>
@@ -76,7 +82,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
               <Button size="lg" variant="outline" className="h-12 rounded-xl px-6">Create Access Link</Button>
             </Link>
           </div>
-          <p className="mt-3 text-sm text-slate-500">MVP cleanup: snelle homepage flow, met behoud van je bestaande ADA + CNT systemen.</p>
+          <p className="mt-3 text-sm text-slate-500">Simpelere V2 flow: maak je link snel aan, met transparante fee-keuze vanaf het begin.</p>
         </div>
 
         <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">

@@ -28,9 +28,7 @@ Deno.serve(async (req) => {
       merchant = allProfiles[0] || null;
     }
 
-    const feePercent = merchant?.status === 'active'
-      ? (merchant.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100
-      : PLATFORM_FEE_PERCENT / 100;
+    const feePercent = ((paymentLink.fee_percentage || merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100);
 
     let amountLovelace = 0;
     if (paymentLink.amount_mode === 'fixed_ada') {
@@ -49,18 +47,17 @@ Deno.serve(async (req) => {
     let platformFeeLovelace, merchantAmountLovelace;
 
     if (feeModel === 'customer_pays') {
-      // Customer pays base + fee, merchant receives full base amount
       platformFeeLovelace = fullFeeLovelace;
       merchantAmountLovelace = baseLovelace;
       amountLovelace = baseLovelace + fullFeeLovelace;
     } else if (feeModel === 'split') {
-      // Customer pays base + half fee, merchant gets base - half fee, platform gets full fee
-      const halfFee = Math.floor(fullFeeLovelace / 2);
+      const splitRatio = Number(paymentLink.fee_split_ratio ?? 0.5);
+      const customerFeeLovelace = Math.floor(fullFeeLovelace * splitRatio);
+      const merchantFeeLovelace = fullFeeLovelace - customerFeeLovelace;
       platformFeeLovelace = fullFeeLovelace;
-      merchantAmountLovelace = baseLovelace - halfFee;
-      amountLovelace = baseLovelace + halfFee;
+      merchantAmountLovelace = baseLovelace - merchantFeeLovelace;
+      amountLovelace = baseLovelace + customerFeeLovelace;
     } else {
-      // merchant_pays (default): fee deducted from merchant, customer pays original amount
       platformFeeLovelace = fullFeeLovelace;
       merchantAmountLovelace = baseLovelace - fullFeeLovelace;
     }
@@ -71,7 +68,7 @@ Deno.serve(async (req) => {
       amount_total_lovelace: amountLovelace,
       platform_fee_lovelace: platformFeeLovelace,
       merchant_amount_lovelace: merchantAmountLovelace,
-      fee_percent: merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT,
+      fee_percent: paymentLink.fee_percentage || merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT,
       status: 'pending'
     });
 
@@ -82,7 +79,7 @@ Deno.serve(async (req) => {
       amount_total_ada: amountLovelace / 1_000_000,
       platform_fee_lovelace: platformFeeLovelace,
       platform_fee_ada: platformFeeLovelace / 1_000_000,
-      platform_fee_percent: merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT,
+      platform_fee_percent: paymentLink.fee_percentage || merchant?.platform_fee_percent || PLATFORM_FEE_PERCENT,
       merchant_amount_lovelace: merchantAmountLovelace,
       merchant_amount_ada: merchantAmountLovelace / 1_000_000,
       merchant_address: paymentLink.receive_address || merchant?.default_receive_address || '',

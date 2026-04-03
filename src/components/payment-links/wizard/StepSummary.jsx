@@ -48,6 +48,9 @@ export default function StepSummary({ form }) {
 
       <div className="bg-white rounded-xl border border-slate-200/60 p-5 space-y-1">
         <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Additional options</h4>
+        <Row label="Fee mode" value={form.fee_model === "merchant_pays" ? "Merchant pays" : form.fee_model === "split" ? "Split fee" : "Customer pays"} />
+        <Row label="Fee percentage" value={`${Number(form.fee_percentage ?? 1.75).toFixed(2)}%`} />
+        <Row label="Split ratio" value={form.fee_model === "split" ? `${Math.round(Number(form.fee_split_ratio ?? 0.5) * 100)} / ${Math.round((1 - Number(form.fee_split_ratio ?? 0.5)) * 100)}` : null} />
         <Row label="Expiry" value={form.expires_at ? new Date(form.expires_at).toLocaleString("en-GB") : "None"} />
         <Row label="Confirmations" value={`${form.confirmations_required}`} />
 

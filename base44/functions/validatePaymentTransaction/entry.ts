@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
 
     // Fetch merchant profile to get fee percentage
     const merchantProfile = await base44.entities.MerchantProfile.filter({ user_id: merchantId }).then(p => p[0]);
-    const feePercent = (merchantProfile?.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100;
+    const feePercent = (paymentLink.fee_percentage || merchantProfile?.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100;
 
     // Enforce merchant status checks
     if (merchantProfile?.status === 'blocked') {
@@ -114,10 +114,10 @@ Deno.serve(async (req) => {
       expectedFeeAmount = totalAmount - baseAmount;
       expectedMerchantAmount = baseAmount;
     } else if (feeModel === 'split') {
-      // total = base + halfFee = base*(1+feePercent/2), so base = total/(1+feePercent/2)
-      const baseAmount = Math.floor(totalAmount / (1 + feePercent / 2));
+      const splitRatio = Number(paymentLink.fee_split_ratio ?? 0.5);
+      const baseAmount = Math.floor(totalAmount / (1 + feePercent * splitRatio));
       expectedFeeAmount = Math.floor(baseAmount * feePercent);
-      expectedMerchantAmount = baseAmount - Math.floor(baseAmount * feePercent / 2);
+      expectedMerchantAmount = baseAmount - (expectedFeeAmount - Math.floor(expectedFeeAmount * splitRatio));
     } else {
       // merchant_pays: total = base, fee deducted from merchant
       expectedFeeAmount = Math.floor(totalAmount * feePercent);
