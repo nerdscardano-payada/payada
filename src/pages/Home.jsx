@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 import { createPageUrl } from "@/utils";
 import SEOHead from "@/components/SEOHead";
 import { useTranslation } from "@/components/i18n/useTranslation";
@@ -77,6 +78,7 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle className="border-slate-200 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" />
             <Button variant="ghost" onClick={handleLogin} className="hidden sm:inline-flex">Inloggen</Button>
             <Button onClick={handleSignUp}>Dashboard</Button>
           </div>

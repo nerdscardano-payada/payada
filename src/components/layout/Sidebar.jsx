@@ -32,6 +32,7 @@ import {
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
 import NotificationBell from "@/components/notifications/NotificationBell";
+import ThemeToggle from "@/components/theme/ThemeToggle";
 
 const navItems = [
   { type: "header", name: "Core" },
@@ -97,6 +98,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
              )}
            </Link>
            <div className="flex items-center gap-1">
+             <ThemeToggle className="h-8 w-8 border-white/10 bg-white/5 text-slate-200 hover:bg-white/10" />
              <NotificationBell user={user} collapsed={collapsed} />
              <button
                onClick={() => setMobileOpen(false)}
