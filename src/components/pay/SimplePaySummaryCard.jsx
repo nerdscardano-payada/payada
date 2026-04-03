@@ -16,7 +16,7 @@ export default function SimplePaySummaryCard({ paymentLink, sessionData }) {
         </div>
         <Badge className="bg-slate-800 text-slate-100 border border-slate-700">{isCnt ? "Token payment" : "ADA payment"}</Badge>
       </div>
-      <div className="mt-6 rounded-2xl bg-slate-950 px-5 py-4 text-white">
+      <div className="mt-6 rounded-2xl bg-slate-800 px-5 py-4 text-white">
         <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">You pay</p>
         <p className="mt-2 text-3xl font-bold">{total}</p>
       </div>
