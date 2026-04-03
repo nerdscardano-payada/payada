@@ -46,9 +46,10 @@ export default function FeeSelector({ form, update }) {
               className={[
                 "w-full rounded-[1.35rem] border text-left transition-all duration-200",
                 "px-4 py-4 sm:px-5 sm:py-5",
+                "bg-slate-900/90",
                 active
-                  ? "border-cyan-400/60 bg-sky-950/40 shadow-[0_0_0_1px_rgba(34,211,238,0.18),0_0_24px_rgba(34,211,238,0.12)]"
-                  : "border-white/10 bg-slate-900/45 hover:border-cyan-500/30 hover:bg-slate-900/70",
+                  ? "border-cyan-400/60 shadow-[0_0_0_1px_rgba(34,211,238,0.18),0_0_24px_rgba(34,211,238,0.12)]"
+                  : "border-slate-700 hover:border-cyan-500/30 hover:bg-slate-900",
               ].join(" ")}
             >
               <div className="flex items-center gap-4">
@@ -56,16 +57,13 @@ export default function FeeSelector({ form, update }) {
                   "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border",
                   active
                     ? "border-cyan-400/20 bg-cyan-500/12 text-cyan-300"
-                    : "border-white/8 bg-white/5 text-slate-400",
+                    : "border-slate-700 bg-slate-800 text-slate-300",
                 ].join(" ")}>
                   <Icon className="h-5 w-5" />
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <div className={[
-                    "text-lg font-semibold leading-tight",
-                    active ? "text-white" : "text-slate-200",
-                  ].join(" ")}>
+                  <div className="text-lg font-semibold leading-tight text-white">
                     {option.title}
                   </div>
                   <p className={[
@@ -78,7 +76,7 @@ export default function FeeSelector({ form, update }) {
 
                 <div className={[
                   "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2",
-                  active ? "border-blue-500" : "border-slate-600",
+                  active ? "border-blue-500" : "border-slate-500",
                 ].join(" ")}>
                   <div className={[
                     "h-3 w-3 rounded-full transition-all",
