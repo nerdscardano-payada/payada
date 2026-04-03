@@ -18,6 +18,7 @@ import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 import WalletHealthCheck from "@/components/checkout/WalletHealthCheck";
 import SimplePaySummaryCard from "@/components/pay/SimplePaySummaryCard";
 import FeeBreakdownCard from "@/components/pay/FeeBreakdownCard";
+import AdaCurrencyConverter from "@/components/pay/AdaCurrencyConverter";
 
 export default function Pay() {
   const navigate = useNavigate();
@@ -54,6 +55,14 @@ export default function Pay() {
     enabled: !!paymentLink?.merchant_id,
   });
   const merchantProfile = merchantProfiles[0] || null;
+
+  const { data: exchangeRates } = useQuery({
+    queryKey: ["ada-exchange-rates"],
+    queryFn: async () => {
+      const response = await base44.functions.invoke("getTokenExchangeRates", {});
+      return response.data;
+    },
+  });
 
   const { data: relatedListings = [] } = useQuery({
     queryKey: ["listing-by-payment-link", paymentLink?.id],
@@ -333,6 +342,10 @@ export default function Pay() {
         <div className="mt-4">
           <FeeBreakdownCard paymentLink={paymentLink} sessionData={sessionData} />
         </div>
+        <AdaCurrencyConverter
+          adaRateEur={exchangeRates?.ADA?.EUR}
+          adaRateUsd={exchangeRates?.ADA?.USD}
+        />
 
         <div className="mt-4 bg-slate-900 rounded-3xl border border-slate-800 shadow-xl shadow-black/20">
 
