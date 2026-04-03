@@ -39,6 +39,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
     setSelectedCntKey(value);
   };
 
+  const selectedCnt = KNOWN_CNTS.find((cnt) => `${cnt.policy_id}:${cnt.asset_name}` === selectedCntKey);
+
   const normalizeSlug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
   const buildUniqueSlug = () => {
@@ -73,8 +75,6 @@ export default function HomeInlineCreator({ onWalletConnected }) {
       const slug = buildUniqueSlug();
 
       if (type === "payment") {
-        const selectedCnt = KNOWN_CNTS.find((cnt) => `${cnt.policy_id}:${cnt.asset_name}` === selectedCntKey);
-
         await base44.entities.PaymentLink.create({
           merchant_id: "public_homepage",
           slug,
@@ -99,8 +99,6 @@ export default function HomeInlineCreator({ onWalletConnected }) {
         navigate(`/Pay?slug=${encodeURIComponent(slug)}`);
         return;
       }
-
-      const selectedCnt = KNOWN_CNTS.find((cnt) => `${cnt.policy_id}:${cnt.asset_name}` === selectedCntKey);
 
       await base44.entities.CommunityAccessLink.create({
         merchant_id: "public_homepage",
@@ -228,7 +226,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
               <Input value={form.title} onChange={(e) => updateForm("title", e.target.value)} placeholder={type === "payment" ? "Premium membership" : "Private Discord access"} className="h-12 rounded-xl" />
             </div>
             <div className="space-y-2">
-              <Label>{currency === "ADA" ? "Amount (ADA)" : "Amount (Token)"}</Label>
+              <Label>{currency === "ADA" ? "Amount (ADA)" : `Amount (${selectedCnt?.ticker || "Token"})`}</Label>
               <Input type="number" value={form.amount} onChange={(e) => updateForm("amount", e.target.value)} placeholder={currency === "ADA" ? "10" : "50"} className="h-12 rounded-xl" />
             </div>
             <div className="space-y-2">
