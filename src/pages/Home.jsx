@@ -130,15 +130,7 @@ export default function HomePage() {
                 <li><Link to={createPageUrl("Roadmap")} className="hover:text-white transition">{t("nav.roadmap")}</Link></li>
               </ul>
             </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">{t("home.footer_developers")}</h4>
-              <ul className="space-y-2 text-sm">
-                <li><Link to={createPageUrl("Documentation")} className="hover:text-white transition">Documentation</Link></li>
-                <li><Link to="/Tutorials" className="hover:text-white transition">Tutorials</Link></li>
-                <li><Link to={createPageUrl("APIReference")} className="hover:text-white transition">API Reference</Link></li>
-                <li><Link to={createPageUrl("Webhooks")} className="hover:text-white transition">Webhooks</Link></li>
-              </ul>
-            </div>
+
             <div>
               <h4 className="text-white font-semibold mb-4">{t("home.footer_company")}</h4>
               <ul className="space-y-2 text-sm">
