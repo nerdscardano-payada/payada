@@ -2,14 +2,11 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import FeeSelector from "@/components/payment-links/FeeSelector";
 
 export default function StepOptions({ form, update }) {
   return (
     <div className="space-y-6">
       <p className="text-sm text-slate-500">All options below are optional.</p>
-
-      <FeeSelector form={form} update={update} />
 
       {/* Expiry */}
       <div className="space-y-2">
