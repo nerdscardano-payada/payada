@@ -8,34 +8,34 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 export default function DisclaimerPage() {
   const { t, lang, setLang } = useTranslation();
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title="Disclaimer — PayADA"
         description="PayADA Disclaimer: no financial or investment advice, crypto-asset volatility warnings, irreversibility of Cardano blockchain transactions, no custody of funds, technology risks, and limitations of liability."
         canonical="https://payada.io/disclaimer"
       />
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
+            Pay<span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
-            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.contact")}</Link>
-            <Link to={createPageUrl("TermsOfService")} className="text-sm text-slate-600 hover:text-slate-900">{t("roadmap.footer_terms")}</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.docs")}</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.contact")}</Link>
+            <Link to={createPageUrl("TermsOfService")} className="text-sm text-muted-foreground hover:text-foreground">{t("roadmap.footer_terms")}</Link>
           </div>
           <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
       </header>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h1 className="text-5xl font-bold text-slate-900 mb-4">Disclaimer</h1>
+        <h1 className="text-5xl font-bold text-foreground mb-4">Disclaimer</h1>
         <p className="text-slate-500 mb-2">Last updated: March 7, 2026</p>
         <p className="text-slate-500 mb-12">This Disclaimer provides important information about the risks and limitations associated with using the PayADA platform.</p>
 
-        <div className="prose prose-lg max-w-none text-slate-600 space-y-0">
+        <div className="prose prose-lg max-w-none text-muted-foreground space-y-0">
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">1. No Financial or Investment Advice</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">1. No Financial or Investment Advice</h2>
           <p>
             <strong>IMPORTANT:</strong> PayADA is a technical payment infrastructure provider, not a financial advisor, investment firm, or bank. 
             Nothing on the PayADA platform constitutes financial advice, investment advice, tax advice, or legal advice. You should:
@@ -47,7 +47,7 @@ export default function DisclaimerPage() {
             <li>Seek legal counsel for jurisdictional compliance questions</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">2. Crypto-Asset Volatility Warning</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">2. Crypto-Asset Volatility Warning</h2>
           <p>
             <strong>WARNING:</strong> Cryptocurrency prices are highly volatile and speculative. By using PayADA to transact in crypto-assets, you acknowledge and accept that:
           </p>
@@ -59,7 +59,7 @@ export default function DisclaimerPage() {
             <li>You assume all risk of price movements</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">3. Blockchain Irreversibility</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">3. Blockchain Irreversibility</h2>
           <p>
             <strong>CRITICAL:</strong> All transactions processed on the Cardano blockchain are permanent and irreversible. Once a payment is confirmed on-chain:
           </p>
@@ -71,7 +71,7 @@ export default function DisclaimerPage() {
             <li>You are solely responsible for verifying receiving addresses before sending</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">4. No Custody or Control</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">4. No Custody or Control</h2>
           <p>
             PayADA does <strong>NOT</strong> custody, hold, or control your crypto-assets at any point. All transactions are peer-to-peer, 
             directly from the payer's wallet to the receiving address. You are responsible for:
@@ -83,7 +83,7 @@ export default function DisclaimerPage() {
             <li>Complying with local tax and regulatory obligations for held assets</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">5. Technology Risks</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">5. Technology Risks</h2>
           <p>
             The PayADA platform operates over internet and blockchain infrastructure, which carry inherent technical risks:
           </p>
@@ -96,7 +96,7 @@ export default function DisclaimerPage() {
             <li>Cyber attacks may compromise platform security</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">6. No Warranty</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">6. No Warranty</h2>
           <p>
             <strong>THE PAYADA PLATFORM IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND.</strong>
           </p>
@@ -109,7 +109,7 @@ export default function DisclaimerPage() {
             <li>That the Service will meet your expectations or requirements</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">7. Limitation of Liability</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">7. Limitation of Liability</h2>
           <p>
             <strong>TO THE MAXIMUM EXTENT PERMITTED BY LAW, PAYADA SHALL NOT BE LIABLE FOR:</strong>
           </p>
@@ -128,7 +128,7 @@ export default function DisclaimerPage() {
             or €100, whichever is greater.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">8. Regulatory Uncertainty</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">8. Regulatory Uncertainty</h2>
           <p>
             The regulatory landscape for crypto-assets is evolving. PayADA operates in compliance with applicable European regulations (MiCA, GDPR, AML/CFT), 
             but regulations may change. You acknowledge:
@@ -140,7 +140,7 @@ export default function DisclaimerPage() {
             <li>You are responsible for understanding local regulatory requirements</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">9. No Guarantees</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">9. No Guarantees</h2>
           <p>
             PayADA makes no guarantees regarding:
           </p>
@@ -152,7 +152,7 @@ export default function DisclaimerPage() {
             <li>Protection against market manipulation or fraud by third parties</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">10. User Responsibility</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">10. User Responsibility</h2>
           <p>
             By using PayADA, you accept full responsibility for:
           </p>
@@ -165,7 +165,7 @@ export default function DisclaimerPage() {
             <li>All consequences of using PayADA</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">11. Third-Party Links & Integrations</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">11. Third-Party Links & Integrations</h2>
           <p>
             PayADA may link to third-party websites or integrate with external services. PayADA is not responsible for:
           </p>
@@ -176,13 +176,13 @@ export default function DisclaimerPage() {
             <li>Losses arising from third-party service failures</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">12. Acknowledgment</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">12. Acknowledgment</h2>
           <p>
             <strong>BY USING PAYADA, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS DISCLAIMER IN FULL, UNDERSTAND THE RISKS, 
             AND ACCEPT ALL TERMS AND LIMITATIONS SET FORTH HEREIN.</strong>
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">13. Contact</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">13. Contact</h2>
           <p>For questions about this Disclaimer:</p>
           <ul className="list-disc list-inside space-y-2">
             <li><Link to={createPageUrl("Contact")} className="text-blue-600 hover:underline">Contact form</Link></li>

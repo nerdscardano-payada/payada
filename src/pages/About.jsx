@@ -27,7 +27,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title="About PayADA — Building the Future of Cardano Payments"
         description="PayADA is building the future of Cardano payments. Our mission: make crypto commerce simple, secure, and accessible for every merchant."
@@ -36,16 +36,16 @@ export default function AboutPage() {
       />
 
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
+            Pay<span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Features")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.features")}</Link>
-            <Link to={createPageUrl("Roadmap")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.roadmap")}</Link>
-            <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.security")}</Link>
-            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.contact")}</Link>
+            <Link to={createPageUrl("Features")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.features")}</Link>
+            <Link to={createPageUrl("Roadmap")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.roadmap")}</Link>
+            <Link to={createPageUrl("Security")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.security")}</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.contact")}</Link>
           </div>
           <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
@@ -58,10 +58,10 @@ export default function AboutPage() {
             <Rocket className="w-4 h-4" />
             {t("about.badge")}
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
             {t("about.hero_title")}
           </h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             {t("about.hero_sub")}
           </p>
         </div>
@@ -70,8 +70,8 @@ export default function AboutPage() {
       {/* Mission */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8">{t("about.mission_title")}</h2>
-          <div className="space-y-6 text-slate-600 text-lg leading-relaxed">
+          <h2 className="text-3xl font-bold text-foreground mb-8">{t("about.mission_title")}</h2>
+          <div className="space-y-6 text-muted-foreground text-lg leading-relaxed">
             <p>{t("about.mission_p1")}</p>
             <p>{t("about.mission_p2")}</p>
             <p>{t("about.mission_p3")}</p>
@@ -82,16 +82,16 @@ export default function AboutPage() {
       {/* Values */}
       <section className="bg-slate-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4 text-center">{t("about.values_title")}</h2>
-          <p className="text-slate-600 text-center mb-12 max-w-xl mx-auto">{t("about.values_sub")}</p>
+          <h2 className="text-3xl font-bold text-foreground mb-4 text-center">{t("about.values_title")}</h2>
+          <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">{t("about.values_sub")}</p>
           <div className="grid md:grid-cols-2 gap-6">
             {values.map(({ Icon, titleKey, descKey, color }, i) => (
-              <div key={i} className="bg-white border border-slate-200 rounded-xl p-8 hover:shadow-md transition-shadow">
+              <div key={i} className="bg-white border border-border rounded-xl p-8 hover:shadow-md transition-shadow">
                 <div className={`w-12 h-12 rounded-lg bg-slate-50 flex items-center justify-center mb-5`}>
                   <Icon className={`w-6 h-6 ${color}`} />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-3">{t(titleKey)}</h3>
-                <p className="text-slate-600 leading-relaxed">{t(descKey)}</p>
+                <h3 className="text-xl font-semibold text-foreground mb-3">{t(titleKey)}</h3>
+                <p className="text-muted-foreground leading-relaxed">{t(descKey)}</p>
               </div>
             ))}
           </div>
@@ -101,8 +101,8 @@ export default function AboutPage() {
       {/* Team / Origin */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8">{t("about.team_title")}</h2>
-          <div className="space-y-6 text-slate-600 text-lg leading-relaxed">
+          <h2 className="text-3xl font-bold text-foreground mb-8">{t("about.team_title")}</h2>
+          <div className="space-y-6 text-muted-foreground text-lg leading-relaxed">
             <p>{t("about.team_p1")}</p>
             <p>{t("about.team_p2")}</p>
           </div>
@@ -132,7 +132,7 @@ export default function AboutPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 py-8">
+      <footer className="border-t border-border py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
           © 2026 PayADA.io. All rights reserved.
         </div>

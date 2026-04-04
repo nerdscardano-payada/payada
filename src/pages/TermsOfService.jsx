@@ -8,38 +8,38 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 export default function TermsOfServicePage() {
   const { t, lang, setLang } = useTranslation();
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title="Terms of Service — PayADA"
         description="PayADA Terms of Service (updated March 2026): eligibility requirements, nature of the non-custodial service, crypto-asset risk disclosures, prohibited uses, 1.75% fee structure, liability limitations, and EU governing law."
         canonical="https://payada.io/terms-of-service"
       />
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
+            Pay<span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
-            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.contact")}</Link>
-            <Link to={createPageUrl("PrivacyPolicy")} className="text-sm text-slate-600 hover:text-slate-900">{t("roadmap.footer_privacy")}</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.docs")}</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.contact")}</Link>
+            <Link to={createPageUrl("PrivacyPolicy")} className="text-sm text-muted-foreground hover:text-foreground">{t("roadmap.footer_privacy")}</Link>
           </div>
           <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
       </header>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h1 className="text-5xl font-bold text-slate-900 mb-4">Terms of Service</h1>
-        <p className="text-slate-500 mb-2">Last updated: March 7, 2026</p>
-        <p className="text-slate-500 mb-12">
+        <h1 className="text-5xl font-bold text-foreground mb-4">Terms of Service</h1>
+        <p className="text-muted-foreground mb-2">Last updated: March 7, 2026</p>
+        <p className="text-muted-foreground mb-12">
           These Terms of Service ("Terms") govern your access to and use of the PayADA platform ("Service"). 
           By using the Service, you agree to be legally bound by these Terms in their entirety.
           If you do not agree, you must immediately cease use of the Service.
         </p>
 
-        <div className="prose prose-lg max-w-none text-slate-600 space-y-0">
+        <div className="prose prose-lg max-w-none text-muted-foreground space-y-0">
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">1. Definitions</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">1. Definitions</h2>
           <ul className="list-disc list-inside space-y-2">
             <li><strong>"PayADA"</strong> refers to the PayADA platform operator.</li>
             <li><strong>"Service"</strong> refers to the PayADA payment infrastructure, website, APIs, and related services.</li>
@@ -48,7 +48,7 @@ export default function TermsOfServicePage() {
             <li><strong>"Crypto-assets"</strong> includes ADA and Cardano Native Tokens (CNTs) processed through the Service.</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">2. Eligibility and Account Registration</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">2. Eligibility and Account Registration</h2>
           <p>To use the Service as a Merchant, you must:</p>
           <ul className="list-disc list-inside space-y-2">
             <li>Be at least 18 years of age or the age of majority in your jurisdiction</li>
@@ -62,7 +62,7 @@ export default function TermsOfServicePage() {
             <a href="mailto:support@payada.io" className="text-indigo-600 hover:underline ml-1">support@payada.io</a> upon becoming aware of any unauthorized access.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">3. Nature of the Service</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">3. Nature of the Service</h2>
           <p>
             PayADA provides a technical infrastructure layer that facilitates crypto-asset payment processing on the Cardano blockchain.
             PayADA is <strong>not a financial institution, bank, exchange, custodian, or investment service provider</strong>.
@@ -74,7 +74,7 @@ export default function TermsOfServicePage() {
             or service exists solely between the Merchant and the Payer. PayADA is not a party to such transactions.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">4. Crypto-Asset Risk Disclosure</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">4. Crypto-Asset Risk Disclosure</h2>
           <p>
             Crypto-assets including ADA and Cardano Native Tokens are highly volatile and speculative in nature. By using the Service, you acknowledge and accept that:
           </p>
@@ -87,7 +87,7 @@ export default function TermsOfServicePage() {
             <li>PayADA is not responsible for losses arising from market volatility between payment initiation and confirmation</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">5. Regulatory Compliance — MiCA & AML</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">5. Regulatory Compliance — MiCA & AML</h2>
           <p>
             PayADA operates in compliance with applicable European Union regulations, including:
           </p>
@@ -104,7 +104,7 @@ export default function TermsOfServicePage() {
             reporting to authorities, and legal action.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">6. Prohibited Uses</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">6. Prohibited Uses</h2>
           <p>You are strictly prohibited from using the Service for:</p>
           <ul className="list-disc list-inside space-y-2">
             <li>Money laundering, terrorist financing, or financing of criminal organizations</li>
@@ -120,7 +120,7 @@ export default function TermsOfServicePage() {
             Violation of this section may result in immediate account termination, asset freezing where legally required, and reporting to law enforcement.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">7. Fees and Payment</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">7. Fees and Payment</h2>
           <ul className="list-disc list-inside space-y-2">
             <li>A platform fee (as displayed on the Pricing page) is automatically deducted at the time of each confirmed transaction</li>
             <li>Fees are denominated as a percentage of the transaction value in ADA</li>
@@ -129,7 +129,7 @@ export default function TermsOfServicePage() {
             <li>No refunds are issued for platform fees once a transaction has been confirmed on-chain</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">8. Limitation of Liability</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">8. Limitation of Liability</h2>
           <p>
             <strong>To the maximum extent permitted by applicable law</strong>, PayADA and its officers, directors, employees, agents, partners,
             and licensors shall not be liable for:
@@ -153,7 +153,7 @@ export default function TermsOfServicePage() {
             will apply to the maximum extent permitted by law.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">9. Indemnification</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">9. Indemnification</h2>
           <p>
             You agree to fully indemnify, defend, and hold harmless PayADA and its affiliates, officers, directors, employees, and agents from and against
             any and all claims, liabilities, damages, losses, costs, and expenses (including reasonable legal fees) arising out of or relating to:
@@ -166,21 +166,21 @@ export default function TermsOfServicePage() {
             <li>Any fraudulent or illegal transactions processed through your account</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">10. Intellectual Property</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">10. Intellectual Property</h2>
           <p>
             All content, trademarks, logos, software, and materials on the PayADA platform are the property of PayADA or its licensors.
             You are granted a limited, non-exclusive, non-transferable license to use the Service for its intended purpose.
             You may not copy, reproduce, modify, distribute, or create derivative works without prior written consent.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">11. Availability and Modifications</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">11. Availability and Modifications</h2>
           <p>
             PayADA does not guarantee uninterrupted, error-free, or secure availability of the Service. We reserve the right to
             modify, suspend, or discontinue the Service (or any part thereof) at any time, with or without notice.
             PayADA shall not be liable for any such modification, suspension, or discontinuation.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">12. Termination</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">12. Termination</h2>
           <p>
             PayADA may suspend or terminate your access to the Service, at any time, with or without notice, for any reason, including but not limited to:
           </p>
@@ -196,7 +196,7 @@ export default function TermsOfServicePage() {
             and any accrued rights shall survive termination.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">13. Dispute Resolution</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">13. Dispute Resolution</h2>
           <p>
             In the event of a dispute arising from these Terms or your use of the Service, you agree to first attempt resolution
             by contacting us via our <Link to={createPageUrl("Contact")} className="text-indigo-600 hover:underline">contact form</Link> and allowing 30 days for good-faith resolution.
@@ -206,26 +206,26 @@ export default function TermsOfServicePage() {
             agreed arbitration institution, unless otherwise required by applicable consumer protection law in your jurisdiction.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">14. Governing Law</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">14. Governing Law</h2>
           <p>
             These Terms shall be governed by and construed in accordance with European Union law and applicable national law.
             Any disputes not resolved through arbitration shall be subject to the exclusive jurisdiction of the competent courts.
             Nothing in these Terms limits your rights as a consumer under mandatory EU consumer protection law.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">15. Severability</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">15. Severability</h2>
           <p>
             If any provision of these Terms is found to be unlawful, void, or unenforceable, that provision shall be deemed severable
             and shall not affect the validity and enforceability of the remaining provisions.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">16. Entire Agreement</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">16. Entire Agreement</h2>
           <p>
             These Terms, together with the Privacy Policy and any other policies referenced herein, constitute the entire agreement
             between you and PayADA with respect to the Service and supersede all prior agreements and understandings.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">17. Contact</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">17. Contact</h2>
           <p>For legal matters or questions regarding these Terms:</p>
           <ul className="list-disc list-inside space-y-2">
             <li><Link to={createPageUrl("Contact")} className="text-indigo-600 hover:underline">Contact form</Link></li>

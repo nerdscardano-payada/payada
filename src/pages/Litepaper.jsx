@@ -189,18 +189,18 @@ For more information: www.payada.io
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title="Litepaper — PayADA Decentralized Cardano Payment Platform"
         description="The PayADA Litepaper covers our decentralized Cardano payment architecture, 1.75% fee model, CNT native token support, self-custodial design, use cases for e-commerce, digital content, community access and fundraising, plus the development roadmap."
         canonical="https://payada.io/litepaper"
       />
       {/* Header */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white py-16">
+      <div className="bg-gradient-to-r from-card to-muted text-foreground py-16 border-b border-border">
         <div className="max-w-4xl mx-auto px-6">
           <div className="flex items-center justify-between mb-6">
             <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-              Pay<span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">ADA</span>
+              Pay<span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">ADA</span>
             </Link>
             <LanguageSwitcher lang={lang} setLang={setLang} />
           </div>
@@ -208,7 +208,7 @@ For more information: www.payada.io
             <FileText className="w-10 h-10" />
             <h1 className="text-4xl font-bold">PayADA Litepaper</h1>
           </div>
-          <p className="text-slate-300 text-lg max-w-2xl">{t("litepaper.hero_sub")}</p>
+          <p className="text-muted-foreground text-lg max-w-2xl">{t("litepaper.hero_sub")}</p>
           <div className="mt-8">
             <Button onClick={downloadPDF} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
               <Download className="w-4 h-4" />
@@ -222,20 +222,20 @@ For more information: www.payada.io
       <div className="max-w-4xl mx-auto px-6 py-16">
         {/* Highlights */}
         <div className="grid md:grid-cols-3 gap-6 mb-16">
-          <div className="bg-white rounded-xl p-6 border border-slate-200">
+          <div className="bg-white rounded-xl p-6 border border-border">
             <Zap className="w-8 h-8 text-indigo-600 mb-3" />
-            <h3 className="font-semibold text-slate-900 mb-2">{t("litepaper.low_fees_title")}</h3>
-            <p className="text-slate-600 text-sm">{t("litepaper.low_fees_desc")}</p>
+            <h3 className="font-semibold text-foreground mb-2">{t("litepaper.low_fees_title")}</h3>
+            <p className="text-muted-foreground text-sm">{t("litepaper.low_fees_desc")}</p>
           </div>
-          <div className="bg-white rounded-xl p-6 border border-slate-200">
+          <div className="bg-white rounded-xl p-6 border border-border">
             <Lock className="w-8 h-8 text-green-600 mb-3" />
-            <h3 className="font-semibold text-slate-900 mb-2">{t("litepaper.custodial_title")}</h3>
-            <p className="text-slate-600 text-sm">{t("litepaper.custodial_desc")}</p>
+            <h3 className="font-semibold text-foreground mb-2">{t("litepaper.custodial_title")}</h3>
+            <p className="text-muted-foreground text-sm">{t("litepaper.custodial_desc")}</p>
           </div>
-          <div className="bg-white rounded-xl p-6 border border-slate-200">
+          <div className="bg-white rounded-xl p-6 border border-border">
             <TrendingUp className="w-8 h-8 text-cyan-600 mb-3" />
-            <h3 className="font-semibold text-slate-900 mb-2">{t("litepaper.tokens_title")}</h3>
-            <p className="text-slate-600 text-sm">{t("litepaper.tokens_desc")}</p>
+            <h3 className="font-semibold text-foreground mb-2">{t("litepaper.tokens_title")}</h3>
+            <p className="text-muted-foreground text-sm">{t("litepaper.tokens_desc")}</p>
           </div>
         </div>
 
@@ -243,12 +243,12 @@ For more information: www.payada.io
         <div className="space-y-12">
           {/* Executive Summary */}
           <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">{t("litepaper.summary_title")}</h2>
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
-              <p className="text-slate-700 leading-relaxed mb-4">
+            <h2 className="text-2xl font-bold text-foreground mb-4">{t("litepaper.summary_title")}</h2>
+            <div className="bg-white rounded-xl p-6 border border-border">
+              <p className="text-foreground leading-relaxed mb-4">
                 PayADA is a decentralized payment processing platform built on Cardano that enables merchants to accept ADA and Cardano Native Tokens (CNTs) with minimal fees and maximum security. The platform facilitates seamless integration of blockchain payments into existing business workflows without requiring merchants to manage complex wallet infrastructure.
               </p>
-              <p className="text-slate-700 leading-relaxed">
+              <p className="text-foreground leading-relaxed">
                 By leveraging Cardano's UTXO model and native asset support, PayADA creates a transparent, auditable payment ecosystem where merchants maintain complete control over their funds while benefiting from instant settlement and low fees.
               </p>
             </div>
@@ -256,9 +256,9 @@ For more information: www.payada.io
 
           {/* The Problem */}
           <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">{t("litepaper.problem_title")}</h2>
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
-              <ul className="space-y-3 text-slate-700">
+            <h2 className="text-2xl font-bold text-foreground mb-4">{t("litepaper.problem_title")}</h2>
+            <div className="bg-white rounded-xl p-6 border border-border">
+              <ul className="space-y-3 text-foreground">
                 <li className="flex gap-3">
                   <span className="text-indigo-600 font-bold">•</span>
                   <span>Traditional payment processors charge 2-4% fees per transaction</span>
@@ -281,29 +281,29 @@ For more information: www.payada.io
 
           {/* Solution */}
           <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">{t("litepaper.solution_title")}</h2>
-            <div className="bg-white rounded-xl p-6 border border-slate-200 space-y-4">
+            <h2 className="text-2xl font-bold text-foreground mb-4">{t("litepaper.solution_title")}</h2>
+            <div className="bg-white rounded-xl p-6 border border-border space-y-4">
               <div>
-                <h4 className="font-semibold text-slate-900 mb-2">🔵 Native Cardano Integration</h4>
-                <p className="text-slate-700">
+                <h4 className="font-semibold text-foreground mb-2">🔵 Native Cardano Integration</h4>
+                <p className="text-foreground">
                   Built directly on Cardano without wrappers or bridges, ensuring maximum security and minimal latency.
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold text-slate-900 mb-2">💰 Competitive Fees</h4>
-                <p className="text-slate-700">
+                <h4 className="font-semibold text-foreground mb-2">💰 Competitive Fees</h4>
+                <p className="text-foreground">
                   1.75% base fee for ADA payments, with CNT fees earned in the token itself - aligning platform incentives with merchant success.
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold text-slate-900 mb-2">🔗 Flexible Integration</h4>
-                <p className="text-slate-700">
+                <h4 className="font-semibold text-foreground mb-2">🔗 Flexible Integration</h4>
+                <p className="text-foreground">
                   Payment links for quick setup, REST API for custom integrations, and webhook support for real-time updates.
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold text-slate-900 mb-2">🎯 Community Features</h4>
-                <p className="text-slate-700">
+                <h4 className="font-semibold text-foreground mb-2">🎯 Community Features</h4>
+                <p className="text-foreground">
                   Discord integration for membership gating, subscription support, and community token payments.
                 </p>
               </div>
@@ -312,28 +312,28 @@ For more information: www.payada.io
 
           {/* Technology */}
           <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">{t("litepaper.tech_title")}</h2>
-            <div className="bg-white rounded-xl p-6 border border-slate-200">
+            <h2 className="text-2xl font-bold text-foreground mb-4">{t("litepaper.tech_title")}</h2>
+            <div className="bg-white rounded-xl p-6 border border-border">
               <div className="space-y-4">
                 <div>
-                  <span className="font-semibold text-slate-900">Blockchain Layer:</span>
-                  <p className="text-slate-700">Cardano UTXO model with native asset support</p>
+                  <span className="font-semibold text-foreground">Blockchain Layer:</span>
+                  <p className="text-foreground">Cardano UTXO model with native asset support</p>
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-900">Backend:</span>
-                  <p className="text-slate-700">Deno runtime with Base44 serverless infrastructure</p>
+                  <span className="font-semibold text-foreground">Backend:</span>
+                  <p className="text-foreground">Deno runtime with Base44 serverless infrastructure</p>
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-900">Frontend:</span>
-                  <p className="text-slate-700">React with Tailwind CSS for responsive UI</p>
+                  <span className="font-semibold text-foreground">Frontend:</span>
+                  <p className="text-foreground">React with Tailwind CSS for responsive UI</p>
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-900">Payment Detection:</span>
-                  <p className="text-slate-700">Blockfrost API for real-time transaction monitoring</p>
+                  <span className="font-semibold text-foreground">Payment Detection:</span>
+                  <p className="text-foreground">Blockfrost API for real-time transaction monitoring</p>
                 </div>
                 <div>
-                  <span className="font-semibold text-slate-900">Wallet Integration:</span>
-                  <p className="text-slate-700">Mesh SDK and CIP standards for secure wallet connections</p>
+                  <span className="font-semibold text-foreground">Wallet Integration:</span>
+                  <p className="text-foreground">Mesh SDK and CIP standards for secure wallet connections</p>
                 </div>
               </div>
             </div>
@@ -341,29 +341,29 @@ For more information: www.payada.io
 
           {/* Use Cases */}
           <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">{t("litepaper.usecases_title")}</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4">{t("litepaper.usecases_title")}</h2>
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
-                <h4 className="font-semibold text-slate-900 mb-2">E-Commerce</h4>
-                <p className="text-slate-700 text-sm">
+              <div className="bg-white rounded-xl p-6 border border-border">
+                <h4 className="font-semibold text-foreground mb-2">E-Commerce</h4>
+                <p className="text-foreground text-sm">
                   Accept direct Cardano payments from customers worldwide with settlement in minutes, not days.
                 </p>
               </div>
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
-                <h4 className="font-semibold text-slate-900 mb-2">Digital Content</h4>
-                <p className="text-slate-700 text-sm">
+              <div className="bg-white rounded-xl p-6 border border-border">
+                <h4 className="font-semibold text-foreground mb-2">Digital Content</h4>
+                <p className="text-foreground text-sm">
                   Creators monetize content with ADA micropayments or custom CNT subscription models.
                 </p>
               </div>
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
-                <h4 className="font-semibold text-slate-900 mb-2">Community Access</h4>
-                <p className="text-slate-700 text-sm">
+              <div className="bg-white rounded-xl p-6 border border-border">
+                <h4 className="font-semibold text-foreground mb-2">Community Access</h4>
+                <p className="text-foreground text-sm">
                   Gate Discord servers or websites behind ADA payments with automatic role assignment.
                 </p>
               </div>
-              <div className="bg-white rounded-xl p-6 border border-slate-200">
-                <h4 className="font-semibold text-slate-900 mb-2">Fundraising</h4>
-                <p className="text-slate-700 text-sm">
+              <div className="bg-white rounded-xl p-6 border border-border">
+                <h4 className="font-semibold text-foreground mb-2">Fundraising</h4>
+                <p className="text-foreground text-sm">
                   Collect ADA or CNT donations with full blockchain transparency and no intermediaries.
                 </p>
               </div>
@@ -372,9 +372,9 @@ For more information: www.payada.io
 
           {/* Roadmap */}
           <section>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">{t("litepaper.roadmap_title")}</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4">{t("litepaper.roadmap_title")}</h2>
             <div className="bg-indigo-50 rounded-xl p-6 border border-indigo-200">
-              <p className="text-slate-700 mb-4">{t("litepaper.roadmap_sub")}</p>
+              <p className="text-foreground mb-4">{t("litepaper.roadmap_sub")}</p>
               <Link to={createPageUrl("Roadmap")} className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700 font-semibold">
                 {t("litepaper.roadmap_link")}
               </Link>

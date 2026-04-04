@@ -8,37 +8,37 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 export default function AcceptableUsePolicyPage() {
   const { t, lang, setLang } = useTranslation();
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title="Acceptable Use Policy — PayADA"
         description="PayADA Acceptable Use Policy: prohibited activities including illegal transactions, money laundering, AML violations, fraud, technical abuse, and geographic restrictions for sanctioned countries."
         canonical="https://payada.io/acceptable-use-policy"
       />
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
+            Pay<span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
-            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.contact")}</Link>
-            <Link to={createPageUrl("TermsOfService")} className="text-sm text-slate-600 hover:text-slate-900">{t("roadmap.footer_terms")}</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.docs")}</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.contact")}</Link>
+            <Link to={createPageUrl("TermsOfService")} className="text-sm text-muted-foreground hover:text-foreground">{t("roadmap.footer_terms")}</Link>
           </div>
           <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
       </header>
 
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h1 className="text-5xl font-bold text-slate-900 mb-4">Acceptable Use Policy</h1>
+        <h1 className="text-5xl font-bold text-foreground mb-4">Acceptable Use Policy</h1>
         <p className="text-slate-500 mb-2">Last updated: March 7, 2026</p>
         <p className="text-slate-500 mb-12">This Acceptable Use Policy ("AUP") sets forth the standards of conduct and restrictions for acceptable use of the PayADA platform and services.</p>
 
-        <div className="prose prose-lg max-w-none text-slate-600 space-y-0">
+        <div className="prose prose-lg max-w-none text-muted-foreground space-y-0">
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">1. Prohibited Activities</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">1. Prohibited Activities</h2>
           <p>You agree not to use the PayADA platform for any of the following prohibited activities:</p>
           
-          <h3 className="text-xl font-semibold text-slate-900 mt-8 mb-3">1.1 Illegal Activities</h3>
+          <h3 className="text-xl font-semibold text-foreground mt-8 mb-3">1.1 Illegal Activities</h3>
           <ul className="list-disc list-inside space-y-2">
             <li>Processing payments for illegal goods, services, or activities</li>
             <li>Money laundering or terrorist financing</li>
@@ -48,7 +48,7 @@ export default function AcceptableUsePolicyPage() {
             <li>Any activity that violates applicable laws and regulations</li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-slate-900 mt-8 mb-3">1.2 Financial Crimes & AML Violations</h3>
+          <h3 className="text-xl font-semibold text-foreground mt-8 mb-3">1.2 Financial Crimes & AML Violations</h3>
           <ul className="list-disc list-inside space-y-2">
             <li>Structuring transactions to evade AML/KYC reporting thresholds</li>
             <li>Processing payments on behalf of sanctioned individuals or entities</li>
@@ -57,7 +57,7 @@ export default function AcceptableUsePolicyPage() {
             <li>Using the platform to facilitate suspicious activity reporting (SAR) violations</li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-slate-900 mt-8 mb-3">1.3 Fraudulent & Deceptive Practices</h3>
+          <h3 className="text-xl font-semibold text-foreground mt-8 mb-3">1.3 Fraudulent & Deceptive Practices</h3>
           <ul className="list-disc list-inside space-y-2">
             <li>Phishing, spoofing, or social engineering attacks</li>
             <li>Creating fake merchant accounts or impersonating others</li>
@@ -67,7 +67,7 @@ export default function AcceptableUsePolicyPage() {
             <li>Operating multi-level marketing schemes or pyramid schemes</li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-slate-900 mt-8 mb-3">1.4 Technical Abuse</h3>
+          <h3 className="text-xl font-semibold text-foreground mt-8 mb-3">1.4 Technical Abuse</h3>
           <ul className="list-disc list-inside space-y-2">
             <li>Attempting to hack, probe, or penetrate PayADA systems</li>
             <li>Launching distributed denial-of-service (DDoS) attacks</li>
@@ -77,7 +77,7 @@ export default function AcceptableUsePolicyPage() {
             <li>Circumventing rate limits or using automation to bypass controls</li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-slate-900 mt-8 mb-3">1.5 Harmful Content & Abuse</h3>
+          <h3 className="text-xl font-semibold text-foreground mt-8 mb-3">1.5 Harmful Content & Abuse</h3>
           <ul className="list-disc list-inside space-y-2">
             <li>Harassment, threats, or abusive language toward PayADA staff or other users</li>
             <li>Publishing or distributing child sexual abuse material (CSAM)</li>
@@ -86,7 +86,7 @@ export default function AcceptableUsePolicyPage() {
             <li>Defamation or false statements damaging PayADA's reputation</li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-slate-900 mt-8 mb-3">1.6 Regulated Activities Without License</h3>
+          <h3 className="text-xl font-semibold text-foreground mt-8 mb-3">1.6 Regulated Activities Without License</h3>
           <ul className="list-disc list-inside space-y-2">
             <li>Operating as an unregistered payment institution or money transmitter</li>
             <li>Offering investment advisory services without proper licensing</li>
@@ -95,7 +95,7 @@ export default function AcceptableUsePolicyPage() {
             <li>Gambling or lottery services in restricted jurisdictions</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">2. Restricted Use Categories</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">2. Restricted Use Categories</h2>
           <p>The following activities are restricted and require explicit prior approval from PayADA:</p>
           <ul className="list-disc list-inside space-y-2">
             <li>High-risk merchant categories (e.g., adult entertainment, firearms, tobacco)</li>
@@ -105,7 +105,7 @@ export default function AcceptableUsePolicyPage() {
             <li>Cross-border payment services for high-risk jurisdictions</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">3. Geographic Restrictions</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">3. Geographic Restrictions</h2>
           <p>PayADA does not operate in the following jurisdictions due to regulatory restrictions:</p>
           <ul className="list-disc list-inside space-y-2">
             <li>OFAC-sanctioned countries (North Korea, Iran, Syria, Crimea, etc.)</li>
@@ -116,7 +116,7 @@ export default function AcceptableUsePolicyPage() {
             Merchants and users located in or operating from restricted jurisdictions are prohibited from using the Service.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">4. Enforcement & Consequences</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">4. Enforcement & Consequences</h2>
           <p>Violation of this AUP may result in:</p>
           <ul className="list-disc list-inside space-y-2">
             <li>Immediate account suspension or termination</li>
@@ -127,20 +127,20 @@ export default function AcceptableUsePolicyPage() {
             <li>Cooperation with authorities in civil or criminal investigations</li>
           </ul>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">5. Reporting & Compliance</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">5. Reporting & Compliance</h2>
           <p>
             If you believe another user is violating this AUP or engaging in illegal activity, please report it immediately via our{" "}
             <Link to={createPageUrl("Contact")} className="text-blue-600 hover:underline">contact form</Link>. 
             All reports are investigated thoroughly and treated confidentially.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">6. Changes to This Policy</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">6. Changes to This Policy</h2>
           <p>
             PayADA reserves the right to update this AUP at any time. Continued use of the platform constitutes acceptance of changes. 
             Material changes will be communicated via email or prominent notice.
           </p>
 
-          <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">7. Contact</h2>
+          <h2 className="text-2xl font-bold text-foreground mt-12 mb-4">7. Contact</h2>
           <p>For questions about this Acceptable Use Policy:</p>
           <ul className="list-disc list-inside space-y-2">
             <li><Link to={createPageUrl("Contact")} className="text-blue-600 hover:underline">Contact form</Link></li>

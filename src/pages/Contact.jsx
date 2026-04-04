@@ -41,21 +41,21 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title="Contact PayADA — Get in Touch"
         description="Have questions about PayADA? Send us a message or browse our FAQ."
         canonical="https://payada.io/contact"
         structuredData={structuredData}
       />
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
+            Pay<span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("About")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.about") || "About"}</Link>
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.docs")}</Link>
+            <Link to={createPageUrl("About")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.about") || "About"}</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-muted-foreground hover:text-foreground">{t("nav.docs")}</Link>
           </div>
           <LanguageSwitcher lang={lang} setLang={setLang} />
         </nav>
@@ -63,28 +63,28 @@ export default function ContactPage() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-20">
-          <h1 className="text-5xl font-bold text-slate-900 mb-4">{t("contact.hero_title")}</h1>
-          <p className="text-xl text-slate-600">{t("contact.hero_sub")}</p>
+          <h1 className="text-5xl font-bold text-foreground mb-4">{t("contact.hero_title")}</h1>
+          <p className="text-xl text-muted-foreground">{t("contact.hero_sub")}</p>
         </div>
 
         <div className="max-w-2xl mx-auto mb-16">
-          <div className="border border-slate-200 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">{t("contact.form_title")}</h2>
+          <div className="border border-border rounded-lg p-8">
+            <h2 className="text-2xl font-bold text-foreground mb-6">{t("contact.form_title")}</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_name")}</label>
+                <label className="block text-sm font-semibold text-foreground mb-2">{t("contact.label_name")}</label>
                 <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder={t("contact.placeholder_name")} required />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_email")}</label>
+                <label className="block text-sm font-semibold text-foreground mb-2">{t("contact.label_email")}</label>
                 <input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder="your@email.com" required />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_subject")}</label>
+                <label className="block text-sm font-semibold text-foreground mb-2">{t("contact.label_subject")}</label>
                 <select value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white"
                   required>
@@ -95,12 +95,12 @@ export default function ContactPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-900 mb-2">{t("contact.label_message")}</label>
+                <label className="block text-sm font-semibold text-foreground mb-2">{t("contact.label_message")}</label>
                 <textarea value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})}
                   rows="6" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder={t("contact.placeholder_message")} required />
               </div>
-              <Button disabled={sending} className="w-full bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white">
+              <Button disabled={sending} className="w-full bg-gradient-to-r from-primary to-accent hover:from-blue-600 hover:to-cyan-500 text-white">
                 {sending ? "Sending…" : t("contact.send_button")}
               </Button>
             </form>
@@ -108,19 +108,19 @@ export default function ContactPage() {
         </div>
 
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">{t("contact.faq_title")}</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-8 text-center">{t("contact.faq_title")}</h2>
           <div className="space-y-4">
             {[
               { q: t("contact.faq1_q"), a: t("contact.faq1_a") },
               { q: t("contact.faq2_q"), a: t("contact.faq2_a") },
               { q: t("contact.faq3_q"), a: t("contact.faq3_a") },
             ].map((faq, i) => (
-              <details key={i} className="border border-slate-200 rounded-lg p-6 cursor-pointer group">
-                <summary className="font-semibold text-slate-900 flex justify-between items-center">
+              <details key={i} className="border border-border rounded-lg p-6 cursor-pointer group">
+                <summary className="font-semibold text-foreground flex justify-between items-center">
                   {faq.q}
                   <span className="group-open:rotate-180 transition">▼</span>
                 </summary>
-                <p className="text-slate-600 mt-4">{faq.a}</p>
+                <p className="text-muted-foreground mt-4">{faq.a}</p>
               </details>
             ))}
           </div>
