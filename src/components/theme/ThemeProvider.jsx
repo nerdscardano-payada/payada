@@ -2,16 +2,15 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 
 const ThemeContext = createContext(null);
 const STORAGE_KEY = "payada-theme";
-const DARK_MODE_PAGES = ["/Pay", "/Checkout", "/PayTerminal", "/Access", "/EventCheckout", "/MultiTokenCheckout", "/Donate", "/NFTGate", "/NFTStore", "/SubscriberPortal"];
+const PUBLIC_DARK_MODE_PAGES = ["/", "/Pay", "/Checkout", "/PayTerminal", "/Access", "/EventCheckout", "/MultiTokenCheckout", "/Donate", "/NFTGate", "/NFTStore", "/SubscriberPortal"];
 
-const shouldUseDarkMode = (pathname) => DARK_MODE_PAGES.some((page) => pathname === page || pathname.startsWith(`${page}/`));
+const shouldUseDarkMode = (pathname) => PUBLIC_DARK_MODE_PAGES.some((page) => {
+  if (page === "/") return pathname === "/";
+  return pathname === page || pathname.startsWith(`${page}/`);
+});
 
 export default function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    const storedTheme = localStorage.getItem(STORAGE_KEY);
-    if (storedTheme === "dark" || storedTheme === "light") return storedTheme;
-    return "dark";
-  });
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     const applyTheme = () => {
@@ -19,15 +18,37 @@ export default function ThemeProvider({ children }) {
       const nextTheme = shouldUseDarkMode(pathname) ? "dark" : "light";
       document.documentElement.classList.toggle("dark", nextTheme === "dark");
       localStorage.setItem(STORAGE_KEY, nextTheme);
-      if (theme !== nextTheme) {
-        setTheme(nextTheme);
-      }
+      setTheme(nextTheme);
     };
 
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+    const notifyRouteChange = () => window.dispatchEvent(new Event("locationchange"));
+
+    window.history.pushState = function (...args) {
+      const result = originalPushState.apply(this, args);
+      notifyRouteChange();
+      return result;
+    };
+
+    window.history.replaceState = function (...args) {
+      const result = originalReplaceState.apply(this, args);
+      notifyRouteChange();
+      return result;
+    };
+
+    window.addEventListener("popstate", notifyRouteChange);
+    window.addEventListener("locationchange", applyTheme);
+
     applyTheme();
-    window.addEventListener("popstate", applyTheme);
-    return () => window.removeEventListener("popstate", applyTheme);
-  }, [theme]);
+
+    return () => {
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+      window.removeEventListener("popstate", notifyRouteChange);
+      window.removeEventListener("locationchange", applyTheme);
+    };
+  }, []);
 
   const value = useMemo(() => ({
     theme,
