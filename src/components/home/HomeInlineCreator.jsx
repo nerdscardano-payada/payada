@@ -187,7 +187,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="hidden sm:grid sm:grid-cols-3 gap-4">
             <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><Wallet className="w-5 h-5 text-primary" /></div>
               <div>
