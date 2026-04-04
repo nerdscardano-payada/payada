@@ -2,22 +2,26 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 
 const ThemeContext = createContext(null);
 const STORAGE_KEY = "payada-theme";
-const PUBLIC_DARK_MODE_PAGES = ["/", "/Pay", "/Checkout", "/PayTerminal", "/Access", "/EventCheckout", "/MultiTokenCheckout", "/Donate", "/NFTGate", "/NFTStore", "/SubscriberPortal"];
+const PUBLIC_THEME_PAGES = ["/", "/Pay", "/Checkout", "/PayTerminal", "/Access", "/EventCheckout", "/MultiTokenCheckout", "/Donate", "/NFTGate", "/NFTStore", "/SubscriberPortal"];
 
-const shouldUseDarkMode = (pathname) => PUBLIC_DARK_MODE_PAGES.some((page) => {
+const canUseThemeToggle = (pathname) => PUBLIC_THEME_PAGES.some((page) => {
   if (page === "/") return pathname === "/";
   return pathname === page || pathname.startsWith(`${page}/`);
 });
 
+const getStoredTheme = () => {
+  const storedTheme = localStorage.getItem(STORAGE_KEY);
+  return storedTheme === "dark" || storedTheme === "light" ? storedTheme : "dark";
+};
+
 export default function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState(() => getStoredTheme());
 
   useEffect(() => {
     const applyTheme = () => {
       const pathname = window.location.pathname;
-      const nextTheme = shouldUseDarkMode(pathname) ? "dark" : "light";
+      const nextTheme = canUseThemeToggle(pathname) ? getStoredTheme() : "light";
       document.documentElement.classList.toggle("dark", nextTheme === "dark");
-      localStorage.setItem(STORAGE_KEY, nextTheme);
       setTheme(nextTheme);
     };
 
@@ -50,10 +54,21 @@ export default function ThemeProvider({ children }) {
     };
   }, []);
 
+  const updateTheme = (nextTheme) => {
+    localStorage.setItem(STORAGE_KEY, nextTheme);
+    document.documentElement.classList.toggle("dark", nextTheme === "dark");
+    setTheme(nextTheme);
+  };
+
+  const toggleTheme = () => {
+    if (!canUseThemeToggle(window.location.pathname)) return;
+    updateTheme(theme === "dark" ? "light" : "dark");
+  };
+
   const value = useMemo(() => ({
     theme,
-    setTheme: () => {},
-    toggleTheme: () => {}
+    setTheme: updateTheme,
+    toggleTheme
   }), [theme]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

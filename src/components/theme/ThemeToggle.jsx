@@ -14,7 +14,7 @@ export default function ThemeToggle({ className = "" }) {
       size="icon"
       onClick={toggleTheme}
       className={`border-border bg-card/80 backdrop-blur-sm hover:bg-secondary ${className}`}
-      aria-label={isDark ? "Schakel naar lichte modus" : "Schakel naar donkere modus"}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? <Sun className="h-4 w-4 text-accent" /> : <Moon className="h-4 w-4 text-foreground" />}
     </Button>
