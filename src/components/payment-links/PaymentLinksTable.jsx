@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
 import PaymentLinkQRCodeDialog from "@/components/payment-links/PaymentLinkQRCodeDialog";
-import { Link2, Copy, MoreHorizontal, Pencil, Trash2, QrCode } from "lucide-react";
+import EmbedCodeDialog from "@/components/shared/EmbedCodeDialog";
+import { buildHtmlEmbedCode, buildJsEmbedCode } from "@/lib/embedCodes";
+import { Link2, Copy, MoreHorizontal, Pencil, Trash2, QrCode, Code2 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +29,7 @@ export default function PaymentLinksTable({
   onDelete,
 }) {
   const [qrLink, setQrLink] = useState(null);
+  const [embedLink, setEmbedLink] = useState(null);
 
   return (
     <>
@@ -111,6 +114,14 @@ export default function PaymentLinksTable({
                       >
                         <QrCode className="w-3.5 h-3.5" />
                       </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => setEmbedLink(link)}
+                      >
+                        <Code2 className="w-3.5 h-3.5" />
+                      </Button>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -129,6 +140,10 @@ export default function PaymentLinksTable({
                           <DropdownMenuItem onClick={() => setQrLink(link)}>
                             <QrCode className="w-3.5 h-3.5 mr-2" />
                             Show QR code
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setEmbedLink(link)}>
+                            <Code2 className="w-3.5 h-3.5 mr-2" />
+                            Embed code
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-red-600"
@@ -149,6 +164,14 @@ export default function PaymentLinksTable({
       )}
     </div>
     <PaymentLinkQRCodeDialog open={!!qrLink} onOpenChange={(open) => !open && setQrLink(null)} link={qrLink} />
+    <EmbedCodeDialog
+      open={!!embedLink}
+      onOpenChange={(open) => !open && setEmbedLink(null)}
+      title={embedLink ? `Embed ${embedLink.title}` : "Embed payment link"}
+      description="Use this code to show the payment widget directly on your own website."
+      htmlCode={embedLink ? buildHtmlEmbedCode(`${window.location.origin}/Pay?slug=${embedLink.slug}`, embedLink.title) : ""}
+      jsCode={embedLink ? buildJsEmbedCode(`${window.location.origin}/Pay?slug=${embedLink.slug}`, `payada-payment-${embedLink.slug}`) : ""}
+    />
     </>
   );
 }

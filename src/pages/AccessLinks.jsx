@@ -6,7 +6,9 @@ import PageHeader from "@/components/shared/PageHeader";
 import EmptyState from "@/components/shared/EmptyState";
 import AccessLinkForm from "@/components/access-links/AccessLinkForm";
 import MembersDashboard from "@/components/access-links/MembersDashboard";
-import { Users, Plus, Copy, MoreHorizontal, Pencil, Trash2, ExternalLink, LayoutDashboard, AlertCircle } from "lucide-react";
+import EmbedCodeDialog from "@/components/shared/EmbedCodeDialog";
+import { buildHtmlEmbedCode, buildJsEmbedCode } from "@/lib/embedCodes";
+import { Users, Plus, Copy, MoreHorizontal, Pencil, Trash2, ExternalLink, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +34,7 @@ export default function AccessLinks() {
   const { isProfileComplete, profile } = useProfileCheck();
   const [showForm, setShowForm] = useState(false);
   const [editingLink, setEditingLink] = useState(null);
+  const [embedLink, setEmbedLink] = useState(null);
   const [view, setView] = useState("links"); // "links" | "members"
   const [user, setUser] = React.useState(null);
   const queryClient = useQueryClient();
@@ -149,6 +152,9 @@ export default function AccessLinks() {
                         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => copyCheckoutUrl(link.slug)}>
                           <Copy className="w-3.5 h-3.5" />
                         </Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEmbedLink(link)}>
+                          <Code2 className="w-3.5 h-3.5" />
+                        </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon" className="h-8 w-8"><MoreHorizontal className="w-4 h-4" /></Button>
@@ -159,6 +165,9 @@ export default function AccessLinks() {
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => copyCheckoutUrl(link.slug)}>
                               <Copy className="w-3.5 h-3.5 mr-2" />Copy URL
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setEmbedLink(link)}>
+                              <Code2 className="w-3.5 h-3.5 mr-2" />Embed code
                             </DropdownMenuItem>
                             <DropdownMenuItem className="text-red-600" onClick={() => deleteMutation.mutate(link.id)}>
                               <Trash2 className="w-3.5 h-3.5 mr-2" />Delete
@@ -175,6 +184,15 @@ export default function AccessLinks() {
         )}
       </div>
       )}
+
+      <EmbedCodeDialog
+        open={!!embedLink}
+        onOpenChange={(open) => !open && setEmbedLink(null)}
+        title={embedLink ? `Embed ${embedLink.title}` : "Embed access link"}
+        description="Use this code to show the access widget directly on your own website."
+        htmlCode={embedLink ? buildHtmlEmbedCode(`${window.location.origin}/Access?slug=${embedLink.slug}`, embedLink.title) : ""}
+        jsCode={embedLink ? buildJsEmbedCode(`${window.location.origin}/Access?slug=${embedLink.slug}`, `payada-access-${embedLink.slug}`) : ""}
+      />
     </div>
   );
 }
