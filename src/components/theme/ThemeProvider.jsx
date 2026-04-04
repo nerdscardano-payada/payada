@@ -2,29 +2,25 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 
 const ThemeContext = createContext(null);
 const STORAGE_KEY = "payada-theme";
-const PUBLIC_PAGES = ["/", "/Home", "/Pay", "/Access", "/About", "/Contact", "/Features", "/Pricing", "/Security", "/Documentation", "/Webhooks", "/PrivacyPolicy", "/TermsOfService", "/AcceptableUsePolicy", "/MerchantAgreement", "/Disclaimer", "/PaymentProof", "/Unlock", "/Store", "/Roadmap", "/Litepaper", "/TokenSale", "/EventCheckout", "/EventEntry", "/Demo", "/MultiTokenCheckout", "/Donate", "/NFTGate", "/NFTStore", "/NFTMarketplaceFAQ", "/NFTMarketplaceTerms", "/Marketplace", "/SubscriberPortal", "/Checkout", "/PayTerminal"];
+const DARK_MODE_PAGES = ["/Pay", "/Checkout", "/PayTerminal", "/Access", "/EventCheckout", "/MultiTokenCheckout", "/Donate", "/NFTGate", "/NFTStore", "/SubscriberPortal"];
 
-const isPublicPath = (pathname) => {
-  if (pathname === "/") return true;
-  return PUBLIC_PAGES.filter((page) => page !== "/").some((page) => pathname === page || pathname.startsWith(`${page}/`));
-};
+const shouldUseDarkMode = (pathname) => DARK_MODE_PAGES.some((page) => pathname === page || pathname.startsWith(`${page}/`));
 
 export default function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    const pathname = window.location.pathname;
-    if (!isPublicPath(pathname)) return "light";
     const storedTheme = localStorage.getItem(STORAGE_KEY);
     if (storedTheme === "dark" || storedTheme === "light") return storedTheme;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return "dark";
   });
 
   useEffect(() => {
     const applyTheme = () => {
       const pathname = window.location.pathname;
-      const nextTheme = isPublicPath(pathname) ? theme : "light";
+      const nextTheme = shouldUseDarkMode(pathname) ? "dark" : "light";
       document.documentElement.classList.toggle("dark", nextTheme === "dark");
-      if (isPublicPath(pathname)) {
-        localStorage.setItem(STORAGE_KEY, theme);
+      localStorage.setItem(STORAGE_KEY, nextTheme);
+      if (theme !== nextTheme) {
+        setTheme(nextTheme);
       }
     };
 
@@ -35,11 +31,8 @@ export default function ThemeProvider({ children }) {
 
   const value = useMemo(() => ({
     theme,
-    setTheme,
-    toggleTheme: () => {
-      if (!isPublicPath(window.location.pathname)) return;
-      setTheme((currentTheme) => currentTheme === "dark" ? "light" : "dark");
-    }
+    setTheme: () => {},
+    toggleTheme: () => {}
   }), [theme]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
