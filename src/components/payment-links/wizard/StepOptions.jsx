@@ -44,7 +44,7 @@ export default function StepOptions({ form, update }) {
       <div className="space-y-4 border-t border-slate-100 pt-5">
         <h4 className="text-sm font-medium text-slate-700">Redirects</h4>
         <div className="space-y-2">
-          <Label>URL after successful payment</Label>
+          <Label>URL after successful payment (optional)</Label>
           <Input value={form.success_redirect_url} onChange={(e) => update("success_redirect_url", e.target.value)} placeholder="https://yoursite.com/thank-you" />
         </div>
       </div>
