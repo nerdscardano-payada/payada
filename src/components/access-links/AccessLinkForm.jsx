@@ -55,6 +55,17 @@ export default function AccessLinkForm({ link, onBack, user }) {
     ...link,
   });
 
+  useEffect(() => {
+    if (!user?.email || link?.id) return;
+    base44.entities.MerchantProfile.filter({ user_id: user.email }).then((profiles) => {
+      const profile = profiles?.[0];
+      const walletAddress = profile?.default_receive_address || profile?.connected_wallet_address;
+      if (walletAddress) {
+        setForm((prev) => ({ ...prev, receive_address: prev.receive_address || walletAddress }));
+      }
+    });
+  }, [user?.email, link?.id]);
+
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const saveMutation = useMutation({
