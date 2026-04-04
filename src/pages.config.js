@@ -55,7 +55,7 @@ import AccessLinks from './pages/AccessLinks';
 import AdminCNTLab from './pages/AdminCNTLab';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLaunchpad from './pages/AdminLaunchpad';
-import ApiKeys from './pages/ApiKeys';
+
 import Billing from './pages/Billing';
 import ButtonGenerator from './pages/ButtonGenerator';
 import Contact from './pages/Contact';
@@ -98,7 +98,7 @@ import TokenSaleDashboard from './pages/TokenSaleDashboard';
 import TransactionAudit from './pages/TransactionAudit';
 import Unlock from './pages/Unlock';
 import WebhookSetupWizard from './pages/WebhookSetupWizard';
-import Webhooks from './pages/Webhooks';
+
 import __Layout from './Layout.jsx';
 
 
@@ -111,7 +111,6 @@ export const PAGES = {
     "AdminCNTLab": AdminCNTLab,
     "AdminDashboard": AdminDashboard,
     "AdminLaunchpad": AdminLaunchpad,
-    "ApiKeys": ApiKeys,
     "Billing": Billing,
     "ButtonGenerator": ButtonGenerator,
     "Contact": Contact,
@@ -154,7 +153,6 @@ export const PAGES = {
     "TransactionAudit": TransactionAudit,
     "Unlock": Unlock,
     "WebhookSetupWizard": WebhookSetupWizard,
-    "Webhooks": Webhooks,
 }
 
 export const pagesConfig = {

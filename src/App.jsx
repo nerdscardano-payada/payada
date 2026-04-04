@@ -31,7 +31,7 @@ import NFTMarketplaceFAQ from './pages/NFTMarketplaceFAQ';
 import NFTMarketplaceTerms from './pages/NFTMarketplaceTerms';
 import PublicNFTMarketplace from './pages/PublicNFTMarketplace';
 import OnboardingGoals from './pages/OnboardingGoals';
-import TutorialPage from './pages/TutorialPage.jsx';
+
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -139,7 +139,6 @@ const AuthenticatedApp = () => {
       <Route path="/NFTMarketplaceTerms" element={<LayoutWrapper currentPageName="NFTMarketplaceTerms"><NFTMarketplaceTerms /></LayoutWrapper>} />
       <Route path="/Marketplace" element={<LayoutWrapper currentPageName="Marketplace"><PublicNFTMarketplace /></LayoutWrapper>} />
       <Route path="/OnboardingGoals" element={<ProtectedRoute currentPageName="OnboardingGoals"><LayoutWrapper currentPageName="OnboardingGoals"><OnboardingGoals /></LayoutWrapper></ProtectedRoute>} />
-      <Route path="/Tutorials" element={<LayoutWrapper currentPageName="Tutorials"><TutorialPage /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
