@@ -282,7 +282,7 @@ For more information: www.payada.io
           {/* Solution */}
           <section>
             <h2 className="text-2xl font-bold text-foreground mb-4">{t("litepaper.solution_title")}</h2>
-            <div className="bg-white rounded-xl p-6 border border-border space-y-4">
+            <div className="bg-card rounded-xl p-6 border border-border space-y-4">
               <div>
                 <h4 className="font-semibold text-foreground mb-2">🔵 Native Cardano Integration</h4>
                 <p className="text-foreground">
