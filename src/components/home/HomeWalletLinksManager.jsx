@@ -12,7 +12,7 @@ function LinkRow({ item, type, walletAddress, onRefresh, canClaim }) {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(publicUrl);
-    toast.success("Link gekopieerd");
+    toast.success("Link copied");
   };
 
   const handleDelete = async () => {
@@ -23,10 +23,10 @@ function LinkRow({ item, type, walletAddress, onRefresh, canClaim }) {
         linkId: item.id,
         walletAddress,
       });
-      toast.success("Link verwijderd");
+      toast.success("Link deleted");
       onRefresh();
     } catch (error) {
-      toast.error(error?.response?.data?.error || "Verwijderen is mislukt");
+      toast.error(error?.response?.data?.error || "Delete failed");
     }
   };
 
@@ -38,10 +38,10 @@ function LinkRow({ item, type, walletAddress, onRefresh, canClaim }) {
         linkId: item.id,
         walletAddress,
       });
-      toast.success("Link geclaimd");
+      toast.success("Link claimed");
       onRefresh();
     } catch (error) {
-      toast.error(error?.response?.data?.error || "Claimen is mislukt");
+      toast.error(error?.response?.data?.error || "Claim failed");
     }
   };
 
@@ -52,10 +52,10 @@ function LinkRow({ item, type, walletAddress, onRefresh, canClaim }) {
         <p className="text-sm text-muted-foreground truncate">/{type === "payment" ? "Pay" : "Access"}?slug={item.slug}</p>
       </div>
       <div className="flex flex-wrap gap-2">
-        <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="w-4 h-4" />Kopieer</Button>
+        <Button variant="outline" size="sm" onClick={handleCopy}><Copy className="w-4 h-4" />Copy</Button>
         <Button variant="outline" size="sm" onClick={() => window.open(publicUrl, "_blank")}><Link2 className="w-4 h-4" />Open</Button>
         {canClaim && <Button size="sm" onClick={handleClaim}><UserPlus className="w-4 h-4" />Claim</Button>}
-        <Button variant="destructive" size="sm" onClick={handleDelete}><Trash2 className="w-4 h-4" />Verwijder</Button>
+        <Button variant="destructive" size="sm" onClick={handleDelete}><Trash2 className="w-4 h-4" />Delete</Button>
       </div>
     </div>
   );
@@ -90,12 +90,12 @@ export default function HomeWalletLinksManager({ walletAddress }) {
     <Card className="p-5 sm:p-6 border border-border bg-card space-y-4 shadow-sm">
       <div>
         <p className="text-sm text-muted-foreground">Wallet links</p>
-        <h3 className="text-xl font-semibold text-foreground mt-1">Beheer links van je wallet</h3>
-        <p className="text-sm text-muted-foreground mt-1">Bekijk, kopieer, open, claim of verwijder public homepage links op basis van je verbonden wallet.</p>
+        <h3 className="text-xl font-semibold text-foreground mt-1">Manage your wallet links</h3>
+        <p className="text-sm text-muted-foreground mt-1">View, copy, open, claim, or delete public homepage links based on your connected wallet.</p>
       </div>
 
-      {loading ? <p className="text-sm text-muted-foreground">Links laden...</p> : null}
-      {!loading && total === 0 ? <p className="text-sm text-muted-foreground">Geen public homepage links gevonden voor dit wallet adres.</p> : null}
+      {loading ? <p className="text-sm text-muted-foreground">Loading links...</p> : null}
+      {!loading && total === 0 ? <p className="text-sm text-muted-foreground">No public homepage links found for this wallet address.</p> : null}
 
       <div className="space-y-3">
         {data.paymentLinks?.map((item) => <LinkRow key={item.id} item={item} type="payment" walletAddress={walletAddress} onRefresh={loadLinks} canClaim={authenticated} />)}
