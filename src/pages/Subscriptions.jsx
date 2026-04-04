@@ -96,6 +96,11 @@ export default function Subscriptions() {
     onSuccess: () => refreshData("Subscription plan deleted"),
   });
 
+  const deleteSubscriptionMutation = useMutation({
+    mutationFn: (subscriptionId) => base44.entities.Subscription.delete(subscriptionId),
+    onSuccess: () => refreshData("Subscriber deleted"),
+  });
+
   const plansById = Object.fromEntries(plans.map((plan) => [plan.id, plan]));
 
   return (
@@ -172,7 +177,9 @@ export default function Subscriptions() {
             subscriptions={subscriptions}
             plansById={plansById}
             savingId={savingId}
+            deletingSubscriptionId={deleteSubscriptionMutation.isPending ? deleteSubscriptionMutation.variables : null}
             onCancel={(subscriptionId) => cancelMutation.mutate(subscriptionId)}
+            onDelete={(subscriptionId) => deleteSubscriptionMutation.mutate(subscriptionId)}
             onMarkPaid={(subscriptionId) => {
               setSavingId(`${subscriptionId}-paid`);
               markPaidMutation.mutateAsync(subscriptionId).finally(() => setSavingId(null));

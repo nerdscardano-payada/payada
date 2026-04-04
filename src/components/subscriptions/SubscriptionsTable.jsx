@@ -4,9 +4,20 @@ import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CheckCircle2, ListOrdered, XCircle } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { CheckCircle2, ListOrdered, Trash2, XCircle } from "lucide-react";
 
-export default function SubscriptionsTable({ subscriptions, plansById, savingId, onCancel, onMarkPaid, onSaveGraceOverride }) {
+export default function SubscriptionsTable({ subscriptions, plansById, savingId, deletingSubscriptionId, onCancel, onDelete, onMarkPaid, onSaveGraceOverride }) {
   const [values, setValues] = useState({});
 
   useEffect(() => {
@@ -89,6 +100,35 @@ export default function SubscriptionsTable({ subscriptions, plansById, savingId,
                       <XCircle className="h-4 w-4" />
                     </Button>
                   )}
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        disabled={deletingSubscriptionId === sub.id}
+                        className="h-8 w-8 text-slate-400 hover:text-red-600 disabled:opacity-60"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete subscriber?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will permanently remove this subscriber from the list.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => onDelete?.(sub.id)}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          {deletingSubscriptionId === sub.id ? "Deleting..." : "Delete subscriber"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </td>
             </tr>
