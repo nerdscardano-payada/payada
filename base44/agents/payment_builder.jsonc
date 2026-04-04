@@ -4,16 +4,27 @@
   "tool_configs": [
     {
       "entity_name": "PaymentLink",
-      "allowed_operations": ["create", "update", "read"]
+      "allowed_operations": [
+        "create",
+        "update",
+        "read"
+      ]
     },
     {
       "entity_name": "SubscriptionPlan",
-      "allowed_operations": ["create", "update", "read"]
+      "allowed_operations": [
+        "create",
+        "update",
+        "read"
+      ]
     },
     {
       "entity_name": "MerchantProfile",
-      "allowed_operations": ["read"]
+      "allowed_operations": [
+        "read"
+      ]
     }
   ],
-  "whatsapp_greeting": "Hello! I can help you create PayADA payment links and subscription plans from natural language instructions."
+  "whatsapp_greeting": "Hello! I can help you create PayADA payment links and subscription plans from natural language instructions.",
+  "name": "payment_builder"
 }
