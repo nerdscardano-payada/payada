@@ -52,9 +52,9 @@ export default function AboutPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 to-white">
+      <section className="relative overflow-hidden bg-gradient-to-b from-background to-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-sm font-medium px-4 py-1.5 rounded-full mb-6">
             <Rocket className="w-4 h-4" />
             {t("about.badge")}
           </div>
@@ -80,14 +80,14 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="bg-slate-50 py-20">
+      <section className="bg-muted py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-foreground mb-4 text-center">{t("about.values_title")}</h2>
           <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">{t("about.values_sub")}</p>
           <div className="grid md:grid-cols-2 gap-6">
             {values.map(({ Icon, titleKey, descKey, color }, i) => (
               <div key={i} className="bg-white border border-border rounded-xl p-8 hover:shadow-md transition-shadow">
-                <div className={`w-12 h-12 rounded-lg bg-slate-50 flex items-center justify-center mb-5`}>
+                <div className={`w-12 h-12 rounded-lg bg-muted flex items-center justify-center mb-5`}>
                   <Icon className={`w-6 h-6 ${color}`} />
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-3">{t(titleKey)}</h3>
@@ -110,14 +110,14 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-blue-600 to-cyan-500 py-20">
+      <section className="bg-gradient-to-r from-primary to-accent py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">{t("about.cta_title")}</h2>
-          <p className="text-blue-100 text-lg mb-8 max-w-xl mx-auto">{t("about.cta_sub")}</p>
+          <p className="text-primary-foreground/80 text-lg mb-8 max-w-xl mx-auto">{t("about.cta_sub")}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to={createPageUrl("Home")}
-              className="bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg hover:bg-blue-50 transition-colors"
+              className="bg-background text-primary font-semibold px-8 py-3 rounded-lg hover:bg-background/90 transition-colors"
             >
               {t("about.cta_button")}
             </Link>
@@ -133,7 +133,7 @@ export default function AboutPage() {
 
       {/* Footer */}
       <footer className="border-t border-border py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-muted-foreground">
           © 2026 PayADA.io. All rights reserved.
         </div>
       </footer>
