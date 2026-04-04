@@ -6,6 +6,7 @@ import { Bot, Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const AGENT_NAME = "payment_builder";
+const STORAGE_KEY = "admin-ai-payment-builder-conversation-id";
 
 export default function AdminAIBuildChat() {
   const [conversation, setConversation] = useState(null);
@@ -17,18 +18,32 @@ export default function AdminAIBuildChat() {
     let unsubscribe;
 
     const init = async () => {
-      const created = await base44.agents.createConversation({
-        agent_name: AGENT_NAME,
-        metadata: {
-          name: "Admin AI Payment Builder",
-          description: "Admin prototype conversation",
-        },
-      });
+      const storedConversationId = window.localStorage.getItem(STORAGE_KEY);
+      let activeConversation = null;
 
-      setConversation(created);
-      setMessages(created.messages || []);
+      if (storedConversationId) {
+        try {
+          activeConversation = await base44.agents.getConversation(storedConversationId);
+        } catch {
+          window.localStorage.removeItem(STORAGE_KEY);
+        }
+      }
 
-      unsubscribe = base44.agents.subscribeToConversation(created.id, (data) => {
+      if (!activeConversation) {
+        activeConversation = await base44.agents.createConversation({
+          agent_name: AGENT_NAME,
+          metadata: {
+            name: "Admin AI Payment Builder",
+            description: "Admin prototype conversation",
+          },
+        });
+        window.localStorage.setItem(STORAGE_KEY, activeConversation.id);
+      }
+
+      setConversation(activeConversation);
+      setMessages(activeConversation.messages || []);
+
+      unsubscribe = base44.agents.subscribeToConversation(activeConversation.id, (data) => {
         setMessages(data.messages || []);
       });
     };
