@@ -7,7 +7,16 @@ async function getLatestBlockHeight() {
   const response = await fetch(`${BLOCKFROST_URL}/blocks/latest`, {
     headers: { "project_id": BLOCKFROST_API_KEY }
   });
-  if (!response.ok) throw new Error(`Failed to get latest block: ${response.statusText}`);
+
+  if (response.status === 403) {
+    const bodyText = await response.text();
+    const quotaExceeded = bodyText.includes('QUOTA_EXCEEDED') || bodyText.includes('requests quota');
+    const error = new Error(quotaExceeded ? 'BLOCKFROST_QUOTA_EXCEEDED' : `BLOCKFROST_FORBIDDEN: ${bodyText}`);
+    error.code = quotaExceeded ? 'BLOCKFROST_QUOTA_EXCEEDED' : 'BLOCKFROST_FORBIDDEN';
+    throw error;
+  }
+
+  if (!response.ok) throw new Error(`Failed to get latest block: ${response.status} ${response.statusText}`);
   const data = await response.json();
   return data.height;
 }
@@ -167,6 +176,16 @@ Deno.serve(async (req) => {
     return Response.json({ success: true, ...result });
   } catch (error) {
     console.error('Confirmation update error:', error.message);
+
+    if (error.code === 'BLOCKFROST_QUOTA_EXCEEDED' || error.message === 'BLOCKFROST_QUOTA_EXCEEDED') {
+      return Response.json({
+        success: true,
+        skipped: true,
+        reason: 'blockfrost_quota_exceeded',
+        message: 'Blockfrost quota exceeded, skipping this run and retrying on the next schedule.'
+      });
+    }
+
     return Response.json({ error: error.message, type: 'confirmation_update_error' }, { status: 500 });
   }
 });
