@@ -42,6 +42,10 @@ const navItems = [
   { name: "Payments", icon: CreditCard, page: "Payments" },
   { name: "Customers", icon: Users, page: "Customers" },
 
+  { type: "header", name: "Tools" },
+  { name: "Donations", icon: Heart, page: "DonationPages" },
+  { name: "POS", icon: Monitor, page: "POS" },
+
   { type: "header", name: "Wallet" },
   { name: "Merchant Profile", icon: Wallet, page: "MerchantProfile" },
 
