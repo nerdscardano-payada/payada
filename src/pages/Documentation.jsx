@@ -8,7 +8,6 @@ import {
   Shield,
   Users,
   ArrowRight,
-  ExternalLink,
   Wallet,
   Lock,
   CheckCircle2,
@@ -73,9 +72,6 @@ export default function DocumentationPage() {
             Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-6">
-            <Link to={createPageUrl("APIReference")} className="text-sm text-slate-600 hover:text-slate-900 flex items-center gap-1">
-              API Reference <ExternalLink className="w-3 h-3" />
-            </Link>
             <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">Security</Link>
           </div>
         </nav>
@@ -266,9 +262,6 @@ export default function DocumentationPage() {
               </p>
               <CodeBlock code={`curl https://api.payada.io/v1/payment-links \\
   -H "Authorization: Bearer YOUR_API_KEY"`} />
-              <Link to={createPageUrl("APIReference")} className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline mt-2">
-                Open API reference <ArrowRight className="w-4 h-4" />
-              </Link>
             </Section>
           </main>
         </div>

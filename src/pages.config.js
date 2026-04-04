@@ -47,7 +47,6 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import APIReference from './pages/APIReference';
 import About from './pages/About';
 import AcceptableUsePolicy from './pages/AcceptableUsePolicy';
 import Access from './pages/Access';
@@ -103,7 +102,6 @@ import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "APIReference": APIReference,
     "About": About,
     "AcceptableUsePolicy": AcceptableUsePolicy,
     "Access": Access,
