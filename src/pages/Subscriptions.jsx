@@ -91,6 +91,11 @@ export default function Subscriptions() {
     onSuccess: () => refreshData("Subscriber grace period updated"),
   });
 
+  const deletePlanMutation = useMutation({
+    mutationFn: (planId) => base44.entities.SubscriptionPlan.delete(planId),
+    onSuccess: () => refreshData("Subscription plan deleted"),
+  });
+
   const plansById = Object.fromEntries(plans.map((plan) => [plan.id, plan]));
 
   return (
@@ -125,7 +130,11 @@ export default function Subscriptions() {
             });
           }}
         />
-        <SubscriptionPlanLinks plans={plans} />
+        <SubscriptionPlanLinks
+          plans={plans}
+          deletingPlanId={deletePlanMutation.isPending ? deletePlanMutation.variables : null}
+          onDeletePlan={(planId) => deletePlanMutation.mutate(planId)}
+        />
       </div>
 
       <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">

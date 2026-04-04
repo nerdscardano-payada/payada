@@ -1,11 +1,22 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Link as LinkIcon } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Copy, ExternalLink, Link as LinkIcon, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const intervalLabel = (plan) => (plan.interval_type === "yearly" ? "Yearly" : "Monthly");
 
-export default function SubscriptionPlanLinks({ plans }) {
+export default function SubscriptionPlanLinks({ plans, onDeletePlan, deletingPlanId }) {
   const origin = window.location.origin;
 
   return (
@@ -33,7 +44,7 @@ export default function SubscriptionPlanLinks({ plans }) {
 
               <div className="mt-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-600 break-all">{checkoutUrl}</div>
 
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
                 <Button type="button" variant="outline" className="flex-1" onClick={() => {
                   navigator.clipboard.writeText(checkoutUrl);
                   toast.success("Checkout link copied");
@@ -45,6 +56,30 @@ export default function SubscriptionPlanLinks({ plans }) {
                     <ExternalLink className="mr-2 h-4 w-4" /> Open
                   </a>
                 </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button type="button" variant="outline" disabled={deletingPlanId === plan.id} className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 disabled:opacity-60">
+                      <Trash2 className="mr-2 h-4 w-4" /> Delete
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete subscription plan?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This will remove the plan and its checkout link. Existing subscriptions are not changed.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => onDeletePlan?.(plan.id)}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
+                        {deletingPlanId === plan.id ? "Deleting..." : "Delete plan"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </div>
           );
