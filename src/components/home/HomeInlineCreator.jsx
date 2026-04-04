@@ -53,7 +53,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   const handleCopyCreatedLink = async () => {
     if (!createdPaymentUrl) return;
     await navigator.clipboard.writeText(createdPaymentUrl);
-    toast.success("Link gekopieerd");
+    toast.success("Link copied");
   };
 
   const handleGenerate = async () => {
@@ -298,8 +298,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           {type === "payment" && createdPaymentUrl && (
             <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
               <div>
-                <p className="text-sm font-semibold text-foreground">Je payment link is klaar</p>
-                <p className="text-sm text-muted-foreground mt-1">Kopieer je nieuwe link of open hem wanneer jij wil.</p>
+                <p className="text-sm font-semibold text-foreground">Your payment link is ready</p>
+                <p className="text-sm text-muted-foreground mt-1">Copy your new link or open it whenever you want.</p>
               </div>
               <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
                 {createdPaymentUrl}
@@ -307,7 +307,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
               <div className="flex flex-wrap gap-3">
                 <Button type="button" onClick={handleCopyCreatedLink} className="h-11 rounded-xl px-5">
                   <Copy className="w-4 h-4 mr-2" />
-                  Kopieer link
+                  Copy link
                 </Button>
                 <Button type="button" variant="outline" onClick={() => window.open(createdPaymentUrl, "_blank")} className="h-11 rounded-xl px-5">
                   <ExternalLink className="w-4 h-4 mr-2" />
