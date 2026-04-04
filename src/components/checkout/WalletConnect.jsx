@@ -237,14 +237,14 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   return (
     <div className="relative">
       {installedWallets.length === 0 ? (
-        <div className="text-center py-4 px-3 bg-slate-900/90 rounded-xl border border-slate-700">
-          <Wallet className="w-5 h-5 text-slate-300 mx-auto mb-1.5" />
-          <p className="text-xs text-slate-300">No Cardano wallet detected.</p>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+        <div className="text-center py-4 px-3 bg-slate-50 rounded-xl border border-slate-200">
+          <Wallet className="w-5 h-5 text-slate-700 mx-auto mb-1.5" />
+          <p className="text-xs text-slate-800">No Cardano wallet detected.</p>
+          <p className="text-[11px] text-slate-600 mt-0.5">
             Install{" "}
-            <a href="https://namiwallet.io" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">Nami</a>,{" "}
-            <a href="https://eternl.io" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">Eternl</a>, or{" "}
-            <a href="https://www.lace.io" target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">Lace</a>
+            <a href="https://namiwallet.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Nami</a>,{" "}
+            <a href="https://eternl.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Eternl</a>, or{" "}
+            <a href="https://www.lace.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Lace</a>
           </p>
         </div>
       ) : (
