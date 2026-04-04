@@ -2,7 +2,6 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import FeeSelector from "@/components/payment-links/FeeSelector";
 
 export default function StepOptions({ form, update }) {
@@ -11,11 +10,6 @@ export default function StepOptions({ form, update }) {
       <p className="text-sm text-slate-500">All options below are optional.</p>
 
       <FeeSelector form={form} update={update} />
-
-      <div className="space-y-2">
-        <Label>Fee percentage</Label>
-        <Input type="number" step="0.01" min="0" value={form.fee_percentage ?? 1.75} onChange={(e) => update("fee_percentage", e.target.value)} />
-      </div>
 
       {/* Expiry */}
       <div className="space-y-2">
