@@ -40,6 +40,7 @@ const upcoming = [
 ];
 
 const launchedIcons = [Link2, Coins, Lock];
+const upcomingIcons = [Rocket, CheckCircle2, Clock];
 
 export default function RoadmapPage() {
   const handleSignUp = () => base44.auth.redirectToLogin(createPageUrl("Dashboard"));
