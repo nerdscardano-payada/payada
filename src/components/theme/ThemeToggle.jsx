@@ -16,7 +16,7 @@ export default function ThemeToggle({ className = "" }) {
       className={`border-border bg-card/80 backdrop-blur-sm hover:bg-secondary ${className}`}
       aria-label={isDark ? "Schakel naar lichte modus" : "Schakel naar donkere modus"}
     >
-      {isDark ? <Sun className="h-4 w-4 text-accent" /> : <Moon className="h-4 w-4 text-slate-900" />}
+      {isDark ? <Sun className="h-4 w-4 text-accent" /> : <Moon className="h-4 w-4 text-foreground" />}
     </Button>
   );
 }
