@@ -38,10 +38,32 @@ Deno.serve(async (req) => {
 
       const profiles = await base44.asServiceRole.entities.MerchantProfile.filter({ user_id: user.email });
       const profile = profiles[0] || null;
-      const profileWallet = profile?.connected_wallet_address || profile?.default_receive_address;
+      const knownWallets = [
+        profile?.connected_wallet_address,
+        profile?.default_receive_address,
+      ].filter(Boolean);
 
-      if (!profileWallet || profileWallet !== walletAddress) {
+      if (knownWallets.length > 0 && !knownWallets.includes(walletAddress)) {
         return Response.json({ error: 'Wallet address does not match your profile' }, { status: 403 });
+      }
+
+      const profileUpdate = profile
+        ? {}
+        : { user_id: user.email, business_name: user.full_name || user.email };
+
+      const walletUpdate = !profile?.connected_wallet_address
+        ? { connected_wallet_address: walletAddress }
+        : {};
+
+      if (profile) {
+        if (Object.keys(walletUpdate).length > 0) {
+          await base44.asServiceRole.entities.MerchantProfile.update(profile.id, walletUpdate);
+        }
+      } else {
+        await base44.asServiceRole.entities.MerchantProfile.create({
+          ...profileUpdate,
+          ...walletUpdate,
+        });
       }
 
       await entityApi.update(linkId, { merchant_id: user.email });

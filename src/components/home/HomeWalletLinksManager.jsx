@@ -16,25 +16,33 @@ function LinkRow({ item, type, walletAddress, onRefresh, canClaim }) {
   };
 
   const handleDelete = async () => {
-    await base44.functions.invoke("claimOrDeletePublicLink", {
-      action: "delete",
-      linkType: type,
-      linkId: item.id,
-      walletAddress,
-    });
-    toast.success("Link verwijderd");
-    onRefresh();
+    try {
+      await base44.functions.invoke("claimOrDeletePublicLink", {
+        action: "delete",
+        linkType: type,
+        linkId: item.id,
+        walletAddress,
+      });
+      toast.success("Link verwijderd");
+      onRefresh();
+    } catch (error) {
+      toast.error(error?.response?.data?.error || "Verwijderen is mislukt");
+    }
   };
 
   const handleClaim = async () => {
-    await base44.functions.invoke("claimOrDeletePublicLink", {
-      action: "claim",
-      linkType: type,
-      linkId: item.id,
-      walletAddress,
-    });
-    toast.success("Link geclaimd");
-    onRefresh();
+    try {
+      await base44.functions.invoke("claimOrDeletePublicLink", {
+        action: "claim",
+        linkType: type,
+        linkId: item.id,
+        walletAddress,
+      });
+      toast.success("Link geclaimd");
+      onRefresh();
+    } catch (error) {
+      toast.error(error?.response?.data?.error || "Claimen is mislukt");
+    }
   };
 
   return (
