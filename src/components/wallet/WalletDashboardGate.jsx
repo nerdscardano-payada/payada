@@ -33,24 +33,20 @@ export default function WalletDashboardGate({ profile, onLinked }) {
             Connect your Cardano wallet
           </div>
           <p className="text-sm text-slate-600">
-            Start eenvoudig: koppel je wallet om payment links en access links te beheren.
+            Get started quickly: connect your wallet to manage payment links and access links.
           </p>
           {isLinked && (
             <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
               <ShieldCheck className="w-3.5 h-3.5" />
-              Wallet gekoppeld aan merchant profiel
+              Wallet linked to merchant profile
             </div>
           )}
-          {matchesConnectedWallet && (
-            <div className="text-xs text-slate-500 font-mono break-all">{connectedAddress}</div>
-          )}
-        </div>
-        <div className="w-full md:w-[320px] space-y-3">
+...
           <WalletConnect onConnected={handleConnected} />
-          {saving && <p className="text-xs text-slate-500">Wallet wordt gekoppeld...</p>}
+          {saving && <p className="text-xs text-slate-500">Linking wallet...</p>}
           {isLinked && !connectedAddress && (
             <Button variant="outline" className="w-full" disabled>
-              Wallet gekoppeld
+              Wallet linked
             </Button>
           )}
         </div>
