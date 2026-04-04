@@ -9,7 +9,6 @@ import {
 import { Button } from "@/components/ui/button";
 import SEOHead from "@/components/SEOHead";
 import { useTranslation } from "@/components/i18n/useTranslation";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const SUPPORTED_WALLETS = [
   { name: "Nami", url: "https://namiwallet.io" },
@@ -72,7 +71,7 @@ function Section({ id, title, icon: Icon, children }) {
 }
 
 export default function DocumentationPage() {
-  const { t, lang, setLang } = useTranslation();
+  const { t } = useTranslation();
   const [activeSection, setActiveSection] = useState("quickstart");
   const [checkedSteps, setCheckedSteps] = useState({});
 
@@ -104,7 +103,7 @@ export default function DocumentationPage() {
             </Link>
             <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">{t("nav.security")}</Link>
           </div>
-          <LanguageSwitcher lang={lang} setLang={setLang} />
+
         </nav>
       </header>
 

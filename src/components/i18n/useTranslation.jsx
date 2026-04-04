@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { translations as baseTranslations } from "./translations";
 import { extraTranslations } from "./translationsExtra";
 
@@ -26,35 +26,14 @@ const translations = Object.fromEntries(
   ])
 );
 
-const STORAGE_KEY = "payada_lang";
-
 export const SUPPORTED_LANGUAGES = [
   { code: "en", label: "English", flag: "🇬🇧" },
-  { code: "nl", label: "Nederlands", flag: "🇳🇱" },
-  { code: "de", label: "Deutsch", flag: "🇩🇪" },
-  { code: "fr", label: "Français", flag: "🇫🇷" },
-  { code: "es", label: "Español", flag: "🇪🇸" },
-  { code: "pt", label: "Português", flag: "🇵🇹" },
-  { code: "tr", label: "Türkçe", flag: "🇹🇷" },
 ];
 
-function getInitialLang() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored && translations[stored]) return stored;
-    const browser = navigator.language?.slice(0, 2);
-    if (browser && translations[browser]) return browser;
-  } catch {}
-  return "en";
-}
-
 export function useTranslation() {
-  const [lang, setLangState] = useState(getInitialLang);
+  const lang = "en";
 
-  const setLang = useCallback((code) => {
-    localStorage.setItem(STORAGE_KEY, code);
-    setLangState(code);
-  }, []);
+  const setLang = useCallback(() => {}, []);
 
   const t = useCallback(
     (key) => {
