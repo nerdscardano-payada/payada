@@ -299,59 +299,59 @@ export default function Access() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 md:p-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4 md:p-8">
       <div className="max-w-xl w-full space-y-4">
 
         <SimpleAccessSummaryCard accessLink={accessLink} />
 
         {!isCnt && (
-          <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm">
             <AdaRatePreview adaAmount={totalAda} />
           </div>
         )}
 
-        <div className="bg-white rounded-3xl border border-slate-200 p-4 space-y-3 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-4 space-y-3 shadow-sm">
           <div className="space-y-1.5">
-            <Label className="text-slate-700 text-sm">Your Name / Username <span className="text-red-500">*</span></Label>
+            <Label className="text-slate-700 dark:text-slate-300 text-sm">Your Name / Username <span className="text-red-500">*</span></Label>
             <Input
               value={memberName}
               onChange={e => setMemberName(e.target.value)}
               placeholder="Full name or username"
-              className="border-slate-200 text-slate-900 placeholder:text-slate-400"
+              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-white dark:bg-slate-950"
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-slate-700 text-sm">Email Address <span className="text-slate-400 font-normal">(optional)</span></Label>
+            <Label className="text-slate-700 dark:text-slate-300 text-sm">Email Address <span className="text-slate-400 dark:text-slate-500 font-normal">(optional)</span></Label>
             <Input
               type="email"
               value={memberEmail}
               onChange={e => setMemberEmail(e.target.value)}
               placeholder="your@email.com"
-              className="border-slate-200 text-slate-900 placeholder:text-slate-400"
+              className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-white dark:bg-slate-950"
             />
           </div>
           {accessLink.platform === "discord" && accessLink.discord_bot_token && (
             <div className="space-y-1.5">
-              <Label className="text-slate-700 text-sm">Discord Username <span className="text-red-500">*</span></Label>
+              <Label className="text-slate-700 dark:text-slate-300 text-sm">Discord Username <span className="text-red-500">*</span></Label>
               <Input
                 value={discordUsername}
                 onChange={e => setDiscordUsername(e.target.value)}
                 placeholder="yourname (no @ needed)"
-                className="border-slate-200 text-slate-900 placeholder:text-slate-400"
+                className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 bg-white dark:bg-slate-950"
               />
-              <p className="text-xs text-slate-500">Required for automatic role assignment</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Required for automatic role assignment</p>
             </div>
           )}
         </div>
 
-        <div className="bg-white rounded-3xl border border-slate-200 p-4 space-y-3 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-4 space-y-3 shadow-sm">
           <WalletConnect
             onConnected={(walletData) => setConnectedWallet(walletData)}
             onDisconnected={() => setConnectedWallet(null)}
           />
 
           {connectedWallet && !memberName.trim() && (
-            <p className="text-amber-400 text-sm text-center">Please enter your name to continue.</p>
+            <p className="text-amber-500 dark:text-amber-400 text-sm text-center">Please enter your name to continue.</p>
           )}
           {connectedWallet && memberName.trim() && (
             <WalletPayButton
@@ -366,7 +366,7 @@ export default function Access() {
           )}
         </div>
 
-        <div className="flex items-center justify-between text-xs text-slate-500 px-1">
+        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
           {isCnt ? (
             <span>Platform fee ({feePercent}%): {formatCntAmount(feeCnt, cntDecimals)} {accessLink.cnt_ticker}</span>
           ) : (
