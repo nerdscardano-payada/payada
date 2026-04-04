@@ -58,7 +58,7 @@ const features = [
 
 export default function FeaturesPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <SEOHead
         title="Features — PayADA"
         description="PayADA features focused on payment links, CNT payments, access links, and gated payment experiences on Cardano."
@@ -71,18 +71,18 @@ export default function FeaturesPage() {
             Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link to={createPageUrl("Pricing")} className="text-sm text-slate-600 hover:text-slate-900">Pricing</Link>
-            <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">Security</Link>
-            <Link to={createPageUrl("Documentation")} className="text-sm text-slate-600 hover:text-slate-900">Documentation</Link>
-            <Link to={createPageUrl("Contact")} className="text-sm text-slate-600 hover:text-slate-900">Contact</Link>
+            <Link to={createPageUrl("Pricing")} className="text-sm text-muted-foreground hover:text-foreground">Pricing</Link>
+            <Link to={createPageUrl("Security")} className="text-sm text-muted-foreground hover:text-foreground">Security</Link>
+            <Link to={createPageUrl("Documentation")} className="text-sm text-muted-foreground hover:text-foreground">Documentation</Link>
+            <Link to={createPageUrl("Contact")} className="text-sm text-muted-foreground hover:text-foreground">Contact</Link>
           </div>
         </nav>
       </header>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-20">
-          <h1 className="text-5xl font-bold text-slate-900 mb-6">Focused features for modern Cardano payments</h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+          <h1 className="text-5xl font-bold text-foreground mb-6">Focused features for modern Cardano payments</h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             PayADA is now centered on a tighter set of products: payment links, CNT payments, access links, and gated payment experiences.
           </p>
         </div>
@@ -91,10 +91,10 @@ export default function FeaturesPage() {
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
-              <div key={feature.title} className="border border-slate-200 rounded-lg p-6 hover:border-cyan-300 hover:shadow-lg transition bg-white">
-                <Icon className="w-12 h-12 text-blue-600 mb-4" />
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">{feature.title}</h3>
-                <p className="text-slate-600">{feature.desc}</p>
+              <div key={feature.title} className="border border-border rounded-lg p-6 hover:border-accent hover:shadow-lg transition bg-card">
+                <Icon className="w-12 h-12 text-primary mb-4" />
+                <h3 className="text-lg font-semibold text-card-foreground mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground">{feature.desc}</p>
               </div>
             );
           })}
@@ -102,9 +102,9 @@ export default function FeaturesPage() {
 
         <div className="mb-20">
           <div className="text-center mb-10">
-            <Wallet className="w-10 h-10 text-blue-600 mx-auto mb-3" />
-            <h2 className="text-3xl font-bold text-slate-900 mb-3">Supported wallets</h2>
-            <p className="text-slate-600">Customers can complete checkout with popular Cardano wallets.</p>
+            <Wallet className="w-10 h-10 text-primary mx-auto mb-3" />
+            <h2 className="text-3xl font-bold text-foreground mb-3">Supported wallets</h2>
+            <p className="text-muted-foreground">Customers can complete checkout with popular Cardano wallets.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             {SUPPORTED_WALLETS.map((wallet) => (
@@ -113,22 +113,22 @@ export default function FeaturesPage() {
                 href={wallet.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-3 border border-slate-200 rounded-full hover:border-cyan-400 hover:shadow-md transition bg-white text-slate-700 font-medium text-sm"
+                className="flex items-center gap-2 px-5 py-3 border border-border rounded-full hover:border-accent hover:shadow-md transition bg-card text-card-foreground font-medium text-sm"
               >
-                <Wallet className="w-4 h-4 text-blue-600" />
+                <Wallet className="w-4 h-4 text-primary" />
                 {wallet.name}
               </a>
             ))}
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-500 to-cyan-400 rounded-lg p-12 text-center text-white">
+        <div className="bg-gradient-to-r from-primary to-accent rounded-lg p-12 text-center text-primary-foreground">
           <h2 className="text-3xl font-bold mb-4">Build with the essentials</h2>
           <p className="text-lg mb-8 opacity-90">
             Start with a hosted payment or access link and grow from there.
           </p>
           <Link to={createPageUrl("Home")}>
-            <Button className="bg-white text-blue-600 hover:bg-blue-50">
+            <Button className="bg-background text-foreground hover:bg-secondary">
               Go to home <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </Link>
