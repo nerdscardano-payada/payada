@@ -11,30 +11,6 @@ export default function StepOptions({ form, update }) {
 
       <FeeSelector form={form} update={update} />
 
-      {/* Expiry */}
-      <div className="space-y-2">
-        <Label>Expiry Date</Label>
-        <Input
-          type="datetime-local"
-          value={form.expires_at ? form.expires_at.slice(0, 16) : ""}
-          onChange={(e) => update("expires_at", e.target.value ? new Date(e.target.value).toISOString() : "")}
-        />
-        <p className="text-xs text-slate-400">Leave empty for no expiry.</p>
-      </div>
-
-      {/* Confirmations */}
-      <div className="space-y-2">
-        <Label>Required Confirmations</Label>
-        <Input
-          type="number"
-          min={1}
-          max={30}
-          value={form.confirmations_required}
-          onChange={(e) => update("confirmations_required", e.target.value)}
-        />
-        <p className="text-xs text-slate-400">Default is 2 blockchain confirmations.</p>
-      </div>
-
       {/* Collect info */}
       <div className="space-y-4 border-t border-slate-100 pt-5">
         <h4 className="text-sm font-medium text-slate-700">Collect payer information</h4>
