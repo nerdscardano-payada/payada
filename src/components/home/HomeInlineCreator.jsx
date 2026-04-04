@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History } from "lucide-react";
+import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History, Copy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,6 +25,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   });
   const [feePreview, setFeePreview] = React.useState({ fee_model: "customer_pays", fee_split_ratio: 0.5 });
   const [selectedCntKey, setSelectedCntKey] = React.useState("");
+  const [createdPaymentUrl, setCreatedPaymentUrl] = React.useState("");
+  const copySectionRef = useRef(null);
 
   useEffect(() => {
     const savedAddress = localStorage.getItem("payada_connected_wallet_address");
@@ -48,7 +50,17 @@ export default function HomeInlineCreator({ onWalletConnected }) {
     return `${base}-${Date.now().toString().slice(-6)}`;
   };
 
+  const handleCopyCreatedLink = async () => {
+    if (!createdPaymentUrl) return;
+    await navigator.clipboard.writeText(createdPaymentUrl);
+    toast.success("Link gekopieerd");
+  };
+
   const handleGenerate = async () => {
+    if (type === "payment") {
+      setCreatedPaymentUrl("");
+    }
+
     if (!form.title.trim()) {
       toast.error(type === "payment" ? "Voer in waarvoor de betaling is." : "Voer in wat mensen ontgrendelen.");
       return;
@@ -96,7 +108,11 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           collect_name: false,
           collect_shipping: false,
         });
-        navigate(`/Pay?slug=${encodeURIComponent(slug)}`);
+        const newPaymentUrl = `${window.location.origin}/Pay?slug=${encodeURIComponent(slug)}`;
+        setCreatedPaymentUrl(newPaymentUrl);
+        setTimeout(() => {
+          copySectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 50);
         return;
       }
 
@@ -278,6 +294,28 @@ export default function HomeInlineCreator({ onWalletConnected }) {
               {submitting ? "Creating..." : type === "payment" ? "Generate Payment Link" : "Generate Access Link"}
             </Button>
           </div>
+
+          {type === "payment" && createdPaymentUrl && (
+            <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
+              <div>
+                <p className="text-sm font-semibold text-foreground">Je payment link is klaar</p>
+                <p className="text-sm text-muted-foreground mt-1">Kopieer je nieuwe link of open hem wanneer jij wil.</p>
+              </div>
+              <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
+                {createdPaymentUrl}
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Button type="button" onClick={handleCopyCreatedLink} className="h-11 rounded-xl px-5">
+                  <Copy className="w-4 h-4 mr-2" />
+                  Kopieer link
+                </Button>
+                <Button type="button" variant="outline" onClick={() => window.open(createdPaymentUrl, "_blank")} className="h-11 rounded-xl px-5">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Open link
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
