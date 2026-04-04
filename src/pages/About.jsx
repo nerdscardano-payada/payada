@@ -20,10 +20,10 @@ export default function AboutPage() {
   };
 
   const values = [
-    { Icon: Target, titleKey: "about.v1_title", descKey: "about.v1_desc", color: "text-blue-500" },
-    { Icon: Shield, titleKey: "about.v2_title", descKey: "about.v2_desc", color: "text-cyan-500" },
-    { Icon: Globe, titleKey: "about.v3_title", descKey: "about.v3_desc", color: "text-indigo-500" },
-    { Icon: Heart, titleKey: "about.v4_title", descKey: "about.v4_desc", color: "text-violet-500" },
+    { Icon: Target, titleKey: "about.v1_title", descKey: "about.v1_desc", color: "text-primary" },
+    { Icon: Shield, titleKey: "about.v2_title", descKey: "about.v2_desc", color: "text-accent" },
+    { Icon: Globe, titleKey: "about.v3_title", descKey: "about.v3_desc", color: "text-primary" },
+    { Icon: Heart, titleKey: "about.v4_title", descKey: "about.v4_desc", color: "text-accent" },
   ];
 
   return (
@@ -86,7 +86,7 @@ export default function AboutPage() {
           <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">{t("about.values_sub")}</p>
           <div className="grid md:grid-cols-2 gap-6">
             {values.map(({ Icon, titleKey, descKey, color }, i) => (
-              <div key={i} className="bg-white border border-border rounded-xl p-8 hover:shadow-md transition-shadow">
+              <div key={i} className="bg-card border border-border rounded-xl p-8 hover:shadow-md transition-shadow">
                 <div className={`w-12 h-12 rounded-lg bg-muted flex items-center justify-center mb-5`}>
                   <Icon className={`w-6 h-6 ${color}`} />
                 </div>
@@ -112,7 +112,7 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="bg-gradient-to-r from-primary to-accent py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">{t("about.cta_title")}</h2>
+          <h2 className="text-3xl font-bold text-primary-foreground mb-4">{t("about.cta_title")}</h2>
           <p className="text-primary-foreground/80 text-lg mb-8 max-w-xl mx-auto">{t("about.cta_sub")}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -123,7 +123,7 @@ export default function AboutPage() {
             </Link>
             <Link
               to={createPageUrl("Roadmap")}
-              className="border border-white/40 text-white font-semibold px-8 py-3 rounded-lg hover:bg-white/10 transition-colors"
+              className="border border-primary-foreground/30 text-primary-foreground font-semibold px-8 py-3 rounded-lg hover:bg-primary-foreground/10 transition-colors"
             >
               {t("about.cta_roadmap")}
             </Link>
