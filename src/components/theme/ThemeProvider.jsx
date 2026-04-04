@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 
 const ThemeContext = createContext(null);
 const STORAGE_KEY = "payada-theme";
-const PUBLIC_THEME_PAGES = ["/", "/Pay", "/Checkout", "/PayTerminal", "/Access", "/EventCheckout", "/MultiTokenCheckout", "/Donate", "/NFTGate", "/NFTStore", "/SubscriberPortal"];
+const PUBLIC_THEME_PAGES = ["/", "/Pay", "/Checkout", "/PayTerminal", "/Access", "/EventCheckout", "/MultiTokenCheckout", "/Donate", "/NFTGate", "/NFTStore", "/SubscriberPortal", "/Features", "/Pricing", "/Security", "/Documentation", "/Webhooks", "/About", "/Contact", "/PrivacyPolicy", "/TermsOfService", "/AcceptableUsePolicy", "/MerchantAgreement", "/Disclaimer", "/PaymentProof", "/Unlock", "/Store", "/Roadmap", "/Litepaper", "/TokenSale", "/EventEntry", "/Demo", "/NFTMarketplaceFAQ", "/NFTMarketplaceTerms", "/Marketplace", "/Tutorials"];
 
 const canUseThemeToggle = (pathname) => PUBLIC_THEME_PAGES.some((page) => {
   if (page === "/") return pathname === "/";
