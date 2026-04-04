@@ -25,7 +25,7 @@ export default function WalletDashboardGate({ profile, onLinked }) {
   const matchesConnectedWallet = !!(connectedAddress && profile?.connected_wallet_address === connectedAddress);
 
   return (
-    <Card className="p-6 border-indigo-200 bg-indigo-50/70">
+    <Card className="h-full p-6 border-indigo-200 bg-indigo-50/70">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-slate-900 font-semibold">
