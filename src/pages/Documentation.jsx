@@ -37,12 +37,12 @@ const sections = [
 
 function Section({ id, title, icon: SectionIcon, children }) {
   return (
-    <section id={id} className="scroll-mt-24 mb-16 pb-16 border-b border-slate-200 last:border-0">
+    <section id={id} className="scroll-mt-24 mb-16 pb-16 border-b border-border last:border-0">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-          <SectionIcon className="w-5 h-5 text-blue-600" />
+        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+          <SectionIcon className="w-5 h-5 text-primary" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
+        <h2 className="text-2xl font-bold text-foreground">{title}</h2>
       </div>
       {children}
     </section>
@@ -69,18 +69,18 @@ export default function DocumentationPage() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to={createPageUrl("Home")} className="text-2xl font-bold">
-            Pay<span className="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">ADA</span>
+            Pay<span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">ADA</span>
           </Link>
           <div className="hidden md:flex items-center gap-6">
-            <Link to={createPageUrl("Security")} className="text-sm text-slate-600 hover:text-slate-900">Security</Link>
+            <Link to={createPageUrl("Security")} className="text-sm text-muted-foreground hover:text-foreground">Security</Link>
           </div>
         </nav>
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-3">Documentation</h1>
-          <p className="text-xl text-slate-600 max-w-3xl">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3">Documentation</h1>
+          <p className="text-xl text-muted-foreground max-w-3xl">
             Everything you need to use PayADA’s focused product set: payment links, CNT payments, access links, and gating.
           </p>
         </div>
@@ -92,7 +92,7 @@ export default function DocumentationPage() {
                 <a
                   key={id}
                   href={`#${id}`}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted"
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
                   {label}
@@ -102,9 +102,9 @@ export default function DocumentationPage() {
           </aside>
 
           <main className="flex-1 min-w-0">
-            <div className="mb-16 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-2xl p-8">
-              <h2 className="text-xl font-bold text-slate-900 mb-2">Start here</h2>
-              <p className="text-slate-600 text-sm mb-6">
+            <div className="mb-16 bg-gradient-to-br from-primary/5 to-accent/10 border border-primary/20 rounded-2xl p-8">
+              <h2 className="text-xl font-bold text-foreground mb-2">Start here</h2>
+              <p className="text-muted-foreground text-sm mb-6">
                 PayADA is now centered on a smaller, clearer set of products. The documentation below reflects that simplified direction.
               </p>
               <div className="grid md:grid-cols-2 gap-4">
@@ -114,9 +114,9 @@ export default function DocumentationPage() {
                   "Use access links for private communities or content.",
                   "Connect payment outcomes to gated access flows."
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-3 bg-white rounded-xl p-4 border border-blue-100">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-                    <span className="text-sm text-slate-700">{item}</span>
+                  <div key={item} className="flex items-center gap-3 bg-card rounded-xl p-4 border border-primary/10">
+                    <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
+                    <span className="text-sm text-foreground">{item}</span>
                   </div>
                 ))}
               </div>
@@ -138,60 +138,60 @@ export default function DocumentationPage() {
                     description: "Track payment status and grant access once the payment is confirmed."
                   }
                 ].map((item) => (
-                  <div key={item.title} className="border border-slate-200 rounded-xl p-5">
-                    <h3 className="font-semibold text-slate-900 mb-1">{item.title}</h3>
-                    <p className="text-sm text-slate-600">{item.description}</p>
+                  <div key={item.title} className="border border-border rounded-xl p-5">
+                    <h3 className="font-semibold text-foreground mb-1">{item.title}</h3>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
                   </div>
                 ))}
               </div>
             </Section>
 
             <Section id="payment-links" title="Payment links" icon={CreditCard}>
-              <p className="text-slate-600 mb-4">
+              <p className="text-muted-foreground mb-4">
                 Payment links let you create a hosted checkout for one-time payments. They are the fastest way to accept ADA, and they also support selected CNT payment flows.
               </p>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm border border-slate-200 rounded-lg overflow-hidden">
-                  <thead className="bg-slate-50">
+                <table className="w-full text-sm border border-border rounded-lg overflow-hidden">
+                  <thead className="bg-muted">
                     <tr>
-                      <th className="text-left px-4 py-3 font-semibold text-slate-900 border-b">Mode</th>
-                      <th className="text-left px-4 py-3 font-semibold text-slate-900 border-b">Description</th>
-                      <th className="text-left px-4 py-3 font-semibold text-slate-900 border-b">Best for</th>
+                      <th className="text-left px-4 py-3 font-semibold text-foreground border-b">Mode</th>
+                      <th className="text-left px-4 py-3 font-semibold text-foreground border-b">Description</th>
+                      <th className="text-left px-4 py-3 font-semibold text-foreground border-b">Best for</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     <tr>
-                      <td className="px-4 py-3 font-mono text-xs text-blue-600">fixed_ada</td>
-                      <td className="px-4 py-3 text-slate-600">Charge a fixed ADA amount.</td>
-                      <td className="px-4 py-3 text-slate-600">Products, services, donations, invoices.</td>
+                      <td className="px-4 py-3 font-mono text-xs text-primary">fixed_ada</td>
+                      <td className="px-4 py-3 text-muted-foreground">Charge a fixed ADA amount.</td>
+                      <td className="px-4 py-3 text-muted-foreground">Products, services, donations, invoices.</td>
                     </tr>
                     <tr>
-                      <td className="px-4 py-3 font-mono text-xs text-blue-600">fixed_cnt</td>
-                      <td className="px-4 py-3 text-slate-600">Charge a fixed Cardano Native Token amount.</td>
-                      <td className="px-4 py-3 text-slate-600">Token-native offers and community payments.</td>
+                      <td className="px-4 py-3 font-mono text-xs text-primary">fixed_cnt</td>
+                      <td className="px-4 py-3 text-muted-foreground">Charge a fixed Cardano Native Token amount.</td>
+                      <td className="px-4 py-3 text-muted-foreground">Token-native offers and community payments.</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <div className="mt-6 bg-slate-50 border border-slate-200 rounded-lg p-4 text-sm text-slate-600">
-                Each link gets a shareable slug such as <code className="font-mono text-blue-600">/pay/your-offer</code>.
+              <div className="mt-6 bg-muted border border-border rounded-lg p-4 text-sm text-muted-foreground">
+                Each link gets a shareable slug such as <code className="font-mono text-primary">/pay/your-offer</code>.
               </div>
             </Section>
 
             <Section id="cnt-payments" title="CNT payments" icon={Package}>
-              <p className="text-slate-600 mb-4">
+              <p className="text-muted-foreground mb-4">
                 CNT payments are part of the core PayADA direction. Merchants can configure accepted tokens and use dedicated token payment flows where supported.
               </p>
-              <ol className="space-y-2 text-sm text-slate-600">
-                <li className="flex gap-3"><span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center">1</span>Select the token you want to accept.</li>
-                <li className="flex gap-3"><span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center">2</span>Set the amount, ticker, and token metadata.</li>
-                <li className="flex gap-3"><span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center">3</span>Share the hosted checkout page with your customer.</li>
-                <li className="flex gap-3"><span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold flex items-center justify-center">4</span>Use the confirmed payment to unlock access or deliver the next step.</li>
+              <ol className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex gap-3"><span className="w-5 h-5 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">1</span>Select the token you want to accept.</li>
+                <li className="flex gap-3"><span className="w-5 h-5 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">2</span>Set the amount, ticker, and token metadata.</li>
+                <li className="flex gap-3"><span className="w-5 h-5 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">3</span>Share the hosted checkout page with your customer.</li>
+                <li className="flex gap-3"><span className="w-5 h-5 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center">4</span>Use the confirmed payment to unlock access or deliver the next step.</li>
               </ol>
             </Section>
 
             <Section id="access-links" title="Access links" icon={Lock}>
-              <p className="text-slate-600 mb-4">
+              <p className="text-muted-foreground mb-4">
                 Access links are designed for community memberships, premium content, and private experiences. You can charge in ADA or CNT and then route the payer into the gated destination.
               </p>
               <div className="grid sm:grid-cols-2 gap-3 text-sm">
@@ -201,7 +201,7 @@ export default function DocumentationPage() {
                   "Private websites",
                   "Members-only content"
                 ].map((item) => (
-                  <div key={item} className="p-3 bg-slate-50 rounded-lg border border-slate-100 text-slate-700">
+                  <div key={item} className="p-3 bg-muted rounded-lg border border-border/60 text-foreground">
                     {item}
                   </div>
                 ))}
@@ -209,16 +209,16 @@ export default function DocumentationPage() {
             </Section>
 
             <Section id="gating" title="Gating" icon={Users}>
-              <p className="text-slate-600 mb-4">
+              <p className="text-muted-foreground mb-4">
                 Gating connects payment confirmation to access delivery. This is one of the main product areas PayADA is prioritizing now.
               </p>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+              <div className="bg-blue-50 border border-primary/20 rounded-lg p-4 text-sm text-primary">
                 Typical flow: create the offer → collect payment → confirm on-chain payment → unlock access.
               </div>
             </Section>
 
             <Section id="security" title="Security" icon={Shield}>
-              <p className="text-slate-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 PayADA uses secure hosted flows, wallet-based payments, and platform-level validation to support reliable merchant checkouts.
               </p>
               <div className="grid md:grid-cols-2 gap-4">
@@ -228,16 +228,16 @@ export default function DocumentationPage() {
                   "Audit-friendly records",
                   "Merchant-configured destinations"
                 ].map((item) => (
-                  <div key={item} className="flex items-start gap-3 p-4 border border-slate-200 rounded-lg">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-slate-700">{item}</p>
+                  <div key={item} className="flex items-start gap-3 p-4 border border-border rounded-lg">
+                    <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <p className="text-sm text-foreground">{item}</p>
                   </div>
                 ))}
               </div>
             </Section>
 
             <Section id="wallets" title="Wallets" icon={Wallet}>
-              <p className="text-slate-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 Customers can pay with popular Cardano wallets that support the required checkout flow.
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -247,7 +247,7 @@ export default function DocumentationPage() {
                     href={wallet.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2.5 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-sm font-medium hover:border-cyan-300 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+                    className="flex items-center gap-2.5 px-4 py-3 bg-muted border border-border rounded-xl text-foreground text-sm font-medium hover:border-cyan-300 hover:bg-blue-50 hover:text-primary transition-colors"
                   >
                     <Wallet className="w-4 h-4 flex-shrink-0" />
                     {wallet.name}
@@ -257,7 +257,7 @@ export default function DocumentationPage() {
             </Section>
 
             <Section id="api" title="API" icon={Code}>
-              <p className="text-slate-600 mb-4">
+              <p className="text-muted-foreground mb-4">
                 The API reference is also being simplified to match the narrower product scope.
               </p>
               <CodeBlock code={`curl https://api.payada.io/v1/payment-links \\
