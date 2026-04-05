@@ -45,6 +45,7 @@ const navItems = [
   { type: "header", name: "Tools" },
   { name: "Donations", icon: Heart, page: "DonationPages" },
   { name: "POS", icon: Monitor, page: "POS" },
+  { name: "Tool Builder", icon: Sparkles, page: "AIBuilderRequest" },
 
   { type: "header", name: "Wallet" },
   { name: "Merchant Profile", icon: Wallet, page: "MerchantProfile" },
@@ -231,7 +232,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
                   "w-[18px] h-[18px] flex-shrink-0",
                   currentPage === "AdminAIPaymentBuilder" ? "text-emerald-400" : "text-slate-500 group-hover:text-slate-300"
                 )} />
-                {!collapsed && <span className="truncate">AI Builder <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded-full ml-1">ADMIN</span></span>}
+                {!collapsed && <span className="truncate">Tool Builder <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded-full ml-1">ADMIN</span></span>}
               </Link>
             </>
           )}
