@@ -55,6 +55,18 @@
     "admin_notes": {
       "type": "string"
     },
+    "assigned_tool_name": {
+      "type": "string",
+      "description": "Human readable tool name assigned by admin"
+    },
+    "assigned_tool_page": {
+      "type": "string",
+      "description": "Internal page or route assigned to this merchant"
+    },
+    "assigned_to_merchant": {
+      "type": "boolean",
+      "default": false
+    },
     "status": {
       "type": "string",
       "enum": ["submitted", "in_review", "ready_for_feedback", "completed"],
