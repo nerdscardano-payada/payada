@@ -460,27 +460,19 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                     <p className="text-sm text-muted-foreground mt-1">Copy your new link, open it, or let someone scan the QR code.</p>
                   </div>
                 </div>
-                <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
-                  <div className="space-y-4">
-                    <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-                      Scan liever de QR-code met je wallet-app op mobiel. Dat is eenvoudiger dan de link handmatig kopiëren.
-                    </div>
-                    <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
-                      {createdPaymentUrl}
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      <Button type="button" onClick={handleCopyCreatedLink} className="h-11 rounded-xl px-5">
-                        <Copy className="w-4 h-4 mr-2" />
-                        Copy link
-                      </Button>
-                      <Button type="button" variant="outline" onClick={() => window.open(createdPaymentUrl, "_blank")} className="h-11 rounded-xl px-5">
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Open link
-                      </Button>
-                    </div>
+                <div className="space-y-4">
+                  <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
+                    {createdPaymentUrl}
                   </div>
-                  <div className="rounded-2xl border border-border bg-white p-4 flex items-center justify-center">
-                    <QRCodeDisplay value={createdPaymentUrl} size={180} />
+                  <div className="flex flex-wrap gap-3">
+                    <Button type="button" onClick={handleCopyCreatedLink} className="h-11 rounded-xl px-5">
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy link
+                    </Button>
+                    <Button type="button" variant="outline" onClick={() => window.open(createdPaymentUrl, "_blank")} className="h-11 rounded-xl px-5">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Open link
+                    </Button>
                   </div>
                 </div>
               </div>
