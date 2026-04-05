@@ -1,0 +1,93 @@
+{
+  "name": "AIBuilderRequest",
+  "type": "object",
+  "properties": {
+    "merchant_id": {
+      "type": "string",
+      "description": "Merchant user email"
+    },
+    "merchant_name": {
+      "type": "string"
+    },
+    "business_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "website_url": {
+      "type": "string"
+    },
+    "connected_wallet_address": {
+      "type": "string"
+    },
+    "request_title": {
+      "type": "string",
+      "description": "Short title for the requested tool"
+    },
+    "tool_type": {
+      "type": "string",
+      "enum": [
+        "payment_link",
+        "subscription",
+        "access_link",
+        "terminal",
+        "custom"
+      ],
+      "default": "custom"
+    },
+    "use_case": {
+      "type": "string"
+    },
+    "target_customer": {
+      "type": "string"
+    },
+    "required_fields": {
+      "type": "string"
+    },
+    "pricing_details": {
+      "type": "string"
+    },
+    "design_preferences": {
+      "type": "string"
+    },
+    "special_requirements": {
+      "type": "string"
+    },
+    "delivery_deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "assigned_tool_name": {
+      "type": "string",
+      "description": "Human readable tool name assigned by admin"
+    },
+    "assigned_tool_page": {
+      "type": "string",
+      "description": "Internal page or route assigned to this merchant"
+    },
+    "assigned_to_merchant": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "in_review",
+        "ready_for_feedback",
+        "completed"
+      ],
+      "default": "submitted"
+    }
+  },
+  "required": [
+    "merchant_id",
+    "contact_email",
+    "request_title",
+    "use_case"
+  ]
+}
