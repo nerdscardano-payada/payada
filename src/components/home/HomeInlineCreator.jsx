@@ -232,7 +232,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             </div>
           </div>
 
-          <div>
+          <div className="rounded-2xl border border-sky-400/30 bg-card/60 p-5 space-y-4">
             <div className="mb-4 flex items-start gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Layers3 className="w-5 h-5" />
