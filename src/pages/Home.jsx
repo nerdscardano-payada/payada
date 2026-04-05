@@ -86,7 +86,7 @@ export default function HomePage() {
         </div>
       </header>
       <section className="relative overflow-hidden pt-20 pb-16 px-4 sm:px-6 bg-background">
-        <div className="relative max-w-5xl mx-auto space-y-6">
+        <div className="relative max-w-7xl mx-auto space-y-6">
           <HomeInlineCreator onWalletConnected={setConnectedWallet} />
           <HomeWalletLinksManager walletAddress={connectedWallet?.address || localStorage.getItem("payada_connected_wallet_address") || ""} />
         </div>
