@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import WalletConnect from "@/components/checkout/WalletConnect";
 import FeeSelector from "@/components/payment-links/FeeSelector";
 import { KNOWN_CNTS } from "@/components/payment-links/wizard/knownCNTs";
+import QRCodeDisplay from "@/components/shared/QRCodeDisplay";
 import { toast } from "sonner";
 
 export default function HomeInlineCreator({ onWalletConnected }) {
@@ -352,20 +353,27 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
               <div>
                 <p className="text-sm font-semibold text-foreground">Your payment link is ready</p>
-                <p className="text-sm text-muted-foreground mt-1">Copy your new link or open it whenever you want.</p>
+                <p className="text-sm text-muted-foreground mt-1">Copy your new link, open it, or let someone scan the QR code.</p>
               </div>
-              <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
-                {createdPaymentUrl}
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <Button type="button" onClick={handleCopyCreatedLink} className="h-11 rounded-xl px-5">
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy link
-                </Button>
-                <Button type="button" variant="outline" onClick={() => window.open(createdPaymentUrl, "_blank")} className="h-11 rounded-xl px-5">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Open link
-                </Button>
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
+                <div className="space-y-4">
+                  <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
+                    {createdPaymentUrl}
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    <Button type="button" onClick={handleCopyCreatedLink} className="h-11 rounded-xl px-5">
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy link
+                    </Button>
+                    <Button type="button" variant="outline" onClick={() => window.open(createdPaymentUrl, "_blank")} className="h-11 rounded-xl px-5">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Open link
+                    </Button>
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-border bg-white p-4 flex items-center justify-center">
+                  <QRCodeDisplay value={createdPaymentUrl} size={180} />
+                </div>
               </div>
             </div>
           )}
