@@ -4,7 +4,6 @@ import AdminAIBuildHeader from "@/components/ai-builder/AdminAIBuildHeader";
 import AdminAIBuildAccessDenied from "@/components/ai-builder/AdminAIBuildAccessDenied";
 import AdminAIBuildIntroCard from "@/components/ai-builder/AdminAIBuildIntroCard";
 import AdminAIBuildChat from "@/components/ai-builder/AdminAIBuildChat";
-import AdminRequestInbox from "@/components/ai-builder/AdminRequestInbox";
 
 export default function AdminAIPaymentBuilder() {
   const { user } = useAuth();
@@ -20,7 +19,6 @@ export default function AdminAIPaymentBuilder() {
         <AdminAIBuildIntroCard />
         <AdminAIBuildChat />
       </div>
-      <AdminRequestInbox />
     </div>
   );
 }
