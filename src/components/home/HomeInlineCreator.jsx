@@ -419,6 +419,9 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                   </div>
                   <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
                     <div className="space-y-4">
+                      <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                        Open wallet werkt meestal alleen op mobiel. Scan deze QR-code met je wallet-app voor de eenvoudigste ervaring.
+                      </div>
                       <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
                         {createdQrValue}
                       </div>
@@ -458,6 +461,9 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                 </div>
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
                   <div className="space-y-4">
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                      Scan liever de QR-code met je wallet-app op mobiel. Dat is eenvoudiger dan de link handmatig kopiëren.
+                    </div>
                     <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
                       {createdPaymentUrl}
                     </div>
