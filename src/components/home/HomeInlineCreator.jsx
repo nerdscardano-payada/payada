@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History, Copy, ExternalLink } from "lucide-react";
+import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History, Copy, ExternalLink, Layers3, Rocket, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -213,38 +213,50 @@ export default function HomeInlineCreator({ onWalletConnected }) {
       </div>
 
       <div>
-        <div className="mb-4">
-          <p className="text-sm font-semibold text-foreground">Step 2 · Select type</p>
-          <p className="text-sm text-muted-foreground">Choose the kind of link you want to launch.</p>
-        </div>
-        <div className="grid w-full grid-cols-1 sm:grid-cols-2 rounded-2xl border border-sky-400/30 bg-card/60 p-2 mb-4 gap-2 shadow-sm">
-          <button
-            type="button"
-            onClick={() => setType("payment")}
-            className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "payment" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
-          >
-            💳 Payment Link
-          </button>
-          <button
-            type="button"
-            onClick={() => setType("access")}
-            className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "access" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
-          >
-            🔐 Access Link
-          </button>
-        </div>
-
         <div className="space-y-4 mb-6">
           <div className="rounded-2xl border border-sky-400/30 bg-card/60 p-5 space-y-4">
-            <div>
-              <p className="text-sm font-semibold">Step 1 · Connect wallet</p>
-              <p className="text-sm text-muted-foreground">Use your Cardano wallet without logging in.</p>
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Wallet className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-lg sm:text-xl font-semibold text-foreground">Step 1 · Connect wallet</p>
+                <p className="text-sm text-muted-foreground">Use your Cardano wallet without logging in.</p>
+              </div>
             </div>
             <div className="mt-5">
               <WalletConnect onConnected={({ address, ...walletData }) => {
                 updateForm("receive_address", address || "");
                 onWalletConnected?.({ address, ...walletData });
               }} />
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-4 flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Layers3 className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-lg sm:text-xl font-semibold text-foreground">Step 2 · Select type</p>
+                <p className="text-sm text-muted-foreground">Choose the kind of link you want to launch.</p>
+              </div>
+            </div>
+            <div className="grid w-full grid-cols-1 sm:grid-cols-2 rounded-2xl border border-sky-400/30 bg-card/60 p-2 mb-4 gap-2 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setType("payment")}
+                className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "payment" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
+              >
+                💳 Payment Link
+              </button>
+              <button
+                type="button"
+                onClick={() => setType("access")}
+                className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "access" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
+              >
+                🔐 Access Link
+              </button>
             </div>
           </div>
 
@@ -274,11 +286,16 @@ export default function HomeInlineCreator({ onWalletConnected }) {
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-5 sm:p-6 space-y-5 shadow-sm">
-          <div>
-            <p className="text-sm text-muted-foreground">Step 3 · Launch flow</p>
-            <h2 className="text-2xl font-semibold text-foreground mt-1">
-              {type === "payment" ? "Create a payment link" : "Create an access link"}
-            </h2>
+          <div className="flex items-start gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Rocket className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-lg sm:text-xl font-semibold text-foreground">Step 3 · Launch flow</p>
+              <h2 className="text-2xl font-semibold text-foreground mt-1">
+                {type === "payment" ? "Create a payment link" : "Create an access link"}
+              </h2>
+            </div>
           </div>
 
           <>
@@ -344,9 +361,14 @@ export default function HomeInlineCreator({ onWalletConnected }) {
 
           {type === "payment" && createdPaymentUrl && (
             <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
-              <div>
-                <p className="text-sm font-semibold text-foreground">Step 4 · Copy your link</p>
-                <p className="text-sm text-muted-foreground mt-1">Copy your new link, open it, or let someone scan the QR code.</p>
+              <div className="flex items-start gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Copy className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-lg sm:text-xl font-semibold text-foreground">Step 4 · Copy your link</p>
+                  <p className="text-sm text-muted-foreground mt-1">Copy your new link, open it, or let someone scan the QR code.</p>
+                </div>
               </div>
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
                 <div className="space-y-4">
@@ -372,8 +394,15 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           )}
 
           <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-4">
-            <p className="text-sm font-semibold text-foreground">Step 5 · Claim for more options</p>
-            <p className="mt-1 text-sm text-muted-foreground">Log in to manage links, see history, and unlock more controls.</p>
+            <div className="flex items-start gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <UserPlus className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-lg sm:text-xl font-semibold text-foreground">Step 5 · Claim for more options</p>
+                <p className="mt-1 text-sm text-muted-foreground">Log in to manage links, see history, and unlock more controls.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
