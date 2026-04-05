@@ -142,18 +142,46 @@ export default function HomeInlineCreator({ onWalletConnected }) {
 
   return (
     <div className="space-y-10">
-      <div className="max-w-3xl space-y-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-background/80 text-muted-foreground text-xs sm:text-sm">
-          <Sparkles className="w-3.5 h-3.5" />
-          Cardano payment links and access flows
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,460px)] lg:items-center">
+        <div className="max-w-3xl space-y-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-background/80 text-muted-foreground text-xs sm:text-sm">
+            <Sparkles className="w-3.5 h-3.5" />
+            Cardano payment links and access flows
+          </div>
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.02] text-left text-foreground">
+            Simple Cardano payments,<br />
+            built to feel clear and trustworthy.
+          </h1>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed text-left">
+            Create payment links for ADA and native tokens, share access links, and give people a cleaner way to pay or unlock content.
+          </p>
         </div>
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.02] text-left text-foreground">
-          Simple Cardano payments,<br />
-          built to feel clear and trustworthy.
-        </h1>
-        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed text-left">
-          Create payment links for ADA and native tokens, share access links, and give people a cleaner way to pay or unlock content.
-        </p>
+
+        <div className="rounded-[1.75rem] border border-primary/70 bg-slate-950 px-6 py-6 text-white shadow-[0_28px_70px_rgba(15,23,42,0.28)] sm:px-7">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-sm text-slate-400">Payment received</p>
+              <p className="mt-4 text-4xl font-semibold tracking-tight">₳ 250</p>
+              <p className="mt-3 text-sm text-slate-400">Confirmed • Block #8,234,567</p>
+            </div>
+            <div className="mt-1 flex h-6 w-6 items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-400/10 text-emerald-400">
+              <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+            </div>
+          </div>
+
+          <div className="mt-8 border-t border-white/10 pt-5">
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Net amount</p>
+                <p className="mt-2 text-xl font-semibold">₳ 246.25</p>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Fee</p>
+                <p className="mt-2 text-xl font-semibold">₳ 3.75</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl">
