@@ -57,6 +57,11 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   };
 
   const handleGenerate = async () => {
+    if (type === "pos") {
+      navigate("/POS");
+      return;
+    }
+
     if (type === "payment") {
       setCreatedPaymentUrl("");
     }
@@ -215,6 +220,13 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           >
             🔐 Access Link
           </button>
+          <button
+            type="button"
+            onClick={() => setType("pos")}
+            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${type === "pos" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            🧾 POS
+          </button>
         </div>
 
         <div className="space-y-4 mb-6">
@@ -260,68 +272,81 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           <div>
             <p className="text-sm text-muted-foreground">Launch flow</p>
             <h2 className="text-2xl font-semibold text-foreground mt-1">
-              {type === "payment" ? "Create a payment link" : "Create an access link"}
+              {type === "payment" ? "Create a payment link" : type === "access" ? "Create an access link" : "Open POS"}
             </h2>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2 md:col-span-2">
-              <Label>{type === "payment" ? "What's this payment for?" : "What are people unlocking?"}</Label>
-              <Input value={form.title} onChange={(e) => updateForm("title", e.target.value)} placeholder={type === "payment" ? "Premium membership" : "Private Discord access"} className="h-12 rounded-xl" />
+          {type === "pos" ? (
+            <div className="rounded-[1.5rem] border border-border bg-background p-6 space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Open the POS screen directly without saving a new link first.
+              </p>
+              <Button size="lg" className="h-12 rounded-xl px-6" onClick={handleGenerate}>
+                Open POS
+              </Button>
             </div>
-            <div className="space-y-2">
-              <Label>{currency === "ADA" ? "Amount (ADA)" : `Amount (${selectedCnt?.ticker || "Token"})`}</Label>
-              <Input type="number" value={form.amount} onChange={(e) => updateForm("amount", e.target.value)} placeholder={currency === "ADA" ? "10" : "50"} className="h-12 rounded-xl" />
-            </div>
-            <div className="space-y-2">
-              <Label>Your Cardano address</Label>
-              <Input value={form.receive_address} onChange={(e) => updateForm("receive_address", e.target.value)} placeholder="addr1..." className="h-12 rounded-xl" />
-            </div>
-            <div className="space-y-2">
-              <Label>Payment token</Label>
-              <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={() => setCurrency("ADA")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "ADA" ? "border-foreground bg-foreground text-background" : "border-border bg-card text-foreground"}`}>ADA · Cardano</button>
-                <button type="button" onClick={() => setCurrency("CNT")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "CNT" ? "border-foreground bg-foreground text-background" : "border-border bg-card text-foreground"}`}>Custom token</button>
+          ) : (
+            <>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2 md:col-span-2">
+                  <Label>{type === "payment" ? "What's this payment for?" : "What are people unlocking?"}</Label>
+                  <Input value={form.title} onChange={(e) => updateForm("title", e.target.value)} placeholder={type === "payment" ? "Premium membership" : "Private Discord access"} className="h-12 rounded-xl" />
+                </div>
+                <div className="space-y-2">
+                  <Label>{currency === "ADA" ? "Amount (ADA)" : `Amount (${selectedCnt?.ticker || "Token"})`}</Label>
+                  <Input type="number" value={form.amount} onChange={(e) => updateForm("amount", e.target.value)} placeholder={currency === "ADA" ? "10" : "50"} className="h-12 rounded-xl" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Your Cardano address</Label>
+                  <Input value={form.receive_address} onChange={(e) => updateForm("receive_address", e.target.value)} placeholder="addr1..." className="h-12 rounded-xl" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Payment token</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button type="button" onClick={() => setCurrency("ADA")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "ADA" ? "border-foreground bg-foreground text-background" : "border-border bg-card text-foreground"}`}>ADA · Cardano</button>
+                    <button type="button" onClick={() => setCurrency("CNT")} className={`h-12 rounded-xl border text-sm font-medium ${currency === "CNT" ? "border-foreground bg-foreground text-background" : "border-border bg-card text-foreground"}`}>Custom token</button>
+                  </div>
+                </div>
+                {currency === "CNT" && (
+                  <div className="space-y-2">
+                    <Label>Select CNT</Label>
+                    <Select value={selectedCntKey} onValueChange={handleCntSelect}>
+                      <SelectTrigger className="h-12 rounded-xl">
+                        <SelectValue placeholder="Kies een CNT" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {KNOWN_CNTS.map((cnt) => (
+                          <SelectItem key={`${cnt.policy_id}:${cnt.asset_name}`} value={`${cnt.policy_id}:${cnt.asset_name}`}>
+                            {cnt.ticker}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {type === "access" && (
+                  <div className="space-y-2">
+                    <Label>Access URL</Label>
+                    <Input value={form.access_url} onChange={(e) => updateForm("access_url", e.target.value)} placeholder="https://your-community-link.com" className="h-12 rounded-xl" />
+                  </div>
+                )}
+                <div className="space-y-2 md:col-span-2">
+                  <Label>{type === "payment" ? "Redirect URL after payment (optional)" : "Redirect URL after unlock (optional)"}</Label>
+                  <Input value={form.redirect_url} onChange={(e) => updateForm("redirect_url", e.target.value)} placeholder="https://your-site.com/thanks" className="h-12 rounded-xl" />
+                </div>
               </div>
-            </div>
-            {currency === "CNT" && (
-              <div className="space-y-2">
-                <Label>Select CNT</Label>
-                <Select value={selectedCntKey} onValueChange={handleCntSelect}>
-                  <SelectTrigger className="h-12 rounded-xl">
-                    <SelectValue placeholder="Kies een CNT" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {KNOWN_CNTS.map((cnt) => (
-                      <SelectItem key={`${cnt.policy_id}:${cnt.asset_name}`} value={`${cnt.policy_id}:${cnt.asset_name}`}>
-                        {cnt.ticker}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-            {type === "access" && (
-              <div className="space-y-2">
-                <Label>Access URL</Label>
-                <Input value={form.access_url} onChange={(e) => updateForm("access_url", e.target.value)} placeholder="https://your-community-link.com" className="h-12 rounded-xl" />
-              </div>
-            )}
-            <div className="space-y-2 md:col-span-2">
-              <Label>{type === "payment" ? "Redirect URL after payment (optional)" : "Redirect URL after unlock (optional)"}</Label>
-              <Input value={form.redirect_url} onChange={(e) => updateForm("redirect_url", e.target.value)} placeholder="https://your-site.com/thanks" className="h-12 rounded-xl" />
-            </div>
-          </div>
 
-          <div className="rounded-[1.5rem] border border-border bg-white dark:bg-slate-900 p-5">
-            <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
-          </div>
+              <div className="rounded-[1.5rem] border border-border bg-white dark:bg-slate-900 p-5">
+                <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
+              </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Button size="lg" className="h-12 rounded-xl px-6" onClick={handleGenerate} disabled={submitting}>
-              {submitting ? "Creating..." : type === "payment" ? "Generate Payment Link" : "Generate Access Link"}
-            </Button>
-          </div>
+              <div className="flex flex-wrap gap-3">
+                <Button size="lg" className="h-12 rounded-xl px-6" onClick={handleGenerate} disabled={submitting}>
+                  {submitting ? "Creating..." : type === "payment" ? "Generate Payment Link" : "Generate Access Link"}
+                </Button>
+              </div>
+            </>
+          )}
 
           {type === "payment" && createdPaymentUrl && (
             <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
