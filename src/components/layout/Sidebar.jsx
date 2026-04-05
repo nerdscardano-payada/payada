@@ -28,7 +28,8 @@ import {
   Eye,
   Heart,
   RefreshCw,
-  Sparkles
+  Sparkles,
+  Inbox
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { base44 } from "@/api/base44Client";
@@ -233,6 +234,22 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
                   currentPage === "AdminAIPaymentBuilder" ? "text-emerald-400" : "text-slate-500 group-hover:text-slate-300"
                 )} />
                 {!collapsed && <span className="truncate">Tool Builder <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded-full ml-1">ADMIN</span></span>}
+              </Link>
+              <Link
+                to={createPageUrl("AdminToolBuilderInbox")}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all group",
+                  currentPage === "AdminToolBuilderInbox"
+                    ? "bg-sky-500/15 text-sky-400"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                )}
+              >
+                <Inbox className={cn(
+                  "w-[18px] h-[18px] flex-shrink-0",
+                  currentPage === "AdminToolBuilderInbox" ? "text-sky-400" : "text-slate-500 group-hover:text-slate-300"
+                )} />
+                {!collapsed && <span className="truncate">Admin Inbox <span className="text-[10px] bg-sky-500/20 text-sky-400 px-1.5 py-0.5 rounded-full ml-1">ADMIN</span></span>}
               </Link>
             </>
           )}

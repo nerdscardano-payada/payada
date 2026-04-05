@@ -33,6 +33,7 @@ import PublicNFTMarketplace from './pages/PublicNFTMarketplace';
 import OnboardingGoals from './pages/OnboardingGoals';
 import AdminAIPaymentBuilder from './pages/AdminAIPaymentBuilder';
 import AIBuilderRequest from './pages/AIBuilderRequest';
+import AdminToolBuilderInbox from './pages/AdminToolBuilderInbox';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -142,6 +143,7 @@ const AuthenticatedApp = () => {
       <Route path="/Marketplace" element={<LayoutWrapper currentPageName="Marketplace"><PublicNFTMarketplace /></LayoutWrapper>} />
       <Route path="/OnboardingGoals" element={<ProtectedRoute currentPageName="OnboardingGoals"><LayoutWrapper currentPageName="OnboardingGoals"><OnboardingGoals /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/AdminAIPaymentBuilder" element={<ProtectedRoute currentPageName="AdminAIPaymentBuilder"><LayoutWrapper currentPageName="AdminAIPaymentBuilder"><AdminAIPaymentBuilder /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/AdminToolBuilderInbox" element={<ProtectedRoute currentPageName="AdminToolBuilderInbox"><LayoutWrapper currentPageName="AdminToolBuilderInbox"><AdminToolBuilderInbox /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/AIBuilderRequest" element={<ProtectedRoute currentPageName="AIBuilderRequest"><LayoutWrapper currentPageName="AIBuilderRequest"><AIBuilderRequest /></LayoutWrapper></ProtectedRoute>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
