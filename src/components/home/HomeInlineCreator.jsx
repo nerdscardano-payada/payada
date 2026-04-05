@@ -88,7 +88,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
       params.set("label", form.title.trim());
     }
 
-    return `cardano://${form.receive_address.trim()}?${params.toString()}`;
+    return `cardano:${form.receive_address.trim()}?${params.toString()}`;
   };
 
   const handleGenerate = async () => {
