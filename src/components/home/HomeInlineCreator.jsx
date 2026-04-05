@@ -10,6 +10,7 @@ import WalletConnect from "@/components/checkout/WalletConnect";
 import FeeSelector from "@/components/payment-links/FeeSelector";
 import { KNOWN_CNTS } from "@/components/payment-links/wizard/knownCNTs";
 import QRCodeDisplay from "@/components/shared/QRCodeDisplay";
+import HomeProgressIndicator from "@/components/home/HomeProgressIndicator";
 import { toast } from "sonner";
 
 export default function HomeInlineCreator({ onWalletConnected }) {
@@ -43,6 +44,16 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   };
 
   const selectedCnt = KNOWN_CNTS.find((cnt) => `${cnt.policy_id}:${cnt.asset_name}` === selectedCntKey);
+
+  const currentStep = createdPaymentUrl
+    ? 4
+    : form.title.trim() || form.amount || form.access_url.trim() || form.redirect_url.trim()
+      ? 3
+      : type !== "payment"
+        ? 2
+        : form.receive_address.trim()
+          ? 2
+          : 1;
 
   const normalizeSlug = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
@@ -143,6 +154,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
 
   return (
     <div className="space-y-10">
+      <HomeProgressIndicator currentStep={currentStep} />
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,460px)] lg:items-center">
         <div className="max-w-3xl space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-background/80 text-muted-foreground text-xs sm:text-sm">
@@ -201,6 +213,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
       </div>
 
       <div>
+        <div className="mb-4">
+          <p className="text-sm font-semibold text-foreground">Step 2 · Select type</p>
+          <p className="text-sm text-muted-foreground">Choose the kind of link you want to launch.</p>
+        </div>
         <div className="grid w-full grid-cols-1 sm:grid-cols-2 rounded-2xl border border-sky-400/30 bg-card/60 p-2 mb-4 gap-2 shadow-sm">
           <button
             type="button"
@@ -221,7 +237,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
         <div className="space-y-4 mb-6">
           <div className="rounded-2xl border border-sky-400/30 bg-card/60 p-5 space-y-4">
             <div>
-              <p className="text-sm font-semibold">Wallet connect</p>
+              <p className="text-sm font-semibold">Step 1 · Connect wallet</p>
               <p className="text-sm text-muted-foreground">Use your Cardano wallet without logging in.</p>
             </div>
             <div className="mt-5">
@@ -259,7 +275,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
 
         <div className="rounded-2xl border border-border bg-card p-5 sm:p-6 space-y-5 shadow-sm">
           <div>
-            <p className="text-sm text-muted-foreground">Launch flow</p>
+            <p className="text-sm text-muted-foreground">Step 3 · Launch flow</p>
             <h2 className="text-2xl font-semibold text-foreground mt-1">
               {type === "payment" ? "Create a payment link" : "Create an access link"}
             </h2>
@@ -329,7 +345,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           {type === "payment" && createdPaymentUrl && (
             <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
               <div>
-                <p className="text-sm font-semibold text-foreground">Your payment link is ready</p>
+                <p className="text-sm font-semibold text-foreground">Step 4 · Copy your link</p>
                 <p className="text-sm text-muted-foreground mt-1">Copy your new link, open it, or let someone scan the QR code.</p>
               </div>
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
@@ -354,6 +370,11 @@ export default function HomeInlineCreator({ onWalletConnected }) {
               </div>
             </div>
           )}
+
+          <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-4">
+            <p className="text-sm font-semibold text-foreground">Step 5 · Claim for more options</p>
+            <p className="mt-1 text-sm text-muted-foreground">Log in to manage links, see history, and unlock more controls.</p>
+          </div>
         </div>
       </div>
     </div>
