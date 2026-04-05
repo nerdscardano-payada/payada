@@ -359,51 +359,53 @@ export default function HomeInlineCreator({ onWalletConnected }) {
               </div>
             </>
 
-          {type === "payment" && createdPaymentUrl && (
-            <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Copy className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-lg sm:text-xl font-semibold text-foreground">Step 4 · Copy your link</p>
-                  <p className="text-sm text-muted-foreground mt-1">Copy your new link, open it, or let someone scan the QR code.</p>
-                </div>
-              </div>
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
-                <div className="space-y-4">
-                  <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
-                    {createdPaymentUrl}
+          {createdPaymentUrl && (
+            <>
+              <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Copy className="w-5 h-5" />
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    <Button type="button" onClick={handleCopyCreatedLink} className="h-11 rounded-xl px-5">
-                      <Copy className="w-4 h-4 mr-2" />
-                      Copy link
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => window.open(createdPaymentUrl, "_blank")} className="h-11 rounded-xl px-5">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Open link
-                    </Button>
+                  <div>
+                    <p className="text-lg sm:text-xl font-semibold text-foreground">Step 4 · Copy your link</p>
+                    <p className="text-sm text-muted-foreground mt-1">Copy your new link, open it, or let someone scan the QR code.</p>
                   </div>
                 </div>
-                <div className="rounded-2xl border border-border bg-white p-4 flex items-center justify-center">
-                  <QRCodeDisplay value={createdPaymentUrl} size={180} />
+                <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
+                  <div className="space-y-4">
+                    <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
+                      {createdPaymentUrl}
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      <Button type="button" onClick={handleCopyCreatedLink} className="h-11 rounded-xl px-5">
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy link
+                      </Button>
+                      <Button type="button" variant="outline" onClick={() => window.open(createdPaymentUrl, "_blank")} className="h-11 rounded-xl px-5">
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Open link
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-white p-4 flex items-center justify-center">
+                    <QRCodeDisplay value={createdPaymentUrl} size={180} />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
 
-          <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-4">
-            <div className="flex items-start gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <UserPlus className="w-5 h-5" />
+              <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <UserPlus className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-lg sm:text-xl font-semibold text-foreground">Step 5 · Claim for more options</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Log in to manage links, see history, and unlock more controls.</p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="text-lg sm:text-xl font-semibold text-foreground">Step 5 · Claim for more options</p>
-                <p className="mt-1 text-sm text-muted-foreground">Log in to manage links, see history, and unlock more controls.</p>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>
