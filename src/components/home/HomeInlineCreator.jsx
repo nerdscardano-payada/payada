@@ -31,10 +31,19 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   const copySectionRef = useRef(null);
 
   useEffect(() => {
-    const savedAddress = localStorage.getItem("payada_connected_wallet_address");
-    if (savedAddress) {
-      setForm((prev) => ({ ...prev, receive_address: prev.receive_address || savedAddress }));
-    }
+    const syncStoredWallet = () => {
+      const savedAddress = localStorage.getItem("payada_connected_wallet_address");
+      if (savedAddress) {
+        setForm((prev) => ({ ...prev, receive_address: prev.receive_address || savedAddress }));
+      }
+    };
+
+    syncStoredWallet();
+    window.addEventListener("payada-wallet-updated", syncStoredWallet);
+
+    return () => {
+      window.removeEventListener("payada-wallet-updated", syncStoredWallet);
+    };
   }, []);
 
   const updateForm = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
