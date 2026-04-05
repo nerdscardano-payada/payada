@@ -205,25 +205,25 @@ export default function HomeInlineCreator({ onWalletConnected }) {
       </div>
 
       <div>
-        <div className="max-w-4xl flex rounded-xl border border-sky-400/30 bg-card/50 p-1 mb-4">
+        <div className="grid w-full grid-cols-1 sm:grid-cols-3 rounded-2xl border border-sky-400/30 bg-card/60 p-2 mb-4 gap-2 shadow-sm">
           <button
             type="button"
             onClick={() => setType("payment")}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${type === "payment" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"}`}
+            className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "payment" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
           >
             💳 Payment Link
           </button>
           <button
             type="button"
             onClick={() => setType("access")}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${type === "access" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"}`}
+            className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "access" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
           >
             🔐 Access Link
           </button>
           <button
             type="button"
             onClick={() => setType("pos")}
-            className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${type === "pos" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"}`}
+            className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "pos" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
           >
             🧾 POS
           </button>
