@@ -33,11 +33,11 @@ const goals = [
   {
     icon: Sparkles,
     eyebrow: "Custom build request",
-    title: "AI Builder Request",
+    title: "Tool Builder Request",
     description:
       "Send your wensen to an admin with your account data already filled in, so a custom setup can be built and tested for you.",
     to: "/AIBuilderRequest",
-    cta: "Open aanvraagformulier"
+    cta: "Open tool builder"
   }
 ];
 

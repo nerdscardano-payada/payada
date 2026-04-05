@@ -68,7 +68,7 @@ export default function AdminAIBuildChat() {
       <div className="border-b p-4">
         <div className="flex items-center gap-2 text-sm font-medium text-foreground">
           <Bot className="h-4 w-4 text-primary" />
-          Builder chat
+          Tool builder chat
         </div>
       </div>
 

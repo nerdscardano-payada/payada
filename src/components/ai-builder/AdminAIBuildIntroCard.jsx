@@ -3,7 +3,7 @@ import React from "react";
 export default function AdminAIBuildIntroCard() {
   return (
     <div className="rounded-2xl border bg-card p-5 text-sm text-muted-foreground">
-      <p className="font-medium text-foreground">What this prototype does</p>
+      <p className="font-medium text-foreground">What this Tool builder does</p>
       <p className="mt-2">Describe a payment flow in plain English and include the merchant email plus the slug you want. The AI will generate PayADA payment links or subscription plans with the platform fee model included.</p>
       <div className="mt-4 rounded-xl bg-secondary p-4 text-sm">
         <p className="font-medium text-foreground">Example</p>
