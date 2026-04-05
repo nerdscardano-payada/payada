@@ -171,8 +171,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
         </div>
       </div>
 
-      <div className="max-w-4xl">
-        <div className="flex rounded-xl border border-sky-400/30 bg-card/50 p-1 mb-4">
+      <div>
+        <div className="max-w-4xl flex rounded-xl border border-sky-400/30 bg-card/50 p-1 mb-4">
           <button
             type="button"
             onClick={() => setType("payment")}
