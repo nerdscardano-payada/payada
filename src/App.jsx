@@ -34,6 +34,7 @@ import OnboardingGoals from './pages/OnboardingGoals';
 import AdminAIPaymentBuilder from './pages/AdminAIPaymentBuilder';
 import AIBuilderRequest from './pages/AIBuilderRequest';
 import AdminToolBuilderInbox from './pages/AdminToolBuilderInbox';
+import CheckoutWidgetBuilder from './pages/CheckoutWidgetBuilder';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -145,6 +146,7 @@ const AuthenticatedApp = () => {
       <Route path="/AdminAIPaymentBuilder" element={<ProtectedRoute currentPageName="AdminAIPaymentBuilder"><LayoutWrapper currentPageName="AdminAIPaymentBuilder"><AdminAIPaymentBuilder /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/AdminToolBuilderInbox" element={<ProtectedRoute currentPageName="AdminToolBuilderInbox"><LayoutWrapper currentPageName="AdminToolBuilderInbox"><AdminToolBuilderInbox /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/AIBuilderRequest" element={<ProtectedRoute currentPageName="AIBuilderRequest"><LayoutWrapper currentPageName="AIBuilderRequest"><AIBuilderRequest /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/CheckoutWidgetBuilder" element={<ProtectedRoute currentPageName="CheckoutWidgetBuilder"><LayoutWrapper currentPageName="CheckoutWidgetBuilder"><CheckoutWidgetBuilder /></LayoutWrapper></ProtectedRoute>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
