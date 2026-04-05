@@ -15,6 +15,7 @@ import HomeHighlights from "@/components/home/HomeHighlights";
 import HomePublicLinksSection from "@/components/home/HomePublicLinksSection";
 import HomeInlineCreator from "@/components/home/HomeInlineCreator";
 import HomeWalletLinksManager from "@/components/home/HomeWalletLinksManager";
+import WalletConnect from "@/components/checkout/WalletConnect";
 import { homeHighlights, homePrimaryActions, homeWorkspaceSections } from "@/components/home/homeData";
 
 export default function HomePage() {
@@ -79,6 +80,11 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <div className="hidden lg:block">
+              <WalletConnect onConnected={({ address, ...walletData }) => {
+                setConnectedWallet({ address, ...walletData });
+              }} />
+            </div>
             <ThemeToggle className="border-slate-200 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800" />
             <Button variant="ghost" onClick={handleLogin} className="hidden sm:inline-flex">Log in</Button>
             <Button onClick={handleSignUp}>Dashboard</Button>
