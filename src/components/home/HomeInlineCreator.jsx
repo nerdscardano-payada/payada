@@ -419,8 +419,9 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                   </div>
                   <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
                     <div className="space-y-4">
-                      <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-                        Open wallet usually works only on mobile. Scan this QR code with your wallet app for the easiest experience.
+                      <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 space-y-2">
+                        <p>Open wallet usually works only on mobile. Scan this QR code with your wallet app for the easiest experience.</p>
+                        <p>For a better in-person payment experience, use POS after logging in.</p>
                       </div>
                       <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
                         {createdQrValue}
