@@ -36,6 +36,7 @@ export default function Pay() {
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [sessionData, setSessionData] = useState(null);
+  const [pageError, setPageError] = useState("");
 
   // Wallet state
   const [connectedWallet, setConnectedWallet] = useState(null);
@@ -78,31 +79,42 @@ export default function Pay() {
     const params = new URLSearchParams(window.location.search);
     const paySlug = params.get("slug");
     const cartParam = params.get("cartItems");
-    
-    console.log("URL params - slug:", paySlug, "cartParam:", cartParam);
-    
+
+    setPageError("");
+
     if (paySlug) {
       setSlug(paySlug);
       setLoading(true);
-    } else if (cartParam) {
+      return;
+    }
+
+    if (cartParam) {
       try {
         const decoded = atob(cartParam);
-        console.log("Decoded cartParam:", decoded);
         const items = JSON.parse(decoded);
-        console.log("Parsed cart items:", items);
+
+        if (!Array.isArray(items) || items.length === 0) {
+          setPageError("This checkout link is invalid.");
+          setLoading(false);
+          return;
+        }
+
         setCartItems(items);
-        setLoading(false);
+        setLoading(true);
       } catch (e) {
         console.error("Failed to parse cartItems:", e);
+        setPageError("This checkout link is invalid.");
         setLoading(false);
       }
-    } else {
-      setLoading(false);
+      return;
     }
+
+    setPageError("No payment link was provided.");
+    setLoading(false);
   }, []);
 
   // For single slug checkout
-  const { data: links = [], isLoading: linksLoading } = useQuery({
+  const { data: links = [], isLoading: linksLoading, isError: linksError } = useQuery({
     queryKey: ["checkout-link", slug],
     queryFn: () => base44.entities.PaymentLink.filter({ slug, status: "active" }, "-created_date", 1),
     enabled: !!slug,
@@ -110,11 +122,10 @@ export default function Pay() {
 
   // For multi-item cart checkout — fetch merchant info from first item's slug
   const uniqueSlugs = [...new Set(cartItems.map(item => item.slug || item.id))].filter(Boolean);
-  const { data: cartLinks = [], isFetching: cartLinksFetching } = useQuery({
+  const { data: cartLinks = [], isFetching: cartLinksFetching, isError: cartLinksError } = useQuery({
     queryKey: ["checkout-links-cart", uniqueSlugs],
     queryFn: async () => {
       if (uniqueSlugs.length === 0) return [];
-      // Only need first link to get merchant address/settings
       const results = await base44.entities.PaymentLink.filter({ slug: uniqueSlugs[0], status: "active" }, "-created_date", 1);
       return results;
     },
@@ -124,38 +135,64 @@ export default function Pay() {
 
 
   useEffect(() => {
-    if (slug) {
-      if (!linksLoading) {
-        if (links.length > 0) {
-          setPaymentLink(links[0]);
-        }
-        setLoading(false);
-      }
+    if (!slug) return;
+    if (linksLoading) return;
+
+    if (linksError) {
+      setPageError("We couldn't load this payment link right now.");
+      setPaymentLink(null);
+      setLoading(false);
+      return;
     }
-  }, [links, slug, linksLoading]);
+
+    if (links.length > 0) {
+      setPaymentLink(links[0]);
+      setPageError("");
+    } else {
+      setPaymentLink(null);
+      setPageError("This payment link may have expired or been disabled.");
+    }
+
+    setLoading(false);
+  }, [links, slug, linksLoading, linksError]);
 
   useEffect(() => {
-    if (cartItems.length > 0 && !cartLinksFetching) {
-      // Calculate total from cart item prices (provided by the store)
-      const totalAda = cartItems.reduce((sum, item) => {
-        return sum + (parseFloat(item.price) || 0) * (item.qty || item.quantity || 1);
-      }, 0);
+    if (cartItems.length === 0) return;
+    if (cartLinksFetching) return;
 
-      const firstLink = cartLinks[0] || null;
-
-      setPaymentLink({
-        id: "cart-" + Date.now(),
-        title: `${cartItems.length} item${cartItems.length > 1 ? 's' : ''}`,
-        amount_ada: totalAda,
-        merchant_id: firstLink?.merchant_id || null,
-        receive_address: firstLink?.receive_address || null,
-        collect_email: firstLink?.collect_email || false,
-        collect_name: firstLink?.collect_name || false,
-        collect_shipping: firstLink?.collect_shipping || false,
-      });
+    if (cartLinksError) {
+      setPageError("We couldn't load this checkout right now.");
+      setPaymentLink(null);
       setLoading(false);
+      return;
     }
-  }, [cartItems, cartLinks, cartLinksFetching]);
+
+    const totalAda = cartItems.reduce((sum, item) => {
+      return sum + (parseFloat(item.price) || 0) * (item.qty || item.quantity || 1);
+    }, 0);
+
+    const firstLink = cartLinks[0] || null;
+
+    if (!firstLink) {
+      setPageError("This checkout is no longer available.");
+      setPaymentLink(null);
+      setLoading(false);
+      return;
+    }
+
+    setPaymentLink({
+      id: "cart-" + Date.now(),
+      title: `${cartItems.length} item${cartItems.length > 1 ? 's' : ''}`,
+      amount_ada: totalAda,
+      merchant_id: firstLink?.merchant_id || null,
+      receive_address: firstLink?.receive_address || null,
+      collect_email: firstLink?.collect_email || false,
+      collect_name: firstLink?.collect_name || false,
+      collect_shipping: firstLink?.collect_shipping || false,
+    });
+    setPageError("");
+    setLoading(false);
+  }, [cartItems, cartLinks, cartLinksFetching, cartLinksError]);
 
   useEffect(() => {
     if (!slug || !multiCntEnabled) return;
@@ -273,18 +310,6 @@ export default function Pay() {
     }, 10000);
   }, [paymentLink, payerEmail, payerName, payerDiscordUsername, connectedWallet, shippingStreet, shippingCity, shippingPostalCode, shippingCountry]);
 
-  if (!slug && cartItems.length === 0) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="text-center">
-          <AlertCircle className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-white">Invalid checkout link</h2>
-          <p className="text-slate-400 mt-2">No payment link slug provided.</p>
-        </div>
-      </div>
-    );
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
@@ -296,13 +321,13 @@ export default function Pay() {
     );
   }
 
-  if (!paymentLink) {
+  if (pageError || !paymentLink) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+        <div className="max-w-md text-center">
           <AlertCircle className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-white">Payment link not found</h2>
-          <p className="text-slate-400 mt-2">This link may have expired or been disabled.</p>
+          <h2 className="text-xl font-semibold text-white">Unable to load checkout</h2>
+          <p className="text-slate-400 mt-2">{pageError || "This link may have expired or been disabled."}</p>
         </div>
       </div>
     );

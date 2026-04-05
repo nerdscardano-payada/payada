@@ -21,7 +21,10 @@ export default function WalletPayButton({ connectedWallet, sessionData, paymentL
   const isCnt = paymentLink?.amount_mode === "fixed_cnt";
 
   const handlePay = async () => {
-    if (!connectedWallet || !sessionData) return;
+    if (!connectedWallet || !sessionData || !paymentLink) {
+      toast.error("Payment details are still loading. Please try again in a moment.");
+      return;
+    }
 
     const { walletId, address: walletAddress } = connectedWallet;
     const merchantAddress = sessionData.merchant_address || paymentLink.receive_address;
