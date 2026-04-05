@@ -32,6 +32,7 @@ import NFTMarketplaceTerms from './pages/NFTMarketplaceTerms';
 import PublicNFTMarketplace from './pages/PublicNFTMarketplace';
 import OnboardingGoals from './pages/OnboardingGoals';
 import AdminAIPaymentBuilder from './pages/AdminAIPaymentBuilder';
+import POS from './pages/POS';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -141,6 +142,7 @@ const AuthenticatedApp = () => {
       <Route path="/Marketplace" element={<LayoutWrapper currentPageName="Marketplace"><PublicNFTMarketplace /></LayoutWrapper>} />
       <Route path="/OnboardingGoals" element={<ProtectedRoute currentPageName="OnboardingGoals"><LayoutWrapper currentPageName="OnboardingGoals"><OnboardingGoals /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/AdminAIPaymentBuilder" element={<ProtectedRoute currentPageName="AdminAIPaymentBuilder"><LayoutWrapper currentPageName="AdminAIPaymentBuilder"><AdminAIPaymentBuilder /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/POS" element={<POS />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

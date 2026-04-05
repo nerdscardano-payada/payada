@@ -59,17 +59,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
 
   const handleGenerate = async () => {
     if (type === "pos") {
-      setSubmitting(true);
-      try {
-        const terminals = await base44.entities.PayTerminal.filter({ status: "active" }, "-created_date", 1);
-        if (!terminals.length) {
-          toast.error("Geen actieve POS terminal gevonden.");
-          return;
-        }
-        navigate(`/PayTerminal?id=${encodeURIComponent(terminals[0].id)}`);
-      } finally {
-        setSubmitting(false);
-      }
+      navigate("/POS");
       return;
     }
 
