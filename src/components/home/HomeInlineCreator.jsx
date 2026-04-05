@@ -85,10 +85,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
     const params = new URLSearchParams();
     params.set("amount", String(amount));
     if (form.title.trim()) {
-      params.set("metadata", form.title.trim());
+      params.set("label", form.title.trim());
     }
 
-    return `web+cardano:${form.receive_address.trim()}?${params.toString()}`;
+    return `cardano:${form.receive_address.trim()}?${params.toString()}`;
   };
 
   const handleGenerate = async () => {
@@ -414,7 +414,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                     </div>
                     <div>
                       <p className="text-lg sm:text-xl font-semibold text-foreground">QR Payment ready</p>
-                      <p className="text-sm text-muted-foreground mt-1">Scan this QR to open the wallet and pay instantly.</p>
+                      <p className="text-sm text-muted-foreground mt-1">Scan this QR with a Cardano wallet app to open the payment request instantly.</p>
                     </div>
                   </div>
                   <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
@@ -430,7 +430,9 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                           <Copy className="w-4 h-4 mr-2" />
                           Copy QR data
                         </Button>
-                        <Button type="button" variant="outline" onClick={() => window.open(createdQrValue, "_self")} className="h-11 rounded-xl px-5">
+                        <Button type="button" variant="outline" onClick={() => {
+                          window.location.href = createdQrValue;
+                        }} className="h-11 rounded-xl px-5">
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Open wallet
                         </Button>
