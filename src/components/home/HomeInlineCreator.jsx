@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History, Copy, ExternalLink, Layers3, Rocket, UserPlus } from "lucide-react";
+import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History, Copy, ExternalLink, Layers3, Rocket, UserPlus, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,6 +28,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   const [feePreview, setFeePreview] = React.useState({ fee_model: "customer_pays", fee_split_ratio: 0.5 });
   const [selectedCntKey, setSelectedCntKey] = React.useState("");
   const [createdPaymentUrl, setCreatedPaymentUrl] = React.useState("");
+  const [createdQrValue, setCreatedQrValue] = React.useState("");
   const copySectionRef = useRef(null);
 
   useEffect(() => {
@@ -77,10 +78,22 @@ export default function HomeInlineCreator({ onWalletConnected }) {
     toast.success("Link copied");
   };
 
-  const handleGenerate = async () => {
-    if (type === "payment") {
-      setCreatedPaymentUrl("");
+  const buildCardanoQrValue = () => {
+    const amount = Number(form.amount || 0);
+    if (!form.receive_address.trim() || amount <= 0) return "";
+
+    const params = new URLSearchParams();
+    params.set("amount", String(amount));
+    if (form.title.trim()) {
+      params.set("metadata", form.title.trim());
     }
+
+    return `web+cardano:${form.receive_address.trim()}?${params.toString()}`;
+  };
+
+  const handleGenerate = async () => {
+    setCreatedPaymentUrl("");
+    setCreatedQrValue("");
 
     if (!form.title.trim()) {
       toast.error(type === "payment" ? "Voer in waarvoor de betaling is." : "Voer in wat mensen ontgrendelen.");
@@ -100,6 +113,18 @@ export default function HomeInlineCreator({ onWalletConnected }) {
     }
     if (type === "access" && !form.access_url.trim()) {
       toast.error("Voer een access URL in.");
+      return;
+    }
+    if (type === "qr_payment") {
+      const qrValue = buildCardanoQrValue();
+      if (!qrValue) {
+        toast.error("Voer een geldig Cardano adres en bedrag in.");
+        return;
+      }
+      setCreatedQrValue(qrValue);
+      setTimeout(() => {
+        copySectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 50);
       return;
     }
 
@@ -248,10 +273,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
               </div>
               <div>
                 <p className="text-lg sm:text-xl font-semibold text-foreground">Step 2 · Select type</p>
-                <p className="text-sm text-muted-foreground">Choose the kind of link you want to launch.</p>
+                <p className="text-sm text-muted-foreground">Choose the kind of flow you want to launch.</p>
               </div>
             </div>
-            <div className="grid w-full grid-cols-1 sm:grid-cols-2 rounded-2xl border border-sky-400/30 bg-card/60 p-2 mb-4 gap-2 shadow-sm">
+            <div className="grid w-full grid-cols-1 sm:grid-cols-3 rounded-2xl border border-sky-400/30 bg-card/60 p-2 mb-4 gap-2 shadow-sm">
               <button
                 type="button"
                 onClick={() => setType("payment")}
@@ -265,6 +290,13 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                 className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "access" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
               >
                 🔐 Access Link
+              </button>
+              <button
+                type="button"
+                onClick={() => setType("qr_payment")}
+                className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "qr_payment" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
+              >
+                💰 QR Payments
               </button>
             </div>
           </div>
@@ -302,7 +334,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             <div>
               <p className="text-lg sm:text-xl font-semibold text-foreground">Step 3 · Launch flow</p>
               <h2 className="text-2xl font-semibold text-foreground mt-1">
-                {type === "payment" ? "Create a payment link" : "Create an access link"}
+                {type === "payment" ? "Create a payment link" : type === "access" ? "Create an access link" : "Create a QR payment"}
               </h2>
             </div>
           </div>
@@ -310,8 +342,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           <>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2 md:col-span-2">
-                  <Label>{type === "payment" ? "Waarvoor is deze betaling?" : "Wat ontgrendelen mensen?"}</Label>
-                  <Input value={form.title} onChange={(e) => updateForm("title", e.target.value)} placeholder={type === "payment" ? "Premium membership" : "Private Discord access"} className="h-12 rounded-xl" />
+                  <Label>{type === "payment" ? "Waarvoor is deze betaling?" : type === "access" ? "Wat ontgrendelen mensen?" : "Omschrijving voor deze QR betaling"}</Label>
+                  <Input value={form.title} onChange={(e) => updateForm("title", e.target.value)} placeholder={type === "payment" ? "Premium membership" : type === "access" ? "Private Discord access" : "Table 4 · Coffee order"} className="h-12 rounded-xl" />
                 </div>
                 <div className="space-y-2">
                   <Label>{currency === "ADA" ? "Amount (ADA)" : `Amount (${selectedCnt?.ticker || "Token"})`}</Label>
@@ -351,25 +383,67 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                     <Input value={form.access_url} onChange={(e) => updateForm("access_url", e.target.value)} placeholder="https://your-community-link.com" className="h-12 rounded-xl" />
                   </div>
                 )}
-                <div className="space-y-2 md:col-span-2">
-                  <Label>{type === "payment" ? "Redirect URL after payment (optional)" : "Redirect URL after unlock (optional)"}</Label>
-                  <Input value={form.redirect_url} onChange={(e) => updateForm("redirect_url", e.target.value)} placeholder="https://your-site.com/thanks" className="h-12 rounded-xl" />
-                </div>
+                {type !== "qr_payment" && (
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>{type === "payment" ? "Redirect URL after payment (optional)" : "Redirect URL after unlock (optional)"}</Label>
+                    <Input value={form.redirect_url} onChange={(e) => updateForm("redirect_url", e.target.value)} placeholder="https://your-site.com/thanks" className="h-12 rounded-xl" />
+                  </div>
+                )}
               </div>
 
-              <div className="rounded-[1.5rem] border border-border bg-white dark:bg-slate-900 p-5">
-                <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
-              </div>
+              {type !== "qr_payment" && (
+                <div className="rounded-[1.5rem] border border-border bg-white dark:bg-slate-900 p-5">
+                  <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
+                </div>
+              )}
 
               <div className="flex flex-wrap gap-3">
                 <Button size="lg" className="h-12 rounded-xl px-6" onClick={handleGenerate} disabled={submitting}>
-                  {submitting ? "Creating..." : type === "payment" ? "Generate Payment Link" : "Generate Access Link"}
+                  {submitting ? "Creating..." : type === "payment" ? "Generate Payment Link" : type === "access" ? "Generate Access Link" : "Generate QR Payment"}
                 </Button>
               </div>
             </>
 
-          {createdPaymentUrl && (
+          {(createdPaymentUrl || createdQrValue) && (
             <>
+              {createdQrValue && (
+                <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <QrCode className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-lg sm:text-xl font-semibold text-foreground">QR Payment ready</p>
+                      <p className="text-sm text-muted-foreground mt-1">Scan this QR to open the wallet and pay instantly.</p>
+                    </div>
+                  </div>
+                  <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start">
+                    <div className="space-y-4">
+                      <div className="rounded-xl border border-border bg-white px-4 py-3 text-sm text-foreground break-all">
+                        {createdQrValue}
+                      </div>
+                      <div className="flex flex-wrap gap-3">
+                        <Button type="button" onClick={async () => {
+                          await navigator.clipboard.writeText(createdQrValue);
+                          toast.success("QR payment copied");
+                        }} className="h-11 rounded-xl px-5">
+                          <Copy className="w-4 h-4 mr-2" />
+                          Copy QR data
+                        </Button>
+                        <Button type="button" variant="outline" onClick={() => window.open(createdQrValue, "_self")} className="h-11 rounded-xl px-5">
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Open wallet
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="rounded-2xl border border-border bg-white p-4 flex items-center justify-center">
+                      <QRCodeDisplay value={createdQrValue} size={180} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {createdPaymentUrl && (
               <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
                 <div className="flex items-start gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -401,6 +475,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                   </div>
                 </div>
               </div>
+              )}
 
               <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-4">
                 <div className="flex items-start gap-3">
