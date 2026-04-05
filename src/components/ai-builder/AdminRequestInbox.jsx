@@ -7,8 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { pagesConfig } from "@/pages.config";
 
 const statusOptions = ["submitted", "in_review", "ready_for_feedback", "completed"];
+const availablePages = Object.keys(pagesConfig.Pages)
+  .filter((page) => !["Home", "AdminToolBuilderInbox", "AdminAIPaymentBuilder"].includes(page))
+  .sort((a, b) => a.localeCompare(b));
 
 function RequestCard({ request }) {
   const queryClient = useQueryClient();
@@ -29,7 +34,7 @@ function RequestCard({ request }) {
     updateMutation.mutate({
       admin_notes: adminNotes,
       assigned_tool_name: assignedToolName,
-      assigned_tool_page: assignedToolPage,
+      assigned_tool_page: assignedToolPage ? `/${assignedToolPage.replace(/^\//, "")}` : "",
       assigned_to_merchant: Boolean(assignedToolName || assignedToolPage),
       status: request.status === "submitted" ? "in_review" : request.status,
     });
@@ -79,7 +84,16 @@ function RequestCard({ request }) {
           </div>
           <div className="space-y-2">
             <Label>Pagina / route</Label>
-            <Input value={assignedToolPage} onChange={(e) => setAssignedToolPage(e.target.value)} placeholder="Bijv. /PayTerminal of /CustomCheckout" />
+            <Select value={assignedToolPage} onValueChange={setAssignedToolPage}>
+              <SelectTrigger>
+                <SelectValue placeholder="Kies een bestaande pagina" />
+              </SelectTrigger>
+              <SelectContent>
+                {availablePages.map((page) => (
+                  <SelectItem key={page} value={page}>{`/${page}`}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
