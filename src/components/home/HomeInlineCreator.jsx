@@ -59,7 +59,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
 
   const handleGenerate = async () => {
     if (type === "pos") {
-      navigate("/POS");
+      navigate("/PayTerminal");
       return;
     }
 
