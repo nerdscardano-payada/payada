@@ -1,5 +1,5 @@
 import React from "react";
-import { CreditCard, Users, Wallet, Sparkles } from "lucide-react";
+import { CreditCard, Users, Wallet } from "lucide-react";
 import GoalTile from "@/components/onboarding/GoalTile";
 
 const goals = [
@@ -30,15 +30,6 @@ const goals = [
     to: "/AccessLinks",
     cta: "Create access links"
   },
-  {
-    icon: Sparkles,
-    eyebrow: "Custom build request",
-    title: "Tool Builder Request",
-    description:
-      "Send your wensen to an admin with your account data already filled in, so a custom setup can be built and tested for you.",
-    to: "/AIBuilderRequest",
-    cta: "Open tool builder"
-  }
 ];
 
 export default function OnboardingGoals() {
