@@ -201,7 +201,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
       </div>
 
       <div>
-        <div className="grid w-full grid-cols-1 sm:grid-cols-3 rounded-2xl border border-sky-400/30 bg-card/60 p-2 mb-4 gap-2 shadow-sm">
+        <div className="grid w-full grid-cols-1 sm:grid-cols-2 rounded-2xl border border-sky-400/30 bg-card/60 p-2 mb-4 gap-2 shadow-sm">
           <button
             type="button"
             onClick={() => setType("payment")}
@@ -215,13 +215,6 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "access" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
           >
             🔐 Access Link
-          </button>
-          <button
-            type="button"
-            onClick={() => setType("pos")}
-            className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "pos" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
-          >
-            🧾 POS
           </button>
         </div>
 
@@ -268,21 +261,11 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           <div>
             <p className="text-sm text-muted-foreground">Launch flow</p>
             <h2 className="text-2xl font-semibold text-foreground mt-1">
-              {type === "payment" ? "Create a payment link" : type === "access" ? "Create an access link" : "Open POS"}
+              {type === "payment" ? "Create a payment link" : "Create an access link"}
             </h2>
           </div>
 
-          {type === "pos" ? (
-            <div className="rounded-[1.5rem] border border-border bg-background p-6 space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Open the POS screen directly without saving a new link first.
-              </p>
-              <Button size="lg" className="h-12 rounded-xl px-6" onClick={handleGenerate}>
-                Open POS
-              </Button>
-            </div>
-          ) : (
-            <>
+          <>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2 md:col-span-2">
                   <Label>{type === "payment" ? "Waarvoor is deze betaling?" : "Wat ontgrendelen mensen?"}</Label>
@@ -342,7 +325,6 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                 </Button>
               </div>
             </>
-          )}
 
           {type === "payment" && createdPaymentUrl && (
             <div ref={copySectionRef} className="rounded-[1.5rem] border border-border bg-background p-5 space-y-4">
