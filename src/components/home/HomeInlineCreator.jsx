@@ -91,7 +91,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   useEffect(() => {
     const interval = window.setInterval(() => {
       setFeeSlide((prev) => (prev === feeSlides.length - 1 ? 0 : prev + 1));
-    }, 2000);
+    }, 5000);
 
     return () => window.clearInterval(interval);
   }, [feeSlides.length]);
