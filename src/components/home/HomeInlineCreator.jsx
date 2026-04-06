@@ -88,6 +88,14 @@ export default function HomeInlineCreator({ onWalletConnected }) {
 
   const currentFeeSlide = feeSlides[feeSlide];
 
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setFeeSlide((prev) => (prev === feeSlides.length - 1 ? 0 : prev + 1));
+    }, 2000);
+
+    return () => window.clearInterval(interval);
+  }, [feeSlides.length]);
+
   const currentStep = createdPaymentUrl
     ? 4
     : form.title.trim() || form.amount || form.access_url.trim() || form.redirect_url.trim()
