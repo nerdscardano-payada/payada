@@ -304,30 +304,6 @@ export default function HomeInlineCreator({ onWalletConnected }) {
         </div>
       </div>
 
-      <div className="hidden sm:grid sm:grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><Wallet className="w-5 h-5 text-primary" /></div>
-          <div>
-            <h3 className="font-medium">Autofill wallet</h3>
-            <p className="text-sm text-muted-foreground mt-1">Use your connected wallet address directly in your links.</p>
-          </div>
-        </div>
-        <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><History className="w-5 h-5 text-primary" /></div>
-          <div>
-            <h3 className="font-medium">Recent links</h3>
-            <p className="text-sm text-muted-foreground mt-1">See the latest links created in this browser right away.</p>
-          </div>
-        </div>
-        <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><Link2 className="w-5 h-5 text-primary" /></div>
-          <div>
-            <h3 className="font-medium">Frictionless flow</h3>
-            <p className="text-sm text-muted-foreground mt-1">Create links on the homepage, and only log in for the dashboard and tracking.</p>
-          </div>
-        </div>
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-4xl">
         <div className="rounded-2xl border border-border bg-background/70 px-4 py-3 text-left backdrop-blur-sm">
           <div className="flex items-center gap-2 text-foreground font-medium text-sm"><Coins className="w-4 h-4 text-primary" /> ADA + native tokens</div>
@@ -482,6 +458,30 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                 <Button size="lg" className="h-12 rounded-xl px-6" onClick={handleGenerate} disabled={submitting}>
                   {submitting ? "Creating..." : type === "payment" ? "Generate Payment Link" : type === "access" ? "Generate Access Link" : "Generate QR Payment"}
                 </Button>
+              </div>
+
+              <div className="hidden sm:grid sm:grid-cols-3 gap-4">
+                <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><Wallet className="w-5 h-5 text-primary" /></div>
+                  <div>
+                    <h3 className="font-medium">Autofill wallet</h3>
+                    <p className="text-sm text-muted-foreground mt-1">Use your connected wallet address directly in your links.</p>
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><History className="w-5 h-5 text-primary" /></div>
+                  <div>
+                    <h3 className="font-medium">Recent links</h3>
+                    <p className="text-sm text-muted-foreground mt-1">See the latest links created in this browser right away.</p>
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-border bg-background/70 p-4 space-y-3 backdrop-blur-sm">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center"><Link2 className="w-5 h-5 text-primary" /></div>
+                  <div>
+                    <h3 className="font-medium">Frictionless flow</h3>
+                    <p className="text-sm text-muted-foreground mt-1">Create links on the homepage, and only log in for the dashboard and tracking.</p>
+                  </div>
+                </div>
               </div>
             </>
 
