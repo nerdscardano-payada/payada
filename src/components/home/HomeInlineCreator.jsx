@@ -261,19 +261,19 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             <button
               type="button"
               onClick={() => setFeeSlide((prev) => (prev === 0 ? feeSlides.length - 1 : prev - 1))}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:bg-white/10"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/5 bg-white/[0.03] text-slate-400 transition hover:bg-white/[0.06] hover:text-slate-200"
               aria-label="Previous fee option"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3.5 w-3.5" />
             </button>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               {feeSlides.map((slide, index) => (
                 <button
                   key={slide.title}
                   type="button"
                   onClick={() => setFeeSlide(index)}
-                  className={`h-2.5 rounded-full transition-all ${index === feeSlide ? "w-8 bg-white" : "w-2.5 bg-white/30"}`}
+                  className={`rounded-full transition-all ${index === feeSlide ? "h-1.5 w-5 bg-white/70" : "h-1.5 w-1.5 bg-white/20 hover:bg-white/35"}`}
                   aria-label={slide.title}
                 />
               ))}
@@ -282,10 +282,10 @@ export default function HomeInlineCreator({ onWalletConnected }) {
             <button
               type="button"
               onClick={() => setFeeSlide((prev) => (prev === feeSlides.length - 1 ? 0 : prev + 1))}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:bg-white/10"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/5 bg-white/[0.03] text-slate-400 transition hover:bg-white/[0.06] hover:text-slate-200"
               aria-label="Next fee option"
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </div>
 
