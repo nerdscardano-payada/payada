@@ -1,6 +1,6 @@
 import React from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import KeyMetrics from "@/components/admin/KeyMetrics";
 import SystemErrorLogs from "@/components/admin/SystemErrorLogs";
 import FeeRevenueStats from "@/components/admin/FeeRevenueStats";
@@ -8,8 +8,11 @@ import MerchantOverview from "@/components/admin/MerchantOverview";
 import MerchantVerificationPanel from "@/components/admin/MerchantVerificationPanel";
 import TransactionTimeline from "@/components/admin/TransactionTimeline";
 import RevenueChart from "@/components/admin/RevenueChart";
+import AdminDashboardHero from "@/components/admin/AdminDashboardHero";
+import HomepageLinkOverview from "@/components/admin/HomepageLinkOverview";
 
 export default function AdminDashboard() {
+  const queryClient = useQueryClient();
   const { data: user, isLoading } = useQuery({
     queryKey: ["current-user"],
     queryFn: () => base44.auth.me(),
@@ -33,12 +36,12 @@ export default function AdminDashboard() {
 
   if (!user || user.role !== "admin") {
     return (
-      <div className="min-h-screen bg-slate-50 p-4 md:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="rounded-lg border border-red-200 bg-red-50 p-6">
-            <h2 className="text-lg font-semibold text-red-900">Access Denied</h2>
-            <p className="text-red-800 mt-2">
-              You need admin privileges to access this dashboard.
+      <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6">
+            <h2 className="text-lg font-semibold text-destructive">Access denied</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Je hebt admin rechten nodig om dit dashboard te openen.
             </p>
           </div>
         </div>
@@ -46,73 +49,56 @@ export default function AdminDashboard() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-slate-50 p-4 md:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Admin Dashboard</h1>
-          <p className="text-slate-600 mt-1">
-            Monitor platform health, performance, and financial metrics
-          </p>
-        </div>
+  const handleRefresh = () => {
+    queryClient.invalidateQueries();
+  };
 
-        {/* Key Metrics Row */}
+  return (
+    <div className="min-h-screen bg-background p-4 md:p-6 lg:p-8">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <AdminDashboardHero onRefresh={handleRefresh} refreshing={false} />
+
         <section>
           <KeyMetrics />
         </section>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Activity & Transactions */}
-          <div className="lg:col-span-3 space-y-6">
-            <section>
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">
-                📈 Groei (6 Maanden)
-              </h2>
-              <RevenueChart />
-            </section>
+        <section>
+          <HomepageLinkOverview />
+        </section>
 
-            <section>
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">
-                📊 Transacties
-              </h2>
+        <div className="grid gap-6 xl:grid-cols-[1.35fr_0.95fr]">
+          <section className="space-y-6">
+            <div>
+              <h2 className="mb-4 text-lg font-semibold text-foreground">Groei en transacties</h2>
+              <RevenueChart />
+            </div>
+            <div>
               <TransactionTimeline />
-            </section>
-          </div>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <div>
+              <h2 className="mb-4 text-lg font-semibold text-foreground">Merchant verificatie</h2>
+              <MerchantVerificationPanel />
+            </div>
+            <div>
+              <h2 className="mb-4 text-lg font-semibold text-foreground">Systeemstatus</h2>
+              <SystemErrorLogs />
+            </div>
+          </section>
         </div>
 
-        {/* Financial Overview */}
         <section>
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">
-            💰 Financieel Overzicht
-          </h2>
+          <h2 className="mb-4 text-lg font-semibold text-foreground">Financieel overzicht</h2>
           <FeeRevenueStats />
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">
-            ✅ Merchant Verificatie
-          </h2>
-          <MerchantVerificationPanel />
-        </section>
-
-        {/* Merchant Management */}
-        <section>
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">
-            🏢 Merchant Beheer
-          </h2>
+          <h2 className="mb-4 text-lg font-semibold text-foreground">Merchant beheer</h2>
           <MerchantOverview />
         </section>
-
-        {/* System Health */}
-        <section>
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">
-            🔧 Systeemstatus
-          </h2>
-          <SystemErrorLogs />
-        </section>
-        </div>
-        </div>
-        );
-        }
+      </div>
+    </div>
+  );
+}
