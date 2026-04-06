@@ -60,18 +60,18 @@ export default function HomeTrustProofSection() {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
-              Trusted by growing Cardano businesses
+              Real-time platform activity
             </div>
             <div>
               <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                Trust and proof for first-time visitors.
+                Real usage, visible in real time.
               </h2>
               <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">
-                Show buyers and merchants that PayADA is already being used for real Cardano payments, not just demos.
+                These numbers are pulled from live platform activity so new visitors can see that PayADA is already being used for real payments.
               </p>
             </div>
             <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 text-sm text-foreground">
-              Live-looking proof elements reduce hesitation and make the homepage feel safer to act on.
+              These totals will keep growing as adoption increases and more merchants start using PayADA.
             </div>
           </div>
 
