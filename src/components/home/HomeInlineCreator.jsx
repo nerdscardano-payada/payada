@@ -391,11 +391,9 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                 )}
               </div>
 
-              {type !== "qr_payment" && (
-                <div className="rounded-[1.5rem] border border-border bg-white dark:bg-slate-900 p-5">
-                  <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
-                </div>
-              )}
+              <div className="rounded-[1.5rem] border border-border bg-white dark:bg-slate-900 p-5">
+                <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
+              </div>
 
               <div className="flex flex-wrap gap-3">
                 <Button size="lg" className="h-12 rounded-xl px-6" onClick={handleGenerate} disabled={submitting}>
