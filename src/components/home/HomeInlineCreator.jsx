@@ -280,23 +280,32 @@ export default function HomeInlineCreator({ onWalletConnected }) {
               <button
                 type="button"
                 onClick={() => setType("payment")}
-                className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "payment" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
+                className={`flex min-h-[104px] flex-col items-start justify-between rounded-xl border px-4 py-4 text-left transition-all ${type === "payment" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
               >
-                💳 Payment Link
+                <span className="text-sm font-semibold">💳 Payment Link</span>
+                <span className={`text-xs leading-5 ${type === "payment" ? "text-primary-foreground/85" : "text-muted-foreground"}`}>
+                  Create a shareable checkout link for one-time payments.
+                </span>
               </button>
               <button
                 type="button"
                 onClick={() => setType("access")}
-                className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "access" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
+                className={`flex min-h-[104px] flex-col items-start justify-between rounded-xl border px-4 py-4 text-left transition-all ${type === "access" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
               >
-                🔐 Access Link
+                <span className="text-sm font-semibold">🔐 Access Link</span>
+                <span className={`text-xs leading-5 ${type === "access" ? "text-primary-foreground/85" : "text-muted-foreground"}`}>
+                  Charge first, then send people to a locked page or community.
+                </span>
               </button>
               <button
                 type="button"
                 onClick={() => setType("qr_payment")}
-                className={`flex min-h-[56px] items-center justify-center rounded-xl border text-sm font-semibold transition-all ${type === "qr_payment" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
+                className={`flex min-h-[104px] flex-col items-start justify-between rounded-xl border px-4 py-4 text-left transition-all ${type === "qr_payment" ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-2 ring-primary/20" : "border-transparent bg-background/80 text-foreground hover:border-sky-200 hover:bg-background"}`}
               >
-                💰 QR Payments
+                <span className="text-sm font-semibold">💰 QR Payments</span>
+                <span className={`text-xs leading-5 ${type === "qr_payment" ? "text-primary-foreground/85" : "text-muted-foreground"}`}>
+                  Generate a wallet-ready QR code for in-person or mobile payments.
+                </span>
               </button>
             </div>
           </div>
