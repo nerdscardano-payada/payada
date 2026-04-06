@@ -207,24 +207,43 @@ export default function HomeInlineCreator({ onWalletConnected }) {
         <div className="rounded-[1.75rem] border border-primary/70 bg-slate-950 px-6 py-6 text-white shadow-[0_28px_70px_rgba(15,23,42,0.28)] sm:px-7">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm text-slate-400">Payment received</p>
-              <p className="mt-4 text-4xl font-semibold tracking-tight">₳ 250</p>
-              <p className="mt-3 text-sm text-slate-400">Confirmed • Block #8,234,567</p>
+              <p className="text-sm text-slate-400">Fee model preview</p>
+              <p className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Who pays the fee?</p>
+              <p className="mt-3 max-w-sm text-sm leading-6 text-slate-400">Choose the fee setup that fits your checkout best: merchant pays, customer pays, or split fee.</p>
             </div>
             <div className="mt-1 flex h-6 w-6 items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-400/10 text-emerald-400">
               <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
             </div>
           </div>
 
-          <div className="mt-8 border-t border-white/10 pt-5">
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Net amount</p>
-                <p className="mt-2 text-xl font-semibold">₳ 246.25</p>
+          <div className="mt-8 space-y-3 border-t border-white/10 pt-5">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-white">Merchant pays</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-400">Customer pays ₳ 250. Merchant receives ₳ 246.25 after fee.</p>
+                </div>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-slate-200">Default</span>
               </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Fee</p>
-                <p className="mt-2 text-xl font-semibold">₳ 3.75</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-white">Customer pays</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-400">Customer pays ₳ 253.75. Merchant still receives the full ₳ 250.</p>
+                </div>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-slate-200">Full pass-through</span>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-white">Split fee</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-400">Customer pays ₳ 251.875 and merchant covers the other half of the fee.</p>
+                </div>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-slate-200">50 / 50</span>
               </div>
             </div>
           </div>
