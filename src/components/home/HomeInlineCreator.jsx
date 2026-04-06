@@ -351,7 +351,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           <>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2 md:col-span-2">
-                  <Label>{type === "payment" ? "Waarvoor is deze betaling?" : type === "access" ? "Wat ontgrendelen mensen?" : "Omschrijving voor deze QR betaling"}</Label>
+                  <Label>{type === "payment" ? "What is this payment for?" : type === "access" ? "What are people unlocking?" : "Description for this QR payment"}</Label>
                   <Input value={form.title} onChange={(e) => updateForm("title", e.target.value)} placeholder={type === "payment" ? "Premium membership" : type === "access" ? "Private Discord access" : "Table 4 · Coffee order"} className="h-12 rounded-xl" />
                 </div>
                 <div className="space-y-2">
