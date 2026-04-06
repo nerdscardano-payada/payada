@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History, Copy, ExternalLink, Layers3, Rocket, UserPlus, QrCode } from "lucide-react";
+import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History, Copy, ExternalLink, Layers3, Rocket, UserPlus, QrCode, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,6 +29,7 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   const [selectedCntKey, setSelectedCntKey] = React.useState("");
   const [createdPaymentUrl, setCreatedPaymentUrl] = React.useState("");
   const [createdQrValue, setCreatedQrValue] = React.useState("");
+  const [feeSlide, setFeeSlide] = React.useState(0);
   const copySectionRef = useRef(null);
 
   useEffect(() => {
@@ -54,6 +55,38 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   };
 
   const selectedCnt = KNOWN_CNTS.find((cnt) => `${cnt.policy_id}:${cnt.asset_name}` === selectedCntKey);
+
+  const feeSlides = [
+    {
+      title: "Merchant pays",
+      amount: "₳ 250",
+      status: "Confirmed • Block #8,234,567",
+      primaryLabel: "Net amount",
+      primaryValue: "₳ 246.25",
+      secondaryLabel: "Fee",
+      secondaryValue: "₳ 3.75",
+    },
+    {
+      title: "Customer pays",
+      amount: "₳ 253.75",
+      status: "Customer covers the fee",
+      primaryLabel: "Merchant receives",
+      primaryValue: "₳ 250",
+      secondaryLabel: "Fee added",
+      secondaryValue: "₳ 3.75",
+    },
+    {
+      title: "Split fee",
+      amount: "₳ 251.875",
+      status: "Fee shared between both",
+      primaryLabel: "Merchant receives",
+      primaryValue: "₳ 248.125",
+      secondaryLabel: "Shared fee",
+      secondaryValue: "₳ 1.875",
+    },
+  ];
+
+  const currentFeeSlide = feeSlides[feeSlide];
 
   const currentStep = createdPaymentUrl
     ? 4
@@ -207,24 +240,56 @@ export default function HomeInlineCreator({ onWalletConnected }) {
         <div className="rounded-[1.75rem] border border-primary/70 bg-slate-950 px-6 py-6 text-white shadow-[0_28px_70px_rgba(15,23,42,0.28)] sm:px-7">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm text-slate-400">Payment received</p>
-              <p className="mt-4 text-4xl font-semibold tracking-tight">₳ 250</p>
-              <p className="mt-3 text-sm text-slate-400">Confirmed • Block #8,234,567</p>
+              <p className="text-sm text-slate-400">{currentFeeSlide.title}</p>
+              <p className="mt-4 text-4xl font-semibold tracking-tight">{currentFeeSlide.amount}</p>
+              <p className="mt-3 text-sm text-slate-400">{currentFeeSlide.status}</p>
             </div>
             <div className="mt-1 flex h-6 w-6 items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-400/10 text-emerald-400">
               <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
             </div>
           </div>
 
+          <div className="mt-6 flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => setFeeSlide((prev) => (prev === 0 ? feeSlides.length - 1 : prev - 1))}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:bg-white/10"
+              aria-label="Previous fee option"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+
+            <div className="flex items-center gap-2">
+              {feeSlides.map((slide, index) => (
+                <button
+                  key={slide.title}
+                  type="button"
+                  onClick={() => setFeeSlide(index)}
+                  className={`h-2.5 rounded-full transition-all ${index === feeSlide ? "w-8 bg-white" : "w-2.5 bg-white/30"}`}
+                  aria-label={slide.title}
+                />
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setFeeSlide((prev) => (prev === feeSlides.length - 1 ? 0 : prev + 1))}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:bg-white/10"
+              aria-label="Next fee option"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+
           <div className="mt-8 border-t border-white/10 pt-5">
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Net amount</p>
-                <p className="mt-2 text-xl font-semibold">₳ 246.25</p>
+                <p className="text-xs uppercase tracking-[0.16em] text-slate-500">{currentFeeSlide.primaryLabel}</p>
+                <p className="mt-2 text-xl font-semibold">{currentFeeSlide.primaryValue}</p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Fee</p>
-                <p className="mt-2 text-xl font-semibold">₳ 3.75</p>
+                <p className="text-xs uppercase tracking-[0.16em] text-slate-500">{currentFeeSlide.secondaryLabel}</p>
+                <p className="mt-2 text-xl font-semibold">{currentFeeSlide.secondaryValue}</p>
               </div>
             </div>
           </div>
