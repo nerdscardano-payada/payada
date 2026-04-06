@@ -5,11 +5,13 @@ import { Copy, RotateCcw, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
 export default function POS() {
   const [amountAda, setAmountAda] = useState("");
   const [label, setLabel] = useState("");
+  const [feeModel, setFeeModel] = useState("merchant_pays");
   const [built, setBuilt] = useState(false);
 
   const qrValue = amountAda && parseFloat(amountAda) > 0
@@ -34,6 +36,7 @@ export default function POS() {
     setBuilt(false);
     setAmountAda("");
     setLabel("");
+    setFeeModel("merchant_pays");
   };
 
   return (
@@ -79,6 +82,25 @@ export default function POS() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label className="text-slate-400 text-xs">Who pays the fee? (1.75%)</Label>
+                <Select value={feeModel} onValueChange={setFeeModel}>
+                  <SelectTrigger className="bg-slate-800 border-slate-700 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="customer_pays">Customer pays fee</SelectItem>
+                    <SelectItem value="merchant_pays">I pay the fee</SelectItem>
+                    <SelectItem value="split">Split the fee</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-[11px] text-slate-500">
+                  {(feeModel || "merchant_pays") === "customer_pays" && "You receive the full amount."}
+                  {feeModel === "merchant_pays" && "Customer pays the exact amount."}
+                  {feeModel === "split" && "Fee is shared between you and the customer."}
+                </p>
+              </div>
+
               {/* Quick amount buttons */}
               <div className="grid grid-cols-4 gap-2">
                 {[20, 40, 60, 80].map((amt) => (
@@ -117,6 +139,11 @@ export default function POS() {
               <div className="rounded-lg bg-slate-800/60 p-3">
                 <p className="text-sm font-semibold text-white">One-time QR ready</p>
                 <p className="text-[11px] text-slate-500 mt-1">Deze QR wordt niet opgeslagen en is bedoeld voor direct eenmalig gebruik.</p>
+                <p className="text-[11px] text-slate-500 mt-1">
+                  {(feeModel || "merchant_pays") === "customer_pays" && "Fee model: customer pays the 1.75% fee."}
+                  {feeModel === "merchant_pays" && "Fee model: you pay the 1.75% fee."}
+                  {feeModel === "split" && "Fee model: the 1.75% fee is split."}
+                </p>
               </div>
 
               <div className="flex gap-3">
