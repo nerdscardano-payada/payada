@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export default function FeeSelector({ form, update }) {
   return (
     <div className="space-y-1.5">
-      <Label>Who pays the fee?</Label>
+      <Label>Who pays the fee? (1.75%)</Label>
       <Select value={form.fee_model || "merchant_pays"} onValueChange={(v) => update("fee_model", v)}>
         <SelectTrigger><SelectValue /></SelectTrigger>
         <SelectContent>
