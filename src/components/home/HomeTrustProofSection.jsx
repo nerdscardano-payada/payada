@@ -1,28 +1,59 @@
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
 import { ShieldCheck, Store, Activity } from "lucide-react";
 
-const trustMetrics = [
+const metricConfig = [
   {
+    key: "transactions",
     title: "Total transactions processed",
-    value: "12,480+",
-    detail: "Cardano payments initiated through PayADA flows.",
+    detail: "Confirmed payments recorded across PayADA checkouts.",
     icon: Activity,
   },
   {
+    key: "merchants",
     title: "Merchants currently using PayADA",
-    value: "185+",
-    detail: "Builders, merchants, and communities actively accepting payments.",
+    detail: "Merchant profiles currently active on the platform.",
     icon: Store,
   },
   {
+    key: "volume",
     title: "Total volume secured",
-    value: "₳ 2.9M+",
-    detail: "Payment volume routed through wallet-ready checkout experiences.",
+    detail: "Confirmed ADA volume processed through PayADA.",
     icon: ShieldCheck,
   },
 ];
 
+const formatCount = (value) => new Intl.NumberFormat("en-US").format(value || 0);
+const formatAda = (value) => `₳ ${new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value || 0)}`;
+
 export default function HomeTrustProofSection() {
+  const { data } = useQuery({
+    queryKey: ["home-trust-metrics"],
+    queryFn: async () => {
+      const [payments, merchants] = await Promise.all([
+        base44.entities.Payment.list("-created_date", 5000),
+        base44.entities.MerchantProfile.list("-created_date", 2000),
+      ]);
+
+      const confirmedPayments = payments.filter((payment) => payment.status === "confirmed");
+      const totalTransactions = confirmedPayments.length;
+      const totalVolume = confirmedPayments.reduce((sum, payment) => sum + (payment.received_amount_ada || payment.expected_amount_ada || 0), 0);
+      const activeMerchants = merchants.filter((merchant) => merchant.status === "active").length;
+
+      return {
+        transactions: formatCount(totalTransactions),
+        merchants: formatCount(activeMerchants),
+        volume: formatAda(totalVolume),
+      };
+    },
+    initialData: {
+      transactions: "0",
+      merchants: "0",
+      volume: "₳ 0",
+    },
+  });
+
   return (
     <section className="px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl rounded-[2rem] border border-border bg-card p-6 shadow-sm sm:p-8 lg:p-10">
@@ -45,7 +76,7 @@ export default function HomeTrustProofSection() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            {trustMetrics.map((metric) => {
+            {metricConfig.map((metric) => {
               const IconComponent = metric.icon;
 
               return (
@@ -53,7 +84,7 @@ export default function HomeTrustProofSection() {
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <IconComponent className="h-5 w-5" />
                   </div>
-                  <p className="mt-4 text-3xl font-semibold tracking-tight text-foreground">{metric.value}</p>
+                  <p className="mt-4 text-3xl font-semibold tracking-tight text-foreground">{data[metric.key]}</p>
                   <p className="mt-2 text-sm font-medium text-foreground">{metric.title}</p>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">{metric.detail}</p>
                 </div>
