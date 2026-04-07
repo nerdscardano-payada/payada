@@ -125,7 +125,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
           <div className="space-y-4">
             <div className="rounded-2xl border border-dashed border-border bg-muted/40 p-4 space-y-2">
               <p className="text-sm font-medium">Step 1</p>
-              <p className="text-sm text-muted-foreground">Voeg een description toe en genereer daarna je unieke payment link.</p>
+              <p className="text-sm text-muted-foreground">Add a description and then generate your unique payment link.</p>
             </div>
             <Button onClick={handleGenerateLink} className="w-full rounded-2xl h-12">
               Generate payment link
