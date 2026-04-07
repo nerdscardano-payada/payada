@@ -12,8 +12,9 @@ export default function JustPaidFeed({ items }) {
           <p className="text-sm text-muted-foreground">No payouts yet.</p>
         ) : (
           items.map((item) => (
-            <div key={item.id} className="rounded-2xl border border-border/70 bg-muted/40 px-4 py-3">
-              <div className="font-medium">+5 ADA → {item.x_handle || "campaign user"}</div>
+            <div key={item.id} className="rounded-2xl border border-border/70 bg-muted/40 px-4 py-3 space-y-1">
+              <div className="font-medium">+5 ADA paid</div>
+              <div className="text-sm">X: @{item.x_handle || "campaign_user"}</div>
               <div className="text-xs text-muted-foreground break-all">{item.payment_link_url}</div>
             </div>
           ))
