@@ -58,9 +58,8 @@ Deno.serve(async (req) => {
       merchantAmountLovelace = baseLovelace - merchantFeeLovelace;
       amountLovelace = baseLovelace + customerFeeLovelace;
     } else {
-      platformFeeLovelace = fullFeeLovelace > 0 ? Math.max(fullFeeLovelace, 1_000_000) : 0;
+      platformFeeLovelace = fullFeeLovelace;
       merchantAmountLovelace = baseLovelace;
-      amountLovelace = baseLovelace + platformFeeLovelace;
     }
 
     const session = await base44.asServiceRole.entities.CheckoutSession.create({
