@@ -1,0 +1,43 @@
+{
+  "name": "LaunchSubmission",
+  "type": "object",
+  "properties": {
+    "wallet_address": {
+      "type": "string",
+      "description": "Cardano wallet address"
+    },
+    "payment_link_id": {
+      "type": "string",
+      "description": "Created payment link ID"
+    },
+    "payment_link_url": {
+      "type": "string",
+      "description": "Public payment link URL"
+    },
+    "x_post_url": {
+      "type": "string",
+      "description": "URL of the X post"
+    },
+    "x_handle": {
+      "type": "string",
+      "description": "Optional X username extracted from the post url or entered by admin"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "paid", "rejected"],
+      "default": "pending"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "paid_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paid_amount_ada": {
+      "type": "number",
+      "default": 5
+    }
+  },
+  "required": ["wallet_address", "payment_link_id", "payment_link_url", "x_post_url"]
+}
