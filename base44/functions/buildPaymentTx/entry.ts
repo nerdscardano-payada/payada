@@ -520,13 +520,6 @@ Deno.serve(async (req) => {
       feeLov = rawFee < MIN_OUTPUT ? MIN_OUTPUT : rawFee;
     }
 
-    if (PAYADA_FEE_WALLET && merchantAddress === PAYADA_FEE_WALLET && feeLov > 0n) {
-      return Response.json({
-        success: false,
-        error: 'Merchant receive address matches the platform fee wallet. Use a different payout address to separate merchant revenue from admin fees.',
-        code: 'MERCHANT_ADDRESS_MATCHES_FEE_WALLET'
-      }, { status: 400 });
-    }
 
     const totalOutput = merchantLov + feeLov;
 
