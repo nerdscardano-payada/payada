@@ -141,7 +141,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
               <Input value={generatedLink.slug} readOnly />
               <Input value={generatedLink.linkUrl} readOnly />
               <p className="text-sm font-medium">Suggested X post</p>
-              <p className="text-sm text-muted-foreground whitespace-pre-line">I just created my first Payada link 🚀{"\n\n"}Someone can pay me 5 ADA here:{"\n"}{generatedLink.linkUrl}{"\n\n"}Built on Cardano</p>
+              <p className="text-sm text-muted-foreground whitespace-pre-line">Testing Payada V2 🚀{"\n\n"}You can send 5 ADA to this link — it gets refunded by Payada{"\n"}{generatedLink.linkUrl}{"\n\n"}Simple Cardano payments, no account needed</p>
             </div>
 
             <div className="space-y-2">
