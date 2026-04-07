@@ -23,8 +23,8 @@ export default function FeeBreakdownCard({ paymentLink, sessionData }) {
         {feeMode === "merchant_pays" && (
           <>
             <div className="flex items-center justify-between"><span>Customer pays</span><span className="font-semibold">{formatAda(baseAmount)}</span></div>
-            <div className="flex items-center justify-between"><span>You receive</span><span className="font-semibold">{formatAda(merchantReceives)}</span></div>
-            <div className="flex items-center justify-between"><span>Fee</span><span className="font-semibold">{formatAda(fee)} (included)</span></div>
+            <div className="flex items-center justify-between"><span>Merchant receives</span><span className="font-semibold">{formatAda(merchantReceives)}</span></div>
+            <div className="flex items-center justify-between"><span>Platform fee paid by merchant</span><span className="font-semibold">{formatAda(fee)}</span></div>
           </>
         )}
 
