@@ -144,10 +144,15 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
               <p className="text-sm text-muted-foreground whitespace-pre-line">Testing Payada V2 🚀{"\n\n"}You can send 5 ADA to this link — it gets refunded by Payada{"\n"}{generatedLink.linkUrl}{"\n\n"}Simple Cardano payments, no account needed</p>
             </div>
 
-            <div className="space-y-2">
-              <Label>X post URL</Label>
-              <Input value={xPostUrl} onChange={(e) => setXPostUrl(e.target.value)} placeholder="https://x.com/username/status/..." />
-              <p className="text-xs text-muted-foreground">Step 2: plaats je X post met de link hierboven en plak daarna hier je X post URL.</p>
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-dashed border-border bg-muted/40 p-4 space-y-2">
+                <p className="text-sm font-medium">Step 2</p>
+                <p className="text-sm text-muted-foreground">Post on X using the link above, then paste your X post URL here.</p>
+              </div>
+              <div className="space-y-2">
+                <Label>X post URL</Label>
+                <Input value={xPostUrl} onChange={(e) => setXPostUrl(e.target.value)} placeholder="https://x.com/username/status/..." />
+              </div>
             </div>
 
             <Button onClick={() => submitMutation.mutate()} disabled={submitMutation.isPending} className="w-full rounded-2xl h-12">
