@@ -140,7 +140,20 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
               </div>
               <Input value={generatedLink.slug} readOnly />
               <Input value={generatedLink.linkUrl} readOnly />
-              <p className="text-sm font-medium">Suggested X post</p>
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm font-medium">Suggested X post</p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(`Testing Payada V2 🚀\n\nYou can send 5 ADA to this link — it gets refunded by Payada\n${generatedLink.linkUrl}\n\nSimple Cardano payments, no account needed`);
+                    toast.success("X post copied.");
+                  }}
+                >
+                  Copy
+                </Button>
+              </div>
               <p className="text-sm text-muted-foreground whitespace-pre-line">Testing Payada V2 🚀{"\n\n"}You can send 5 ADA to this link — it gets refunded by Payada{"\n"}{generatedLink.linkUrl}{"\n\n"}Simple Cardano payments, no account needed</p>
             </div>
 
