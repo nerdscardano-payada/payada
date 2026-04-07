@@ -93,6 +93,19 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     onConnected?.({ api: null, walletId: storedWalletId || null, address: storedAddress, lovelace: null });
   };
 
+  const normalizeWalletAddress = (rawAddress) => {
+    if (!rawAddress) return null;
+    if (rawAddress.startsWith('addr')) return rawAddress;
+
+    let addrHex = rawAddress;
+    if (rawAddress.startsWith('58')) {
+      const length = parseInt(rawAddress.slice(2, 4), 16);
+      addrHex = rawAddress.slice(4, 4 + length * 2);
+    }
+
+    return hexToBech32(addrHex, 'addr');
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       detectWallets();
@@ -144,32 +157,23 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     try {
       const api = await window.cardano[walletId].enable();
       
-      // Get address (CIP-30 returns hex, convert to bech32)
-      const changeAddr = await api.getChangeAddress();
-      console.log("🔥 Raw changeAddr from wallet:", changeAddr.slice(0, 30) + '...');
+      const usedAddresses = await api.getUsedAddresses().catch(() => []);
+      const changeAddr = await api.getChangeAddress().catch(() => null);
+      const primaryRawAddress = usedAddresses?.[0] || changeAddr;
 
-      // Convert address to bech32 if needed
-      let address = changeAddr;
-      if (address && !address.startsWith('addr')) {
-        console.log("🔥 Address is NOT bech32, converting...", { length: address.length, startsWithCbor: address.startsWith('58') });
-        try {
-          // Strip CBOR wrapper if present (0x58XX prefix)
-          let addrHex = address;
-          if (address.startsWith('58')) {
-            const length = parseInt(address.slice(2, 4), 16);
-            addrHex = address.slice(4, 4 + length * 2);
-            console.log("🔥 Stripped CBOR, new hex:", addrHex.slice(0, 30) + '...');
-          }
+      console.log("🔥 Raw wallet addresses:", {
+        usedCount: usedAddresses?.length || 0,
+        primary: primaryRawAddress?.slice?.(0, 30) || null,
+        change: changeAddr?.slice?.(0, 30) || null,
+      });
 
-          // Convert raw hex to bech32
-          address = hexToBech32(addrHex, 'addr');
-          console.log("🔥 ✅ Successfully converted hex to bech32:", address.slice(0, 20) + '...');
-        } catch (e) {
-          console.error("🔥 ❌ Address conversion FAILED:", e.message, e);
-          throw new Error('Failed to convert wallet address to proper format');
-        }
-      } else {
-        console.log("🔥 Address is already bech32, skipping conversion");
+      let address;
+      try {
+        address = normalizeWalletAddress(primaryRawAddress);
+        console.log("🔥 ✅ Using wallet address:", address?.slice(0, 20) + '...');
+      } catch (e) {
+        console.error("🔥 ❌ Address conversion FAILED:", e.message, e);
+        throw new Error('Failed to read a usable wallet address');
       }
 
       // Get balance in lovelace — CBOR decode
@@ -219,7 +223,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       setWalletBalance(adaBalance > 0 ? adaBalance : null);
       setConnected(true);
 
-      onConnected?.({ api, walletId, address, lovelace });
+      onConnected?.({ api, walletId, address, lovelace, usedAddresses });
     } catch (err) {
       setError(err?.message || "Failed to connect wallet");
     } finally {
