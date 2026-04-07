@@ -24,7 +24,11 @@
     },
     "status": {
       "type": "string",
-      "enum": ["pending", "paid", "rejected"],
+      "enum": [
+        "pending",
+        "paid",
+        "rejected"
+      ],
       "default": "pending"
     },
     "rejection_reason": {
@@ -39,5 +43,10 @@
       "default": 5
     }
   },
-  "required": ["wallet_address", "payment_link_id", "payment_link_url", "x_post_url"]
+  "required": [
+    "wallet_address",
+    "payment_link_id",
+    "payment_link_url",
+    "x_post_url"
+  ]
 }
