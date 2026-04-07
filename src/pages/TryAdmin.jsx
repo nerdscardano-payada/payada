@@ -24,6 +24,7 @@ export default function TryAdmin() {
   }
 
   const pending = submissions.filter((item) => item.status === "pending");
+  const paid = submissions.filter((item) => item.status === "paid");
 
   const handleExport = async () => {
     const content = pending.map((item) => item.wallet_address).join("\n");
@@ -40,6 +41,10 @@ export default function TryAdmin() {
         onMarkPaid={(item) => updateMutation.mutate({ id: item.id, data: { status: "paid", paid_at: new Date().toISOString(), paid_amount_ada: 5 } })}
         onReject={(item) => updateMutation.mutate({ id: item.id, data: { status: "rejected", rejection_reason: "Rejected by admin" } })}
       />
+
+      {paid.length > 0 ? (
+        <AdminSubmissionTable title="Paid submissions" items={paid} />
+      ) : null}
     </div>
   );
 }

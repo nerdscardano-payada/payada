@@ -2,12 +2,12 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export default function AdminSubmissionTable({ items, onMarkPaid, onReject, onExport }) {
+export default function AdminSubmissionTable({ items, onMarkPaid, onReject, onExport, title = "Pending submissions" }) {
   return (
     <Card className="rounded-3xl border-border/70">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Pending submissions</CardTitle>
-        <Button variant="outline" onClick={onExport}>Export addresses</Button>
+        <CardTitle>{title}</CardTitle>
+        {onExport ? <Button variant="outline" onClick={onExport}>Export addresses</Button> : null}
       </CardHeader>
       <CardContent className="space-y-3">
         {items.length === 0 ? (
@@ -25,8 +25,8 @@ export default function AdminSubmissionTable({ items, onMarkPaid, onReject, onEx
                 <Button asChild variant="outline" className="rounded-xl">
                   <a href={item.payment_link_url} target="_blank" rel="noopener noreferrer">Open betaal-link</a>
                 </Button>
-                <Button onClick={() => onMarkPaid(item)} className="rounded-xl">Mark paid</Button>
-                <Button variant="destructive" onClick={() => onReject(item)} className="rounded-xl">Reject</Button>
+                {onMarkPaid ? <Button onClick={() => onMarkPaid(item)} className="rounded-xl">Mark paid</Button> : null}
+                {onReject ? <Button variant="destructive" onClick={() => onReject(item)} className="rounded-xl">Reject</Button> : null}
               </div>
             </div>
           ))
