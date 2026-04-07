@@ -147,14 +147,14 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    navigator.clipboard.writeText(`Testing Payada V2 🚀\n\nYou can send 5 ADA to this link — it gets refunded by Payada\n${generatedLink.linkUrl}\n\nSimple Cardano payments, no account needed`);
+                    navigator.clipboard.writeText(`Testing Payada V2 on payada.io 🚀\n\nYou can send 5 ADA to this link — it gets refunded by Payada\n${generatedLink.linkUrl}\n\nOnly 100 spots available.\n\nSimple Cardano payments, no account needed`);
                     toast.success("X post copied.");
                   }}
                 >
                   Copy
                 </Button>
               </div>
-              <p className="text-sm text-muted-foreground whitespace-pre-line">Testing Payada V2 🚀{"\n\n"}You can send 5 ADA to this link — it gets refunded by Payada{"\n"}{generatedLink.linkUrl}{"\n\n"}Simple Cardano payments, no account needed</p>
+              <p className="text-sm text-muted-foreground whitespace-pre-line">Testing Payada V2 on payada.io 🚀{"\n\n"}You can send 5 ADA to this link — it gets refunded by Payada{"\n"}{generatedLink.linkUrl}{"\n\n"}Only 100 spots available.{"\n\n"}Simple Cardano payments, no account needed</p>
             </div>
 
             <div className="space-y-4">
