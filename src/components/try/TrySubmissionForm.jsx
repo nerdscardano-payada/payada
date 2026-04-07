@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
+const buildSlug = (value) => `v2-${slugify(value || "launch")}-${Math.random().toString(36).slice(2, 6)}`;
+
 const TRY_CAMPAIGN_PAYOUT_WALLET = "addr1q974n3yf96aylrjuddrkqg6j9hlqnf3ax3xjzjfg2f6enlu88h5q6gnlr40hlx9htep4la63fd9hz63vjre7a73j0w3s05v8lm";
 const MAX_SPOTS = 100;
 
@@ -21,10 +23,11 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
   const queryClient = useQueryClient();
   const [description, setDescription] = useState("");
   const [xPostUrl, setXPostUrl] = useState("");
-  const paymentLinkUrl = useMemo(() => {
+  const paymentCode = useMemo(() => {
     if (!description.trim()) return "";
-    return `${window.location.origin}/Pay?link=v2-${slugify(description)}-${Math.random().toString(36).slice(2, 6)}`;
+    return buildSlug(description);
   }, [description]);
+  const paymentLinkUrl = paymentCode ? `${window.location.origin}/Pay?slug=${paymentCode}` : "";
 
   const submitMutation = useMutation({
     mutationFn: async () => {
@@ -35,7 +38,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
       const existing = await base44.entities.LaunchSubmission.filter({ wallet_address: walletAddress });
       if (existing.length > 0) throw new Error("Deze wallet deed al mee.");
 
-      const slug = `v2-${slugify(description || "launch")}-${Math.random().toString(36).slice(2, 6)}`;
+      const slug = buildSlug(description);
       const link = await base44.entities.PaymentLink.create({
         merchant_id: "launch-campaign",
         slug,
@@ -98,14 +101,21 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
           <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Short note for your launch link" rows={3} />
         </div>
 
-        <div className="rounded-2xl border border-dashed border-border bg-muted/40 p-4 space-y-2">
+        <div className="rounded-2xl border border-dashed border-border bg-muted/40 p-4 space-y-3">
+          <div>
+            <p className="text-sm font-medium">Your payment link code</p>
+            <p className="text-xs text-muted-foreground">Gebruik deze code of link in je X post.</p>
+          </div>
+          <Input value={paymentCode || "Voer eerst een description in"} readOnly />
+          <Input value={paymentLinkUrl || "Je link verschijnt hier"} readOnly />
           <p className="text-sm font-medium">Suggested X post</p>
-          <p className="text-sm text-muted-foreground whitespace-pre-line">I just created my first Payada link 🚀{"\n\n"}Someone can pay me 5 ADA here:{"\n"}[your link]{"\n\n"}Built on Cardano</p>
+          <p className="text-sm text-muted-foreground whitespace-pre-line">I just created my first Payada link 🚀{"\n\n"}Someone can pay me 5 ADA here:{"\n"}{paymentLinkUrl || "[your link]"}{"\n\n"}Code: {paymentCode || "[your code]"}{"\n\n"}Built on Cardano</p>
         </div>
 
         <div className="space-y-2">
           <Label>X post URL</Label>
           <Input value={xPostUrl} onChange={(e) => setXPostUrl(e.target.value)} placeholder="https://x.com/username/status/..." />
+          <p className="text-xs text-muted-foreground">Plaats eerst je post met de code of link hierboven, en plak daarna hier je X post URL.</p>
         </div>
 
         <Button onClick={() => submitMutation.mutate()} disabled={submitMutation.isPending} className="w-full rounded-2xl h-12">
