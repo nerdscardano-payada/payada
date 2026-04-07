@@ -33,9 +33,11 @@ export default function HomepageLinkOverview() {
 
   const summary = useMemo(() => {
     const homepagePayments = paymentLinks.filter(
-      (link) => link.creation_source === "manual" || !link.creation_source
+      (link) => link.merchant_id === "public_homepage"
     );
-    const homepageAccess = accessLinks;
+    const homepageAccess = accessLinks.filter(
+      (link) => link.merchant_id === "public_homepage"
+    );
 
     return {
       homepagePayments: homepagePayments.length,
