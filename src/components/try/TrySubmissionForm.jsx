@@ -8,6 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
+const normalizeUrl = (value) => (value || "").trim().replace(/\/$/, "");
+const canVerifyXPostLink = (html, linkUrl) => {
+  const normalizedLink = normalizeUrl(linkUrl);
+  const decodedHtml = decodeURIComponent(html || "");
+  return (html || "").includes(normalizedLink) || decodedHtml.includes(normalizedLink);
+};
+
 const buildSlug = (value) => `v2-${slugify(value || "launch")}-${Math.random().toString(36).slice(2, 6)}`;
 
 const TRY_CAMPAIGN_PAYOUT_WALLET = "addr1q974n3yf96aylrjuddrkqg6j9hlqnf3ax3xjzjfg2f6enlu88h5q6gnlr40hlx9htep4la63fd9hz63vjre7a73j0w3s05v8lm";
@@ -42,6 +49,13 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
       if (link.amount_ada !== 5) throw new Error("Alleen 5 ADA links zijn toegestaan.");
 
       const linkUrl = generatedLink.linkUrl;
+      const response = await fetch(xPostUrl);
+      const html = await response.text();
+
+      if (!canVerifyXPostLink(html, linkUrl)) {
+        throw new Error("Je X post bevat deze Payada link niet.");
+      }
+
       await base44.entities.LaunchSubmission.create({
         wallet_address: walletAddress,
         payment_link_id: generatedLink.id,
@@ -165,6 +179,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
               <div className="space-y-2">
                 <Label>X post URL</Label>
                 <Input value={xPostUrl} onChange={(e) => setXPostUrl(e.target.value)} placeholder="https://x.com/username/status/..." />
+                <p className="text-xs text-muted-foreground">We controleren automatisch of je X post jouw Payada payment link bevat.</p>
               </div>
             </div>
 
