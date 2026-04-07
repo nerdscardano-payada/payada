@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
       amountLovelace = baseLovelace + halfFee;
     } else {
       platformFeeLovelace = fullFeeLovelace;
-      merchantAmountLovelace = baseLovelace - fullFeeLovelace;
+      merchantAmountLovelace = baseLovelace;
     }
 
     // Create checkout session record

@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
       : PLATFORM_FEE_PERCENT / 100;
 
     const platformFeeLovelace = Math.floor(totalLovelace * feePercent);
-    const merchantAmountLovelace = totalLovelace - platformFeeLovelace;
+    const merchantAmountLovelace = totalLovelace;
 
     // Create checkout session
     const session = await base44.asServiceRole.entities.CheckoutSession.create({
