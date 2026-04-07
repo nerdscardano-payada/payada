@@ -94,6 +94,15 @@ export default function HomePage() {
       </header>
       <section className="relative overflow-hidden pt-20 pb-16 px-4 sm:px-6 bg-background">
         <div className="relative max-w-7xl mx-auto space-y-6">
+          <div className="rounded-3xl border border-primary/20 bg-primary/10 px-5 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-primary">Payada V2 launch</p>
+              <p className="text-sm text-foreground">Create a payment link, share it on X, and we’ll be your first customer with 5 ADA.</p>
+            </div>
+            <Button asChild className="rounded-2xl w-full sm:w-auto">
+              <Link to="/try">Try the campaign</Link>
+            </Button>
+          </div>
           <HomeInlineCreator onWalletConnected={setConnectedWallet} />
           <HomeWalletLinksManager walletAddress={connectedWallet?.address || localStorage.getItem("payada_connected_wallet_address") || ""} />
         </div>
