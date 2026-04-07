@@ -33,7 +33,7 @@ export default function TryAdmin() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Try Campaign Admin" subtitle="Review pending launch submissions and process payouts." />
+      <PageHeader title="Try Campaign Admin" subtitle="Open elke deelnemer zijn eigen betaallink en betaal die handmatig één voor één." />
       <AdminSubmissionTable
         items={pending}
         onExport={handleExport}

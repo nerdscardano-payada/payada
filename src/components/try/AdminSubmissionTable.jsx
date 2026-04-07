@@ -22,6 +22,9 @@ export default function AdminSubmissionTable({ items, onMarkPaid, onReject, onEx
                 <div><span className="text-muted-foreground">Handle:</span><div>{item.x_handle || "—"}</div></div>
               </div>
               <div className="flex flex-wrap gap-2">
+                <Button asChild variant="outline" className="rounded-xl">
+                  <a href={item.payment_link_url} target="_blank" rel="noopener noreferrer">Open betaal-link</a>
+                </Button>
                 <Button onClick={() => onMarkPaid(item)} className="rounded-xl">Mark paid</Button>
                 <Button variant="destructive" onClick={() => onReject(item)} className="rounded-xl">Reject</Button>
               </div>
