@@ -179,7 +179,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
               <div className="space-y-2">
                 <Label>X post URL</Label>
                 <Input value={xPostUrl} onChange={(e) => setXPostUrl(e.target.value)} placeholder="https://x.com/username/status/..." />
-                <p className="text-xs text-muted-foreground">We controleren automatisch of je X post jouw Payada payment link bevat.</p>
+                <p className="text-xs text-muted-foreground">We automatically check whether your X post contains your Payada payment link.</p>
               </div>
             </div>
 
