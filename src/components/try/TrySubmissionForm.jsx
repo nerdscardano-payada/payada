@@ -53,7 +53,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
 
       if (link.amount_ada !== 5) throw new Error("Alleen 5 ADA links zijn toegestaan.");
 
-      const linkUrl = `${window.location.origin}/Pay?link=${link.slug}`;
+      const linkUrl = `${window.location.origin}/Pay?slug=${link.slug}`;
       await base44.entities.LaunchSubmission.create({
         wallet_address: walletAddress,
         payment_link_id: link.id,

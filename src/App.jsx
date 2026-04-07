@@ -146,7 +146,7 @@ const AuthenticatedApp = () => {
       <Route path="/AdminAIPaymentBuilder" element={<ProtectedRoute currentPageName="AdminAIPaymentBuilder"><LayoutWrapper currentPageName="AdminAIPaymentBuilder"><AdminAIPaymentBuilder /></LayoutWrapper></ProtectedRoute>} />
       <Route path="/POS" element={<POS />} />
       <Route path="/try" element={<Try />} />
-      <Route path="/TryAdmin" element={<ProtectedRoute currentPageName="TryAdmin"><LayoutWrapper currentPageName="TryAdmin"><TryAdmin /></LayoutWrapper></ProtectedRoute>} />
+      <Route path="/TryAdmin" element={<LayoutWrapper currentPageName="TryAdmin"><TryAdmin /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
