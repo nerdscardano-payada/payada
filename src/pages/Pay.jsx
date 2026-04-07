@@ -496,11 +496,11 @@ export default function Pay() {
                   {sessionData && paymentLink.amount_mode !== "fixed_cnt" && (
                     <div className="bg-slate-800/50 rounded-lg p-3 space-y-1.5 text-xs text-slate-300">
                       <div className="flex justify-between">
-                        <span>Total</span>
-                        <span className="text-white font-semibold">₳ {sessionData.amount_total_ada?.toFixed(3)}</span>
+                        <span>Customer pays</span>
+                        <span className="text-white font-semibold">₳ {paymentLink.amount_ada?.toFixed(3)}</span>
                       </div>
                       <div className="flex justify-between text-slate-400">
-                        <span>Platform fee ({sessionData.platform_fee_percent}%)</span>
+                        <span>Platform fee paid by merchant ({sessionData.platform_fee_percent}%)</span>
                         <span>₳ {sessionData.platform_fee_ada?.toFixed(3)}</span>
                       </div>
                       <div className="border-t border-slate-700 pt-1.5 flex justify-between">

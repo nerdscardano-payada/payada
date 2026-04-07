@@ -7,7 +7,7 @@ function formatAda(value) {
 export default function FeeBreakdownCard({ paymentLink, sessionData }) {
   if (!sessionData || paymentLink?.amount_mode === "fixed_cnt") return null;
 
-  const feeMode = paymentLink?.fee_model || "customer_pays";
+  const feeMode = paymentLink?.fee_model || "merchant_pays";
   const splitRatio = Number(paymentLink?.fee_split_ratio ?? 0.5);
   const baseAmount = Number(paymentLink?.amount_ada || 0);
   const total = Number(sessionData?.amount_total_ada || 0);
