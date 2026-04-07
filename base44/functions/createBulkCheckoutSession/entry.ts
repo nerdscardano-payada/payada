@@ -73,7 +73,8 @@ Deno.serve(async (req) => {
       ? (merchant.platform_fee_percent || PLATFORM_FEE_PERCENT) / 100
       : PLATFORM_FEE_PERCENT / 100;
 
-    const platformFeeLovelace = Math.floor(totalLovelace * feePercent);
+    const rawPlatformFeeLovelace = Math.floor(totalLovelace * feePercent);
+    const platformFeeLovelace = rawPlatformFeeLovelace > 0 ? Math.max(rawPlatformFeeLovelace, 1_000_000) : 0;
     const merchantAmountLovelace = totalLovelace;
 
     // Create checkout session
