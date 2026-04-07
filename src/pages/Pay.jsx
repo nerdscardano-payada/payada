@@ -77,7 +77,7 @@ export default function Pay() {
   // Extract slug or cartItems from URL query params
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const paySlug = params.get("slug");
+    const paySlug = params.get("slug") || params.get("link");
     const cartParam = params.get("cartItems");
 
     setPageError("");
