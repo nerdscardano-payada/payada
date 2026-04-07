@@ -61,7 +61,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
       setXPostUrl("");
       setGeneratedLink(null);
       navigator.clipboard.writeText(`I just created my first Payada link 🚀\n\nSomeone can pay me 5 ADA here:\n${linkUrl}\n\nBuilt on Cardano`);
-      toast.success("Je deelname is ingediend.");
+      toast.success("Your submission was received successfully. Please now wait for payment from Payada. This will be processed within 24 hours.");
     },
     onError: (error) => toast.error(error.message)
   });
