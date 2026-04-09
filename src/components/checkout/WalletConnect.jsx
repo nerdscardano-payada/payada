@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle, Smartphone, Monitor, ExternalLink } from "lucide-react";
-import { useCardano } from "@cardano-foundation/cardano-connect-with-wallet";
 import { Button } from "@/components/ui/button";
 
 function hexToBech32(hexStr, hrp = "addr") {
@@ -62,7 +61,6 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [error, setError] = useState(null);
   const [selectedWalletId, setSelectedWalletId] = useState(null);
   const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
-  const { connect, disconnect, isConnected: hookConnected, stakeAddress, enabledWallet } = useCardano();
 
   const saveWalletState = useCallback((walletId, walletDisplayName, address, api = null, lovelace = null) => {
     localStorage.setItem("payada_connected_wallet_address", address);
@@ -145,14 +143,6 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     };
   }, [detectWallets]);
 
-  useEffect(() => {
-    if (!hookConnected || !stakeAddress) return;
-    const walletId = enabledWallet || selectedWalletId || localStorage.getItem("payada_connected_wallet_id") || "wallet";
-    const walletDisplayName = KNOWN_WALLETS.find((item) => item.id === walletId)?.name || walletId;
-    saveWalletState(walletId, walletDisplayName, stakeAddress, null, null);
-    setError(null);
-  }, [hookConnected, stakeAddress, enabledWallet, selectedWalletId, saveWalletState]);
-
   const connectWallet = async (walletId) => {
     setConnecting(true);
     setSelectedWalletId(walletId);
@@ -160,12 +150,15 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     setShowPicker(false);
     try {
       if (window.cardano?.[walletId]?.enable) {
-        await connect(walletId);
         const api = await window.cardano[walletId].enable();
         const usedAddresses = await api.getUsedAddresses().catch(() => []);
+        const unusedAddresses = await api.getUnusedAddresses?.().catch(() => []);
         const changeAddr = await api.getChangeAddress().catch(() => null);
-        const primaryRawAddress = usedAddresses?.[0] || changeAddr;
+        const primaryRawAddress = usedAddresses?.[0] || unusedAddresses?.[0] || changeAddr;
         const address = normalizeWalletAddress(primaryRawAddress);
+        if (!address) {
+          throw new Error("No wallet address found");
+        }
         const balanceCbor = await api.getBalance();
         let lovelace = 0;
         try {
@@ -198,7 +191,6 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   };
 
   const handleDisconnect = async () => {
-    await disconnect().catch(() => null);
     clearWalletState();
   };
 
