@@ -101,7 +101,10 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     return hexToBech32(addrHex, "addr");
   };
 
-  const getMobileWalletUrl = () => null;
+  const getMobileWalletUrl = (walletId) => {
+    const wallet = KNOWN_WALLETS.find((item) => item.id === walletId);
+    return wallet?.mobileLabel ? `mobile-${walletId}` : null;
+  };
 
   const detectWallets = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -297,7 +300,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
               </div>
               <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] border ${w.available ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-amber-500/30 bg-amber-500/10 text-amber-300"}`}>
                 {w.available ? <CheckCircle2 className="w-3 h-3" /> : <ExternalLink className="w-3 h-3" />}
-                {w.available ? "Detected" : "Open app"}
+                {w.available ? "Detected" : "Use wallet"}
               </span>
             </button>
           ))}
