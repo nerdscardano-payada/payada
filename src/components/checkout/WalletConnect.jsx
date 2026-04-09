@@ -43,12 +43,10 @@ function hexToBech32(hexStr, hrp = "addr") {
 
 const KNOWN_WALLETS = [
   { id: "nami", name: "Nami" },
-  { id: "eternl", name: "Eternl", mobileLabel: "Use Eternl dApp browser" },
+  { id: "eternl", name: "Eternl", mobileLabel: "Open in Eternl" },
   { id: "lace", name: "Lace" },
   { id: "typhon", name: "Typhon" },
   { id: "gerowallet", name: "GeroWallet" },
-  { id: "yoroi", name: "Yoroi", mobileLabel: "Use Yoroi dApp browser" },
-  { id: "vespr", name: "Vespr", mobileLabel: "Use Vespr dApp browser" },
 ];
 
 export default function WalletConnect({ onConnected, onDisconnected }) {
@@ -62,6 +60,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [error, setError] = useState(null);
   const [selectedWalletId, setSelectedWalletId] = useState(null);
   const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
+  const currentUrl = useMemo(() => typeof window !== "undefined" ? window.location.href : "", []);
+  const eternlDeepLink = useMemo(() => currentUrl ? `eternl://browser?url=${encodeURIComponent(currentUrl)}` : "", [currentUrl]);
   const { connect, disconnect, isConnected: hookConnected, stakeAddress, enabledWallet } = useCardano();
 
   const saveWalletState = useCallback((walletId, walletDisplayName, address, api = null, lovelace = null) => {
@@ -153,6 +153,11 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     setError(null);
   }, [hookConnected, stakeAddress, enabledWallet, selectedWalletId, saveWalletState]);
 
+  const handleOpenEternl = () => {
+    if (!eternlDeepLink) return;
+    window.location.href = eternlDeepLink;
+  };
+
   const connectWallet = async (walletId) => {
     setConnecting(true);
     setSelectedWalletId(walletId);
@@ -185,7 +190,11 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       }
 
       if (isMobile) {
-        setError("Open this page inside your wallet app browser to connect.");
+        if (walletId === "eternl" && eternlDeepLink) {
+          window.location.href = eternlDeepLink;
+          return;
+        }
+        setError("Open this page in Eternl to connect your wallet.");
         return;
       }
 
@@ -235,28 +244,40 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       <div className="flex items-center justify-between rounded-xl border border-slate-700/60 bg-slate-900/60 px-3 py-2">
         <div className="flex items-center gap-2 text-[11px] text-slate-300">
           {isMobile ? <Smartphone className="w-3.5 h-3.5 text-cyan-400" /> : <Monitor className="w-3.5 h-3.5 text-cyan-400" />}
-          <span>{isMobile ? "Mobile wallets" : "Desktop wallets"}</span>
+          <span>{isMobile ? "Eternl mobile" : "Desktop wallets"}</span>
         </div>
         <span className="text-[10px] text-slate-400">{installedWallets.length} options</span>
       </div>
 
-      <Button
-        variant="outline"
-        className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2 justify-between"
-        onClick={() => {
-          setError(null);
-          setShowPicker((p) => !p);
-        }}
-        disabled={connecting}
-      >
-        <div className="flex items-center gap-2">
+      {isMobile ? (
+        <Button
+          variant="outline"
+          className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2"
+          onClick={handleOpenEternl}
+          disabled={connecting || !eternlDeepLink}
+        >
           {connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wallet className="w-4 h-4" />}
-          {connecting ? "Connecting…" : "Connect Cardano Wallet"}
-        </div>
-        <ChevronDown className="w-3.5 h-3.5 opacity-50" />
-      </Button>
+          Open in Eternl
+        </Button>
+      ) : (
+        <Button
+          variant="outline"
+          className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2 justify-between"
+          onClick={() => {
+            setError(null);
+            setShowPicker((p) => !p);
+          }}
+          disabled={connecting}
+        >
+          <div className="flex items-center gap-2">
+            {connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wallet className="w-4 h-4" />}
+            {connecting ? "Connecting…" : "Connect Cardano Wallet"}
+          </div>
+          <ChevronDown className="w-3.5 h-3.5 opacity-50" />
+        </Button>
+      )}
 
-      {showPicker && (
+      {!isMobile && showPicker && (
         <div className="absolute top-full mt-2 left-0 right-0 bg-slate-900 border border-slate-700 rounded-xl shadow-xl z-50 overflow-y-auto max-h-72">
           {installedWallets.length > 0 ? installedWallets.map((w) => (
             <button
@@ -272,12 +293,12 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
                 )}
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm text-white font-medium">{w.name}</span>
-                  <span className="text-[11px] text-slate-400">{w.available ? "Ready to connect" : (w.mobileLabel || "Open in wallet browser")}</span>
+                  <span className="text-[11px] text-slate-400">{w.available ? "Ready to connect" : "Unavailable"}</span>
                 </div>
               </div>
               <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] border ${w.available ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-slate-600 bg-slate-800 text-slate-300"}`}>
                 {w.available ? <CheckCircle2 className="w-3 h-3" /> : <ExternalLink className="w-3 h-3" />}
-                {w.available ? "Detected" : "Mobile"}
+                {w.available ? "Detected" : "Off"}
               </span>
             </button>
           )) : (
@@ -285,6 +306,12 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
               No wallet detected on this device.
             </div>
           )}
+        </div>
+      )}
+
+      {isMobile && (
+        <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/10 px-3 py-2 text-xs text-cyan-100">
+          On mobile, continue in the Eternl app browser.
         </div>
       )}
 
