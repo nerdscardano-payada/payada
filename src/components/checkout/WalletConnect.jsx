@@ -59,12 +59,12 @@ function hexToBech32(hexStr, hrp = 'addr') {
 // Known wallets with fallback icons
 const KNOWN_WALLETS = [
   { id: "nami", name: "Nami" },
-  { id: "eternl", name: "Eternl" },
+  { id: "eternl", name: "Eternl", mobileLabel: "Open in Eternl app" },
   { id: "lace", name: "Lace" },
   { id: "typhon", name: "Typhon" },
   { id: "gerowallet", name: "GeroWallet" },
   { id: "yoroi", name: "Yoroi" },
-  { id: "vespr", name: "Vespr" },
+  { id: "vespr", name: "Vespr", mobileLabel: "Open in Vespr app" },
 ];
 
 export default function WalletConnect({ onConnected, onDisconnected }) {
@@ -125,19 +125,23 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   }, []);
 
   const detectWallets = () => {
-    if (typeof window === "undefined" || !window.cardano) return;
+    if (typeof window === "undefined") return;
+
     const found = [];
     const knownIds = new Set(KNOWN_WALLETS.map(w => w.id));
+    const cardanoProviders = window.cardano || {};
 
-    KNOWN_WALLETS.forEach(({ id, name }) => {
-      if (window.cardano?.[id]) {
-        found.push({ id, name, icon: window.cardano[id].icon || null });
+    KNOWN_WALLETS.forEach(({ id, name, mobileLabel }) => {
+      if (cardanoProviders[id]) {
+        found.push({ id, name, mobileLabel, icon: cardanoProviders[id].icon || null });
+      } else if (isMobile && getMobileWalletUrl(id)) {
+        found.push({ id, name, mobileLabel, icon: null, mobileOnly: true });
       }
     });
 
-    Object.keys(window.cardano).forEach(key => {
-      if (!knownIds.has(key) && window.cardano[key]?.enable) {
-        const w = window.cardano[key];
+    Object.keys(cardanoProviders).forEach(key => {
+      if (!knownIds.has(key) && cardanoProviders[key]?.enable) {
+        const w = cardanoProviders[key];
         found.push({
           id: key,
           name: w.name || (key.charAt(0).toUpperCase() + key.slice(1)),
@@ -152,6 +156,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const getMobileWalletUrl = (walletId) => {
     const currentUrl = encodeURIComponent(window.location.href);
     if (walletId === "vespr") return `vespr://open?url=${currentUrl}`;
+    if (walletId === "eternl") return `eternl://wallet/connect?url=${currentUrl}`;
     return null;
   };
 
@@ -328,8 +333,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
                   )}
                   <div className="flex flex-col">
                     <span className="text-sm text-white font-medium">{w.name}</span>
-                    {isMobile && w.id === "vespr" && (
-                      <span className="text-[11px] text-slate-400">Open in Vespr app</span>
+                    {isMobile && w.mobileLabel && (
+                      <span className="text-[11px] text-slate-400">{w.mobileLabel}</span>
                     )}
                   </div>
                 </button>
