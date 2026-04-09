@@ -159,20 +159,26 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
         if (!address) {
           throw new Error("No wallet address found");
         }
-        const balanceCbor = await api.getBalance();
-        let lovelace = 0;
-        try {
-          const bytes = balanceCbor.match(/.{1,2}/g).map((b) => parseInt(b, 16));
-          const firstByte = bytes[0];
-          const majorType = firstByte >> 5;
-          const addInfo = firstByte & 0x1f;
-          if (majorType === 0) {
-            if (addInfo <= 23) lovelace = addInfo;
-            else if (addInfo === 24) lovelace = bytes[1];
-            else if (addInfo === 25) lovelace = (bytes[1] << 8) | bytes[2];
-            else if (addInfo === 26) lovelace = ((bytes[1] << 24) | (bytes[2] << 16) | (bytes[3] << 8) | bytes[4]) >>> 0;
-          }
-        } catch {}
+        const balanceCbor = await api.getBalance().catch(() => null);
+        let lovelace = null;
+        if (typeof balanceCbor === "string") {
+          try {
+            const hex = balanceCbor.startsWith("0x") ? balanceCbor.slice(2) : balanceCbor;
+            const bytes = hex.match(/.{1,2}/g)?.map((b) => parseInt(b, 16)) || [];
+            const firstByte = bytes[0];
+            const majorType = firstByte >> 5;
+            const addInfo = firstByte & 0x1f;
+            if (majorType === 0) {
+              if (addInfo <= 23) lovelace = addInfo;
+              else if (addInfo === 24) lovelace = bytes[1];
+              else if (addInfo === 25) lovelace = (bytes[1] << 8) | bytes[2];
+              else if (addInfo === 26) lovelace = ((bytes[1] << 24) | (bytes[2] << 16) | (bytes[3] << 8) | bytes[4]) >>> 0;
+              else if (addInfo === 27) {
+                lovelace = bytes.slice(1, 9).reduce((total, byte) => (total * 256) + byte, 0);
+              }
+            }
+          } catch {}
+        }
         saveWalletState(walletId, window.cardano[walletId]?.name || walletId, address, api, lovelace);
         return;
       }
