@@ -59,12 +59,12 @@ function hexToBech32(hexStr, hrp = 'addr') {
 // Known wallets with fallback icons
 const KNOWN_WALLETS = [
   { id: "nami", name: "Nami" },
-  { id: "eternl", name: "Eternl", mobileLabel: "Open in Eternl app", mobileUrl: (url) => `eternl://wallet/connect?url=${url}` },
+  { id: "eternl", name: "Eternl", mobileLabel: "Open Eternl", mobileUrl: () => "eternl://" },
   { id: "lace", name: "Lace" },
-  { id: "typhon", name: "Typhon", mobileLabel: "Open in Typhon app", mobileUrl: (url) => `typhon://open?url=${url}` },
+  { id: "typhon", name: "Typhon" },
   { id: "gerowallet", name: "GeroWallet" },
-  { id: "yoroi", name: "Yoroi", mobileLabel: "Open in Yoroi app", mobileUrl: (url) => `yoroi://open?url=${url}` },
-  { id: "vespr", name: "Vespr", mobileLabel: "Open in Vespr app", mobileUrl: (url) => `vespr://open?url=${url}` },
+  { id: "yoroi", name: "Yoroi" },
+  { id: "vespr", name: "Vespr", mobileLabel: "Open Vespr", mobileUrl: () => "vespr://" },
 ];
 
 export default function WalletConnect({ onConnected, onDisconnected }) {
@@ -140,14 +140,6 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     if (!mobileUrl) return;
     setPendingMobileUrl(mobileUrl);
     setPendingWalletName(wallet?.name || "wallet");
-
-    const anchor = document.createElement("a");
-    anchor.href = mobileUrl;
-    anchor.rel = "noopener noreferrer";
-    anchor.style.display = "none";
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
   }, []);
 
   const detectWallets = () => {
@@ -419,7 +411,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
             Open {pendingWalletName || "wallet app"}
           </a>
           <p className="text-xs leading-5 text-amber-800">
-            Then open this website again inside the wallet’s built-in dApp browser to finish connecting.
+            If the app opens, paste or open this website inside the wallet’s built-in dApp browser to finish connecting.
           </p>
         </div>
       )}
