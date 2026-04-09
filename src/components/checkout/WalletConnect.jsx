@@ -40,6 +40,64 @@ function hexToBech32(hexStr, hrp = "addr") {
   return hrp + "1" + result.map((d) => CHARSET[d]).join("");
 }
 
+function decodeCborUnsigned(bytes, startIndex = 0) {
+  const firstByte = bytes[startIndex];
+  if (firstByte === undefined) return null;
+
+  const majorType = firstByte >> 5;
+  const additionalInfo = firstByte & 0x1f;
+  if (majorType !== 0) return null;
+
+  if (additionalInfo < 24) {
+    return { value: additionalInfo, nextIndex: startIndex + 1 };
+  }
+
+  if (additionalInfo === 24) {
+    return { value: bytes[startIndex + 1], nextIndex: startIndex + 2 };
+  }
+
+  if (additionalInfo === 25) {
+    return {
+      value: (bytes[startIndex + 1] << 8) | bytes[startIndex + 2],
+      nextIndex: startIndex + 3,
+    };
+  }
+
+  if (additionalInfo === 26) {
+    return {
+      value: ((bytes[startIndex + 1] * 2 ** 24) + (bytes[startIndex + 2] << 16) + (bytes[startIndex + 3] << 8) + bytes[startIndex + 4]),
+      nextIndex: startIndex + 5,
+    };
+  }
+
+  if (additionalInfo === 27) {
+    let value = 0;
+    for (let i = 1; i <= 8; i += 1) {
+      value = (value * 256) + bytes[startIndex + i];
+    }
+    return { value, nextIndex: startIndex + 9 };
+  }
+
+  return null;
+}
+
+function decodeCborBalance(hexValue) {
+  if (!hexValue || typeof hexValue !== "string") return null;
+
+  const hex = hexValue.startsWith("0x") ? hexValue.slice(2) : hexValue;
+  const bytes = hex.match(/.{1,2}/g)?.map((b) => parseInt(b, 16)) || [];
+  if (!bytes.length) return null;
+
+  const directValue = decodeCborUnsigned(bytes, 0);
+  if (directValue) return directValue.value;
+
+  const isArray = (bytes[0] >> 5) === 4;
+  if (!isArray) return null;
+
+  const firstItem = decodeCborUnsigned(bytes, 1);
+  return firstItem?.value ?? null;
+}
+
 const KNOWN_WALLETS = [
   { id: "nami", name: "Nami" },
   { id: "eternl", name: "Eternl", mobileLabel: "Open in Eternl app" },
@@ -160,25 +218,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
           throw new Error("No wallet address found");
         }
         const balanceCbor = await api.getBalance().catch(() => null);
-        let lovelace = null;
-        if (typeof balanceCbor === "string") {
-          try {
-            const hex = balanceCbor.startsWith("0x") ? balanceCbor.slice(2) : balanceCbor;
-            const bytes = hex.match(/.{1,2}/g)?.map((b) => parseInt(b, 16)) || [];
-            const firstByte = bytes[0];
-            const majorType = firstByte >> 5;
-            const addInfo = firstByte & 0x1f;
-            if (majorType === 0) {
-              if (addInfo <= 23) lovelace = addInfo;
-              else if (addInfo === 24) lovelace = bytes[1];
-              else if (addInfo === 25) lovelace = (bytes[1] << 8) | bytes[2];
-              else if (addInfo === 26) lovelace = ((bytes[1] << 24) | (bytes[2] << 16) | (bytes[3] << 8) | bytes[4]) >>> 0;
-              else if (addInfo === 27) {
-                lovelace = bytes.slice(1, 9).reduce((total, byte) => (total * 256) + byte, 0);
-              }
-            }
-          } catch {}
-        }
+        const lovelace = decodeCborBalance(balanceCbor);
         saveWalletState(walletId, window.cardano[walletId]?.name || walletId, address, api, lovelace);
         return;
       }
