@@ -135,8 +135,6 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     KNOWN_WALLETS.forEach(({ id, name, mobileLabel }) => {
       if (cardanoProviders[id]) {
         found.push({ id, name, mobileLabel, icon: cardanoProviders[id].icon || null });
-      } else if (isMobile && getMobileWalletUrl(id)) {
-        found.push({ id, name, mobileLabel, icon: null, mobileOnly: true });
       }
     });
 
@@ -154,27 +152,14 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     setInstalledWallets(found);
   };
 
-  const getMobileWalletUrl = (walletId) => {
-    const currentUrl = encodeURIComponent(window.location.href);
-    if (walletId === "vespr") return `vespr://open?url=${currentUrl}`;
-    if (walletId === "eternl") return `eternl://wallet/connect?url=${currentUrl}`;
-    if (walletId === "yoroi") return `yoroi://open?url=${currentUrl}`;
-    if (walletId === "flint") return `flint://open?url=${currentUrl}`;
-    if (walletId === "typhon") return `typhon://open?url=${currentUrl}`;
-    return null;
-  };
 
   const connectWallet = async (walletId) => {
     setConnecting(true);
     setError(null);
     setShowPicker(false);
     try {
-      if (isMobile && !window.cardano?.[walletId]?.enable) {
-        const mobileUrl = getMobileWalletUrl(walletId);
-        if (mobileUrl) {
-          window.location.href = mobileUrl;
-          return;
-        }
+      if (!window.cardano?.[walletId]?.enable) {
+        throw new Error("Wallet not detected on this device");
       }
 
       const api = await window.cardano[walletId].enable();
