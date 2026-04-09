@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -77,6 +77,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [showPicker, setShowPicker] = useState(false);
   const [error, setError] = useState(null);
   const [walletInstance, setWalletInstance] = useState(null);
+  const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
 
   const applyStoredWallet = () => {
     const storedAddress = localStorage.getItem("payada_connected_wallet_address");
@@ -128,14 +129,12 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     const found = [];
     const knownIds = new Set(KNOWN_WALLETS.map(w => w.id));
 
-    // First add known wallets in order
     KNOWN_WALLETS.forEach(({ id, name }) => {
       if (window.cardano?.[id]) {
         found.push({ id, name, icon: window.cardano[id].icon || null });
       }
     });
 
-    // Then add any unknown wallets injected by extensions
     Object.keys(window.cardano).forEach(key => {
       if (!knownIds.has(key) && window.cardano[key]?.enable) {
         const w = window.cardano[key];
@@ -150,11 +149,25 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     setInstalledWallets(found);
   };
 
+  const getMobileWalletUrl = (walletId) => {
+    const currentUrl = encodeURIComponent(window.location.href);
+    if (walletId === "vespr") return `vespr://open?url=${currentUrl}`;
+    return null;
+  };
+
   const connectWallet = async (walletId) => {
     setConnecting(true);
     setError(null);
     setShowPicker(false);
     try {
+      if (isMobile && !window.cardano?.[walletId]?.enable) {
+        const mobileUrl = getMobileWalletUrl(walletId);
+        if (mobileUrl) {
+          window.location.href = mobileUrl;
+          return;
+        }
+      }
+
       const api = await window.cardano[walletId].enable();
       
       const usedAddresses = await api.getUsedAddresses().catch(() => []);
@@ -313,7 +326,12 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
                       {w.name[0]}
                     </div>
                   )}
-                  <span className="text-sm text-white font-medium">{w.name}</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm text-white font-medium">{w.name}</span>
+                    {isMobile && w.id === "vespr" && (
+                      <span className="text-[11px] text-slate-400">Open in Vespr app</span>
+                    )}
+                  </div>
                 </button>
               ))}
             </div>
