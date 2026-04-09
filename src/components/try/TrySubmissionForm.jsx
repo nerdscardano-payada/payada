@@ -28,6 +28,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
   const submitMutation = useMutation({
     mutationFn: async () => {
       if (!walletAddress) throw new Error("Connect eerst een wallet.");
+      if (!description.trim()) throw new Error("Voeg eerst een description toe.");
       if (!xPostUrl.trim()) throw new Error("Voeg je X post URL toe.");
       if (claimedCount >= MAX_SPOTS) throw new Error("Alle spots zijn geclaimd.");
 
