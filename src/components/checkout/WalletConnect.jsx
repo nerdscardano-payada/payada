@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle, Smartphone, Monitor, ExternalLink, QrCode } from "lucide-react";
+import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle, Smartphone, Monitor, ExternalLink } from "lucide-react";
 import { useCardano } from "@cardano-foundation/cardano-connect-with-wallet";
 import { Button } from "@/components/ui/button";
 
@@ -60,8 +60,6 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [walletBalance, setWalletBalance] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
   const [error, setError] = useState(null);
-  const [pendingMobileUrl, setPendingMobileUrl] = useState(null);
-  const [pendingWalletName, setPendingWalletName] = useState(null);
   const [selectedWalletId, setSelectedWalletId] = useState(null);
   const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
   const { connect, disconnect, isConnected: hookConnected, stakeAddress, enabledWallet } = useCardano();
@@ -101,10 +99,6 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     return hexToBech32(addrHex, "addr");
   };
 
-  const getMobileWalletUrl = (walletId) => {
-    const wallet = KNOWN_WALLETS.find((item) => item.id === walletId);
-    return wallet?.mobileLabel ? `mobile-${walletId}` : null;
-  };
 
   const detectWallets = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -116,7 +110,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     KNOWN_WALLETS.forEach(({ id, name, mobileLabel }) => {
       if (cardanoProviders[id]?.enable) {
         found.push({ id, name, mobileLabel, icon: cardanoProviders[id].icon || null, available: true });
-      } else if (isMobile && getMobileWalletUrl(id)) {
+      } else if (isMobile && mobileLabel) {
         found.push({ id, name, mobileLabel, icon: null, available: false, mobileFallback: true });
       }
     });
@@ -128,7 +122,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       }
     });
 
-    setInstalledWallets(!hasInjectedProviders && isMobile ? found.filter((wallet) => wallet.mobileFallback) : found);
+    setInstalledWallets(isMobile && !hasInjectedProviders ? found.filter((wallet) => wallet.mobileFallback) : found);
   }, [isMobile]);
 
   useEffect(() => {
@@ -156,16 +150,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     const walletId = enabledWallet || selectedWalletId || localStorage.getItem("payada_connected_wallet_id") || "wallet";
     const walletDisplayName = KNOWN_WALLETS.find((item) => item.id === walletId)?.name || walletId;
     saveWalletState(walletId, walletDisplayName, stakeAddress, null, null);
-    setPendingMobileUrl(null);
-    setPendingWalletName(null);
     setError(null);
   }, [hookConnected, stakeAddress, enabledWallet, selectedWalletId, saveWalletState]);
-
-  const openMobileWallet = useCallback((walletId) => {
-    const wallet = KNOWN_WALLETS.find((item) => item.id === walletId);
-    setPendingMobileUrl(null);
-    setPendingWalletName(wallet?.name || "wallet");
-  }, []);
 
   const connectWallet = async (walletId) => {
     setConnecting(true);
@@ -195,14 +181,11 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
           }
         } catch {}
         saveWalletState(walletId, window.cardano[walletId]?.name || walletId, address, api, lovelace);
-        setPendingMobileUrl(null);
-        setPendingWalletName(null);
         return;
       }
 
       if (isMobile) {
-        openMobileWallet(walletId);
-        setError("This wallet does not reliably open from a mobile browser here. Open this site inside the wallet’s own dApp browser to connect.");
+        setError("Open this page inside your wallet app browser to connect.");
         return;
       }
 
@@ -252,17 +235,15 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       <div className="flex items-center justify-between rounded-xl border border-slate-700/60 bg-slate-900/60 px-3 py-2">
         <div className="flex items-center gap-2 text-[11px] text-slate-300">
           {isMobile ? <Smartphone className="w-3.5 h-3.5 text-cyan-400" /> : <Monitor className="w-3.5 h-3.5 text-cyan-400" />}
-          <span>{isMobile ? "Mobile wallet bridge" : "Desktop wallet detection"}</span>
+          <span>{isMobile ? "Mobile wallets" : "Desktop wallets"}</span>
         </div>
-        <span className="text-[10px] text-slate-400">{installedWallets.filter((w) => w.available).length} ready</span>
+        <span className="text-[10px] text-slate-400">{installedWallets.length} options</span>
       </div>
 
       <Button
         variant="outline"
         className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2 justify-between"
         onClick={() => {
-          setPendingMobileUrl(null);
-          setPendingWalletName(null);
           setError(null);
           setShowPicker((p) => !p);
         }}
@@ -276,8 +257,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       </Button>
 
       {showPicker && (
-        <div className="absolute top-full mt-2 left-0 right-0 bg-slate-900 border border-slate-700 rounded-xl shadow-xl z-50 overflow-y-auto max-h-60">
-          {installedWallets.map((w) => (
+        <div className="absolute top-full mt-2 left-0 right-0 bg-slate-900 border border-slate-700 rounded-xl shadow-xl z-50 overflow-y-auto max-h-72">
+          {installedWallets.length > 0 ? installedWallets.map((w) => (
             <button
               key={w.id}
               onClick={() => connectWallet(w.id)}
@@ -291,30 +272,19 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
                 )}
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm text-white font-medium">{w.name}</span>
-                  {isMobile && w.mobileFallback && !w.available ? (
-                    <span className="text-[11px] text-slate-400">{w.mobileLabel}</span>
-                  ) : w.available ? (
-                    <span className="text-[11px] text-emerald-400">Ready to connect</span>
-                  ) : null}
+                  <span className="text-[11px] text-slate-400">{w.available ? "Ready to connect" : (w.mobileLabel || "Open in wallet browser")}</span>
                 </div>
               </div>
-              <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] border ${w.available ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-amber-500/30 bg-amber-500/10 text-amber-300"}`}>
+              <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] border ${w.available ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-slate-600 bg-slate-800 text-slate-300"}`}>
                 {w.available ? <CheckCircle2 className="w-3 h-3" /> : <ExternalLink className="w-3 h-3" />}
-                {w.available ? "Detected" : "Use wallet"}
+                {w.available ? "Detected" : "Mobile"}
               </span>
             </button>
-          ))}
-        </div>
-      )}
-
-      {pendingWalletName && isMobile && (
-        <div className="mt-2 space-y-3 rounded-xl border border-amber-400/40 bg-amber-50 px-4 py-3 shadow-sm">
-          <p className="text-sm font-medium leading-5 text-amber-900">Use {pendingWalletName} from its own mobile dApp browser to finish connecting.</p>
-          <div className="inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-white/70 px-3 py-2 text-sm text-amber-800">
-            <QrCode className="w-4 h-4" />
-            On desktop, use an injected wallet or a wallet-supported QR flow
-          </div>
-          <p className="text-xs leading-5 text-amber-800">I verified this: the direct “open app” deep link is not reliable here, so showing that button was misleading.</p>
+          )) : (
+            <div className="px-4 py-4 text-sm text-slate-300">
+              No wallet detected on this device.
+            </div>
+          )}
         </div>
       )}
 
