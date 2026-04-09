@@ -281,7 +281,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       )}
 
       {isMobile && (
-        <div className="rounded-lg border border-amber-500/30 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100">
+        <div className="md:hidden rounded-lg border border-amber-500/30 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100">
           On mobile, copy this page URL and paste it into your Cardano wallet app browser to connect.
         </div>
       )}
