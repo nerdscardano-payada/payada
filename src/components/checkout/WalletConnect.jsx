@@ -47,7 +47,7 @@ const KNOWN_WALLETS = [
   { id: "lace", name: "Lace" },
   { id: "typhon", name: "Typhon" },
   { id: "gerowallet", name: "GeroWallet" },
-  { id: "yoroi", name: "Yoroi" },
+  { id: "yoroi", name: "Yoroi", mobileLabel: "Use Yoroi dApp browser" },
   { id: "vespr", name: "Vespr", mobileLabel: "Use Vespr dApp browser" },
 ];
 
