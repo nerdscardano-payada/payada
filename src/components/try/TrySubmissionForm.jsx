@@ -119,7 +119,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
         </div>
 
         <div className="space-y-2">
-          <Label>Description</Label>
+          <Label>Description <span className="text-destructive">*</span></Label>
           <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Short note for your launch link" rows={3} />
         </div>
 
