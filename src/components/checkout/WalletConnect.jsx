@@ -78,6 +78,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [error, setError] = useState(null);
   const [walletInstance, setWalletInstance] = useState(null);
   const [detectionMode, setDetectionMode] = useState("desktop");
+  const [pendingMobileUrl, setPendingMobileUrl] = useState(null);
   const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
 
   const applyStoredWallet = () => {
@@ -178,7 +179,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       if (!window.cardano?.[walletId]?.enable) {
         const mobileUrl = isMobile ? getMobileWalletUrl(walletId) : null;
         if (mobileUrl) {
-          window.location.href = mobileUrl;
+          setPendingMobileUrl(mobileUrl);
+          setError("Tik op de link hieronder om de wallet-app te openen.");
           return;
         }
         throw new Error("Wallet not detected on this device");
@@ -246,6 +248,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       localStorage.setItem("payada_connected_wallet_name", window.cardano[walletId]?.name || (walletId.charAt(0).toUpperCase() + walletId.slice(1)));
       window.dispatchEvent(new Event("payada-wallet-updated"));
 
+      setPendingMobileUrl(null);
       setWalletInstance({ api, walletId });
       setWalletName(window.cardano[walletId]?.name || (walletId.charAt(0).toUpperCase() + walletId.slice(1)));
       setWalletAddress(address);
@@ -379,6 +382,16 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
             </div>
           )}
         </>
+      )}
+
+      {pendingMobileUrl && (
+        <a
+          href={pendingMobileUrl}
+          className="mt-2 inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-300 hover:bg-amber-500/15"
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+          Open wallet app
+        </a>
       )}
 
       {error && (
