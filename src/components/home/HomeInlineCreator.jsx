@@ -454,8 +454,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                 <FeeSelector form={feePreview} update={(field, value) => setFeePreview((prev) => ({ ...prev, [field]: value }))} />
               </div>
 
-              <div className="flex flex-wrap gap-3">
-                <Button size="lg" className="h-12 rounded-xl px-6" onClick={handleGenerate} disabled={submitting}>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button size="lg" className="h-12 w-full sm:w-auto rounded-xl px-6" onClick={handleGenerate} disabled={submitting}>
                   {submitting ? "Creating..." : type === "payment" ? "Generate Payment Link" : type === "access" ? "Generate Access Link" : "Generate QR Payment"}
                 </Button>
               </div>
@@ -507,11 +507,11 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                       <div className="rounded-xl border border-border bg-white dark:bg-card px-4 py-3 text-sm text-foreground break-all">
                         {createdQrValue}
                       </div>
-                      <div className="flex flex-wrap gap-3">
+                      <div className="flex flex-col sm:flex-row gap-3">
                         <Button type="button" onClick={async () => {
                           await navigator.clipboard.writeText(createdQrValue);
                           toast.success("QR payment copied");
-                        }} className="h-11 rounded-xl px-5">
+                        }} className="h-11 w-full sm:w-auto rounded-xl px-5">
                           <Copy className="w-4 h-4 mr-2" />
                           Copy QR data
                         </Button>
@@ -545,8 +545,8 @@ export default function HomeInlineCreator({ onWalletConnected }) {
                   <div className="rounded-xl border border-border bg-white dark:bg-card px-4 py-3 text-sm text-foreground break-all">
                     {createdPaymentUrl}
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    <Button type="button" onClick={handleCopyCreatedLink} className="h-11 rounded-xl px-5">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button type="button" onClick={handleCopyCreatedLink} className="h-11 w-full sm:w-auto rounded-xl px-5">
                       <Copy className="w-4 h-4 mr-2" />
                       Copy link
                     </Button>

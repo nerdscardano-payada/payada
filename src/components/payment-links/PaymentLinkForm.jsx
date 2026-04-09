@@ -156,9 +156,9 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
   };
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl w-full">
       {/* Back */}
-      <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors mb-6">
+      <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition-colors mb-6 min-h-[44px]">
         <ArrowLeft className="w-4 h-4" /> Back to payment links
       </button>
 
@@ -192,36 +192,36 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
       </div>
 
       {/* Step content */}
-      <div className="bg-white rounded-xl border border-slate-200/60 p-6 mb-6">
+      <div className="bg-white rounded-xl border border-slate-200/60 p-4 sm:p-6 mb-6">
         {step === 1 && <StepBasic form={form} update={update} isEditing={isEditing} isAdmin={user?.role === "admin"} />}
         {step === 2 && <StepOptions form={form} update={update} />}
         {step === 3 && <StepSummary form={form} />}
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between gap-3">
-        <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="w-full sm:w-auto">
           {step === 3 && (
-            <Button type="button" variant="outline" className="gap-2" onClick={() => { setTemplateName(form.title || ""); setShowSaveTemplate(true); }}>
+            <Button type="button" variant="outline" className="gap-2 w-full sm:w-auto" onClick={() => { setTemplateName(form.title || ""); setShowSaveTemplate(true); }}>
               <BookTemplate className="w-4 h-4" />
               Save as template
             </Button>
           )}
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
           {step > 1 && (
-            <Button type="button" variant="outline" onClick={() => setStep((s) => s - 1)}>
+            <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => setStep((s) => s - 1)}>
               <ArrowLeft className="w-4 h-4 mr-1" /> Previous
             </Button>
           )}
           {step < 3 ? (
-            <Button type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2" onClick={handleNext}>
+            <Button type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2 w-full sm:w-auto" onClick={handleNext}>
               Next <ArrowRight className="w-4 h-4" />
             </Button>
           ) : (
             <Button
               type="button"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2 w-full sm:w-auto"
               disabled={mutation.isPending}
               onClick={handleSubmit}
             >

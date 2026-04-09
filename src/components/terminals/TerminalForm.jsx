@@ -73,8 +73,8 @@ export default function TerminalForm({ terminal, onBack }) {
   };
 
   return (
-    <div className="max-w-xl">
-      <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6">
+    <div className="max-w-xl w-full">
+      <button onClick={onBack} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6 min-h-[44px]">
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
@@ -133,10 +133,10 @@ export default function TerminalForm({ terminal, onBack }) {
         {/* Branding */}
         <div className="space-y-4 pt-2 border-t border-slate-100">
           <p className="text-sm font-medium text-slate-700">Branding</p>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="space-y-2 flex-1">
               <Label>Accent Color</Label>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                 <input type="color" value={form.accent_color}
                   onChange={(e) => setForm({ ...form, accent_color: e.target.value })}
                   className="w-10 h-10 rounded border border-slate-200 cursor-pointer" />
@@ -172,7 +172,7 @@ export default function TerminalForm({ terminal, onBack }) {
             {logoMode === "url" ? (
               <Input value={form.logo_url} onChange={(e) => setForm({ ...form, logo_url: e.target.value })} placeholder="https://..." />
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <label className="cursor-pointer flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50 transition-colors">
                   {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
                   {uploading ? "Uploading..." : "Choose image"}
@@ -205,11 +205,11 @@ export default function TerminalForm({ terminal, onBack }) {
           <span className="text-sm text-slate-700">Terminal active</span>
         </div>
 
-        <div className="flex gap-3 pt-2">
-          <Button onClick={handleSave} disabled={saveMutation.isPending} className="bg-indigo-600 hover:bg-indigo-700 text-white">
+        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+          <Button onClick={handleSave} disabled={saveMutation.isPending} className="bg-indigo-600 hover:bg-indigo-700 text-white w-full sm:w-auto">
             {saveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Save"}
           </Button>
-          <Button variant="outline" onClick={onBack}>Cancel</Button>
+          <Button variant="outline" className="w-full sm:w-auto" onClick={onBack}>Cancel</Button>
         </div>
       </div>
     </div>

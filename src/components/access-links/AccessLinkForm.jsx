@@ -108,18 +108,18 @@ export default function AccessLinkForm({ link, onBack, user }) {
   return (
     <div>
       <div className="flex items-center gap-3 mb-6">
-        <Button variant="ghost" size="icon" onClick={onBack}><ArrowLeft className="w-4 h-4" /></Button>
+        <Button variant="ghost" size="icon" className="shrink-0" onClick={onBack}><ArrowLeft className="w-4 h-4" /></Button>
         <div>
           <h1 className="text-xl font-bold text-slate-900">{link ? "Edit Access Link" : "New Access Link"}</h1>
           <p className="text-sm text-slate-500">Configure your community access payment</p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl w-full">
         <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
           <h2 className="font-semibold text-slate-800 text-sm uppercase tracking-wider">Community Info</h2>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label>Community Name *</Label>
               <Input value={form.title} onChange={e => set("title", e.target.value)} placeholder="Crypto Trading Club" />
@@ -157,7 +157,7 @@ export default function AccessLinkForm({ link, onBack, user }) {
 
               <div className="space-y-1.5">
                 <Label>Select Token</Label>
-                <div className="flex gap-2 flex-wrap">
+                <div className="grid grid-cols-2 sm:flex gap-2 flex-wrap">
                   {KNOWN_CNTS.map(cnt => (
                     <button
                       type="button"
@@ -186,7 +186,7 @@ export default function AccessLinkForm({ link, onBack, user }) {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             <div className="space-y-1.5">
               <Label>Logo URL</Label>
               <Input value={form.logo_url} onChange={e => set("logo_url", e.target.value)} placeholder="https://..." />
@@ -238,7 +238,7 @@ export default function AccessLinkForm({ link, onBack, user }) {
           {form.platform === "discord" && (
             <div className="space-y-4 pt-2 border-t border-slate-100">
               <p className="text-xs font-medium text-indigo-600 uppercase tracking-wide">Discord Bot Configuration (optional)</p>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"
                 <div className="space-y-1.5">
                   <Label>Guild (Server) ID</Label>
                   <Input value={form.discord_guild_id} onChange={e => set("discord_guild_id", e.target.value)} placeholder="123456789..." />
@@ -260,9 +260,9 @@ export default function AccessLinkForm({ link, onBack, user }) {
           )}
         </div>
 
-        <div className="flex gap-3">
-          <Button type="button" variant="outline" onClick={onBack}>Cancel</Button>
-          <Button type="submit" disabled={saveMutation.isPending} className="bg-indigo-600 hover:bg-indigo-700 text-white">
+        <div className="flex flex-col-reverse sm:flex-row gap-3">
+          <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={onBack}>Cancel</Button>
+          <Button type="submit" disabled={saveMutation.isPending} className="bg-indigo-600 hover:bg-indigo-700 text-white w-full sm:w-auto">
             {saveMutation.isPending ? "Saving..." : link ? "Save Changes" : "Create Access Link"}
           </Button>
         </div>
