@@ -80,8 +80,8 @@ export default function HomePage() {
             <Link to={createPageUrl("Contact")} className="text-sm font-medium text-muted-foreground transition hover:text-foreground">Contact</Link>
           </nav>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden lg:block">
+          <div className="flex items-center gap-3 flex-1 justify-end">
+            <div className="block lg:block w-full max-w-[220px]">
               <WalletConnect onConnected={({ address, ...walletData }) => {
                 setConnectedWallet({ address, ...walletData });
               }} />
