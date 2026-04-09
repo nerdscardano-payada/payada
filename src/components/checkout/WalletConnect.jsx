@@ -65,7 +65,6 @@ const KNOWN_WALLETS = [
   { id: "gerowallet", name: "GeroWallet" },
   { id: "yoroi", name: "Yoroi", mobileLabel: "Open in Yoroi app", mobileUrl: (url) => `yoroi://open?url=${url}` },
   { id: "vespr", name: "Vespr", mobileLabel: "Open in Vespr app", mobileUrl: (url) => `vespr://open?url=${url}` },
-  { id: "flint", name: "Flint", mobileLabel: "Open in Flint app", mobileUrl: (url) => `flint://open?url=${url}` },
 ];
 
 export default function WalletConnect({ onConnected, onDisconnected }) {
@@ -327,7 +326,6 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
             <a href="https://namiwallet.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Nami</a>,{" "}
             <a href="https://eternl.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Eternl</a>,{" "}
             <a href="https://yoroi-wallet.com" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Yoroi</a>,{" "}
-            <a href="https://flint-wallet.com" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Flint</a>,{" "}
             <a href="https://typhonwallet.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Typhon</a>, or{" "}
             <a href="https://www.lace.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Lace</a>
           </p>
