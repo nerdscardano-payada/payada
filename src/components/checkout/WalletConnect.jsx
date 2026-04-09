@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle, Smartphone, Monitor, ExternalLink } from "lucide-react";
+import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle, Smartphone, Monitor, ExternalLink, QrCode } from "lucide-react";
+import { useCardano } from "@cardano-foundation/cardano-connect-with-wallet";
 import { Button } from "@/components/ui/button";
 
 function hexToBech32(hexStr, hrp = "addr") {
@@ -61,7 +62,9 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [error, setError] = useState(null);
   const [pendingMobileUrl, setPendingMobileUrl] = useState(null);
   const [pendingWalletName, setPendingWalletName] = useState(null);
+  const [selectedWalletId, setSelectedWalletId] = useState(null);
   const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
+  const { connect, disconnect, isConnected: hookConnected, stakeAddress, enabledWallet } = useCardano();
 
   const saveWalletState = useCallback((walletId, walletDisplayName, address, api = null, lovelace = null) => {
     localStorage.setItem("payada_connected_wallet_address", address);
@@ -140,6 +143,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       setWalletName(storedWalletName || storedWalletId || "Wallet");
       setWalletBalance(null);
     };
+    handleStorageSync();
     window.addEventListener("payada-wallet-updated", handleStorageSync);
     return () => {
       clearTimeout(timer);
@@ -147,6 +151,15 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     };
   }, [detectWallets]);
 
+  useEffect(() => {
+    if (!hookConnected || !stakeAddress) return;
+    const walletId = enabledWallet || selectedWalletId || localStorage.getItem("payada_connected_wallet_id") || "wallet";
+    const walletDisplayName = KNOWN_WALLETS.find((item) => item.id === walletId)?.name || walletId;
+    saveWalletState(walletId, walletDisplayName, stakeAddress, null, null);
+    setPendingMobileUrl(null);
+    setPendingWalletName(null);
+    setError(null);
+  }, [hookConnected, stakeAddress, enabledWallet, selectedWalletId, saveWalletState]);
 
   const openMobileWallet = useCallback((walletId) => {
     const wallet = KNOWN_WALLETS.find((item) => item.id === walletId);
@@ -157,10 +170,12 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
 
   const connectWallet = async (walletId) => {
     setConnecting(true);
+    setSelectedWalletId(walletId);
     setError(null);
     setShowPicker(false);
     try {
       if (window.cardano?.[walletId]?.enable) {
+        await connect(walletId);
         const api = await window.cardano[walletId].enable();
         const usedAddresses = await api.getUsedAddresses().catch(() => []);
         const changeAddr = await api.getChangeAddress().catch(() => null);
@@ -188,7 +203,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
 
       if (isMobile) {
         openMobileWallet(walletId);
-        setError("Continue in your wallet app to complete the connection.");
+        setError("Open the wallet app or scan on desktop, then finish the connection from the wallet browser.");
         return;
       }
 
@@ -200,7 +215,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     }
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
+    await disconnect().catch(() => null);
     clearWalletState();
   };
 
@@ -295,10 +311,16 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       {pendingMobileUrl && (
         <div className="mt-2 space-y-3 rounded-xl border border-amber-400/40 bg-amber-50 px-4 py-3 shadow-sm">
           <p className="text-sm font-medium leading-5 text-amber-900">Continue in {pendingWalletName || "your wallet app"} to finish connecting.</p>
-          <a href={pendingMobileUrl} className="inline-flex w-fit items-center gap-2 rounded-lg border border-amber-500/40 bg-white px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100">
-            <ExternalLink className="w-4 h-4" />
-            Open {pendingWalletName || "wallet app"}
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <a href={pendingMobileUrl} className="inline-flex w-fit items-center gap-2 rounded-lg border border-amber-500/40 bg-white px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100">
+              <ExternalLink className="w-4 h-4" />
+              Open {pendingWalletName || "wallet app"}
+            </a>
+            <div className="inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-white/70 px-3 py-2 text-sm text-amber-800">
+              <QrCode className="w-4 h-4" />
+              Desktop QR flow supported by compatible wallet bridge
+            </div>
+          </div>
           <p className="text-xs leading-5 text-amber-800">If needed, open this site from the wallet’s built-in dApp browser to complete the mobile connection.</p>
         </div>
       )}
