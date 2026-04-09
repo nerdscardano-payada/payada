@@ -161,11 +161,15 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     setError(null);
   }, [hookConnected, stakeAddress, enabledWallet, selectedWalletId, saveWalletState]);
 
-  const openMobileWallet = useCallback((walletId) => {
+  const openMobileWallet = useCallback((walletId, shouldLaunch = false) => {
     const wallet = KNOWN_WALLETS.find((item) => item.id === walletId);
     const mobileUrl = getMobileWalletUrl(walletId);
     setPendingMobileUrl(mobileUrl);
     setPendingWalletName(wallet?.name || "wallet");
+
+    if (shouldLaunch && mobileUrl && typeof window !== "undefined") {
+      window.location.href = mobileUrl;
+    }
   }, []);
 
   const connectWallet = async (walletId) => {
@@ -202,8 +206,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       }
 
       if (isMobile) {
-        openMobileWallet(walletId);
-        setError("Open the wallet app or scan on desktop, then finish the connection from the wallet browser.");
+        openMobileWallet(walletId, true);
+        setError("If the wallet app did not open automatically, use the button below and then continue in the wallet browser.");
         return;
       }
 
@@ -312,10 +316,18 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
         <div className="mt-2 space-y-3 rounded-xl border border-amber-400/40 bg-amber-50 px-4 py-3 shadow-sm">
           <p className="text-sm font-medium leading-5 text-amber-900">Continue in {pendingWalletName || "your wallet app"} to finish connecting.</p>
           <div className="flex flex-wrap gap-2">
-            <a href={pendingMobileUrl} className="inline-flex w-fit items-center gap-2 rounded-lg border border-amber-500/40 bg-white px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100">
+            <button
+              type="button"
+              onClick={() => {
+                if (pendingMobileUrl && typeof window !== "undefined") {
+                  window.location.href = pendingMobileUrl;
+                }
+              }}
+              className="inline-flex w-fit items-center gap-2 rounded-lg border border-amber-500/40 bg-white px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100"
+            >
               <ExternalLink className="w-4 h-4" />
               Open {pendingWalletName || "wallet app"}
-            </a>
+            </button>
             <div className="inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-white/70 px-3 py-2 text-sm text-amber-800">
               <QrCode className="w-4 h-4" />
               Desktop QR flow supported by compatible wallet bridge
