@@ -232,14 +232,6 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
 
   return (
     <div className="relative space-y-2">
-      <div className="flex items-center justify-between rounded-xl border border-slate-700/60 bg-slate-900/60 px-3 py-2">
-        <div className="flex items-center gap-2 text-[11px] text-slate-300">
-          {isMobile ? <Smartphone className="w-3.5 h-3.5 text-cyan-400" /> : <Monitor className="w-3.5 h-3.5 text-cyan-400" />}
-          <span>{isMobile ? "Eternl mobile" : "Desktop wallets"}</span>
-        </div>
-        <span className="text-[10px] text-slate-400">{installedWallets.length} options</span>
-      </div>
-
       <Button
         variant="outline"
         className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2 justify-between"
