@@ -232,37 +232,29 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
 
   return (
     <div className="relative space-y-2">
-      {isMobile ? (
-        <div className="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
-          Copy this page link, open your Cardano wallet app, and paste the link into the wallet browser to connect.
+      <div className="flex items-center justify-between rounded-xl border border-slate-700/60 bg-slate-900/60 px-3 py-2">
+        <div className="flex items-center gap-2 text-[11px] text-slate-300">
+          {isMobile ? <Smartphone className="w-3.5 h-3.5 text-cyan-400" /> : <Monitor className="w-3.5 h-3.5 text-cyan-400" />}
+          <span>{isMobile ? "Eternl mobile" : "Desktop wallets"}</span>
         </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-between rounded-xl border border-slate-700/60 bg-slate-900/60 px-3 py-2">
-            <div className="flex items-center gap-2 text-[11px] text-slate-300">
-              <Monitor className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Desktop wallets</span>
-            </div>
-            <span className="text-[10px] text-slate-400">{installedWallets.length} options</span>
-          </div>
+        <span className="text-[10px] text-slate-400">{installedWallets.length} options</span>
+      </div>
 
-          <Button
-            variant="outline"
-            className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2 justify-between"
-            onClick={() => {
-              setError(null);
-              setShowPicker((p) => !p);
-            }}
-            disabled={connecting}
-          >
-            <div className="flex items-center gap-2">
-              {connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wallet className="w-4 h-4" />}
-              {connecting ? "Connecting…" : "Connect Cardano Wallet"}
-            </div>
-            <ChevronDown className="w-3.5 h-3.5 opacity-50" />
-          </Button>
-        </>
-      )}
+      <Button
+        variant="outline"
+        className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2 justify-between"
+        onClick={() => {
+          setError(null);
+          setShowPicker((p) => !p);
+        }}
+        disabled={connecting}
+      >
+        <div className="flex items-center gap-2">
+          {connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wallet className="w-4 h-4" />}
+          {connecting ? "Connecting…" : "Connect Cardano Wallet"}
+        </div>
+        <ChevronDown className="w-3.5 h-3.5 opacity-50" />
+      </Button>
 
       {!isMobile && showPicker && (
         <div className="absolute top-full mt-2 left-0 right-0 bg-slate-900 border border-slate-700 rounded-xl shadow-xl z-50 overflow-y-auto max-h-72">
@@ -296,6 +288,11 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
         </div>
       )}
 
+      {isMobile && (
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+          On mobile, copy this page URL and paste it into your Cardano wallet app browser to connect.
+        </div>
+      )}
 
       {error && (
         <div className="mt-2 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs leading-5 text-red-700">
