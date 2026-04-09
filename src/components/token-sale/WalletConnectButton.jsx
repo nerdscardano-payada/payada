@@ -47,15 +47,65 @@ function hexAddrToBech32(hex) {
       if (bits > 0) ret.push((acc << (tobits - bits)) & maxv);
       return ret;
     }
-    // If already bech32 (starts with addr), return as-is
     if (hex.startsWith('addr')) return hex;
     const bytes = Array.from(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
     const networkId = bytes[0] & 0x0f;
     const hrp = networkId === 0 ? 'addr_test' : 'addr';
     return encode(hrp, convertbits(bytes, 8, 5));
   } catch {
-    return hex; // fallback to original if conversion fails
+    return hex;
   }
+}
+
+function decodeCborUnsigned(bytes, startIndex = 0) {
+  const firstByte = bytes[startIndex];
+  if (firstByte === undefined) return null;
+
+  const majorType = firstByte >> 5;
+  const additionalInfo = firstByte & 0x1f;
+  if (majorType !== 0) return null;
+
+  if (additionalInfo < 24) {
+    return { value: additionalInfo, nextIndex: startIndex + 1 };
+  }
+  if (additionalInfo === 24) {
+    return { value: bytes[startIndex + 1], nextIndex: startIndex + 2 };
+  }
+  if (additionalInfo === 25) {
+    return { value: (bytes[startIndex + 1] << 8) | bytes[startIndex + 2], nextIndex: startIndex + 3 };
+  }
+  if (additionalInfo === 26) {
+    return {
+      value: (bytes[startIndex + 1] * 2 ** 24) + (bytes[startIndex + 2] << 16) + (bytes[startIndex + 3] << 8) + bytes[startIndex + 4],
+      nextIndex: startIndex + 5
+    };
+  }
+  if (additionalInfo === 27) {
+    let value = 0;
+    for (let i = 1; i <= 8; i += 1) {
+      value = (value * 256) + bytes[startIndex + i];
+    }
+    return { value, nextIndex: startIndex + 9 };
+  }
+
+  return null;
+}
+
+function decodeCborBalance(hexValue) {
+  if (!hexValue || typeof hexValue !== 'string') return null;
+
+  const hex = hexValue.startsWith('0x') ? hexValue.slice(2) : hexValue;
+  const bytes = hex.match(/.{1,2}/g)?.map((b) => parseInt(b, 16)) || [];
+  if (!bytes.length) return null;
+
+  const directValue = decodeCborUnsigned(bytes, 0);
+  if (directValue) return directValue.value;
+
+  const isArray = (bytes[0] >> 5) === 4;
+  if (!isArray) return null;
+
+  const firstItem = decodeCborUnsigned(bytes, 1);
+  return firstItem?.value ?? null;
 }
 
 export default function WalletConnectButton({ onConnect, onDisconnect, connectedAddress, requiredAddress = null, persistKey = null }) {
@@ -64,6 +114,7 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [wallets, setWallets] = useState([]);
+  const [walletBalance, setWalletBalance] = useState(null);
 
   const matchesRequiredAddress = (address) => !requiredAddress || (address || "").toLowerCase() === requiredAddress.toLowerCase();
 
@@ -102,6 +153,9 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
         clearSavedConnection();
         throw new Error("Deze wallet komt niet overeen met de ingestelde signer wallet");
       }
+      const balanceCbor = await api.getBalance().catch(() => null);
+      const lovelace = decodeCborBalance(balanceCbor);
+      setWalletBalance(lovelace !== null ? lovelace / 1_000_000 : null);
       if (persistKey) {
         localStorage.setItem(persistKey, JSON.stringify({ walletKey, address: addr }));
       }
@@ -144,6 +198,7 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
 
   const handleDisconnect = () => {
     clearSavedConnection();
+    setWalletBalance(null);
     onDisconnect?.();
     setShowDropdown(false);
   };
@@ -156,7 +211,10 @@ export default function WalletConnectButton({ onConnect, onDisconnect, connected
           className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-900 hover:bg-emerald-100 transition-colors w-full"
         >
           <div className="w-2 h-2 rounded-full bg-emerald-400" />
-          <span className="font-mono flex-1 text-left">{shortAddr(connectedAddress)}</span>
+          <div className="flex-1 text-left">
+            <div className="font-mono">{shortAddr(connectedAddress)}</div>
+            {walletBalance !== null && <div className="text-[11px] text-emerald-700">Balance: ₳ {walletBalance.toFixed(2)}</div>}
+          </div>
           <ChevronDown className="w-3.5 h-3.5" />
         </button>
         {showDropdown && (
