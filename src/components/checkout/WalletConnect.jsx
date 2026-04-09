@@ -61,10 +61,11 @@ const KNOWN_WALLETS = [
   { id: "nami", name: "Nami" },
   { id: "eternl", name: "Eternl", mobileLabel: "Open in Eternl app" },
   { id: "lace", name: "Lace" },
-  { id: "typhon", name: "Typhon" },
+  { id: "typhon", name: "Typhon", mobileLabel: "Open in Typhon app" },
   { id: "gerowallet", name: "GeroWallet" },
-  { id: "yoroi", name: "Yoroi" },
+  { id: "yoroi", name: "Yoroi", mobileLabel: "Open in Yoroi app" },
   { id: "vespr", name: "Vespr", mobileLabel: "Open in Vespr app" },
+  { id: "flint", name: "Flint", mobileLabel: "Open in Flint app" },
 ];
 
 export default function WalletConnect({ onConnected, onDisconnected }) {
@@ -157,6 +158,9 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     const currentUrl = encodeURIComponent(window.location.href);
     if (walletId === "vespr") return `vespr://open?url=${currentUrl}`;
     if (walletId === "eternl") return `eternl://wallet/connect?url=${currentUrl}`;
+    if (walletId === "yoroi") return `yoroi://open?url=${currentUrl}`;
+    if (walletId === "flint") return `flint://open?url=${currentUrl}`;
+    if (walletId === "typhon") return `typhon://open?url=${currentUrl}`;
     return null;
   };
 
@@ -297,7 +301,10 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
           <p className="text-[11px] text-slate-600 mt-0.5">
             Install{" "}
             <a href="https://namiwallet.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Nami</a>,{" "}
-            <a href="https://eternl.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Eternl</a>, or{" "}
+            <a href="https://eternl.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Eternl</a>,{" "}
+            <a href="https://yoroi-wallet.com" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Yoroi</a>,{" "}
+            <a href="https://flint-wallet.com" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Flint</a>,{" "}
+            <a href="https://typhonwallet.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Typhon</a>, or{" "}
             <a href="https://www.lace.io" target="_blank" rel="noopener noreferrer" className="text-cyan-700 hover:underline">Lace</a>
           </p>
         </div>
