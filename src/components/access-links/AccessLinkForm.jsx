@@ -186,7 +186,7 @@ export default function AccessLinkForm({ link, onBack, user }) {
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label>Logo URL</Label>
               <Input value={form.logo_url} onChange={e => set("logo_url", e.target.value)} placeholder="https://..." />
@@ -238,7 +238,7 @@ export default function AccessLinkForm({ link, onBack, user }) {
           {form.platform === "discord" && (
             <div className="space-y-4 pt-2 border-t border-slate-100">
               <p className="text-xs font-medium text-indigo-600 uppercase tracking-wide">Discord Bot Configuration (optional)</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label>Guild (Server) ID</Label>
                   <Input value={form.discord_guild_id} onChange={e => set("discord_guild_id", e.target.value)} placeholder="123456789..." />
