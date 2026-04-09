@@ -81,7 +81,7 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-3 flex-1 justify-end">
-            <div className="block lg:block w-full max-w-[220px]">
+            <div className="hidden lg:block w-full max-w-[220px]">
               <WalletConnect onConnected={({ address, ...walletData }) => {
                 setConnectedWallet({ address, ...walletData });
               }} />
@@ -92,6 +92,15 @@ export default function HomePage() {
           </div>
         </div>
       </header>
+
+      <div className="lg:hidden border-b border-border bg-background px-4 py-3 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          <WalletConnect onConnected={({ address, ...walletData }) => {
+            setConnectedWallet({ address, ...walletData });
+          }} />
+        </div>
+      </div>
+
       <section className="relative overflow-hidden pt-20 pb-16 px-4 sm:px-6 bg-background">
         <div className="relative max-w-7xl mx-auto space-y-6">
           <div className="rounded-3xl border border-primary/20 bg-primary/10 px-5 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
