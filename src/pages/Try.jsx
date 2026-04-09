@@ -17,7 +17,7 @@ export default function Try() {
   });
 
   const claimedCount = submissions.filter((item) => item.status === "pending" || item.status === "paid").length;
-  const paidItems = submissions.filter((item) => item.status === "paid").slice(0, 5);
+  const paidItems = submissions.filter((item) => item.status === "paid");
 
   return (
     <div className="min-h-screen bg-background text-foreground">
