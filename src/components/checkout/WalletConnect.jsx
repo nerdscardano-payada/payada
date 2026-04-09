@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle, Smartphone, Monitor, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Convert hex string to Bech32 (Cardano address format)
@@ -59,13 +59,13 @@ function hexToBech32(hexStr, hrp = 'addr') {
 // Known wallets with fallback icons
 const KNOWN_WALLETS = [
   { id: "nami", name: "Nami" },
-  { id: "eternl", name: "Eternl", mobileLabel: "Open in Eternl app" },
+  { id: "eternl", name: "Eternl", mobileLabel: "Open in Eternl app", mobileUrl: (url) => `eternl://wallet/connect?url=${url}` },
   { id: "lace", name: "Lace" },
-  { id: "typhon", name: "Typhon", mobileLabel: "Open in Typhon app" },
+  { id: "typhon", name: "Typhon", mobileLabel: "Open in Typhon app", mobileUrl: (url) => `typhon://open?url=${url}` },
   { id: "gerowallet", name: "GeroWallet" },
-  { id: "yoroi", name: "Yoroi", mobileLabel: "Open in Yoroi app" },
-  { id: "vespr", name: "Vespr", mobileLabel: "Open in Vespr app" },
-  { id: "flint", name: "Flint", mobileLabel: "Open in Flint app" },
+  { id: "yoroi", name: "Yoroi", mobileLabel: "Open in Yoroi app", mobileUrl: (url) => `yoroi://open?url=${url}` },
+  { id: "vespr", name: "Vespr", mobileLabel: "Open in Vespr app", mobileUrl: (url) => `vespr://open?url=${url}` },
+  { id: "flint", name: "Flint", mobileLabel: "Open in Flint app", mobileUrl: (url) => `flint://open?url=${url}` },
 ];
 
 export default function WalletConnect({ onConnected, onDisconnected }) {
@@ -78,6 +78,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [showPicker, setShowPicker] = useState(false);
   const [error, setError] = useState(null);
   const [walletInstance, setWalletInstance] = useState(null);
+  const [detectionMode, setDetectionMode] = useState("desktop");
   const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
 
   const applyStoredWallet = () => {
@@ -125,16 +126,28 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     };
   }, []);
 
+  const getMobileWalletUrl = (walletId) => {
+    if (typeof window === "undefined") return null;
+    const currentUrl = encodeURIComponent(window.location.href);
+    const wallet = KNOWN_WALLETS.find((item) => item.id === walletId);
+    return wallet?.mobileUrl ? wallet.mobileUrl(currentUrl) : null;
+  };
+
   const detectWallets = () => {
     if (typeof window === "undefined") return;
 
     const found = [];
     const knownIds = new Set(KNOWN_WALLETS.map(w => w.id));
     const cardanoProviders = window.cardano || {};
+    const hasInjectedProviders = Object.keys(cardanoProviders).some((key) => cardanoProviders[key]?.enable);
+
+    setDetectionMode(isMobile ? "mobile" : "desktop");
 
     KNOWN_WALLETS.forEach(({ id, name, mobileLabel }) => {
-      if (cardanoProviders[id]) {
-        found.push({ id, name, mobileLabel, icon: cardanoProviders[id].icon || null });
+      if (cardanoProviders[id]?.enable) {
+        found.push({ id, name, mobileLabel, icon: cardanoProviders[id].icon || null, available: true });
+      } else if (isMobile && getMobileWalletUrl(id)) {
+        found.push({ id, name, mobileLabel, icon: null, available: false, mobileFallback: true });
       }
     });
 
@@ -145,13 +158,18 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
           id: key,
           name: w.name || (key.charAt(0).toUpperCase() + key.slice(1)),
           icon: w.icon || null,
+          available: true,
         });
       }
     });
 
+    if (!hasInjectedProviders && isMobile) {
+      setInstalledWallets(found.filter((wallet) => wallet.mobileFallback));
+      return;
+    }
+
     setInstalledWallets(found);
   };
-
 
   const connectWallet = async (walletId) => {
     setConnecting(true);
@@ -159,6 +177,11 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     setShowPicker(false);
     try {
       if (!window.cardano?.[walletId]?.enable) {
+        const mobileUrl = isMobile ? getMobileWalletUrl(walletId) : null;
+        if (mobileUrl) {
+          window.location.href = mobileUrl;
+          return;
+        }
         throw new Error("Wallet not detected on this device");
       }
 
@@ -260,10 +283,18 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   if (connected) {
     return (
       <div className="flex items-center justify-between bg-emerald-500/10 border border-emerald-500/25 rounded-xl px-4 py-3">
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-emerald-500/15 flex items-center justify-center">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          </div>
           <div>
-            <p className="text-xs font-semibold text-emerald-400">{walletName} connected</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-xs font-semibold text-emerald-400">{walletName} connected</p>
+              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[10px] text-emerald-300">
+                {isMobile ? <Smartphone className="w-3 h-3" /> : <Monitor className="w-3 h-3" />}
+                {isMobile ? "Mobile" : "Desktop"}
+              </span>
+            </div>
             <p className="text-[10px] text-slate-400 font-mono">{shortAddress(walletAddress)}</p>
             {walletBalance !== null && (
               <p className="text-[10px] text-slate-500">Balance: ₳ {walletBalance.toFixed(2)}</p>
@@ -278,7 +309,15 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   }
 
   return (
-    <div className="relative">
+    <div className="relative space-y-2">
+      <div className="flex items-center justify-between rounded-xl border border-slate-700/60 bg-slate-900/60 px-3 py-2">
+        <div className="flex items-center gap-2 text-[11px] text-slate-300">
+          {isMobile ? <Smartphone className="w-3.5 h-3.5 text-cyan-400" /> : <Monitor className="w-3.5 h-3.5 text-cyan-400" />}
+          <span>{detectionMode === "mobile" ? "Mobile wallet detection" : "Desktop wallet detection"}</span>
+        </div>
+        <span className="text-[10px] text-slate-400">{installedWallets.filter(w => w.available).length} ready</span>
+      </div>
+
       {installedWallets.length === 0 ? (
         <div className="text-center py-4 px-3 bg-slate-50 rounded-xl border border-slate-200">
           <Wallet className="w-5 h-5 text-slate-700 mx-auto mb-1.5" />
@@ -314,21 +353,29 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
                 <button
                   key={w.id}
                   onClick={() => connectWallet(w.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-800 transition-colors text-left"
+                  className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-slate-800 transition-colors text-left"
                 >
-                  {w.icon ? (
-                    <img src={w.icon} alt={w.name} className="w-6 h-6 rounded" />
-                  ) : (
-                    <div className="w-6 h-6 rounded bg-indigo-600 flex items-center justify-center text-white text-[10px] font-bold">
-                      {w.name[0]}
-                    </div>
-                  )}
-                  <div className="flex flex-col">
-                    <span className="text-sm text-white font-medium">{w.name}</span>
-                    {isMobile && w.mobileLabel && (
-                      <span className="text-[11px] text-slate-400">{w.mobileLabel}</span>
+                  <div className="flex items-center gap-3 min-w-0">
+                    {w.icon ? (
+                      <img src={w.icon} alt={w.name} className="w-6 h-6 rounded" />
+                    ) : (
+                      <div className="w-6 h-6 rounded bg-indigo-600 flex items-center justify-center text-white text-[10px] font-bold">
+                        {w.name[0]}
+                      </div>
                     )}
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm text-white font-medium">{w.name}</span>
+                      {isMobile && w.mobileFallback && !w.available ? (
+                        <span className="text-[11px] text-slate-400">{w.mobileLabel}</span>
+                      ) : w.available ? (
+                        <span className="text-[11px] text-emerald-400">Ready to connect</span>
+                      ) : null}
+                    </div>
                   </div>
+                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] border ${w.available ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' : 'border-amber-500/30 bg-amber-500/10 text-amber-300'}`}>
+                    {w.available ? <CheckCircle2 className="w-3 h-3" /> : <ExternalLink className="w-3 h-3" />}
+                    {w.available ? 'Detected' : 'Open app'}
+                  </span>
                 </button>
               ))}
             </div>
