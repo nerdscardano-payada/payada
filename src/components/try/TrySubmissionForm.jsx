@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,18 +21,26 @@ const extractHandle = (url) => {
 
 export default function TrySubmissionForm({ walletAddress, claimedCount }) {
   const queryClient = useQueryClient();
+  const [manualWalletAddress, setManualWalletAddress] = useState(walletAddress || "");
   const [description, setDescription] = useState("");
   const [xPostUrl, setXPostUrl] = useState("");
   const [generatedLink, setGeneratedLink] = useState(null);
+  const activeWalletAddress = manualWalletAddress.trim();
+
+  useEffect(() => {
+    if (walletAddress) {
+      setManualWalletAddress(walletAddress);
+    }
+  }, [walletAddress]);
 
   const submitMutation = useMutation({
     mutationFn: async () => {
-      if (!walletAddress) throw new Error("Connect eerst een wallet.");
+      if (!activeWalletAddress) throw new Error("Voeg eerst een walletadres toe.");
       if (!description.trim()) throw new Error("Voeg eerst een description toe.");
       if (!xPostUrl.trim()) throw new Error("Voeg je X post URL toe.");
       if (claimedCount >= MAX_SPOTS) throw new Error("Alle spots zijn geclaimd.");
 
-      const existing = await base44.entities.LaunchSubmission.filter({ wallet_address: walletAddress });
+      const existing = await base44.entities.LaunchSubmission.filter({ wallet_address: activeWalletAddress });
       if (existing.length > 0) throw new Error("Deze wallet deed al mee.");
       if (!generatedLink?.id || !generatedLink?.slug || !generatedLink?.linkUrl) {
         throw new Error("Genereer eerst je payment link.");
@@ -45,7 +53,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
       const linkUrl = generatedLink.linkUrl;
 
       await base44.entities.LaunchSubmission.create({
-        wallet_address: walletAddress,
+        wallet_address: activeWalletAddress,
         payment_link_id: generatedLink.id,
         payment_link_url: linkUrl,
         x_post_url: xPostUrl,
@@ -68,8 +76,8 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
   });
 
   const handleGenerateLink = async () => {
-    if (!walletAddress) {
-      toast.error("Connect eerst een wallet.");
+    if (!activeWalletAddress) {
+      toast.error("Voeg eerst een walletadres toe.");
       return;
     }
     if (!description.trim()) {
@@ -109,8 +117,12 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
       <CardContent className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Connected wallet</Label>
-            <Input value={walletAddress || "Connect a Cardano wallet"} readOnly />
+            <Label>Wallet address</Label>
+            <Input
+              value={manualWalletAddress}
+              onChange={(e) => setManualWalletAddress(e.target.value)}
+              placeholder="Paste a Cardano wallet address or connect a wallet"
+            />
           </div>
           <div className="space-y-2">
             <Label>Amount</Label>
