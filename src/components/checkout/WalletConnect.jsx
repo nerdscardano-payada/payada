@@ -196,7 +196,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       if (!window.cardano?.[walletId]?.enable) {
         if (isMobile) {
           openMobileWallet(walletId);
-          setError("Mobiele wallets verbinden alleen vanuit hun eigen dApp-browser. Open eerst de wallet-app en open daar deze site.");
+          setError("Mobile wallets only connect from their own dApp browser. Open the wallet app first, then open this site inside it.");
           return;
         }
         throw new Error("Wallet not detected on this device");
@@ -407,27 +407,27 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       )}
 
       {pendingMobileUrl && (
-        <div className="mt-2 space-y-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
-          <p className="text-xs text-amber-200">
-            {pendingWalletName ? `${pendingWalletName} opent niet als normale browserextensie op mobiel.` : "Deze wallet opent niet als normale browserextensie op mobiel."}
+        <div className="mt-2 space-y-3 rounded-xl border border-amber-400/40 bg-amber-50 px-4 py-3 shadow-sm">
+          <p className="text-sm font-medium leading-5 text-amber-900">
+            {pendingWalletName ? `${pendingWalletName} does not connect from a normal mobile browser.` : "This wallet does not connect from a normal mobile browser."}
           </p>
           <a
             href={pendingMobileUrl}
-            className="inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-300 hover:bg-amber-500/15"
+            className="inline-flex w-fit items-center gap-2 rounded-lg border border-amber-500/40 bg-white px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100"
           >
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="w-4 h-4" />
             Open {pendingWalletName || "wallet app"}
           </a>
-          <p className="text-[11px] text-amber-100/80">
-            Open daarna deze website opnieuw in de ingebouwde dApp-browser van de wallet om echt te verbinden.
+          <p className="text-xs leading-5 text-amber-800">
+            Then open this website again inside the wallet’s built-in dApp browser to finish connecting.
           </p>
         </div>
       )}
 
       {error && (
-        <div className="mt-2 flex items-center gap-2 text-red-400 text-xs">
-          <XCircle className="w-3.5 h-3.5 flex-shrink-0" />
-          {error}
+        <div className="mt-2 flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs leading-5 text-red-700">
+          <XCircle className="mt-0.5 w-3.5 h-3.5 flex-shrink-0" />
+          <span>{error}</span>
         </div>
       )}
     </div>
