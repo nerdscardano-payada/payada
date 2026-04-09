@@ -234,7 +234,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     <div className="relative space-y-2">
       <Button
         variant="outline"
-        className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2 justify-between"
+        className="w-full border-slate-300 bg-white text-slate-900 hover:bg-slate-50 hover:text-slate-950 hover:border-cyan-500 dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-200 dark:hover:bg-slate-900 dark:hover:text-white gap-2 justify-between"
         onClick={() => {
           setError(null);
           setShowPicker((p) => !p);
@@ -249,12 +249,12 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       </Button>
 
       {!isMobile && showPicker && (
-        <div className="absolute top-full mt-2 left-0 right-0 bg-slate-900 border border-slate-700 rounded-xl shadow-xl z-50 overflow-y-auto max-h-72">
+        <div className="absolute top-full mt-2 left-0 right-0 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-y-auto max-h-72 dark:bg-slate-900 dark:border-slate-700">
           {installedWallets.length > 0 ? installedWallets.map((w) => (
             <button
               key={w.id}
               onClick={() => connectWallet(w.id)}
-              className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-slate-800 transition-colors text-left"
+              className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
             >
               <div className="flex items-center gap-3 min-w-0">
                 {w.icon ? (
@@ -263,8 +263,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
                   <div className="w-6 h-6 rounded bg-indigo-600 flex items-center justify-center text-white text-[10px] font-bold">{w.name[0]}</div>
                 )}
                 <div className="flex flex-col min-w-0">
-                  <span className="text-sm text-white font-medium">{w.name}</span>
-                  <span className="text-[11px] text-slate-400">{w.available ? "Ready to connect" : "Unavailable"}</span>
+                  <span className="text-sm text-slate-900 dark:text-white font-medium">{w.name}</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400">{w.available ? "Ready to connect" : "Unavailable"}</span>
                 </div>
               </div>
               <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] border ${w.available ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300" : "border-slate-600 bg-slate-800 text-slate-300"}`}>
@@ -273,7 +273,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
               </span>
             </button>
           )) : (
-            <div className="px-4 py-4 text-sm text-slate-300">
+            <div className="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">
               No wallet detected on this device.
             </div>
           )}
@@ -281,7 +281,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       )}
 
       {isMobile && (
-        <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+        <div className="rounded-lg border border-amber-500/30 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100">
           On mobile, copy this page URL and paste it into your Cardano wallet app browser to connect.
         </div>
       )}
