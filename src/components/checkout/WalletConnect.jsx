@@ -43,8 +43,10 @@ function hexToBech32(hexStr, hrp = "addr") {
 
 const KNOWN_WALLETS = [
   { id: "nami", name: "Nami" },
-  { id: "eternl", name: "Eternl" },
-  { id: "lace", name: "Lace" },
+  { id: "eternl", name: "Eternl", mobileLabel: "Open in Eternl app" },
+  { id: "yoroi", name: "Yoroi", mobileLabel: "Open in Yoroi app" },
+  { id: "lace", name: "Lace", mobileLabel: "Open in Lace app" },
+  { id: "vespr", name: "Vespr", mobileLabel: "Open in Vespr app" },
   { id: "typhon", name: "Typhon" },
   { id: "gerowallet", name: "GeroWallet" },
 ];
@@ -183,7 +185,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       }
 
       if (isMobile) {
-        setError("Open this exact URL inside your wallet app browser to connect.");
+        setError("Copy this page URL and open it inside your Cardano wallet app browser to connect.");
         return;
       }
 
@@ -288,7 +290,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
 
       {isMobile && (
         <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
-          Open this page URL manually inside your wallet app browser to connect on mobile.
+          On mobile, copy this page URL and paste it into your Cardano wallet app browser to connect.
         </div>
       )}
 
