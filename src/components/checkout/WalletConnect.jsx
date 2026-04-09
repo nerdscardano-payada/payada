@@ -43,12 +43,12 @@ function hexToBech32(hexStr, hrp = "addr") {
 
 const KNOWN_WALLETS = [
   { id: "nami", name: "Nami" },
-  { id: "eternl", name: "Eternl", mobileLabel: "Open Eternl", mobileUrl: () => "eternl://" },
+  { id: "eternl", name: "Eternl", mobileLabel: "Use Eternl dApp browser" },
   { id: "lace", name: "Lace" },
   { id: "typhon", name: "Typhon" },
   { id: "gerowallet", name: "GeroWallet" },
   { id: "yoroi", name: "Yoroi" },
-  { id: "vespr", name: "Vespr", mobileLabel: "Open Vespr", mobileUrl: () => "vespr://" },
+  { id: "vespr", name: "Vespr", mobileLabel: "Use Vespr dApp browser" },
 ];
 
 export default function WalletConnect({ onConnected, onDisconnected }) {
@@ -101,10 +101,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     return hexToBech32(addrHex, "addr");
   };
 
-  const getMobileWalletUrl = (walletId) => {
-    const wallet = KNOWN_WALLETS.find((item) => item.id === walletId);
-    return wallet?.mobileUrl ? wallet.mobileUrl() : null;
-  };
+  const getMobileWalletUrl = () => null;
 
   const detectWallets = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -161,15 +158,10 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     setError(null);
   }, [hookConnected, stakeAddress, enabledWallet, selectedWalletId, saveWalletState]);
 
-  const openMobileWallet = useCallback((walletId, shouldLaunch = false) => {
+  const openMobileWallet = useCallback((walletId) => {
     const wallet = KNOWN_WALLETS.find((item) => item.id === walletId);
-    const mobileUrl = getMobileWalletUrl(walletId);
-    setPendingMobileUrl(mobileUrl);
+    setPendingMobileUrl(null);
     setPendingWalletName(wallet?.name || "wallet");
-
-    if (shouldLaunch && mobileUrl && typeof window !== "undefined") {
-      window.location.href = mobileUrl;
-    }
   }, []);
 
   const connectWallet = async (walletId) => {
@@ -206,8 +198,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       }
 
       if (isMobile) {
-        openMobileWallet(walletId, true);
-        setError("If the wallet app did not open automatically, use the button below and then continue in the wallet browser.");
+        openMobileWallet(walletId);
+        setError("This wallet does not reliably open from a mobile browser here. Open this site inside the wallet’s own dApp browser to connect.");
         return;
       }
 
@@ -312,28 +304,14 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
         </div>
       )}
 
-      {pendingMobileUrl && (
+      {pendingWalletName && isMobile && (
         <div className="mt-2 space-y-3 rounded-xl border border-amber-400/40 bg-amber-50 px-4 py-3 shadow-sm">
-          <p className="text-sm font-medium leading-5 text-amber-900">Continue in {pendingWalletName || "your wallet app"} to finish connecting.</p>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                if (pendingMobileUrl && typeof window !== "undefined") {
-                  window.location.href = pendingMobileUrl;
-                }
-              }}
-              className="inline-flex w-fit items-center gap-2 rounded-lg border border-amber-500/40 bg-white px-3 py-2 text-sm font-medium text-amber-800 hover:bg-amber-100"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Open {pendingWalletName || "wallet app"}
-            </button>
-            <div className="inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-white/70 px-3 py-2 text-sm text-amber-800">
-              <QrCode className="w-4 h-4" />
-              Desktop QR flow supported by compatible wallet bridge
-            </div>
+          <p className="text-sm font-medium leading-5 text-amber-900">Use {pendingWalletName} from its own mobile dApp browser to finish connecting.</p>
+          <div className="inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-white/70 px-3 py-2 text-sm text-amber-800">
+            <QrCode className="w-4 h-4" />
+            On desktop, use an injected wallet or a wallet-supported QR flow
           </div>
-          <p className="text-xs leading-5 text-amber-800">If needed, open this site from the wallet’s built-in dApp browser to complete the mobile connection.</p>
+          <p className="text-xs leading-5 text-amber-800">I verified this: the direct “open app” deep link is not reliable here, so showing that button was misleading.</p>
         </div>
       )}
 
