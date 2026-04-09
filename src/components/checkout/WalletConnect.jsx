@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle, Smartphone, Monitor, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -79,6 +79,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [walletInstance, setWalletInstance] = useState(null);
   const [detectionMode, setDetectionMode] = useState("desktop");
   const [pendingMobileUrl, setPendingMobileUrl] = useState(null);
+  const [pendingWalletName, setPendingWalletName] = useState(null);
   const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
 
   const applyStoredWallet = () => {
@@ -133,6 +134,22 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     return wallet?.mobileUrl ? wallet.mobileUrl(currentUrl) : null;
   };
 
+  const openMobileWallet = useCallback((walletId) => {
+    const mobileUrl = getMobileWalletUrl(walletId);
+    const wallet = KNOWN_WALLETS.find((item) => item.id === walletId);
+    if (!mobileUrl) return;
+    setPendingMobileUrl(mobileUrl);
+    setPendingWalletName(wallet?.name || "wallet");
+
+    const anchor = document.createElement("a");
+    anchor.href = mobileUrl;
+    anchor.rel = "noopener noreferrer";
+    anchor.style.display = "none";
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  }, []);
+
   const detectWallets = () => {
     if (typeof window === "undefined") return;
 
@@ -177,10 +194,9 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     setShowPicker(false);
     try {
       if (!window.cardano?.[walletId]?.enable) {
-        const mobileUrl = isMobile ? getMobileWalletUrl(walletId) : null;
-        if (mobileUrl) {
-          setPendingMobileUrl(mobileUrl);
-          setError("Tik op de link hieronder om de wallet-app te openen.");
+        if (isMobile) {
+          openMobileWallet(walletId);
+          setError("Mobiele wallets verbinden alleen vanuit hun eigen dApp-browser. Open eerst de wallet-app en open daar deze site.");
           return;
         }
         throw new Error("Wallet not detected on this device");
@@ -249,6 +265,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       window.dispatchEvent(new Event("payada-wallet-updated"));
 
       setPendingMobileUrl(null);
+      setPendingWalletName(null);
       setWalletInstance({ api, walletId });
       setWalletName(window.cardano[walletId]?.name || (walletId.charAt(0).toUpperCase() + walletId.slice(1)));
       setWalletAddress(address);
@@ -338,7 +355,12 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
           <Button
             variant="outline"
             className="w-full border-slate-700 bg-slate-900/90 text-slate-200 hover:bg-slate-900 hover:text-white hover:border-cyan-500 gap-2 justify-between"
-            onClick={() => setShowPicker((p) => !p)}
+            onClick={() => {
+              setPendingMobileUrl(null);
+              setPendingWalletName(null);
+              setError(null);
+              setShowPicker((p) => !p);
+            }}
             disabled={connecting}
           >
             <div className="flex items-center gap-2">
@@ -385,13 +407,21 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       )}
 
       {pendingMobileUrl && (
-        <a
-          href={pendingMobileUrl}
-          className="mt-2 inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-300 hover:bg-amber-500/15"
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-          Open wallet app
-        </a>
+        <div className="mt-2 space-y-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
+          <p className="text-xs text-amber-200">
+            {pendingWalletName ? `${pendingWalletName} opent niet als normale browserextensie op mobiel.` : "Deze wallet opent niet als normale browserextensie op mobiel."}
+          </p>
+          <a
+            href={pendingMobileUrl}
+            className="inline-flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-300 hover:bg-amber-500/15"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+            Open {pendingWalletName || "wallet app"}
+          </a>
+          <p className="text-[11px] text-amber-100/80">
+            Open daarna deze website opnieuw in de ingebouwde dApp-browser van de wallet om echt te verbinden.
+          </p>
+        </div>
       )}
 
       {error && (
