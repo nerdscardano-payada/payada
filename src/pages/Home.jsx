@@ -73,7 +73,7 @@ export default function HomePage() {
             <span className="text-lg font-bold text-foreground">PayADA</span>
           </Link>
 
-          <nav className="hidden items-center gap-6 md:flex">
+          <nav className="hidden items-center gap-6 md:ml-8 md:flex lg:ml-12">
             <Link to={createPageUrl("Features")} className="text-sm font-medium text-muted-foreground transition hover:text-foreground">Features</Link>
             <Link to={createPageUrl("Pricing")} className="text-sm font-medium text-muted-foreground transition hover:text-foreground">Pricing</Link>
             <Link to={createPageUrl("Documentation")} className="text-sm font-medium text-muted-foreground transition hover:text-foreground">Documentation</Link>
