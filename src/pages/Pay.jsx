@@ -48,6 +48,13 @@ export default function Pay() {
 
   const multiCntEnabled = paymentLink?.enable_multi_cnt_checkout && paymentLink?.amount_mode === "fixed_ada" && (paymentLink?.accepted_cnt_tokens || []).length > 0;
 
+  useEffect(() => {
+    localStorage.removeItem("payada_connected_wallet_address");
+    localStorage.removeItem("payada_connected_wallet_id");
+    localStorage.removeItem("payada_connected_wallet_name");
+    window.dispatchEvent(new Event("payada-wallet-updated"));
+  }, []);
+
   // Detect NFT-related checkouts and merchant fulfillment mode
   const { data: merchantProfiles = [] } = useQuery({
     queryKey: ["merchant-profile-for-pay", paymentLink?.merchant_id],
