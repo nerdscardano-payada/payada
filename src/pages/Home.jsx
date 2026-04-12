@@ -113,7 +113,7 @@ export default function HomePage() {
             </Button>
           </div>
           <HomeInlineCreator onWalletConnected={setConnectedWallet} />
-          <HomeWalletLinksManager walletAddress={connectedWallet?.address || localStorage.getItem("payada_connected_wallet_address") || ""} />
+          <HomeWalletLinksManager walletAddress={connectedWallet?.address || localStorage.getItem("payada_manual_wallet_address") || localStorage.getItem("payada_connected_wallet_address") || ""} />
         </div>
       </section>
 

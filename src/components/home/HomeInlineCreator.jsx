@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
-import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History, Copy, ExternalLink, Layers3, Rocket, UserPlus, QrCode, ChevronLeft, ChevronRight } from "lucide-react";
+import { Coins, Link2, LockKeyhole, Wallet, Sparkles, ArrowRight, History, Copy, ExternalLink, Layers3, Rocket, UserPlus, QrCode, ChevronLeft, ChevronRight, Smartphone, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,10 +31,11 @@ export default function HomeInlineCreator({ onWalletConnected }) {
   const [createdQrValue, setCreatedQrValue] = React.useState("");
   const [feeSlide, setFeeSlide] = React.useState(0);
   const copySectionRef = useRef(null);
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
 
   useEffect(() => {
     const syncStoredWallet = () => {
-      const savedAddress = localStorage.getItem("payada_connected_wallet_address");
+      const savedAddress = localStorage.getItem("payada_manual_wallet_address") || localStorage.getItem("payada_connected_wallet_address");
       if (savedAddress) {
         setForm((prev) => ({ ...prev, receive_address: prev.receive_address || savedAddress }));
       }
@@ -48,7 +49,18 @@ export default function HomeInlineCreator({ onWalletConnected }) {
     };
   }, []);
 
-  const updateForm = (field, value) => setForm((prev) => ({ ...prev, [field]: value }));
+  const updateForm = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (field === "receive_address") {
+      const trimmedValue = value.trim();
+      if (trimmedValue) {
+        localStorage.setItem("payada_manual_wallet_address", trimmedValue);
+      } else {
+        localStorage.removeItem("payada_manual_wallet_address");
+      }
+      window.dispatchEvent(new Event("payada-wallet-updated"));
+    }
+  };
 
   const handleCntSelect = (value) => {
     setSelectedCntKey(value);
@@ -324,18 +336,35 @@ export default function HomeInlineCreator({ onWalletConnected }) {
           <div className="rounded-2xl border border-sky-400/30 bg-card/60 p-5 space-y-4">
             <div className="flex items-start gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Wallet className="w-5 h-5" />
+                {isMobile ? <Smartphone className="w-5 h-5" /> : <Monitor className="w-5 h-5" />}
               </div>
               <div>
-                <p className="text-lg sm:text-xl font-semibold text-foreground">Step 1 · Connect wallet</p>
-                <p className="text-sm text-muted-foreground">Use your Cardano wallet without logging in.</p>
+                <p className="text-lg sm:text-xl font-semibold text-foreground">Step 1 · {isMobile ? "Enter wallet" : "Connect wallet"}</p>
+                <p className="text-sm text-muted-foreground">{isMobile ? "On mobile, enter your Cardano wallet address manually. It will be remembered for the homepage forms." : "Use your Cardano wallet without logging in."}</p>
               </div>
             </div>
             <div className="mt-5">
-              <WalletConnect onConnected={({ address, ...walletData }) => {
-                updateForm("receive_address", address || "");
-                onWalletConnected?.({ address, ...walletData });
-              }} />
+              {isMobile ? (
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label>Your Cardano address</Label>
+                    <Input
+                      value={form.receive_address}
+                      onChange={(e) => updateForm("receive_address", e.target.value)}
+                      placeholder="addr1..."
+                      className="h-12 rounded-xl"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    This address will be remembered and auto-filled in the homepage flow.
+                  </p>
+                </div>
+              ) : (
+                <WalletConnect onConnected={({ address, ...walletData }) => {
+                  updateForm("receive_address", address || "");
+                  onWalletConnected?.({ address, ...walletData });
+                }} />
+              )}
             </div>
           </div>
 
