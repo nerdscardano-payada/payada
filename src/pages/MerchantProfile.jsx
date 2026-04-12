@@ -394,11 +394,16 @@ export default function MerchantProfilePage() {
           </h3>
           <p className="text-sm text-slate-500 mt-0.5">All merchants can accept these platform-approved Cardano Native Tokens in their payment links.</p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {KNOWN_CNTS.map((token) => (
-            <div key={token.policy_id} className="flex items-center gap-1.5 bg-purple-50 border border-purple-200 rounded-lg px-3 py-1.5">
-              <span className="text-sm font-medium text-purple-900">{token.ticker}</span>
-              <span className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">Active</span>
+            <div
+              key={token.policy_id}
+              className="flex items-center justify-between rounded-xl border border-purple-200 bg-purple-50 px-4 py-3"
+            >
+              <span className="text-sm font-semibold text-purple-900">{token.ticker}</span>
+              <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                Active
+              </span>
             </div>
           ))}
         </div>
