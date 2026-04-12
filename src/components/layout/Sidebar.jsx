@@ -68,6 +68,7 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
   const isAdmin = user?.role === "admin";
   const canAccessTemporaryPages = isAdmin || user?.email === "nerscardano@gmail.com";
   const temporaryRestrictedPages = ["NFTs"];
+  const hasWalletConnected = !!(profile?.connected_wallet_address || profile?.default_receive_address);
 
   return (
     <>
@@ -116,14 +117,14 @@ export default function Sidebar({ currentPage, collapsed, setCollapsed, mobileOp
               onClick={() => setMobileOpen(false)}
               className={cn(
                 "block rounded-xl border px-3 py-2 text-[11px] transition-colors",
-                profile?.connected_wallet_address
+                hasWalletConnected
                   ? "border-emerald-400/20 bg-emerald-500/10 text-emerald-200 hover:bg-emerald-500/15"
                   : "border-amber-400/20 bg-amber-500/10 text-amber-200 hover:bg-amber-500/15"
               )}
             >
               <div className="font-semibold">Wallet status</div>
               <div className="opacity-80">
-                {profile?.connected_wallet_address ? "Wallet connected" : "Connect or add wallet in Merchant Profile"}
+                {hasWalletConnected ? "Wallet connected" : "Connect or add wallet in Merchant Profile"}
               </div>
             </Link>
           )}
