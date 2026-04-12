@@ -124,7 +124,24 @@ export default function MerchantProfilePage() {
     await base44.auth.logout('/');
   };
 
-  const handleWalletLinked = () => {
+  const handleWalletLinked = async () => {
+    const savedAddress = localStorage.getItem("payada_connected_wallet_address") || localStorage.getItem("payada_manual_wallet_address");
+    if (savedAddress && user?.email) {
+      if (profile?.id) {
+        await base44.entities.MerchantProfile.update(profile.id, {
+          connected_wallet_address: savedAddress,
+          default_receive_address: savedAddress,
+        });
+      } else {
+        await base44.entities.MerchantProfile.create({
+          user_id: user.email,
+          business_name: formData.business_name || user.email,
+          connected_wallet_address: savedAddress,
+          default_receive_address: savedAddress,
+          timezone: formData.timezone || "UTC",
+        });
+      }
+    }
     queryClient.invalidateQueries({ queryKey: ['merchantProfile'] });
   };
 

@@ -67,8 +67,9 @@ export default function PaymentLinkForm({ link, prefill, onBack, merchantId: mer
         base44.entities.MerchantProfile.filter({ user_id: u.email }).then((profiles) => {
           const profile = profiles?.[0];
           setMerchantProfile(profile);
-          if (!isEditing && profile?.default_receive_address) {
-            setForm((prev) => ({ ...prev, receive_address: prev.receive_address || profile.default_receive_address }));
+          const syncedAddress = localStorage.getItem("payada_connected_wallet_address") || localStorage.getItem("payada_manual_wallet_address") || profile?.default_receive_address || "";
+          if (!isEditing && syncedAddress) {
+            setForm((prev) => ({ ...prev, receive_address: prev.receive_address || syncedAddress }));
           }
         });
       }

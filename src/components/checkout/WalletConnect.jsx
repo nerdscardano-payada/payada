@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Wallet, ChevronDown, Loader2, CheckCircle2, XCircle, Smartphone, Monitor, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 function hexToBech32(hexStr, hrp = "addr") {
   const CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
@@ -118,17 +119,20 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const [showPicker, setShowPicker] = useState(false);
   const [error, setError] = useState(null);
   const [selectedWalletId, setSelectedWalletId] = useState(null);
+  const [manualAddress, setManualAddress] = useState("");
   const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
 
   const saveWalletState = useCallback((walletId, walletDisplayName, address, api = null, lovelace = null) => {
     localStorage.setItem("payada_connected_wallet_address", address);
-    localStorage.setItem("payada_connected_wallet_id", walletId || "");
+    localStorage.setItem("payada_connected_wallet_id", walletId || "manual");
     localStorage.setItem("payada_connected_wallet_name", walletDisplayName || "Wallet");
+    localStorage.setItem("payada_manual_wallet_address", address);
+    setManualAddress(address);
     setWalletName(walletDisplayName || "Wallet");
     setWalletAddress(address);
     setWalletBalance(lovelace !== null ? lovelace / 1_000_000 : null);
     setConnected(true);
-    onConnected?.({ api, walletId, address, lovelace });
+    onConnected?.({ api, walletId: walletId || "manual", address, lovelace });
     window.dispatchEvent(new Event("payada-wallet-updated"));
   }, [onConnected]);
 
@@ -136,6 +140,8 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     localStorage.removeItem("payada_connected_wallet_address");
     localStorage.removeItem("payada_connected_wallet_id");
     localStorage.removeItem("payada_connected_wallet_name");
+    localStorage.removeItem("payada_manual_wallet_address");
+    setManualAddress("");
     setConnected(false);
     setWalletName(null);
     setWalletAddress(null);
@@ -186,7 +192,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     let isMounted = true;
 
     const handleStorageSync = async () => {
-      const storedAddress = localStorage.getItem("payada_connected_wallet_address");
+      const storedAddress = localStorage.getItem("payada_connected_wallet_address") || localStorage.getItem("payada_manual_wallet_address");
       const storedWalletId = localStorage.getItem("payada_connected_wallet_id");
       const storedWalletName = localStorage.getItem("payada_connected_wallet_name");
 
@@ -200,9 +206,10 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       }
 
       if (!isMounted) return;
+      setManualAddress(storedAddress);
       setConnected(true);
       setWalletAddress(storedAddress);
-      setWalletName(storedWalletName || storedWalletId || "Wallet");
+      setWalletName(storedWalletName || (storedWalletId === "manual" ? "Manual wallet" : storedWalletId) || "Wallet");
       setWalletBalance((current) => current);
 
       if (storedWalletId && window.cardano?.[storedWalletId]?.enable) {
@@ -261,6 +268,16 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
 
   const handleDisconnect = async () => {
     clearWalletState();
+  };
+
+  const handleManualConnect = () => {
+    const trimmedAddress = manualAddress.trim();
+    if (!trimmedAddress) {
+      setError("Voer eerst een Cardano walletadres in.");
+      return;
+    }
+    setError(null);
+    saveWalletState("manual", "Manual wallet", trimmedAddress, null, null);
   };
 
   const shortAddress = (addr) => !addr ? "" : addr.length <= 20 ? addr : `${addr.slice(0, 10)}…${addr.slice(-8)}`;
@@ -342,8 +359,17 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
       )}
 
       {isMobile && (
-        <div className="md:hidden rounded-lg border border-amber-500/30 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100">
-          On mobile, copy this page URL and paste it into your Cardano wallet app browser to connect.
+        <div className="space-y-3 rounded-lg border border-amber-500/30 bg-amber-50 px-3 py-3 text-xs text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100">
+          <p>Op mobiel kan je je Cardano walletadres handmatig invullen en opslaan.</p>
+          <Input
+            value={manualAddress}
+            onChange={(e) => setManualAddress(e.target.value)}
+            placeholder="addr1..."
+            className="bg-white text-slate-900 dark:bg-slate-950 dark:text-white"
+          />
+          <Button type="button" className="w-full" onClick={handleManualConnect} disabled={connecting}>
+            Gebruik dit walletadres
+          </Button>
         </div>
       )}
 
