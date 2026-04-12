@@ -136,12 +136,12 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
     localStorage.removeItem("payada_connected_wallet_address");
     localStorage.removeItem("payada_connected_wallet_id");
     localStorage.removeItem("payada_connected_wallet_name");
-    window.dispatchEvent(new Event("payada-wallet-updated"));
     setConnected(false);
     setWalletName(null);
     setWalletAddress(null);
     setWalletBalance(null);
     onDisconnected?.();
+    window.dispatchEvent(new Event("payada-wallet-updated"));
   }, [onDisconnected]);
 
   const normalizeWalletAddress = (rawAddress) => {
@@ -183,45 +183,46 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
 
   useEffect(() => {
     const timer = setTimeout(detectWallets, 500);
+    let isMounted = true;
+
     const handleStorageSync = async () => {
       const storedAddress = localStorage.getItem("payada_connected_wallet_address");
       const storedWalletId = localStorage.getItem("payada_connected_wallet_id");
       const storedWalletName = localStorage.getItem("payada_connected_wallet_name");
 
       if (!storedAddress) {
+        if (!isMounted) return;
         setConnected(false);
         setWalletAddress(null);
         setWalletName(null);
         setWalletBalance(null);
-        onDisconnected?.();
         return;
       }
 
+      if (!isMounted) return;
       setConnected(true);
       setWalletAddress(storedAddress);
       setWalletName(storedWalletName || storedWalletId || "Wallet");
-      setWalletBalance(null);
+      setWalletBalance((current) => current);
 
-      let api = null;
-      let lovelace = null;
       if (storedWalletId && window.cardano?.[storedWalletId]?.enable) {
-        api = await window.cardano[storedWalletId].enable().catch(() => null);
-        if (api) {
-          const balanceCbor = await api.getBalance().catch(() => null);
-          lovelace = decodeCborBalance(balanceCbor);
-          setWalletBalance(lovelace !== null ? lovelace / 1_000_000 : null);
-        }
+        const api = await window.cardano[storedWalletId].enable().catch(() => null);
+        if (!api || !isMounted) return;
+        const balanceCbor = await api.getBalance().catch(() => null);
+        const lovelace = decodeCborBalance(balanceCbor);
+        if (!isMounted) return;
+        setWalletBalance(lovelace !== null ? lovelace / 1_000_000 : null);
       }
-
-      onConnected?.({ api, walletId: storedWalletId, address: storedAddress, lovelace });
     };
+
     handleStorageSync();
     window.addEventListener("payada-wallet-updated", handleStorageSync);
     return () => {
+      isMounted = false;
       clearTimeout(timer);
       window.removeEventListener("payada-wallet-updated", handleStorageSync);
     };
-  }, [detectWallets, onConnected, onDisconnected]);
+  }, [detectWallets]);
 
   const connectWallet = async (walletId) => {
     setConnecting(true);
