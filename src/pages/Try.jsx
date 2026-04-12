@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
@@ -10,6 +10,15 @@ import { Button } from "@/components/ui/button";
 
 export default function Try() {
   const [wallet, setWallet] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const { data: submissions = [] } = useQuery({
     queryKey: ["launch-submissions"],
     queryFn: () => base44.entities.LaunchSubmission.list("-created_date", 200),
@@ -32,9 +41,11 @@ export default function Try() {
               <Button asChild variant="outline" className="rounded-2xl"><Link to="/">Back to home</Link></Button>
             </div>
           </div>
-          <div className="w-full max-w-sm">
-            <WalletConnect onConnected={setWallet} />
-          </div>
+          {!isMobile && (
+            <div className="w-full max-w-sm">
+              <WalletConnect onConnected={setWallet} />
+            </div>
+          )}
         </div>
 
         <TryStatsCards claimedCount={claimedCount} paidCount={paidItems.length} maxSpots={100} />
