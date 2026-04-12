@@ -160,12 +160,12 @@ export default function MerchantProfilePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <PageHeader title="Merchant Profile" subtitle="Manage your business details" />
+      <div className="flex items-center justify-between gap-3">
+        <PageHeader title="Merchant Profile" subtitle="Manage your business details and wallet address" />
         <Button
           onClick={() => setIsEditing(!isEditing)}
           variant={isEditing ? "outline" : "default"}
-          className="gap-2"
+          className="gap-2 shrink-0"
         >
           {isEditing ? null : <Edit2 className="w-4 h-4" />}
           {isEditing ? "Cancel" : "Edit"}

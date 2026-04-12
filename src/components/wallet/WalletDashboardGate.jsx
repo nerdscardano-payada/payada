@@ -1,14 +1,21 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import WalletConnect from "@/components/checkout/WalletConnect";
 import { base44 } from "@/api/base44Client";
 import { ShieldCheck, Wallet } from "lucide-react";
 
 export default function WalletDashboardGate({ profile, onLinked }) {
   const [connectedAddress, setConnectedAddress] = React.useState(null);
+  const [manualAddress, setManualAddress] = useState("");
   const [saving, setSaving] = React.useState(false);
   const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
+
+  useEffect(() => {
+    const savedAddress = localStorage.getItem("payada_manual_wallet_address") || profile?.connected_wallet_address || profile?.default_receive_address || "";
+    setManualAddress(savedAddress);
+  }, [profile?.connected_wallet_address, profile?.default_receive_address]);
 
   const handleConnected = async ({ address }) => {
     setConnectedAddress(address);
@@ -20,6 +27,26 @@ export default function WalletDashboardGate({ profile, onLinked }) {
     });
     setSaving(false);
     onLinked?.(address);
+  };
+
+  const handleManualSave = async () => {
+    const trimmedAddress = manualAddress.trim();
+    if (!trimmedAddress) return;
+
+    localStorage.setItem("payada_manual_wallet_address", trimmedAddress);
+    localStorage.setItem("payada_connected_wallet_address", trimmedAddress);
+    window.dispatchEvent(new CustomEvent("payada-wallet-connected", { detail: { address: trimmedAddress } }));
+
+    setSaving(true);
+    if (profile?.id) {
+      await base44.entities.MerchantProfile.update(profile.id, {
+        connected_wallet_address: trimmedAddress,
+        default_receive_address: trimmedAddress,
+      });
+    }
+    setConnectedAddress(trimmedAddress);
+    setSaving(false);
+    onLinked?.(trimmedAddress);
   };
 
   const isLinked = !!profile?.connected_wallet_address;
@@ -44,12 +71,26 @@ export default function WalletDashboardGate({ profile, onLinked }) {
           )}
 ...
           {!isMobile && <WalletConnect onConnected={handleConnected} />}
+
           {isMobile && (
-            <p className="text-xs text-slate-500">
-              On mobile, your saved wallet address is used automatically.
-            </p>
+            <div className="space-y-3 rounded-xl border border-indigo-200 bg-white/80 p-4">
+              <div>
+                <p className="text-sm font-medium text-slate-900">No wallet connected yet?</p>
+                <p className="text-xs text-slate-500">Enter your Cardano wallet address here. You can also manage this later in Merchant Profile.</p>
+              </div>
+              <Input
+                value={manualAddress}
+                onChange={(e) => setManualAddress(e.target.value)}
+                placeholder="Paste your Cardano wallet address"
+                className="bg-white text-xs"
+              />
+              <Button onClick={handleManualSave} className="w-full" disabled={!manualAddress.trim() || saving}>
+                Save wallet address
+              </Button>
+            </div>
           )}
-          {saving && <p className="text-xs text-slate-500">Linking wallet...</p>}
+
+          {saving && <p className="text-xs text-slate-500">Saving wallet...</p>}
           {isLinked && !connectedAddress && (
             <Button variant="outline" className="w-full" disabled>
               Wallet linked
