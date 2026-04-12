@@ -10,7 +10,6 @@ import { toast } from "sonner";
 
 const buildSlug = (value) => `v2-${slugify(value || "launch")}-${Math.random().toString(36).slice(2, 6)}`;
 
-const TRY_CAMPAIGN_PAYOUT_WALLET = "addr1q974n3yf96aylrjuddrkqg6j9hlqnf3ax3xjzjfg2f6enlu88h5q6gnlr40hlx9htep4la63fd9hz63vjre7a73j0w3s05v8lm";
 const MAX_SPOTS = 100;
 
 const slugify = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 40);
@@ -93,7 +92,7 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
       description: description || "We’ll be your first customer",
       amount_mode: "fixed_ada",
       amount_ada: 5,
-      receive_address: TRY_CAMPAIGN_PAYOUT_WALLET,
+      receive_address: activeWalletAddress,
       fee_model: "merchant_pays",
       confirmations_required: 2,
       status: "active",

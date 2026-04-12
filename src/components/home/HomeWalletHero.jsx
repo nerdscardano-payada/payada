@@ -56,7 +56,6 @@ export default function HomeWalletHero({ onLogin, onWalletConnected }) {
           </div>
           <WalletConnect onConnected={onWalletConnected} />
         </div>
-        </div>
       </div>
     </section>
   );

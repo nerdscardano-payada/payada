@@ -19,7 +19,20 @@ export default function MyStores() {
     base44.auth.me().then(setUser);
   }, []);
 
-  // Show profile warning banner if not complete
+  const { data: stores = [], isLoading } = useQuery({
+    queryKey: ["stores", user?.email],
+    queryFn: () => base44.entities.Store.filter({ merchant_id: user.email }, "-updated_date", 100),
+    enabled: !!user,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Store.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stores"] });
+      setDeletingId(null);
+    },
+  });
+
   if (!isProfileComplete && profile !== undefined) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -40,20 +53,6 @@ export default function MyStores() {
       </div>
     );
   }
-
-  const { data: stores = [], isLoading } = useQuery({
-    queryKey: ["stores", user?.email],
-    queryFn: () => base44.entities.Store.filter({ merchant_id: user.email }, "-updated_date", 100),
-    enabled: !!user,
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Store.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["stores"] });
-      setDeletingId(null);
-    },
-  });
 
   if (selectedStore) {
     return (
