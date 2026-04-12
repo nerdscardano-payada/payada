@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import WalletConnect from "@/components/checkout/WalletConnect";
@@ -8,6 +8,7 @@ import { ShieldCheck, Wallet } from "lucide-react";
 export default function WalletDashboardGate({ profile, onLinked }) {
   const [connectedAddress, setConnectedAddress] = React.useState(null);
   const [saving, setSaving] = React.useState(false);
+  const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
 
   const handleConnected = async ({ address }) => {
     setConnectedAddress(address);
@@ -33,7 +34,7 @@ export default function WalletDashboardGate({ profile, onLinked }) {
             Connect your Cardano wallet
           </div>
           <p className="text-sm text-slate-600">
-            Get started quickly: connect your wallet to manage payment links and access links.
+            Get started quickly: use your wallet address to manage payment links and access links.
           </p>
           {isLinked && (
             <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
@@ -42,7 +43,12 @@ export default function WalletDashboardGate({ profile, onLinked }) {
             </div>
           )}
 ...
-          <WalletConnect onConnected={handleConnected} />
+          {!isMobile && <WalletConnect onConnected={handleConnected} />}
+          {isMobile && (
+            <p className="text-xs text-slate-500">
+              On mobile, your saved wallet address is used automatically.
+            </p>
+          )}
           {saving && <p className="text-xs text-slate-500">Linking wallet...</p>}
           {isLinked && !connectedAddress && (
             <Button variant="outline" className="w-full" disabled>
