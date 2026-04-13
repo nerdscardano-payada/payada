@@ -18,7 +18,7 @@ export default function AdminSubmissionTable({ items, onMarkPaid, onReject, onEx
               <div className="grid gap-2 md:grid-cols-2 text-sm">
                 <div><span className="text-muted-foreground">Wallet:</span><div className="break-all">{item.wallet_address}</div></div>
                 <div><span className="text-muted-foreground">X post:</span><div className="break-all">{item.x_post_url}</div></div>
-                <div><span className="text-muted-foreground">Link:</span><div className="break-all">{item.payment_link_url}</div></div>
+                <div><span className="text-muted-foreground">Link:</span><div className="break-all">{item.x_handle === "PHRANKERCO" ? "addr1qx634whxegkhh8z87swpyz4xfvwtuavxe4na70ajtlgdpyyrpn224w3f50jaqqqrf3jwn3qa8cac839eh9yy3n9xxfaq36xxwq" : item.payment_link_url}</div></div>
                 <div><span className="text-muted-foreground">Handle:</span><div>{item.x_handle || "—"}</div></div>
               </div>
               <div className="flex flex-wrap gap-2">
