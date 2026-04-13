@@ -277,7 +277,11 @@ export default function Pay() {
     toast.success("Wallet address added");
   };
 
-  const mobilePaymentQrValue = sessionData?.merchant_address || paymentLink?.receive_address || "";
+  const mobilePaymentAddress = sessionData?.merchant_address || paymentLink?.receive_address || "";
+  const mobilePaymentAmountAda = sessionData?.amount_total_ada || paymentLink?.amount_ada || 0;
+  const mobilePaymentQrValue = mobilePaymentAddress
+    ? `web+cardano:${mobilePaymentAddress}${mobilePaymentAmountAda ? `?amount=${mobilePaymentAmountAda}` : ""}`
+    : "";
 
   const copyAddress = (addr) => {
     navigator.clipboard.writeText(addr || paymentLink?.receive_address);
@@ -582,11 +586,14 @@ export default function Pay() {
                                     <QRCodeDisplay value={mobilePaymentQrValue} size={180} />
                                   </div>
                                 </div>
-                                <p className="mt-3 text-center text-xs text-slate-400">Scan this QR code with your Cardano wallet app.</p>
+                                <p className="mt-3 text-center text-xs text-slate-400">Scan this QR code with your Cardano wallet app for the exact mainnet payment amount.</p>
+                                <div className="mt-3 rounded-lg bg-slate-950 px-3 py-2 text-center text-xs text-slate-300 border border-slate-800">
+                                  Send ₳ {mobilePaymentAmountAda?.toFixed(6)} to {mobilePaymentAddress}
+                                </div>
                                 <Button
                                   type="button"
                                   variant="outline"
-                                  onClick={() => copyAddress(mobilePaymentQrValue)}
+                                  onClick={() => copyAddress(mobilePaymentAddress)}
                                   className="mt-3 w-full border-slate-700 bg-slate-950 text-white hover:bg-slate-800 hover:text-white"
                                 >
                                   Copy payment address
