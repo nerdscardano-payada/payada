@@ -18,6 +18,7 @@ import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 import WalletHealthCheck from "@/components/checkout/WalletHealthCheck";
 import SimplePaySummaryCard from "@/components/pay/SimplePaySummaryCard";
 import FeeBreakdownCard from "@/components/pay/FeeBreakdownCard";
+import QRCodeDisplay from "@/components/shared/QRCodeDisplay";
 
 export default function Pay() {
   const navigate = useNavigate();
@@ -275,6 +276,8 @@ export default function Pay() {
     setConnectedWallet({ address: trimmedAddress, name: "Manual entry", id: "manual" });
     toast.success("Wallet address added");
   };
+
+  const mobilePaymentQrValue = sessionData?.merchant_address || paymentLink?.receive_address || "";
 
   const copyAddress = (addr) => {
     navigator.clipboard.writeText(addr || paymentLink?.receive_address);
@@ -552,10 +555,12 @@ export default function Pay() {
                             />
                           </>
                         ) : (
-                          <div className="space-y-3 rounded-xl border border-amber-400/20 bg-amber-500/10 p-4">
+                          <div className="space-y-4 rounded-xl border border-amber-400/20 bg-amber-500/10 p-4">
                             <div>
-                              <p className="text-sm font-medium text-amber-100">On mobile, enter your Cardano wallet address manually.</p>
-                              <p className="text-xs text-amber-200/80 mt-1">A wallet address is required before payment.</p>
+                              <p className="text-sm font-medium text-amber-100">Mobile checkout</p>
+                              <p className="text-xs text-amber-200/80 mt-1">1. Enter your Cardano wallet address below.</p>
+                              <p className="text-xs text-amber-200/80">2. Scan the QR code with your mobile wallet app.</p>
+                              <p className="text-xs text-amber-200/80">3. Complete the payment from your wallet.</p>
                             </div>
                             <Input
                               value={manualWalletAddress}
@@ -570,6 +575,24 @@ export default function Pay() {
                             >
                               Use this wallet address
                             </Button>
+                            {mobilePaymentQrValue && (
+                              <div className="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
+                                <div className="flex justify-center">
+                                  <div className="rounded-xl bg-white p-3">
+                                    <QRCodeDisplay value={mobilePaymentQrValue} size={180} />
+                                  </div>
+                                </div>
+                                <p className="mt-3 text-center text-xs text-slate-400">Scan this QR code with your Cardano wallet app.</p>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  onClick={() => copyAddress(mobilePaymentQrValue)}
+                                  className="mt-3 w-full border-slate-700 bg-slate-950 text-white hover:bg-slate-800 hover:text-white"
+                                >
+                                  Copy payment address
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         )}
                         {connectedWallet && (
