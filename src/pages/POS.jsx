@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import QRCodeDisplay from "@/components/shared/QRCodeDisplay";
 import AdaRatePreview from "@/components/checkout/AdaRatePreview";
 import { Copy, RotateCcw, Zap } from "lucide-react";
@@ -11,14 +11,26 @@ import { toast } from "sonner";
 export default function POS() {
   const [amountAda, setAmountAda] = useState("");
   const [label, setLabel] = useState("");
+  const [receiveAddress, setReceiveAddress] = useState("");
   const [feeModel, setFeeModel] = useState("merchant_pays");
   const [built, setBuilt] = useState(false);
 
-  const qrValue = amountAda && parseFloat(amountAda) > 0
-    ? `web+cardano:${label ? `${encodeURIComponent(label)}:` : ""}?amount=${parseFloat(amountAda).toFixed(6)}`
+  useEffect(() => {
+    const savedAddress = localStorage.getItem("payada_manual_wallet_address") || localStorage.getItem("payada_connected_wallet_address") || "";
+    if (savedAddress) {
+      setReceiveAddress(savedAddress);
+    }
+  }, []);
+
+  const qrValue = receiveAddress && amountAda && parseFloat(amountAda) > 0
+    ? `web+cardano:${receiveAddress}?amount=${parseFloat(amountAda).toFixed(6)}${label ? `&label=${encodeURIComponent(label)}` : ""}`
     : "";
 
   const handleGenerate = () => {
+    if (!receiveAddress.trim()) {
+      toast.error("Voer een geldig Cardano walletadres in.");
+      return;
+    }
     if (!amountAda || parseFloat(amountAda) <= 0) {
       toast.error("Voer een geldig bedrag in.");
       return;
@@ -55,6 +67,16 @@ export default function POS() {
           {!built ? (
             /* Amount entry */
             <div className="p-6 space-y-5">
+              <div className="space-y-2">
+                <Label className="text-slate-400 text-xs">Receive address</Label>
+                <Input
+                  value={receiveAddress}
+                  onChange={(e) => setReceiveAddress(e.target.value)}
+                  placeholder="addr1..."
+                  className="bg-slate-800 border-slate-700 text-white h-12 placeholder:text-slate-600"
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label className="text-slate-400 text-xs">Amount (ADA)</Label>
                 <div className="relative">
@@ -116,7 +138,7 @@ export default function POS() {
 
               <Button
                 onClick={handleGenerate}
-                disabled={!amountAda}
+                disabled={!amountAda || !receiveAddress.trim()}
                 className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-base"
               >
                 Generate QR Code
@@ -138,7 +160,8 @@ export default function POS() {
 
               <div className="rounded-lg bg-slate-800/60 p-3">
                 <p className="text-sm font-semibold text-white">One-time QR ready</p>
-                <p className="text-[11px] text-slate-500 mt-1">Deze QR wordt niet opgeslagen en is bedoeld voor direct eenmalig gebruik.</p>
+                <p className="text-[11px] text-slate-500 mt-1">Deze QR bevat nu een echt mainnet Cardano walletadres en exact bedrag voor direct gebruik.</p>
+                <p className="text-[11px] text-slate-400 mt-1 break-all">{receiveAddress}</p>
                 <p className="text-[11px] text-slate-500 mt-1">
                   {(feeModel || "merchant_pays") === "customer_pays" && "Fee model: customer pays the 1.75% fee."}
                   {feeModel === "merchant_pays" && "Fee model: you pay the 1.75% fee."}
