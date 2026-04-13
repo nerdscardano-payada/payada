@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -45,6 +45,8 @@ export default function Pay() {
   const [pollCount, setPollCount] = useState(0);
   const [txSubmitted, setTxSubmitted] = useState(false);
   const [walletHealth, setWalletHealth] = useState(null);
+  const [manualWalletAddress, setManualWalletAddress] = useState("");
+  const isMobile = useMemo(() => typeof window !== "undefined" && window.innerWidth < 1024, []);
 
   const multiCntEnabled = paymentLink?.enable_multi_cnt_checkout && paymentLink?.amount_mode === "fixed_ada" && (paymentLink?.accepted_cnt_tokens || []).length > 0;
 
@@ -52,6 +54,9 @@ export default function Pay() {
     localStorage.removeItem("payada_connected_wallet_address");
     localStorage.removeItem("payada_connected_wallet_id");
     localStorage.removeItem("payada_connected_wallet_name");
+    localStorage.removeItem("payada_manual_wallet_address");
+    setConnectedWallet(null);
+    setManualWalletAddress("");
     window.dispatchEvent(new Event("payada-wallet-updated"));
   }, []);
 
@@ -258,6 +263,17 @@ export default function Pay() {
     } finally {
       setCheckoutLoading(false);
     }
+  };
+
+  const handleManualWalletUse = () => {
+    const trimmedAddress = manualWalletAddress.trim();
+    if (!trimmedAddress) {
+      toast.error("Please enter your Cardano wallet address");
+      return;
+    }
+
+    setConnectedWallet({ address: trimmedAddress, name: "Manual entry", id: "manual" });
+    toast.success("Wallet address added");
   };
 
   const copyAddress = (addr) => {
@@ -525,13 +541,37 @@ export default function Pay() {
 
                       {/* Wallet flow only */}
                       <div className="space-y-3">
-                        <p className="text-[11px] text-slate-500 text-center">
-                          Wallet connect checkout · Supported: Nami · Eternl · Lace · Typhon · GeroWallet · Yoroi · Vespr
-                        </p>
-                        <WalletConnect
-                          onConnected={(w) => setConnectedWallet(w)}
-                          onDisconnected={() => setConnectedWallet(null)}
-                        />
+                        {!isMobile ? (
+                          <>
+                            <p className="text-[11px] text-slate-500 text-center">
+                              Wallet connect checkout · Supported: Nami · Eternl · Lace · Typhon · GeroWallet · Yoroi · Vespr
+                            </p>
+                            <WalletConnect
+                              onConnected={(w) => setConnectedWallet(w)}
+                              onDisconnected={() => setConnectedWallet(null)}
+                            />
+                          </>
+                        ) : (
+                          <div className="space-y-3 rounded-xl border border-amber-400/20 bg-amber-500/10 p-4">
+                            <div>
+                              <p className="text-sm font-medium text-amber-100">On mobile, enter your Cardano wallet address manually.</p>
+                              <p className="text-xs text-amber-200/80 mt-1">A wallet address is required before payment.</p>
+                            </div>
+                            <Input
+                              value={manualWalletAddress}
+                              onChange={(e) => setManualWalletAddress(e.target.value)}
+                              placeholder="Paste your Cardano wallet address"
+                              className="bg-slate-950 border-slate-700 text-white placeholder:text-slate-500"
+                            />
+                            <Button
+                              onClick={handleManualWalletUse}
+                              disabled={!manualWalletAddress.trim()}
+                              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                            >
+                              Use this wallet address
+                            </Button>
+                          </div>
+                        )}
                         {connectedWallet && (
                           <>
                             {paymentLink?.amount_mode === "fixed_cnt" && (
@@ -551,9 +591,11 @@ export default function Pay() {
                               onSuccess={handleTxSuccess}
                               walletHealth={walletHealth}
                             />
-                            <p className="text-[11px] text-slate-500 text-center">
-                              Your wallet will ask you to confirm and enter your password.
-                            </p>
+                            {!isMobile && (
+                              <p className="text-[11px] text-slate-500 text-center">
+                                Your wallet will ask you to confirm and enter your password.
+                              </p>
+                            )}
                           </>
                         )}
                       </div>
