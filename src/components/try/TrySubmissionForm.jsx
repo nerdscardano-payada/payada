@@ -27,14 +27,13 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
   const activeWalletAddress = manualWalletAddress.trim();
 
   useEffect(() => {
-    if (walletAddress) {
-      setManualWalletAddress(walletAddress);
-    }
+    setManualWalletAddress(walletAddress || "");
   }, [walletAddress]);
 
   const submitMutation = useMutation({
     mutationFn: async () => {
       if (!activeWalletAddress) throw new Error("Voeg eerst een walletadres toe.");
+      if (!activeWalletAddress.startsWith("addr1")) throw new Error("Voer een geldig Cardano mainnet walletadres in.");
       if (!description.trim()) throw new Error("Voeg eerst een description toe.");
       if (!xPostUrl.trim()) throw new Error("Voeg je X post URL toe.");
       if (claimedCount >= MAX_SPOTS) throw new Error("Alle spots zijn geclaimd.");
@@ -77,6 +76,10 @@ export default function TrySubmissionForm({ walletAddress, claimedCount }) {
   const handleGenerateLink = async () => {
     if (!activeWalletAddress) {
       toast.error("Voeg eerst een walletadres toe.");
+      return;
+    }
+    if (!activeWalletAddress.startsWith("addr1")) {
+      toast.error("Voer een geldig Cardano mainnet walletadres in.");
       return;
     }
     if (!description.trim()) {

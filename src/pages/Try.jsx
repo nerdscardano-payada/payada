@@ -51,7 +51,7 @@ export default function Try() {
         <TryStatsCards claimedCount={claimedCount} paidCount={paidItems.length} maxSpots={100} />
 
         <div className="grid gap-6 lg:grid-cols-[1.4fr_0.8fr]" id="submit">
-          <TrySubmissionForm walletAddress={wallet?.address || localStorage.getItem("payada_connected_wallet_address") || ""} claimedCount={claimedCount} />
+          <TrySubmissionForm walletAddress={wallet?.address || ""} claimedCount={claimedCount} />
           <JustPaidFeed items={paidItems} />
         </div>
       </div>
