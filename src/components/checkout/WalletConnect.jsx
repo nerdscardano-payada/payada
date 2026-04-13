@@ -273,7 +273,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
   const handleManualConnect = () => {
     const trimmedAddress = manualAddress.trim();
     if (!trimmedAddress) {
-      setError("Voer eerst een Cardano walletadres in.");
+      setError("Please enter your Cardano wallet address first.");
       return;
     }
     setError(null);
@@ -360,7 +360,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
 
       {isMobile && (
         <div className="space-y-3 rounded-lg border border-amber-500/30 bg-amber-50 px-3 py-3 text-xs text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100">
-          <p>Op mobiel kan je je Cardano walletadres handmatig invullen en opslaan.</p>
+          <p>On mobile, you can enter and save your Cardano wallet address manually.</p>
           <Input
             value={manualAddress}
             onChange={(e) => setManualAddress(e.target.value)}
@@ -368,7 +368,7 @@ export default function WalletConnect({ onConnected, onDisconnected }) {
             className="bg-white text-slate-900 dark:bg-slate-950 dark:text-white"
           />
           <Button type="button" className="w-full" onClick={handleManualConnect} disabled={connecting}>
-            Gebruik dit walletadres
+            Use this wallet address
           </Button>
         </div>
       )}
