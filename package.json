@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@base44/sdk": "^0.8.25",
+    "@base44/sdk": "^0.8.26",
     "@base44/vite-plugin": "^1.0.7",
     "@cardano-foundation/cardano-connect-with-wallet": "^0.1.57",
     "@hello-pangea/dnd": "^17.0.0",
