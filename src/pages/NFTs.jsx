@@ -89,22 +89,28 @@ export default function NFTs() {
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">How the NFT suite works today</h2>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">How the NFT suite works today</h2>
+            <p className="mt-1 text-sm text-slate-500">The latest marketplace flow now includes automatic asset selection and faster listing creation.</p>
+          </div>
+          <a href="/NFTHowTo" className="text-sm font-semibold text-cyan-700 hover:text-cyan-800">Open educational how-to page</a>
+        </div>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <div className="rounded-2xl bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step 1</p>
-            <p className="mt-2 font-medium text-slate-900">Connect your wallet and select assets</p>
+            <p className="mt-2 font-medium text-slate-900">Connect your wallet and import assets in bulk</p>
             <p className="mt-2 text-sm leading-6 text-slate-600">Wallet assets are loaded automatically with label, metadata, and available image.</p>
           </div>
           <div className="rounded-2xl bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step 2</p>
-            <p className="mt-2 font-medium text-slate-900">Publish utility or sales flows</p>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Use gates for access or listings for storefronts and checkout.</p>
+            <p className="mt-2 font-medium text-slate-900">Select NFTs visually in the asset gallery</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Click or drag assets directly into the listing flow instead of copying policy details manually.</p>
           </div>
           <div className="rounded-2xl bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step 3</p>
-            <p className="mt-2 font-medium text-slate-900">Deliver securely through the signing queue</p>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Confirmed payments flow into a clear operational queue for signing and delivery.</p>
+            <p className="mt-2 font-medium text-slate-900">Track sales from the marketplace dashboard</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Use your listing overview, draft pipeline and storefront controls as your NFT sales dashboard.</p>
           </div>
         </div>
       </div>
