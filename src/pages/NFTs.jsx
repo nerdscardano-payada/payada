@@ -77,10 +77,10 @@ export default function NFTs() {
           title="NFT Marketplace"
           status="Ready"
           tone="amber"
-          description="Publish your own storefront with media, metadata, and PayADA checkout so your NFTs are sold directly inside your own flow."
+          description="Publish your own storefront with media, metadata, and public PayADA checkout so your NFTs are sold directly through wallet connect without user accounts."
           bullets={[
             "Listing management with pricing, image, and description",
-            "Direct checkout through existing PayADA payment links",
+            "Public checkout through existing PayADA payment links",
             "Storefront without dependence on an external marketplace",
           ]}
           ctaLabel="Open Marketplace"

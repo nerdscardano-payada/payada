@@ -32,7 +32,7 @@ export default function NFTStore() {
 
   const listings = data?.listings || [];
   const merchantName = data?.merchant?.nft_store_name || data?.merchant?.business_name || "NFT Storefront";
-  const storeDescription = data?.merchant?.nft_store_description || "Direct NFT listings with PayADA checkout and merchant-managed NFT delivery.";
+  const storeDescription = data?.merchant?.nft_store_description || "Direct NFT listings with public PayADA checkout, wallet connect, and merchant-managed NFT delivery.";
   const fulfillmentMode = data?.merchant?.nft_fulfillment_mode || "manual";
   const websiteUrlRaw = data?.merchant?.website_url || "";
   const websiteUrl = React.useMemo(() => {
@@ -208,7 +208,7 @@ export default function NFTStore() {
                               <a href={`/nft/${(data?.merchant?.nft_store_slug || resolvedStoreSlug)}/${listing.id}`}>More info</a>
                             </Button>
                             <Button asChild>
-                              <a href={`/Pay?slug=${listing.payment_link_slug}`}>Buy now</a>
+                              <a href={`/Pay?slug=${listing.payment_link_slug}`}>Buy with wallet</a>
                             </Button>
                           </div>
                         </div>
