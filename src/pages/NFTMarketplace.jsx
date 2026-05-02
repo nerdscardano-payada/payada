@@ -6,7 +6,6 @@ import PageHeader from "@/components/shared/PageHeader";
 import ListingForm from "@/components/nfts/ListingForm";
 import ListingsTable from "@/components/nfts/ListingsTable";
 import FulfillmentSetupRequiredCard from "@/components/nfts/FulfillmentSetupRequiredCard";
-import AssetGallery from "@/components/nfts/AssetGallery";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
@@ -201,11 +200,6 @@ export default function NFTMarketplace() {
   return (
     <div className="space-y-6">
       <PageHeader title="NFT Marketplace" subtitle="Manage listings using NFTs from your saved wallet—no extra wallet setup on this page." />
-      <div className="rounded-2xl border border-cyan-200 bg-cyan-50 p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-cyan-700">NFT sales dashboard</p>
-        <h2 className="mt-2 text-xl font-semibold text-cyan-950">Monitor listings, import wallet assets in bulk, and launch new NFT sales faster.</h2>
-        <p className="mt-2 max-w-3xl text-sm text-cyan-900">Your marketplace now doubles as a lightweight sales dashboard: active listings, draft pipeline, public store link, and visual asset selection all live in one place.</p>
-      </div>
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">Active listings</p>
@@ -275,7 +269,6 @@ export default function NFTMarketplace() {
           <Button asChild variant="outline"><a href={`${window.location.origin}${publicStorePath}`} target="_blank" rel="noreferrer">Preview store</a></Button>
         </div>
       </div>
-      <AssetGallery assets={walletAssets} selectedUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} />
       <ListingForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
       <ListingsTable listings={listings} paymentLinksById={paymentLinksById} onEdit={(listing) => { setEditingListing(listing); setFormData({ ...initialForm, ...listing, price_ada: listing.price_ada || paymentLinksById[listing.payment_link_id]?.amount_ada || 0 }); setSelectedAssetUnit(`${listing.policy_id}${listing.asset_name_hex || ""}`); }} onDelete={(listing) => deleteMutation.mutate(listing)} onCopy={copyLink} onPreview={() => window.open(publicStorePath, "_blank")} />
     </div>

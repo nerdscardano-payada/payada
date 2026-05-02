@@ -35,7 +35,6 @@ import AdminAIPaymentBuilder from './pages/AdminAIPaymentBuilder';
 import POS from './pages/POS';
 import Try from './pages/Try';
 import TryAdmin from './pages/TryAdmin';
-import NFTHowTo from './pages/NFTHowTo';
 
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -148,7 +147,6 @@ const AuthenticatedApp = () => {
       <Route path="/POS" element={<POS />} />
       <Route path="/try" element={<Try />} />
       <Route path="/TryAdmin" element={<LayoutWrapper currentPageName="TryAdmin"><TryAdmin /></LayoutWrapper>} />
-      <Route path="/NFTHowTo" element={<LayoutWrapper currentPageName="NFTHowTo"><NFTHowTo /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

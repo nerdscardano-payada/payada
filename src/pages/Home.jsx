@@ -16,7 +16,6 @@ import HomePublicLinksSection from "@/components/home/HomePublicLinksSection";
 import HomeInlineCreator from "@/components/home/HomeInlineCreator";
 import HomeWalletLinksManager from "@/components/home/HomeWalletLinksManager";
 import HomeTrustProofSection from "@/components/home/HomeTrustProofSection";
-import HomeNFTSalesSection from "@/components/home/HomeNFTSalesSection";
 import WalletConnect from "@/components/checkout/WalletConnect";
 import { homeHighlights, homePrimaryActions, homeWorkspaceSections } from "@/components/home/homeData";
 
@@ -113,8 +112,6 @@ export default function HomePage() {
       <HomeHighlights items={homeHighlights} />
 
       <HomeTrustProofSection />
-
-      <HomeNFTSalesSection />
 
       <HomePublicLinksSection />
 
