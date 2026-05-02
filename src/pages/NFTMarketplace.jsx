@@ -6,6 +6,7 @@ import PageHeader from "@/components/shared/PageHeader";
 import ListingForm from "@/components/nfts/ListingForm";
 import ListingsTable from "@/components/nfts/ListingsTable";
 import FulfillmentSetupRequiredCard from "@/components/nfts/FulfillmentSetupRequiredCard";
+import AssetGallery from "@/components/nfts/AssetGallery";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import upsertHiddenNftPaymentLink from "@/lib/upsertHiddenNftPaymentLink";
@@ -269,6 +270,7 @@ export default function NFTMarketplace() {
           <Button asChild variant="outline"><a href={`${window.location.origin}${publicStorePath}`} target="_blank" rel="noreferrer">Preview store</a></Button>
         </div>
       </div>
+      <AssetGallery assets={walletAssets} selectedUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} />
       <ListingForm formData={formData} setFormData={setFormData} walletAssets={walletAssets} selectedAssetUnit={selectedAssetUnit} onSelectAsset={handleSelectAsset} onSubmit={handleSubmit} editingListing={editingListing} isSubmitting={saveMutation.isPending} onCancel={() => { setEditingListing(null); setFormData(initialForm); setSelectedAssetUnit(""); }} />
       <ListingsTable listings={listings} paymentLinksById={paymentLinksById} onEdit={(listing) => { setEditingListing(listing); setFormData({ ...initialForm, ...listing, price_ada: listing.price_ada || paymentLinksById[listing.payment_link_id]?.amount_ada || 0 }); setSelectedAssetUnit(`${listing.policy_id}${listing.asset_name_hex || ""}`); }} onDelete={(listing) => deleteMutation.mutate(listing)} onCopy={copyLink} onPreview={() => window.open(publicStorePath, "_blank")} />
     </div>
